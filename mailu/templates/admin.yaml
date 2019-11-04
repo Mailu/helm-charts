@@ -1,0 +1,122 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-admin
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: admin
+    spec:
+      containers:
+      - name: admin
+        image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: admin
+            mountPath: /data
+          - name: data
+            mountPath: /dkim
+            subPath: dkim
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.admin.logLevel }}
+          - name: QUOTA_STORAGE_URL
+            value: redis://{{ include "mailu.fullname" . }}-redis/1
+          - name: RATELIMIT_STORAGE_URL
+            value: redis://{{ include "mailu.fullname" . }}-redis/2
+          - name: DOMAIN
+            value: "{{ required "domain" .Values.domain }}"
+          - name: HOSTNAMES
+            value: "{{ join "," .Values.hostnames }}"
+          - name: IMAP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
+          - name: POP3_ADDRESS
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
+          - name: SMTP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}
+          - name: AUTHSMTP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}
+          - name: REDIS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}
+          - name: WEBMAIL
+            value: none
+          - name: WEBMAIL_ADDRESS
+            value: localhost
+          - name: FRONT_ADDRESS
+            value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}
+          - name: RECIPIENT_DELIMITER
+            value: +
+          - name: POD_ADDRESS_RANGE
+            value: {{ .Values.podAddressRange }}
+          - name: PASSWORD_SCHEME
+            value: "{{ default "PBKDF2" .Values.passwordScheme }}"
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
+          - name: AUTH_RATELIMIT
+            value: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
+          {{ if .Values.initialAccount }}
+          - name: INITIAL_ADMIN_ACCOUNT
+            value: {{ required "initialAccount.username" .Values.initialAccount.username }}
+          - name: INITIAL_ADMIN_DOMAIN
+            value: {{ required "initialAccount.domain" .Values.initialAccount.domain }}
+          - name: INITIAL_ADMIN_PW
+            value: {{ required "initialAccount.password" .Values.initialAccount.password }}
+          {{ end }}
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 500m
+          limits:
+            memory: 500Mi
+            cpu: 500m
+        livenessProbe:
+          httpGet:
+            path: /ui/login
+            port: http
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ui/login
+            port: http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-admin
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: admin
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: admin
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP

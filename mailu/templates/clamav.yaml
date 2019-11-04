@@ -1,0 +1,59 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
+# (file is split into rspamd.yaml and clamav.yaml)
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-clamav
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: clamav
+    spec:
+      containers:
+      - name: clamav
+        image: {{ .Values.clamav.image.repository }}:{{ default .Values.mailuVersion .Values.clamav.image.tag }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 1000m
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+        volumeMounts:
+          - name: data
+            subPath: clamav
+            mountPath: /data
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.clamav.logLevel }}
+        ports:
+          - name: clamav
+            containerPort: 3310
+            protocol: TCP
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-clamav
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: clamav
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: clamav
+  ports:
+  - name: clamav
+    port: 3310
+    protocol: TCP

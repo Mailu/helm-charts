@@ -1,0 +1,188 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
+
+apiVersion: apps/v1beta2
+kind: DaemonSet
+metadata:
+  name: {{ include "mailu.fullname" . }}-front
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: front
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: front
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: front
+    spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+      - name: front
+        image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: certs
+            mountPath: /certs
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.front.logLevel }}
+          - name: KUBERNETES_INGRESS
+            value: "true"
+          - name: TLS_FLAVOR
+            value: cert
+          - name: HOSTNAMES
+            value: "{{ join "," .Values.hostnames }}"
+          - name: ADMIN_ADDRESS
+            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.cluster.local
+          - name: ANTISPAM_WEBUI_ADDRESS
+            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.cluster.local:11334
+          - name: WEBMAIL
+            value: roundcube
+          - name: WEBMAIL_ADDRESS
+            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.cluster.local
+          - name: MESSAGE_SIZE_LIMIT
+            value: "{{ mul .Values.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+          - name: WEB_WEBMAIL
+            value: "/"
+          - name: WEBDAV
+            value: none
+          - name: WEBDAV_ADDRESS
+            value: localhost
+          - name: ADMIN
+            value: "true"
+          - name: WEB_ADMIN
+            value: "/admin"
+        ports:
+          - name: pop3
+            containerPort: 110
+            hostPort: 110
+            protocol: TCP
+          - name: pop3s
+            containerPort: 995
+            hostPort: 995
+            protocol: TCP
+          - name: imap
+            containerPort: 143
+            hostPort: 143
+            protocol: TCP
+          - name: imaps
+            containerPort: 993
+            hostPort: 993
+            protocol: TCP
+          - name: smtp
+            containerPort: 25
+            hostPort: 25
+            protocol: TCP
+          - name: smtp-auth
+            containerPort: 10025
+            hostPort: 10025
+            protocol: TCP
+          - name: imap-auth
+            containerPort: 10143
+            hostPort: 10143
+            protocol: TCP
+          - name: smtps
+            containerPort: 465
+            hostPort: 465
+            protocol: TCP
+          - name: smtpd
+            containerPort: 587
+            hostPort: 587
+            protocol: TCP
+          - name: auth
+            containerPort: 8000
+            protocol: TCP
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 5
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+        - name: certs
+          secret:
+            items:
+              - key: tls.crt
+                path: cert.pem
+              - key: tls.key
+                path: key.pem
+            secretName: {{ include "mailu.fullname" . }}-certificates
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-front
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: front
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: front
+  ports:
+  - name: pop3
+    port: 110
+    protocol: TCP
+  - name: pop3s
+    port: 995
+    protocol: TCP
+  - name: imap
+    port: 143
+    protocol: TCP
+  - name: imaps
+    port: 993
+    protocol: TCP
+  - name: smtp
+    port: 25
+    protocol: TCP
+  - name: smtps
+    port: 465
+    protocol: TCP
+  - name: smtpd
+    port: 587
+    protocol: TCP
+  - name: smtp-auth
+    port: 10025
+    protocol: TCP
+  - name: imap-auth
+    port: 10143
+    protocol: TCP
+  - name: http
+    port: 80
+    protocol: TCP

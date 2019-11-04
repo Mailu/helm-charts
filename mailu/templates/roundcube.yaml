@@ -1,0 +1,62 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/webmail.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-roundcube
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: roundcube
+    spec:
+      containers:
+      - name: roundcube
+        image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
+        volumeMounts:
+          - mountPath: /data
+            name: data
+            subPath: roundcube
+        env:
+          - name: MESSAGE_SIZE_LIMIT
+            value: "{{ mul .Values.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+          - name: IMAP_ADDRESS
+            value: {{ include "mailu.fullname" . }}-dovecot
+          - name: FRONT_ADDRESS
+            value: {{ include "mailu.fullname" . }}-front
+          - name: SECRET_KEY
+            value: hie4tahZei4Rie4
+        ports:
+          - name: http
+            containerPort: 80
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-roundcube
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: roundcube
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: roundcube
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP

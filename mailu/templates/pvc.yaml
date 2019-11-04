@@ -1,0 +1,47 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "mailu.fullname" . }}-storage
+spec:
+  accessModes:
+    - ReadWriteMany
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
+  volumeName: {{ include "mailu.fullname" . }}-storage
+{{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
+---
+# in case of hostPath we create the Volume directly because there's no official hostPath provisioner
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "mailu.fullname" . }}-storage
+spec:
+  capacity:
+    storage: {{ .Values.persistence.size }}
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: {{ required "persistence.hostPath" .Values.persistence.hostPath }}
+    type: DirectoryOrCreate
+  {{ if .Values.nodeSelector }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        {{- range $k,$v := .Values.nodeSelector }}
+        - key: "{{ $k }}"
+          operator: In
+          values:
+            - "{{ $v }}"
+        {{- end }}
+  {{- end }}
+{{- end }}
+

@@ -1,0 +1,25 @@
+# This is the definition of the required ssl certificate for the mail system
+# It will be issued by cert-manager
+
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: {{ include "mailu.fullname" . }}-certificates
+spec:
+  secretName: {{ include "mailu.fullname" . }}-certificates
+  renewBefore: 1440h # 60d
+  commonName: "{{ first .Values.hostnames }}"
+  acme:
+    config:
+    - http01: {}
+      domains:
+{{- range .Values.hostnames }}
+      - "{{ . }}"
+{{- end }}
+  dnsNames:
+{{- range .Values.hostnames }}
+  - "{{ . }}"
+{{- end }}
+  issuerRef:
+    kind: {{ .Values.certmanager.issuerType }}
+    name: {{ .Values.certmanager.issuerName }}

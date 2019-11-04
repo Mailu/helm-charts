@@ -1,0 +1,108 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/imap.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-dovecot
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: dovecot
+    spec:
+      containers:
+      - name: admin
+        image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: dovecotdata
+            mountPath: /data
+          - name: data
+            mountPath: /mail
+            subPath: dovecotmail
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
+          - name: FRONT_ADDRESS
+            value: {{ include "mailu.fullname" . }}-front
+          - name: ADMIN_ADDRESS
+            value: {{ include "mailu.fullname" . }}-admin
+          - name: ANTISPAM_WEBUI_ADDRESS
+            value: {{ include "mailu.fullname" . }}-rspamd:11334
+          - name: POSTMASTER
+            value: postmaster
+          - name: DOMAIN
+            value: "{{ required "domain" .Values.domain }}"
+          - name: HOSTNAMES
+            value: "{{ join "," .Values.hostnames }}"
+          - name: RECIPIENT_DELIMITER
+            value: +
+          # TODO: COMPRESSION / COMPRESS_LEVEL -> documentation?
+
+          # TODO: next entries should be removed when https://github.com/Mailu/Mailu/issues/1112 is fixed
+          - name: REDIS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-redis
+          - name: WEBMAIL
+            value: none
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
+        ports:
+          - name: auth
+            containerPort: 2102
+            protocol: TCP
+          - name: lmtp
+            containerPort: 2525
+            protocol: TCP
+          - name: imap
+            containerPort: 143
+            protocol: TCP
+          - name: pop3
+            containerPort: 110
+            protocol: TCP
+          - name: sieve
+            containerPort: 4190
+            protocol: TCP
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 500m
+          limits:
+            memory: 500Mi
+            cpu: 500m
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-dovecot
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: dovecot
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: dovecot
+  ports:
+  - name: imap-auth
+    port: 2102
+    protocol: TCP
+  - name: imap-transport
+    port: 2525
+    protocol: TCP
+  - name: imap-default
+    port: 143
+    protocol: TCP
+  - name: pop3
+    port: 110
+    protocol: TCP
+  - name: sieve
+    port: 4190
+    protocol: TCP

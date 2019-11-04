@@ -1,0 +1,23 @@
+After all services are running, your mail system is reachable under
+
+        https://{{ .Values.hostnames|first }}
+
+{{- if .Values.initialAccount }}
+
+You can login to the admin panel using the following initial credentials (if not changed yet):
+
+        https://{{ .Values.hostnames|first }}/admin
+
+        Username: {{ .Values.initialAccount.username }}@{{ .Values.initialAccount.domain }}
+        Password: {{ .Values.initialAccount.password }}
+
+        !!! Please change the password after 1st login !!!
+
+{{- else }}
+
+After you created an initial admin login (see docs), you can login to the admin panel at 
+
+        https://{{ .Values.hostnames|first }}/admin
+
+{{- end }}
+

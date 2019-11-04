@@ -1,0 +1,92 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
+# (file is split into rspamd.yaml and clamav.yaml)
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-rspamd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: rspamd
+    spec:
+      containers:
+      - name: rspamd
+        image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
+        volumeMounts:
+          - name: data
+            subPath: rspamd
+            mountPath: /var/lib/rspamd
+          - name: data
+            subPath: dkim
+            mountPath: /dkim
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
+          - name: FRONT_ADDRESS
+            value: {{ include "mailu.fullname" . }}-front
+          - name: REDIS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-redis
+          - name: ANTIVIRUS
+            value: clamav
+          - name: ANTIVIRUS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-clamav:3310
+          - name: POD_ADDRESS_RANGE
+            value: "{{ .Values.podAddressRange }}"
+        ports:
+          - name: rspamd
+            containerPort: 11332
+            protocol: TCP
+          - name: rspamd-http
+            containerPort: 11334
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds: 5
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-rspamd
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: rspamd
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: rspamd
+  ports:
+  - name: rspamd
+    port: 11332
+    protocol: TCP
+  - name: rspamd-http
+    protocol: TCP
+    port: 11334

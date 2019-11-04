@@ -1,0 +1,30 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin-ingress.yaml
+
+{{- $fullname := (include "mailu.fullname" .) }}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullname }}-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  labels:
+    app: {{ $fullname }}
+    component: admin
+spec:
+  tls:
+  - secretName: {{ $fullname }}-certificates
+    hosts:
+{{- range .Values.hostnames }}
+    - "{{ . }}"
+{{- end }}
+{{- range .Values.hostnames }}
+  rules:
+  - host: "{{ . }}"
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: {{ $fullname }}-front
+          servicePort: 80
+{{- end }}

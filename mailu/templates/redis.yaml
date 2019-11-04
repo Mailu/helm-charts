@@ -1,0 +1,55 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-redis
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: redis
+            mountPath: /data
+        ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+        resources:
+          requests:
+            memory: 200Mi
+            cpu: 100m
+          limits:
+            memory: 300Mi
+            cpu: 200m
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-redis
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: redis
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: redis
+  ports:
+  - name: redis
+    port: 6379
+    protocol: TCP

@@ -1,0 +1,106 @@
+# Default values for mailu.
+
+# A list of mail hostnames is required. The first will be used as primary mail hostname
+#  hostnames:
+#    - mail.example.com
+#    - imap.example.com
+
+# The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
+#  domain: example.com
+
+# An initial account can automatically be created:
+#initialAccount:
+#  username: mailadmin
+#  domain: mydomain.com
+#  password: chang3m3!
+
+nameOverride: ""
+fullnameOverride: ""
+
+nodeSelector: {}
+
+persistence:
+  size: 100Gi
+  type: hostPath
+#  hostPath: /path/on/the/host
+
+# Change this if you're using different address ranges for pods
+podAddressRange: 10.42.0.0/16
+
+# Version of mailu docker images to use when not specified otherwise
+mailuVersion: master
+
+# default log level. can be overridden globally or per service
+logLevel: WARNING
+
+mail:
+  messageSizeLimitInMegabytes: 50
+  authRatelimit: 10/minute;1000/hour
+
+# certmanager settings
+certmanager:
+  issuerType: ClusterIssuer
+  issuerName: letsencrypt
+
+# Frontend load balancer for non-HTTP(s) services
+front:
+  # logLevel: WARNING
+  image:
+    repository: mailu/nginx
+    # tag defaults to mailuVersion
+    # tag: master
+
+admin:
+  # logLevel: WARNING
+  image:
+    repository: mailu/admin
+    # tag defaults to mailuVersion
+    # tag: master
+
+redis:
+  image:
+    repository: redis
+    tag: 4.0-alpine
+
+postfix:
+  # logLevel: WARNING
+  image:
+    repository: mailu/postfix
+    # tag defaults to mailuVersion
+    # tag: master
+
+dovecot:
+  # logLevel: WARNING
+  image:
+    repository: mailu/dovecot
+    # tag defaults to mailuVersion
+    # tag: master
+
+rspamd:
+  # logLevel: WARNING
+  image:
+    repository: mailu/rspamd
+    # tag defaults to mailuVersion
+    # tag: master
+
+clamav:
+  # logLevel: WARNING
+  image:
+    repository: mailu/clamav
+    # tag defaults to mailuVersion
+    # tag: master
+
+roundcube:
+  # logLevel: WARNING
+  image:
+    repository: mailu/roundcube
+    # tag defaults to mailuVersion
+    # tag: master
+
+
+webdav:
+  # logLevel: WARNING
+  image:
+    repository: mailu/clamav
+    # tag defaults to mailuVersion
+    # tag: master
