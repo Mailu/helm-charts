@@ -52,8 +52,8 @@ spec:
             value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}
           - name: RECIPIENT_DELIMITER
             value: +
-          - name: POD_ADDRESS_RANGE
-            value: {{ .Values.podAddressRange }}
+          - name: SUBNET
+            value: {{ .Values.subnet }}
           - name: PASSWORD_SCHEME
             value: "{{ default "PBKDF2" .Values.passwordScheme }}"
           - name: SECRET_KEY

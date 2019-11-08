@@ -38,12 +38,8 @@ spec:
             value: "{{ join "," .Values.hostnames }}"
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.messageSizeLimitInMegabytes (mul 1024 1024) }}"
-          - name: POD_ADDRESS_RANGE
-            value: "{{ .Values.podAddressRange }}"
           - name: SUBNET
-            value: "{{ .Values.podAddressRange }}"
-          # SUBNET / RELAYNETS / POD_ADDRESS_RANGE
-          # RELAYHOST / RELAYUSER
+            value: "{{ .Values.subnet }}"
           - name: RECIPIENT_DELIMITER
             value: "+"
           - name: LMTP_ADDRESS

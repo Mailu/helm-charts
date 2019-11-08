@@ -42,8 +42,8 @@ spec:
             value: clamav
           - name: ANTIVIRUS_ADDRESS
             value: {{ include "mailu.fullname" . }}-clamav:3310
-          - name: POD_ADDRESS_RANGE
-            value: "{{ .Values.podAddressRange }}"
+          - name: SUBNET
+            value: "{{ .Values.subnet }}"
         ports:
           - name: rspamd
             containerPort: 11332

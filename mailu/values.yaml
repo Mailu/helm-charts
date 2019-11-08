@@ -25,7 +25,7 @@ persistence:
 #  hostPath: /path/on/the/host
 
 # Change this if you're using different address ranges for pods
-podAddressRange: 10.42.0.0/16
+subnet: 10.42.0.0/16
 
 # Version of mailu docker images to use when not specified otherwise
 mailuVersion: master
