@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "1.8"
 description: Mailu mail system
 name: mailu
-version: 0.0.1
+version: 0.0.1.1

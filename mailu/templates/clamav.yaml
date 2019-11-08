@@ -19,11 +19,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 1Gi
-            cpu: 1000m
+            memory: {{ default "1Gi" .Values.clamav.resources.requests.memory }}
+            cpu: {{ default "1000m" .Values.clamav.resources.requests.cpu }}
           limits:
-            memory: 2Gi
-            cpu: 1000m
+            memory: {{ default "2Gi" .Values.clamav.resources.limits.memory }}
+            cpu: {{ default "1000m" .Values.clamav.resources.limits.cpu }}
         volumeMounts:
           - name: data
             subPath: clamav

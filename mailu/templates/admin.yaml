@@ -74,11 +74,11 @@ spec:
             protocol: TCP
         resources:
           requests:
-            memory: 500Mi
-            cpu: 500m
+            memory: {{ default "500Mi" .Values.admin.resources.requests.memory }}
+            cpu: {{ default "500m" .Values.admin.resources.requests.cpu }}
           limits:
-            memory: 500Mi
-            cpu: 500m
+            memory: {{ default "500Mi" .Values.admin.resources.limits.memory }}
+            cpu: {{ default "500m" .Values.admin.resources.limits.cpu }}
         livenessProbe:
           httpGet:
             path: /ui/login

@@ -67,11 +67,11 @@ spec:
             protocol: TCP
         resources:
           requests:
-            memory: 500Mi
-            cpu: 500m
+            memory: {{ default "500Mi" .Values.dovecot.resources.requests.memory }}
+            cpu: {{ default "500m" .Values.dovecot.resources.requests.cpu }}
           limits:
-            memory: 500Mi
-            cpu: 500m
+            memory: {{ default "500Mi" .Values.dovecot.resources.limits.memory }}
+            cpu: {{ default "500m" .Values.dovecot.resources.limits.cpu }}
       volumes:
         - name: data
           persistentVolumeClaim:

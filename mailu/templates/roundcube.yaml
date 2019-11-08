@@ -18,11 +18,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 100Mi
-            cpu: 100m
+            memory: {{ default "100Mi" .Values.roundcube.resources.requests.memory }}
+            cpu: {{ default "100m" .Values.roundcube.resources.requests.cpu }}
           limits:
-            memory: 200Mi
-            cpu: 200m
+            memory: {{ default "200Mi" .Values.roundcube.resources.limits.memory }}
+            cpu: {{ default "200m" .Values.roundcube.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /data
             name: data
