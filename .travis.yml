@@ -19,3 +19,7 @@ script:
   - git commit -m "Travis build"
   - git push
 
+branches:
+  only:
+  - master
+
