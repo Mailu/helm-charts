@@ -19,11 +19,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 100Mi
-            cpu: 100m
+            memory: {{ default "100Mi" .Values.rspamd.resources.requests.memory }}
+            cpu: {{ default "100m" .Values.rspamd.resources.requests.cpu }}
           limits:
-            memory: 200Mi
-            cpu: 200m
+            memory: {{ default "200Mi" .Values.rspamd.resources.limits.memory }}
+            cpu: {{ default "200m" .Values.rspamd.resources.limits.cpu }}
         volumeMounts:
           - name: data
             subPath: rspamd

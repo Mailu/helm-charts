@@ -18,11 +18,11 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            memory: 2Gi
-            cpu: 500m
+            memory: {{ default "2Gi" .Values.postfix.resources.requests.memory }}
+            cpu: {{ default "500m" .Values.postfix.resources.requests.cpu }}
           limits:
-            memory: 2Gi
-            cpu: 500m
+            memory: {{ default "2Gi" .Values.postfix.resources.limits.memory }}
+            cpu: {{ default "500m" .Values.postfix.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /queue
             name: data

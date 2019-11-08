@@ -109,11 +109,11 @@ spec:
             protocol: TCP
         resources:
           requests:
-            memory: 100Mi
-            cpu: 100m
+            memory: {{ default "100Mi" .Values.front.resources.requests.memory }}
+            cpu: {{ default "100m" .Values.front.resources.requests.cpu }}
           limits:
-            memory: 200Mi
-            cpu: 200m
+            memory: {{ default "200Mi" .Values.front.resources.limits.memory }}
+            cpu: {{ default "200m" .Values.front.resources.limits.cpu }}
         livenessProbe:
           httpGet:
             path: /health

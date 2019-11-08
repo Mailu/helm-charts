@@ -49,6 +49,13 @@ front:
     repository: mailu/nginx
     # tag defaults to mailuVersion
     # tag: master
+  resources:
+    requests: 
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 200Mi
 
 admin:
   # logLevel: WARNING
@@ -56,11 +63,25 @@ admin:
     repository: mailu/admin
     # tag defaults to mailuVersion
     # tag: master
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 500m
+    limits:
+      memory: 500Mi
+      cpu: 500m
 
 redis:
   image:
     repository: redis
     tag: 4.0-alpine
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+    limits:
+      memory: 300Mi
+      cpu: 200m
 
 postfix:
   # logLevel: WARNING
@@ -68,6 +89,13 @@ postfix:
     repository: mailu/postfix
     # tag defaults to mailuVersion
     # tag: master
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 500m
+    limits:
+      memory: 2Gi
+      cpu: 500m
 
 dovecot:
   # logLevel: WARNING
@@ -75,6 +103,13 @@ dovecot:
     repository: mailu/dovecot
     # tag defaults to mailuVersion
     # tag: master
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 500m
+      limits:
+        memory: 500Mi
+        cpu: 500m
 
 rspamd:
   # logLevel: WARNING
@@ -82,6 +117,13 @@ rspamd:
     repository: mailu/rspamd
     # tag defaults to mailuVersion
     # tag: master
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+      limits:
+        memory: 200Mi
+        cpu: 200m
 
 clamav:
   # logLevel: WARNING
@@ -89,6 +131,13 @@ clamav:
     repository: mailu/clamav
     # tag defaults to mailuVersion
     # tag: master
+    resources:
+      requests:
+        memory: 1Gi
+        cpu: 1000m
+      limits:
+        memory: 2Gi
+        cpu: 1000m
 
 roundcube:
   # logLevel: WARNING
@@ -96,6 +145,13 @@ roundcube:
     repository: mailu/roundcube
     # tag defaults to mailuVersion
     # tag: master
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+      limits:
+        memory: 200Mi
+        cpu: 200m
 
 
 webdav:

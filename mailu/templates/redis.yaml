@@ -26,11 +26,11 @@ spec:
             protocol: TCP
         resources:
           requests:
-            memory: 200Mi
-            cpu: 100m
+            memory: {{{ default "200Mi" .Values.redis.resources.requests.memory }}
+            cpu: {{ default "100m" .Values.redis.resources.requests.cpu }}
           limits:
-            memory: 300Mi
-            cpu: 200m
+            memory: {{ default "300Mi" .Values.redis.resources.limits.memory }}
+            cpu: {{ default "200m" .Values.redis.resources.limits.cpu }}
       volumes:
         - name: data
           persistentVolumeClaim:
