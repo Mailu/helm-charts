@@ -1,6 +1,10 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
+{{ if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" }}
+apiVersion: apps/v1
+{{ else }}
 apiVersion: apps/v1beta2
+{{ end }}
 kind: DaemonSet
 metadata:
   name: {{ include "mailu.fullname" . }}-front
