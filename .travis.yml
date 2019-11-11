@@ -15,6 +15,7 @@ script:
   - ./helm package mailu -d repo
   - ./helm repo index --url https://mailu.github.io/helm-charts/ repo
   - cd repo
+  - ./index.html.sh > index.html
   - git add .
   - git commit -m "Travis build"
   - git push
