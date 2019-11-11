@@ -1,3 +1,6 @@
+#!/bin/bash
+
+cat << EOF
 <html>
 <body>
 <h1>Public repo for Mailu helm chart</h1>
@@ -10,8 +13,13 @@ helm install mailu/mailu
 </p>
 <h2>Available versions</h2>
 <ul>
-<li>0.0.2</li>
-<li>0.0.1</li>
+EOF
+
+grep index.yaml -e "version:" | awk -F': ' '{print "<li>"$2"</li>"}' | sort -n -r
+
+cat << EOF
 </ul>
 </body>
 </html>
+EOF
+
