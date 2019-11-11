@@ -10,8 +10,9 @@
 
 ## Installation
 
+* Add the repository via `helm repo add mailu https://mailu.github.io/helm-charts/`
 * create a local values file (see below)
-* run `helm install --values my-values-file.yaml incubator/mailu`
+* run `helm install --values my-values-file.yaml mailu/mailu`
 
 ## Configuration
 
