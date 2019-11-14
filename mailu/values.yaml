@@ -19,6 +19,24 @@ fullnameOverride: ""
 
 nodeSelector: {}
 
+# set to true if you have cert manager < v0.11
+certManagerPre011: false
+
+database:
+# default database is an embedded sqlite
+  type: sqlite
+
+# For mysql/mariadb use the following config:
+# Set the host to use an external database.
+# If not host is set, a database instance is created by this chart.
+#   type: mysql
+#  mysql:
+#    database: mailu
+#    user: mailu
+#    password: chang3m3!
+#    host: external-db-hostname
+#    rootPassword: chang3m3! # can only be set for embedded mysql
+
 persistence:
   size: 100Gi
   type: hostPath
@@ -161,3 +179,15 @@ webdav:
     repository: mailu/clamav
     # tag defaults to mailuVersion
     # tag: master
+
+mysql:
+  image:
+    repository: library/mariadb
+    tag: 10.4.10
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 200m

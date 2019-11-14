@@ -1,6 +1,6 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
 
-{{ if .Capabilties.APIVersions.Has "apps/v1/Deployment" }}
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
 apiVersion: extensions/v1beta1
