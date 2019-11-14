@@ -1,0 +1,80 @@
+{{ if and (eq .Values.database.type "mysql") (not .Values.database.host) }}
+
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
+apiVersion: apps/v1
+{{ else }}
+apiVersion: extensions/v1beta1
+{{ end }}
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-mysql
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: mysql
+    spec:
+      containers:
+      - name: admin
+        image: {{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: mysql
+            mountPath: /var/lib/mysql
+        env:
+          {{ if .Values.database.mysql.rootPassword }}
+          - name: MYSQL_ROOT_PASSWORD
+            value: {{ .Values.database.mysql.rootPassword }}
+          {{ else }}
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+          {{ end }}
+          - name: MYSQL_DATABASE
+            value: {{ required "database.mysql.database" .Values.database.mysql.database }}
+          - name: MYSQL_USER
+            value: {{ required "database.mysql.user" .Values.database.mysql.user }}
+          - name: MYSQL_PASSWORD
+            value: {{ required "database.mysql.password" .Values.database.mysql.password }}
+        ports:
+          - name: mysql
+            containerPort: 3306
+            protocol: TCP
+        resources:
+          requests:
+            memory: {{ default "256Mi" .Values.mysql.resources.requests.memory }}
+            cpu: {{ default "100m" .Values.mysql.resources.requests.cpu }}
+          limits:
+            memory: {{ default "512Mi" .Values.mysql.resources.limits.memory }}
+            cpu: {{ default "200m" .Values.mysql.resources.limits.cpu }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-mysql
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: mysql
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: mysql
+  ports:
+  - name: mysql
+    port: 3306
+    protocol: TCP
+
+{{ end }}

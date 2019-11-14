@@ -3,7 +3,7 @@
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
-apiVersion: extensions/v1beta
+apiVersion: extensions/v1beta1
 {{ end }}
 kind: Deployment
 metadata:
@@ -64,14 +64,34 @@ spec:
             value: "{{ required "secretKey" .Values.secretKey }}"
           - name: AUTH_RATELIMIT
             value: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
-          {{ if .Values.initialAccount }}
+          {{- if .Values.initialAccount }}
           - name: INITIAL_ADMIN_ACCOUNT
             value: {{ required "initialAccount.username" .Values.initialAccount.username }}
           - name: INITIAL_ADMIN_DOMAIN
             value: {{ required "initialAccount.domain" .Values.initialAccount.domain }}
           - name: INITIAL_ADMIN_PW
             value: {{ required "initialAccount.password" .Values.initialAccount.password }}
-          {{ end }}
+          {{- end }}
+          {{- if eq .Values.database.type "sqlite" }}
+          - name: DB_FLAVOR
+            value: sqlite
+          {{- else if eq .Values.database.type "mysql" }}
+          - name: DB_FLAVOR
+            value: mysql
+          - name: DB_USER
+            value: {{ required "database.mysql.user" .Values.database.mysql.user }}
+          - name: DB_PW
+            value: {{ required "database.mysql.password" .Values.database.mysql.password }}
+          - name: DB_NAME
+            value: {{ required "database.mysql.database" .Values.database.mysql.database }}
+          - name: DB_HOST
+            {{- if .Values.database.host }}
+            value: {{ .Values.database.host }}
+            {{- end }}
+            value: {{ include "mailu.fullname" . }}-mysql
+          {{- else }}
+          value: {{ required "database.type must be one of sqlite/mysql" .None }}
+          {{- end }}
         ports:
           - name: http
             containerPort: 80

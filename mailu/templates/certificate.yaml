@@ -1,7 +1,11 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
 
+{{ if default false .Values.certManagerPre011 }}
 apiVersion: certmanager.k8s.io/v1alpha1
+{{ else }}
+apiVersion: cert-manager.io/v1alpha2
+{{ end }}
 kind: Certificate
 metadata:
   name: {{ include "mailu.fullname" . }}-certificates

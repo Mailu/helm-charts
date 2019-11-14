@@ -19,6 +19,7 @@ spec:
 {{- else }}
   storageClassName: {{ .Values.persistence.storageClass }}
 {{- end }}
+{{- end }}
 
 {{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
 ---
