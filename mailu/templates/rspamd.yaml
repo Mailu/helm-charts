@@ -10,6 +10,10 @@ kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-rspamd
 spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: rspamd
   replicas: 1
   template:
     metadata:

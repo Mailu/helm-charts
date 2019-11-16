@@ -9,6 +9,10 @@ kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-redis
 spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: redis
   replicas: 1
   template:
     metadata:
