@@ -9,6 +9,10 @@ kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-admin
 spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: admin
   replicas: 1
   template:
     metadata:

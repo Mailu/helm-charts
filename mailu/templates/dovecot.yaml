@@ -9,6 +9,10 @@ kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-dovecot
 spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: dovecot
   replicas: 1
   template:
     metadata:
