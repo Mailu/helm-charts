@@ -80,10 +80,33 @@ spec:
           limits:
             memory: {{ default "500Mi" .Values.dovecot.resources.limits.memory }}
             cpu: {{ default "500m" .Values.dovecot.resources.limits.cpu }}
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
 ---
 
