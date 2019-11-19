@@ -43,10 +43,30 @@ spec:
           - name: clamav
             containerPort: 3310
             protocol: TCP
+        livenessProbe:
+          # give it 10 minutes for initial freshclam update
+          exec:
+            command:
+              - /health.sh
+          periodSeconds: 10
+          failureThreshold: 60
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
 ---
 
