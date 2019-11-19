@@ -39,10 +39,33 @@ spec:
           limits:
             memory: {{ default "300Mi" .Values.redis.resources.limits.memory }}
             cpu: {{ default "200m" .Values.redis.resources.limits.cpu }}
+        livenessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
 ---
 
