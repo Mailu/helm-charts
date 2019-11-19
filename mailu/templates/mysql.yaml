@@ -46,13 +46,10 @@ spec:
           - name: mysql
             containerPort: 3306
             protocol: TCP
+        {{- with .Values.front.resources }}
         resources:
-          requests:
-            memory: {{ default "256Mi" .Values.mysql.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.mysql.resources.requests.cpu }}
-          limits:
-            memory: {{ default "512Mi" .Values.mysql.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.mysql.resources.limits.cpu }}
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           exec:
             command:

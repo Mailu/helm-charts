@@ -25,13 +25,6 @@ spec:
       - name: clamav
         image: {{ .Values.clamav.image.repository }}:{{ default .Values.mailuVersion .Values.clamav.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "1Gi" .Values.clamav.resources.requests.memory }}
-            cpu: {{ default "1000m" .Values.clamav.resources.requests.cpu }}
-          limits:
-            memory: {{ default "2Gi" .Values.clamav.resources.limits.memory }}
-            cpu: {{ default "1000m" .Values.clamav.resources.limits.cpu }}
         volumeMounts:
           - name: data
             subPath: clamav
@@ -43,6 +36,10 @@ spec:
           - name: clamav
             containerPort: 3310
             protocol: TCP
+        {{- with .Values.clamav.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           # give it 10 minutes for initial freshclam update
           exec:

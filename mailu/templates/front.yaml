@@ -111,13 +111,10 @@ spec:
           - name: http
             containerPort: 80
             protocol: TCP
+        {{- with .Values.front.resources }}
         resources:
-          requests:
-            memory: {{ default "100Mi" .Values.front.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.front.resources.requests.cpu }}
-          limits:
-            memory: {{ default "200Mi" .Values.front.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.front.resources.limits.cpu }}
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /health

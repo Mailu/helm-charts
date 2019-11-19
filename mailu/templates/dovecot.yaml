@@ -73,13 +73,10 @@ spec:
           - name: sieve
             containerPort: 4190
             protocol: TCP
+        {{- with .Values.dovecot.resources }}
         resources:
-          requests:
-            memory: {{ default "500Mi" .Values.dovecot.resources.requests.memory }}
-            cpu: {{ default "500m" .Values.dovecot.resources.requests.cpu }}
-          limits:
-            memory: {{ default "500Mi" .Values.dovecot.resources.limits.memory }}
-            cpu: {{ default "500m" .Values.dovecot.resources.limits.cpu }}
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           exec:
             command:

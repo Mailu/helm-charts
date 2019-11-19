@@ -24,13 +24,6 @@ spec:
       - name: roundcube
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "100Mi" .Values.roundcube.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.roundcube.resources.requests.cpu }}
-          limits:
-            memory: {{ default "200Mi" .Values.roundcube.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.roundcube.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /data
             name: data
@@ -47,6 +40,10 @@ spec:
         ports:
           - name: http
             containerPort: 80
+        {{- with .Values.roundcube.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /

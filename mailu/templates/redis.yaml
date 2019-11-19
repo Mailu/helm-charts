@@ -32,13 +32,10 @@ spec:
           - containerPort: 6379
             name: redis
             protocol: TCP
+        {{- with .Values.redis.resources }}
         resources:
-          requests:
-            memory: {{ default "200Mi" .Values.redis.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.redis.resources.requests.cpu }}
-          limits:
-            memory: {{ default "300Mi" .Values.redis.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.redis.resources.limits.cpu }}
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           exec:
             command:

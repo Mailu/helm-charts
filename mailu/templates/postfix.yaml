@@ -24,13 +24,6 @@ spec:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "2Gi" .Values.postfix.resources.requests.memory }}
-            cpu: {{ default "500m" .Values.postfix.resources.requests.cpu }}
-          limits:
-            memory: {{ default "2Gi" .Values.postfix.resources.limits.memory }}
-            cpu: {{ default "500m" .Values.postfix.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /queue
             name: data
@@ -71,6 +64,10 @@ spec:
           - name: smtp-auth
             containerPort: 10025
             protocol: TCP
+        {{- with .Values.postfix.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           exec:
             command:
