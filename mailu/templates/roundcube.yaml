@@ -43,7 +43,7 @@ spec:
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
           - name: SECRET_KEY
-            value: hie4tahZei4Rie4
+            value: "{{ required "secretKey" .Values.secretKey }}"
         ports:
           - name: http
             containerPort: 80
