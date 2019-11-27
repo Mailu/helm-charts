@@ -46,22 +46,38 @@ spec:
           - name: mysql
             containerPort: 3306
             protocol: TCP
+        {{- with .Values.front.resources }}
         resources:
-          requests:
-            memory: {{ default "256Mi" .Values.mysql.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.mysql.resources.requests.cpu }}
-          limits:
-            memory: {{ default "512Mi" .Values.mysql.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.mysql.resources.limits.cpu }}
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
   strategy:
+    # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+      maxUnavailable: 1
+      maxSurge: 0
 
 ---
 

@@ -24,13 +24,6 @@ spec:
       - name: roundcube
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "100Mi" .Values.roundcube.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.roundcube.resources.requests.cpu }}
-          limits:
-            memory: {{ default "200Mi" .Values.roundcube.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.roundcube.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /data
             name: data
@@ -43,14 +36,37 @@ spec:
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
           - name: SECRET_KEY
-            value: hie4tahZei4Rie4
+            value: "{{ required "secretKey" .Values.secretKey }}"
         ports:
           - name: http
             containerPort: 80
+        {{- with .Values.roundcube.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 5
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
 ---
 apiVersion: v1

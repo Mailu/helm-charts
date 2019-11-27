@@ -24,13 +24,6 @@ spec:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "2Gi" .Values.postfix.resources.requests.memory }}
-            cpu: {{ default "500m" .Values.postfix.resources.requests.cpu }}
-          limits:
-            memory: {{ default "2Gi" .Values.postfix.resources.limits.memory }}
-            cpu: {{ default "500m" .Values.postfix.resources.limits.cpu }}
         volumeMounts:
           - mountPath: /queue
             name: data
@@ -58,7 +51,6 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
-
         ports:
           - name: smtp
             containerPort: 25
@@ -72,10 +64,37 @@ spec:
           - name: smtp-auth
             containerPort: 10025
             protocol: TCP
+        {{- with .Values.postfix.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fullname" . }}-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
 
 ---
 

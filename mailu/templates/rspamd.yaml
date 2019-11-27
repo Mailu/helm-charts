@@ -25,13 +25,6 @@ spec:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
         imagePullPolicy: Always
-        resources:
-          requests:
-            memory: {{ default "100Mi" .Values.rspamd.resources.requests.memory }}
-            cpu: {{ default "100m" .Values.rspamd.resources.requests.cpu }}
-          limits:
-            memory: {{ default "200Mi" .Values.rspamd.resources.limits.memory }}
-            cpu: {{ default "200m" .Values.rspamd.resources.limits.cpu }}
         volumeMounts:
           - name: data
             subPath: rspamd
@@ -59,6 +52,10 @@ spec:
           - name: rspamd-http
             containerPort: 11334
             protocol: TCP
+        {{- with .Values.rspamd.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: /
