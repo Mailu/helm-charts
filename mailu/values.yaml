@@ -93,7 +93,7 @@ admin:
 redis:
   image:
     repository: redis
-    tag: 4.0-alpine
+    tag: 5-alpine
   resources:
     requests:
       memory: 200Mi
