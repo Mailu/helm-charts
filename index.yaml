@@ -3,7 +3,16 @@ entries:
   mailu:
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2019-11-28T20:28:56.917446161Z"
+    created: "2020-01-23T21:16:15.982056514Z"
+    description: Mailu mail system
+    digest: b116b48b161f46f9f836769c6100958db95e65d173f52a1a152d1c2276dcd3a9
+    name: mailu
+    urls:
+    - https://mailu.github.io/helm-charts/mailu-0.0.4.tgz
+    version: 0.0.4
+  - apiVersion: v1
+    appVersion: "1.8"
+    created: "2020-01-23T21:16:15.98115095Z"
     description: Mailu mail system
     digest: 9f4a4ffc80d94f3c49b2e0a80c7cc3a98d3944cb9b118d6638b701eab10eadad
     name: mailu
@@ -12,7 +21,7 @@ entries:
     version: 0.0.3
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2019-11-28T20:28:56.916433721Z"
+    created: "2020-01-23T21:16:15.98036516Z"
     description: Mailu mail system
     digest: 2c6e3733a5aa899cfb34b583b4d11df0afd919970c1f0c49cecdb9e53aead43c
     name: mailu
@@ -21,11 +30,11 @@ entries:
     version: 0.0.2
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2019-11-28T20:28:56.915453519Z"
+    created: "2020-01-23T21:16:15.97971545Z"
     description: Mailu mail system
     digest: b445932d76377ec97a033be84d24e45d8234b751d219f8bf9db485d84697b757
     name: mailu
     urls:
     - https://mailu.github.io/helm-charts/mailu-0.0.1.tgz
     version: 0.0.1
-generated: "2019-11-28T20:28:56.913692611Z"
+generated: "2020-01-23T21:16:15.979105732Z"
