@@ -53,7 +53,7 @@ spec:
 # endregion Choice 1: hostPath
 
 # region Choice 2: existingClaim
-{{- if (and (eq "existingClaim" .Values.persistence.type)) .Values.persistence.existingClaim) }}
+{{- if (and (eq "existingClaim" .Values.persistence.type) .Values.persistence.existingClaim) }}
   persistentVolumeClaim:
 {{- with .Values.persistence.existingClaim }}
     claimName: {{ tpl . $ }}
