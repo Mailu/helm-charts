@@ -3,12 +3,22 @@ entries:
   mailu:
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2020-01-25T16:41:07.782612+01:00"
+    created: "2020-01-25T16:44:07.737209+01:00"
     description: Mailu mail system
-    digest: 0b8c7cb2d407563930b87310bf07743b75f5a2ace8fc6063ba9363440b2e4df1
+    digest: 288bec1a4b56b12a18d4567578e0168ef675a43e9c0ec24d99a22e86a995f6ce
     icon: https://mailu.io/1.7/_images/logo.png
     name: mailu
     urls:
     - https://soriyath.github.io/helm-charts/mailu-0.0.4.tgz
     version: 0.0.4
-generated: "2020-01-25T16:41:07.779859+01:00"
+  - apiVersion: v1
+    appVersion: "1.8"
+    created: "2020-01-25T16:44:07.735556+01:00"
+    description: Mailu mail system
+    digest: 0b8c7cb2d407563930b87310bf07743b75f5a2ace8fc6063ba9363440b2e4df1
+    icon: https://mailu.io/1.7/_images/logo.png
+    name: mailu
+    urls:
+    - https://soriyath.github.io/helm-charts/mailu-0.0.3.tgz
+    version: 0.0.3
+generated: "2020-01-25T16:44:07.733503+01:00"
