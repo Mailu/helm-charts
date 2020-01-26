@@ -29,7 +29,7 @@ Create the claimName: existingClaim if provided, otherwise mailu-storage (or oth
 */}}
 {{- define "mailu.claimName" -}}
 {{- if (eq "existingClaim" .Values.persistence.type) -}}
-{{- .Values.existingClaim | trimSuffix "-" -}}
+{{- .Values.persistence.existingClaim | trimSuffix "-" -}}
 {{- else -}}
 {{ include "mailu.fullname" . }}-storage
 {{- end -}}
