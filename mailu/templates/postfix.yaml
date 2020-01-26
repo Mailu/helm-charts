@@ -89,7 +89,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.fullname" . }}-storage
+            claimName: {{ include "mailu.claimName" . }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

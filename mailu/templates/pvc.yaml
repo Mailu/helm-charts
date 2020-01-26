@@ -1,14 +1,14 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
 
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
 # region PVC
 # create new PVC for hostPath persistence.type
-{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "mailu.fullname" . }}-storage
+  name: {{ include "mailu.claimName" . }}
 spec:
-  volumeName: {{ include "mailu.fullname" . }}-storage
+  volumeName: {{ include "mailu.claimName" . }}
   accessModes:
     - ReadWriteMany
   resources:
@@ -21,51 +21,26 @@ spec:
   storageClassName: {{ .Values.persistence.storageClass }}
 {{- end }}
 {{- end }}
-{{- end }}
 # endregion
 
 # region PV
-# region Common settings
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-{{- if (eq "hostPath" .Values.persistence.type) }}
-  name: {{ include "mailu.fullname" . }}-storage
-{{- else if (eq "existingClaim" .Values.persistence.type) }}
-  name: {{ .Values.persistence.existingVolume }}
-{{- end }}
+  name: {{ include "mailu.claimName" . }}
 spec:
   capacity:
     storage: {{ .Values.persistence.size }}
   accessModes:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
-# endregion Common settings
-
-# Choose a valid persistence.type: either hostPath (default) or existingClaim
-{{- required "persistence.type (hostPath | existingClaim)" .Values.persistence.type}}
-
-# region Choice 1: hostPath
-# in case of hostPath we create the Volume directly because there's no official hostPath provisioner
 {{- if (eq "hostPath" .Values.persistence.type) }}
   volumeMode: Filesystem
   hostPath:
     path: {{ required "persistence.hostPath" .Values.persistence.hostPath }}
     type: DirectoryOrCreate
 {{- end }}
-# endregion Choice 1: hostPath
-
-# region Choice 2: existingClaim
-{{- if (and (eq "existingClaim" .Values.persistence.type) .Values.persistence.existingClaim) }}
-  persistentVolumeClaim:
-{{- with .Values.persistence.existingClaim }}
-    claimName: {{ tpl . $ }}
-{{- end }}
-{{- end}}
-# endregion Choice 2: existingClaim
-
-  # region nodeAffinity
   {{ if .Values.nodeSelector }}
   nodeAffinity:
     required:
@@ -78,5 +53,5 @@ spec:
             - "{{ $v }}"
         {{- end }}
   {{- end }}
-  # endregion nodeAffinity
 # endregion PV
+{{- end }}
