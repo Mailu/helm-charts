@@ -38,5 +38,6 @@
 | `persistence.hostPath`             | path of the hostPath persistence                                                                                                  | not set                                                        |
 | `persistence.storageClass`         | storageClass to use for persistence (mutually exclusive with `hostPath` choice)                                                   | not set                                                        |
 | `persistence.existingClaim`        | existing PVC (mutually exclusive with `hostPath`, mandatory for `existingClaim` persistence type)                                 | not set                                                        |
+| `persistence.existingVolume`       | existing PV (mandatory when using `existingClaim` persistence type)                                                               | not set                                                        |
 
 ... TBD
