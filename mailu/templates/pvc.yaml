@@ -30,7 +30,11 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+{{- if (eq "hostPath" .Values.persistence.type) }}
   name: {{ include "mailu.fullname" . }}-storage
+{{- else if (eq "existingClaim" .Values.persistence.type) }}
+  name: {{ .Values.persistence.existingVolume }}
+{{- end }}
 spec:
   capacity:
     storage: {{ .Values.persistence.size }}
