@@ -1,16 +1,16 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
 
-#region PVC
+# region PVC
+# create new PVC for hostPath persistence.type
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "mailu.fullname" . }}-storage
 spec:
+  volumeName: {{ include "mailu.fullname" . }}-storage
   accessModes:
     - ReadWriteMany
-{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
-  volumeName: {{ include "mailu.fullname" . }}-storage
-{{- end }}
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
@@ -21,7 +21,8 @@ spec:
   storageClassName: {{ .Values.persistence.storageClass }}
 {{- end }}
 {{- end }}
-#endregion
+{{- end }}
+# endregion
 
 # region PV
 # region Common settings
@@ -31,7 +32,6 @@ kind: PersistentVolume
 metadata:
   name: {{ include "mailu.fullname" . }}-storage
 spec:
-  name: {{ include "mailu.fullname" . }}-storage # may not work maybe
   capacity:
     storage: {{ .Values.persistence.size }}
   accessModes:
