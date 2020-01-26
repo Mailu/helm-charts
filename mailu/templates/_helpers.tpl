@@ -25,6 +25,17 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Create the claimName: existingClaim if provided, otherwise mailu-storage (or other fullname if overriden)
+*/}}
+{{- define "mailu.claimName" -}}
+{{- if (eq "existingClaim" .Values.persistence.type) -}}
+{{- .Values.existingClaim | trimSuffix "-" -}}
+{{- else -}}
+{{ include "mailu.fullname" . }}-storage
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "mailu.chart" -}}
