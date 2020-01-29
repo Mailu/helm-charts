@@ -1,16 +1,18 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
 
-{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
+{{- if ( not ( eq "existingClaim" (required "persistence.type" .Values.persistence.type))) }}
 # region PVC
 # create new PVC for hostPath persistence.type
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "mailu.claimName" . }}
+  name: {{ include "mailu.fullname" . }}-storage
 spec:
-  volumeName: {{ include "mailu.claimName" . }}
   accessModes:
     - ReadWriteMany
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
+  volumeName: {{ include "mailu.fullname" . }}-storage
+{{- end }}
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
@@ -24,6 +26,8 @@ spec:
 # endregion
 
 # region PV
+# in case of hostPath we create the Volume directly because there's no official hostPath provisioner
+{{- if ( eq "hostPath" (required "persistence.type" .Values.persistence.type)) }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -53,5 +57,6 @@ spec:
             - "{{ $v }}"
         {{- end }}
   {{- end }}
+{{- end }}
 # endregion PV
 {{- end }}
