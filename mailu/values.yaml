@@ -28,7 +28,7 @@ database:
 # Set the host to use an external database.
 # If not host is set, a database instance is created by this chart.
 #   type: mysql
-#  mysql:
+  mysql: {}
 #    database: mailu
 #    user: mailu
 #    password: chang3m3!
