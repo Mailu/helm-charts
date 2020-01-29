@@ -71,7 +71,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.fullname" . }}-storage
+            claimName: {{ include "mailu.claimName" . }}
   strategy:
     # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
     type: RollingUpdate
