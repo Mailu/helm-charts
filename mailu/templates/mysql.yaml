@@ -1,4 +1,4 @@
-{{ if and (eq .Values.database.type "mysql") (not .Values.database.host) }}
+{{ if and (eq .Values.database.type "mysql") (not .Values.database.mysql.host) }}
 
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1

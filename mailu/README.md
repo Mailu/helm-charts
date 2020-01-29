@@ -3,7 +3,7 @@
 ## Prerequisites
 
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
-* cert-manager installed and configured (including a working cert issuer)
+* cert-manager v0.12 or higher installed and configured (including a working cert issuer).  
 * A node which has a public reachable IP address because mail service binds directly to the node's IP
     * alternatively, inbound traffic routing for mail must be setup externally
 

@@ -57,7 +57,7 @@ spec:
           - name: WEBMAIL_ADDRESS
             value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.cluster.local
           - name: MESSAGE_SIZE_LIMIT
-            value: "{{ mul .Values.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+            value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
           - name: WEB_WEBMAIL
             value: "/"
           - name: WEBDAV

@@ -2,23 +2,30 @@ language: generic
 fail_fast: true
 install:
   - >
-    curl -s -L https://get.helm.sh/helm-v2.15.2-linux-amd64.tar.gz
+    curl -s -L https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz
+    | tar xfvz - --strip-components=1 linux-amd64/helm
+  - chmod 0700 helm; mv helm helm3
+  - >
+    curl -s -L https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm
-  - echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa
-  - chmod 0600 ~/.ssh/id_rsa
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa'
 script:
   - set -e
   - mkdir -p out
   - ./helm init --client-only
-  - git clone --branch gh-pages git@github.com:Mailu/helm-charts.git repo
-  - ./helm package mailu -d repo
-  - ./helm repo index --url https://mailu.github.io/helm-charts/ repo
-  - cd repo
-  - ./index.html.sh > index.html
-  - git add .
-  - git commit -m "Travis build"
-  - git push
+  - ./helm lint --strict --values mailu/helm-lint-values.yaml mailu
+  - ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
+  - >
+    [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
+    git clone --branch gh-pages git@github.com:Mailu/helm-charts.git repo &&
+    ./helm package mailu -d repo &&
+    ./helm repo index --url https://mailu.github.io/helm-charts/ repo &&
+    cd repo &&
+    ./index.html.sh > index.html &&
+    git add . &&
+    git commit -m "Travis build" &&
+    git push
 
 branches:
   only:

@@ -1,0 +1,71 @@
+# Values to be used for "helm lint --strict --values helm-lint-values.yaml"
+# The strict mode has a bug that fails with all missing values, even if "default" is used,
+# so we need to set defaults for everything. See https://github.com/helm/helm/issues/7483
+
+hostnames:
+ - mail.example.com
+ - imap.example.com
+
+domain: example.com
+
+initialAccount:
+  username: mailadmin
+  domain: mydomain.com
+  password: chang3m3!
+
+secretKey: chang3m3!
+
+passwordScheme: PBKDF2
+
+persistence:
+  storageClass: default
+  hostPath: /tmp/path/on/the/host
+
+database:
+  mysql:
+    database: mailu
+    user: mailu
+    password: chang3m3!
+    host: null
+    rootPassword: chang3m3!
+
+front:
+  logLevel: WARNING
+  image:
+    tag: master
+
+admin:
+  logLevel: WARNING
+  image:
+    tag: master
+
+postfix:
+  logLevel: WARNING
+  image:
+    tag: master
+
+dovecot:
+  logLevel: WARNING
+  image:
+    tag: master
+
+rspamd:
+  logLevel: INFO
+  image:
+    tag: master
+
+clamav:
+  logLevel: WARNING
+  image:
+    tag: master
+
+roundcube:
+  logLevel: WARNING
+  image:
+    tag: master
+
+
+webdav:
+  logLevel: WARNING
+  image:
+    tag: master
