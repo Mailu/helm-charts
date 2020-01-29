@@ -10,7 +10,7 @@ install:
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm
   - |
-    if [ -z "$GITHUB_SSH_KEY"]; then
+    if [ ! -z "$GITHUB_SSH_KEY"]; then
       echo "Adding deployment ssh key"
       echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa
     fi
@@ -20,17 +20,17 @@ script:
   - ./helm init --client-only
   - ./helm lint --strict --values mailu/helm-lint-values.yaml mailu
   - ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
-  - >
-    [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
-    git clone --branch gh-pages git@github.com:Mailu/helm-charts.git repo &&
-    ./helm package mailu -d repo &&
-    ./helm repo index --url https://mailu.github.io/helm-charts/ repo &&
-    cd repo &&
-    ./index.html.sh > index.html &&
-    git add . &&
-    git commit -m "Travis build" &&
-    git push ||
-    /bin/true
+  - |
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+      git clone --branch gh-pages git@github.com:Mailu/helm-charts.git repo
+      ./helm package mailu -d repo
+      ./helm repo index --url https://mailu.github.io/helm-charts/ repo
+      cd repo
+      ./index.html.sh > index.html
+      git add .
+      git commit -m "Travis build"
+      git push
+    fi
 
 branches:
   only:
