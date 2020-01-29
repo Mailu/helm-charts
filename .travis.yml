@@ -9,11 +9,11 @@ install:
     curl -s -L https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm
-  - echo -e "$GITHUB_SSH_KEY" | wc -c
-  - >
-    [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
-    echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa ||
-    /bin/true
+  - |
+    if [ -z "$GITHUB_SSH_KEY"]; then
+      echo "Adding deployment ssh key"
+      echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa
+    fi
 script:
   - set -e
   - mkdir -p out
@@ -29,7 +29,8 @@ script:
     ./index.html.sh > index.html &&
     git add . &&
     git commit -m "Travis build" &&
-    git push
+    git push ||
+    /bin/true
 
 branches:
   only:
