@@ -12,7 +12,8 @@ install:
   - echo -e "$GITHUB_SSH_KEY" | wc -c
   - >
     [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
-    echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa
+    echo -e "$GITHUB_SSH_KEY" | base64 -d > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/id_rsa ||
+    /bin/true
 script:
   - set -e
   - mkdir -p out
