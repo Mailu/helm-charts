@@ -43,7 +43,7 @@ When leaving the default persistence type (`hostPath`), it will create and use a
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
 | `persistence.type`                | type of persistence (`hostPath` or `existingClaim`) | `hostPath`                 |
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
-| `persistence.storageClass`        | storageClass to use for persistence (mutually exclusive with `hostPath` choice) | not set |
+| `persistence.storageClass`        | storageClass to use for persistence (unused for persistence type `existingClaim`) | not set |
 | `persistence.existingClaim`       | existing PVC (mutually exclusive with `hostPath`, mandatory for `existingClaim` persistence type) | not set |
 
 ... TBD
