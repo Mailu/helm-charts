@@ -174,9 +174,16 @@ roundcube:
 webdav:
   # logLevel: WARNING
   image:
-    repository: mailu/clamav
+    repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 200m
 
 mysql:
   image:

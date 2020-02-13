@@ -64,7 +64,6 @@ roundcube:
   image:
     tag: master
 
-
 webdav:
   logLevel: WARNING
   image:

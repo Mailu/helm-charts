@@ -1,0 +1,34 @@
+{{- $fullname := (include "mailu.fullname" .) }}
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: http://{{ $fullname }}-admin.{{ .Release.Namespace }}.svc.cluster.local/internal/auth/basic
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/webdav/(.*) /$1 break;
+      auth_request_set $user $upstream_http_x_user;
+      proxy_set_header X-Remote-User $user;
+      proxy_set_header X-Script-Name /webdav;
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  labels:
+    app: {{ $fullname }}
+    component: webdav
+  name: mailu-webdav-ingress
+spec:
+{{- range .Values.hostnames }}
+  rules:
+  - host: "{{ . }}"
+    http:
+      paths:
+      - path: "/webdav"
+        backend:
+          serviceName: {{ $fullname }}-webdav
+          servicePort: 5232
+{{- end }}
+  tls:
+  - secretName: {{ $fullname }}-certificates
+    hosts:
+{{- range .Values.hostnames }}
+    - "{{ . }}"
+{{- end }}
