@@ -25,11 +25,13 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create the claimName: existingClaim if provided, otherwise mailu-storage (or other fullname if overriden)
+Create the claimName: existingClaim if provided, otherwise claimNameOverride if provided, otherwise mailu-storage (or other fullname if overriden)
 */}}
 {{- define "mailu.claimName" -}}
-{{- if (eq "existingClaim" .Values.persistence.type) -}}
-{{- .Values.persistence.existingClaim | trimSuffix "-" -}}
+{{- if .Values.persistence.existingClaim -}}
+{{- .Values.persistence.existingClaim -}}
+{{- else if .Values.persistence.claimNameOverride -}}
+{{- .Values.persistence.claimNameOverride -}}
 {{- else -}}
 {{ include "mailu.fullname" . }}-storage
 {{- end -}}

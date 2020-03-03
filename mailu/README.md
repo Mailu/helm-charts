@@ -41,9 +41,24 @@ When leaving the default persistence type (`hostPath`), it will create and use a
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
-| `persistence.type`                | type of persistence (`hostPath` or `existingClaim`) | `hostPath`                 |
+| `persistence.storageClass`        | storageClass to use for persistence  | not set                                   |
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
-| `persistence.storageClass`        | storageClass to use for persistence (unused for persistence type `existingClaim`) | not set |
-| `persistence.existingClaim`       | existing PVC (mutually exclusive with `hostPath`, mandatory for `existingClaim` persistence type) | not set |
+| `persistence.existingClaim`       | existing PVC                         | not set                                   |
+| `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 
-... TBD
+## Persistence
+
+### hostPath persistence
+
+If `persistence.hostPath` is set, a path on the host is used for persistence. This overrides all other persistence options.
+
+### PVC with existing claim
+
+If `persistence.existingClaim` is set, not PVC is created and the PCV with the given name is being used.
+
+### PVC with automatic provisioning
+
+If neither `persistence.hostPath` nor `persistence.existingClaim` is set, a new PVC is created. The name of the claim is generated but it
+can be overridden with `persistence.claimNameOverride`.
+
+The `persistence.storageClass` is not set by default. It can be set to `-` to have an empty storageClassName or to anything else to use this name.
