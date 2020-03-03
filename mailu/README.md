@@ -14,14 +14,6 @@
 * create a local values file (see below)
 * run `helm install --values my-values-file.yaml mailu/mailu`
 
-### Persistent Volume
-
-This chart uses a `hostPath` persistence per default, and sets corresponding new PV and PVC automatically.
-You can override this behaviour by providing your own PV/PVC using the `existingClaim` persistence type per default.
-By default, it uses the chart name as the default app name, unless specified with the `fullnameOverride` parameter (truncated after 63 characters).
-
-When leaving the default persistence type (`hostPath`), it will create and use a PV/PVC named like so: app_name-storage (e.g. `mailu-storage`).
-
 ## Configuration
 | Parameter                         | Description                          | Default                                   |
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
@@ -45,6 +37,26 @@ When leaving the default persistence type (`hostPath`), it will create and use a
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
+
+### Example values.yaml to get started
+
+```yaml
+domain: mail.mydomain.com
+hostnames:
+- mail.mydomain.com
+initialAccount:
+  domain: mail.mydomain.com
+  password: chang3m3!
+  username: mailadmin
+logLevel: INFO
+mail:
+  authRatelimit: 100/minute;3600/hour
+  messageSizeLimitInMegabytes: 200
+persistence:
+  size: 100Gi
+  storageClass: fast
+secretKey: chang3m3!
+```
 
 ## Persistence
 
