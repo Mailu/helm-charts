@@ -68,6 +68,12 @@ spec:
             value: "true"
           - name: WEB_ADMIN
             value: "/admin"
+          {{- if .Values.webdav.enabled }}
+          - name: WEBDAV
+            value: radicale
+          - name: WEBDAV_ADDRESS
+            value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.cluster.local:5232
+          {{- end }}
         ports:
           - name: pop3
             containerPort: 110

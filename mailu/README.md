@@ -37,6 +37,7 @@
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
+| `webdav.enabled`                  | enable webdav server                 | `false`                                   |
 
 ### Example values.yaml to get started
 

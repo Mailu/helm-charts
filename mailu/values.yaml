@@ -177,9 +177,10 @@ roundcube:
 
 
 webdav:
+  enabled: false
   # logLevel: WARNING
   image:
-    repository: mailu/clamav
+    repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
 
