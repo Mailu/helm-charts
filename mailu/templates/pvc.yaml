@@ -56,7 +56,7 @@ metadata:
   name: {{ include "mailu.claimName" . }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.accessMode }}
   resources:
     requests:
       storage: {{ .Values.persistence.size }}

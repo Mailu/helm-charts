@@ -41,6 +41,7 @@ database:
 
 persistence:
   size: 100Gi
+  accessMode: ReadWriteOnce
   #hostPath: /path/on/the/host
   #existingClaim: name-of-existing.claim
   #storageClass: "-"
