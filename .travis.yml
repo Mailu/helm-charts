@@ -2,13 +2,13 @@ language: generic
 fail_fast: true
 install:
   - >
-    curl -s -L https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz
+    curl -s -L https://get.helm.sh/helm-v3.1.1-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm; mv helm helm3
   - >
     curl -s -L https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
-  - chmod 0700 helm
+  - chmod 0700 helm; mv helm helm2
   - |
     if [ ! -z "$GITHUB_SSH_KEY" ]; then
       echo "Adding deployment ssh key"
@@ -16,17 +16,11 @@ install:
     fi
 script:
   - set -e
-  - mkdir -p out
-  - ./helm init --client-only
-  - ./helm lint --strict --values mailu/helm-lint-values.yaml mailu
-  - ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
+  - ./helm2 init --client-only
+  - ./pack_chart.sh
   - |
     if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then
-      git clone --branch gh-pages git@github.com:Mailu/helm-charts.git repo
-      ./helm package mailu -d repo
-      ./helm repo index --url https://mailu.github.io/helm-charts/ repo
-      cd repo
-      ./index.html.sh > index.html
+      cd gh-pages
       git add .
       git commit -m "Travis build"
       git push
