@@ -19,7 +19,9 @@ passwordScheme: PBKDF2
 
 persistence:
   storageClass: default
-  hostPath: /tmp/path/on/the/host
+  claimNameOverride: null
+  existingClaim: null
+  hostPath: null
 
 database:
   mysql:
