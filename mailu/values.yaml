@@ -22,7 +22,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 nodeSelector: {}
-imagePullSecrets: {}
 
 database:
 # default database is an embedded sqlite
