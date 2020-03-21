@@ -61,6 +61,8 @@ mail:
 
 # certmanager settings
 certmanager:
+  # apiVersion: certificates.k8s.io/v1beta1
+  apiVersion: cert-manager.io/v1alpha2
   issuerType: ClusterIssuer
   issuerName: letsencrypt
 
