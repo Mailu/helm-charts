@@ -61,8 +61,23 @@ mail:
 
 # certmanager settings
 certmanager:
+  enabled: false
+  # leave emty for default value
+  #apiVersion: cert-manager.io/v1alpha3
+  apiVersion:
+  # leave emty for default value. If set one, make sure to set the same for ingress.secretName
+  #secretName: &secretName wildcard-cert-secret
+  secretName:
+  # ClusterIssuer or Issuer
   issuerType: ClusterIssuer
+  # issuer name set in cert manager deployment
   issuerName: letsencrypt
+
+ingress:
+  enabled: false
+  # leave emty for default value
+  #secretName: *secretName
+  secretName:
 
 # Frontend load balancer for non-HTTP(s) services
 front:
@@ -72,7 +87,7 @@ front:
     # tag defaults to mailuVersion
     # tag: master
   resources:
-    requests: 
+    requests:
       memory: 100Mi
       cpu: 100m
     limits:

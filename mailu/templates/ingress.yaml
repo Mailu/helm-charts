@@ -1,5 +1,6 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin-ingress.yaml
 
+{{- if .Values.ingress.enabled }}
 {{- $fullname := (include "mailu.fullname" .) }}
 
 apiVersion: extensions/v1beta1
@@ -13,7 +14,7 @@ metadata:
     component: admin
 spec:
   tls:
-  - secretName: {{ $fullname }}-certificates
+  - secretName: "{{ include "mailu.ingressSecretName" . }}"
     hosts:
 {{- range .Values.hostnames }}
     - "{{ . }}"
@@ -27,4 +28,5 @@ spec:
         backend:
           serviceName: {{ $fullname }}-front
           servicePort: 80
+{{- end }}
 {{- end }}

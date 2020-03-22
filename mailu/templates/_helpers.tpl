@@ -56,3 +56,26 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Certmanager secretName template
+*/}}
+{{- define "mailu.certManagerSecretName" -}}
+{{- if .Values.certmanager.secretName -}}
+{{- .Values.certmanager.secretName | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $fullname := include "mailu.fullname" . -}}
+{{- printf "%s-%s" $fullname "certificates" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{/*
+Ingress secretName template
+*/}}
+{{- define "mailu.ingressSecretName" -}}
+{{- if .Values.ingress.secretName -}}
+{{- .Values.ingress.secretName | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $fullname := include "mailu.fullname" . -}}
+{{- printf "%s-%s" $fullname "certificates" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
