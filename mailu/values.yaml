@@ -33,19 +33,34 @@ tolerations: {}
 affinity: {}
 
 database:
-# default database is an embedded sqlite
+  # type of the database for mailu (sqlite or mysql)
+  # default database is an embedded sqlite
+  # for mysql, see settings below
   type: sqlite
+
+  # type of the database for roundcube (sqlite or mysql)
+  # default database is an embedded sqlite
+  # for mysql, see settings below
+  roundcubeType: sqlite
 
 # For mysql/mariadb use the following config:
 # Set the host to use an external database.
 # If not host is set, a database instance is created by this chart.
 #   type: mysql
   mysql: {}
+#    host: external-db-hostname
+    # root password for mysql database
+#    rootPassword: chang3m3! # can only be set for embedded mysql
+
+    # settings for mailu (required if mailu database type is "mysql")
 #    database: mailu
 #    user: mailu
 #    password: chang3m3!
-#    host: external-db-hostname
-#    rootPassword: chang3m3! # can only be set for embedded mysql
+
+    # settings for roundcube (required if roundcube database type is "mysql")
+#    roundcubeDatabase: roundcube
+#    roundcubeUser: roundcube
+#    roundcubePassword: chang3m3!
 
 persistence:
   size: 100Gi

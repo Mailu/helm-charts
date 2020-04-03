@@ -82,6 +82,8 @@ spec:
           - name: WEBDAV_ADDRESS
             value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:5232
           {{- end }}
+          - name: SUBNET
+            value: {{ .Values.subnet }}
         ports:
           - name: pop3
             containerPort: 110
