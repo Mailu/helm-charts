@@ -27,8 +27,8 @@
 | `secretKey`                       | Session encryption key for admin and webmail | not set                           |
 | `mail.messageSizeLimitInMegabytes`| Message size limit in Megabytes      | `50`                                      |
 | `mail.authRatelimit`              | Rate limit for authentication requests | `10/minute;1000/hour`                   |
-| `initialAccount.username`         | Local part (part after @) for initial admin account | not set                    |
-| `initialAccount.domain`           | Domain part (part before @) for initial admin account | not set                  |
+| `initialAccount.username`         | Local part (part before @) for initial admin account | not set                    |
+| `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                  |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
