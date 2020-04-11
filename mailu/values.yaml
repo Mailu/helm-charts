@@ -69,6 +69,11 @@ database:
     # roundcubeUser: roundcube
     # roundcubePassword: chang3m3!
 
+external_relay: {}
+#    relayhost: "[domain.tld]:port"
+#    relayuser: username
+#    relaypassword: SECRET
+
 persistence:
   size: 100Gi
   accessMode: ReadWriteOnce
