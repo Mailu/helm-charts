@@ -20,6 +20,7 @@
 | `mailuVersion`                    | Version/tag of mailu images          | `master`                                  |
 | `logLevel`                        | Level of logging                     | `WARNING`                                 |
 | `nameOverride`                    | Override the resource name prefix    | `mailu`                                   |
+| `clusterDomain`                   | Change the cluster DNS root          | `cluster.local`                           |
 | `fullnameOverride`                | Override the full resource names     | `mailu-{release-name}` (or `mailu` if release-name is `mailu`) |
 | `hostnames`                       | List of hostnames to generate certificates and ingresses for | not set           |
 | `domain`                          | Mail domain name, see https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames | not set |
