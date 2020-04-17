@@ -39,6 +39,8 @@
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
+| `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
+| `ingress.tlsFlavor`               | [Choose from these](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert`                                   |
 
 ### Example values.yaml to get started
 
@@ -76,3 +78,13 @@ If neither `persistence.hostPath` nor `persistence.existingClaim` is set, a new 
 can be overridden with `persistence.claimNameOverride`.
 
 The `persistence.storageClass` is not set by default. It can be set to `-` to have an empty storageClassName or to anything else to use this name.
+
+## Ingress
+
+The default ingress is handled externally. In some situations, this is problematic, such as when webmail should be accessible
+ on the same address as the exposed ports. Kubernetes services cannot provide such capabilities without vendor-specific annotations.
+ 
+By setting `ingress.externalIngress` to false, the internal NGINX instance provided by `front` will configure TLS according to
+ `ingress.tlsFlavor` and redirect `http` scheme connections to `https`. 
+ 
+ CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.

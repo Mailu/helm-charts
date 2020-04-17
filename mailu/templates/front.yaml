@@ -1,5 +1,6 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
 {{ if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" }}
 apiVersion: apps/v1
 {{ else }}
@@ -39,19 +40,19 @@ spec:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.front.logLevel }}
           - name: KUBERNETES_INGRESS
-            value: "true"
+            value: "{{ .Values.ingress.externalIngress }}"
           - name: TLS_FLAVOR
-            value: cert
+            value: {{ default "cert" .Values.ingress.tlsFlavor }}
           - name: HOSTNAMES
             value: "{{ join "," .Values.hostnames }}"
           - name: ADMIN_ADDRESS
-            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.cluster.local
+            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: ANTISPAM_WEBUI_ADDRESS
-            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.cluster.local:11334
+            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
           - name: WEBMAIL
             value: roundcube
           - name: WEBMAIL_ADDRESS
-            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.cluster.local
+            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
           - name: WEB_WEBMAIL
@@ -68,7 +69,7 @@ spec:
           - name: WEBDAV
             value: radicale
           - name: WEBDAV_ADDRESS
-            value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.cluster.local:5232
+            value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:5232
           {{- end }}
         ports:
           - name: pop3
@@ -189,3 +190,8 @@ spec:
   - name: http
     port: 80
     protocol: TCP
+{{ if not .Values.ingress.externalIngress }}
+  - name: http
+    port: 443
+    protocol: TCP
+{{end}}
