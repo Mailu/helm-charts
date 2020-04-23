@@ -148,6 +148,7 @@ rspamd:
       cpu: 200m
 
 clamav:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/clamav

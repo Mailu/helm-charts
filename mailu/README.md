@@ -40,6 +40,7 @@
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
+| `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 
 ### Example values.yaml to get started
 

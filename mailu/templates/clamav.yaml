@@ -1,6 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
 # (file is split into rspamd.yaml and clamav.yaml)
 
+{{- if .Values.clamav.enabled }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -86,3 +88,5 @@ spec:
   - name: clamav
     port: 3310
     protocol: TCP
+
+{{- end }}
