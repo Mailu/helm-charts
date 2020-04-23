@@ -44,10 +44,17 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.cluster.local
           - name: ANTISPAM_WEBUI_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.cluster.local:11334
+          {{- if .Values.roundcube.enabled }}
           - name: WEBMAIL
             value: roundcube
           - name: WEBMAIL_ADDRESS
             value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.cluster.local
+          {{- else }}
+          - name: WEBMAIL
+            value: none
+          - name: WEBMAIL_ADDRESS
+            value: localhost
+          {{- end }}
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
           - name: WEB_WEBMAIL

@@ -39,6 +39,7 @@
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
+| `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 
 ### Example values.yaml to get started
 

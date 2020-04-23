@@ -162,6 +162,7 @@ clamav:
       cpu: 1000m
 
 roundcube:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/roundcube
