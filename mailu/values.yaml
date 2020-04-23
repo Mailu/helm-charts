@@ -20,6 +20,7 @@
 
 nameOverride: ""
 fullnameOverride: ""
+clusterDomain: cluster.local
 
 nodeSelector: {}
 
@@ -63,6 +64,11 @@ mail:
 certmanager:
   issuerType: ClusterIssuer
   issuerName: letsencrypt
+
+# Set ingress and loadbalancer config
+ingress:
+  externalIngress: true
+  tlsFlavor: cert
 
 # Frontend load balancer for non-HTTP(s) services
 front:

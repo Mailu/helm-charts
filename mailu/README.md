@@ -20,6 +20,7 @@
 | `mailuVersion`                    | Version/tag of mailu images          | `master`                                  |
 | `logLevel`                        | Level of logging                     | `WARNING`                                 |
 | `nameOverride`                    | Override the resource name prefix    | `mailu`                                   |
+| `clusterDomain`                   | Change the cluster DNS root          | `cluster.local`                           |
 | `fullnameOverride`                | Override the full resource names     | `mailu-{release-name}` (or `mailu` if release-name is `mailu`) |
 | `hostnames`                       | List of hostnames to generate certificates and ingresses for | not set           |
 | `domain`                          | Mail domain name, see https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames | not set |
@@ -40,6 +41,8 @@
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
+| `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
+| `ingress.tlsFlavor`               | [Choose from these](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 
@@ -89,3 +92,12 @@ deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadW
 
 It's very likely that your PODs run on a different subnet than the default `10.42.0.0/16`. Set the `subnet` value to the correct subnet and try again.
 
+## Ingress
+
+The default ingress is handled externally. In some situations, this is problematic, such as when webmail should be accessible
+ on the same address as the exposed ports. Kubernetes services cannot provide such capabilities without vendor-specific annotations.
+ 
+By setting `ingress.externalIngress` to false, the internal NGINX instance provided by `front` will configure TLS according to
+ `ingress.tlsFlavor` and redirect `http` scheme connections to `https`. 
+ 
+ CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
