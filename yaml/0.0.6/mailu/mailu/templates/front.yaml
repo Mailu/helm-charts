@@ -47,27 +47,23 @@ spec:
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
 
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: mailu-front
-  labels:
-    app: mailu
-    component: front
 spec:
   selector:
     matchLabels:
       app: mailu
       component: front
+  replicas: 1
   template:
     metadata:
       labels:
         app: mailu
         component: front
     spec:
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 60
       containers:
       - name: front
         image: mailu/nginx:master
@@ -125,17 +121,15 @@ spec:
             containerPort: 25
             hostPort: 25
             protocol: TCP
-          - name: smtp-auth
-            containerPort: 10025
-            hostPort: 10025
-            protocol: TCP
-          - name: imap-auth
-            containerPort: 10143
-            hostPort: 10143
-            protocol: TCP
           - name: smtps
             containerPort: 465
             hostPort: 465
+            protocol: TCP
+          - name: smtp-auth
+            containerPort: 10025
+            protocol: TCP
+          - name: imap-auth
+            containerPort: 10143
             protocol: TCP
           - name: smtpd
             containerPort: 587
@@ -177,7 +171,10 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: mailu-certificates
-  updateStrategy:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
+      maxSurge: 0
