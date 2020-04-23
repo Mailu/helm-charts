@@ -91,17 +91,15 @@ spec:
             containerPort: 25
             hostPort: 25
             protocol: TCP
-          - name: smtp-auth
-            containerPort: 10025
-            hostPort: 10025
-            protocol: TCP
-          - name: imap-auth
-            containerPort: 10143
-            hostPort: 10143
-            protocol: TCP
           - name: smtps
             containerPort: 465
             hostPort: 465
+            protocol: TCP
+          - name: smtp-auth
+            containerPort: 10025
+            protocol: TCP
+          - name: imap-auth
+            containerPort: 10143
             protocol: TCP
           - name: smtpd
             containerPort: 587
