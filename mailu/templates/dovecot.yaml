@@ -20,6 +20,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: dovecot
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: admin
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}

@@ -21,6 +21,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: clamav
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: clamav
         image: {{ .Values.clamav.image.repository }}:{{ default .Values.mailuVersion .Values.clamav.image.tag }}

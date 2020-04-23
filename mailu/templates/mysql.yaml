@@ -20,6 +20,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: mysql
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: admin
         image: {{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}

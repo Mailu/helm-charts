@@ -21,6 +21,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: rspamd
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}

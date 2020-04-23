@@ -20,6 +20,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: roundcube
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: roundcube
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
