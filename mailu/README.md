@@ -37,6 +37,7 @@
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
 | `persistence.storageClass`        | storageClass to use for persistence  | not set                                   |
 | `persistence.accessMode`          | accessMode to use for persistence    | `ReadWriteOnce`                           |
+| `persistence.annotations`          | Annotations to use in the PVC.    | `{}`                           |
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
