@@ -6,8 +6,10 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullname }}-ingress
+{{- if .Values.ingress.annotations }}
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
   labels:
     app: {{ $fullname }}
     component: admin
