@@ -42,6 +42,8 @@ database:
 persistence:
   size: 100Gi
   accessMode: ReadWriteOnce
+  #annotations:
+  #  "helm.sh/resource-policy": keep
   #hostPath: /path/on/the/host
   #existingClaim: name-of-existing.claim
   #storageClass: "-"
