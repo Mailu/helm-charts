@@ -1,21 +1,19 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
-{{ if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" }}
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 {{ end }}
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-front
-  labels:
-    app: {{ include "mailu.fullname" . }}
-    component: front
 spec:
   selector:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
       component: front
+  replicas: 1
   template:
     metadata:
       labels:
@@ -26,8 +24,6 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 60
       containers:
       - name: front
         image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
@@ -138,10 +134,13 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: {{ include "mailu.fullname" . }}-certificates
-  updateStrategy:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
+      maxSurge: 0
 
 ---
 
