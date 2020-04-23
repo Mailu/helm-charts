@@ -26,6 +26,7 @@
 | `domain`                          | Mail domain name, see https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames | not set |
 | `passwordScheme`                  | Scheme used to hash passwords        | `PBKDF2`                                  |
 | `secretKey`                       | Session encryption key for admin and webmail | not set                           |
+| `subnet`                          | Subnet of PODs, used to configure from which IPs internal requests are allowed | `10.42.0.0/16` |
 | `mail.messageSizeLimitInMegabytes`| Message size limit in Megabytes      | `50`                                      |
 | `mail.authRatelimit`              | Rate limit for authentication requests | `10/minute;1000/hour`                   |
 | `initialAccount.username`         | Local part (part before @) for initial admin account | not set                    |
@@ -35,13 +36,15 @@
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
 | `persistence.storageClass`        | storageClass to use for persistence  | not set                                   |
-| `persistence.accessMode`          | accessMode to use for persistence    | `readWriteOnce`                           |
+| `persistence.accessMode`          | accessMode to use for persistence    | `ReadWriteOnce`                           |
 | `persistence.hostPath`            | path of the hostPath persistence     | not set                                   |
 | `persistence.existingClaim`       | existing PVC                         | not set                                   |
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
 | `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
 | `ingress.tlsFlavor`               | [Choose from these](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert`                                   |
+| `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
+| `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 
 ### Example values.yaml to get started
 
@@ -79,6 +82,15 @@ If neither `persistence.hostPath` nor `persistence.existingClaim` is set, a new 
 can be overridden with `persistence.claimNameOverride`.
 
 The `persistence.storageClass` is not set by default. It can be set to `-` to have an empty storageClassName or to anything else to use this name.
+
+All pods are using the same PV. This is not a technical but a historical limitation which could be changed in the future. If you plan to
+deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadWriteMany`.
+
+## Trouble shooting
+
+### All services are running but authentication fails for webmail and imap
+
+It's very likely that your PODs run on a different subnet than the default `10.42.0.0/16`. Set the `subnet` value to the correct subnet and try again.
 
 ## Ingress
 

@@ -21,6 +21,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: rspamd
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
@@ -39,10 +43,17 @@ spec:
             value: {{ include "mailu.fullname" . }}-front
           - name: REDIS_ADDRESS
             value: {{ include "mailu.fullname" . }}-redis
+          {{- if .Values.clamav.enabled }}
           - name: ANTIVIRUS
             value: clamav
           - name: ANTIVIRUS_ADDRESS
             value: {{ include "mailu.fullname" . }}-clamav:3310
+          {{- else }}
+          - name: ANTIVIRUS
+            value: none
+          - name: ANTIVIRUS_ADDRESS
+            value: localhost
+          {{- end }}
           - name: SUBNET
             value: "{{ .Values.subnet }}"
         ports:

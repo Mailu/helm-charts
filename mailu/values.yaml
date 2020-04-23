@@ -154,6 +154,7 @@ rspamd:
       cpu: 200m
 
 clamav:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/clamav
@@ -168,6 +169,7 @@ clamav:
       cpu: 1000m
 
 roundcube:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/roundcube

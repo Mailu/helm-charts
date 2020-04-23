@@ -20,6 +20,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: admin
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: admin
         image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
@@ -89,10 +93,11 @@ spec:
           - name: DB_NAME
             value: {{ required "database.mysql.database" .Values.database.mysql.database }}
           - name: DB_HOST
-            {{- if .Values.database.host }}
-            value: {{ .Values.database.host }}
-            {{- end }}
+            {{- if .Values.database.mysql.host }}
+            value: {{ .Values.database.mysql.host }}
+            {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
+            {{- end }}
           {{- else }}
           value: {{ required "database.type must be one of sqlite/mysql" .None }}
           {{- end }}

@@ -22,6 +22,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: webdav
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: webdav
         image: {{ .Values.webdav.image.repository }}:{{ default .Values.mailuVersion .Values.webdav.image.tag }}

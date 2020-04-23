@@ -20,6 +20,10 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: postfix
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
