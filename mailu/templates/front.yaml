@@ -195,7 +195,7 @@ spec:
     port: 80
     protocol: TCP
 {{ if not .Values.ingress.externalIngress }}
-  - name: http
+  - name: https
     port: 443
     protocol: TCP
 {{end}}
