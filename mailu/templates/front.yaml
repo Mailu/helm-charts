@@ -115,6 +115,11 @@ spec:
           - name: http
             containerPort: 80
             protocol: TCP
+          {{ if not .Values.ingress.externalIngress }}
+          - name: https
+            containerPort: 443
+            protocol: TCP
+          {{end}}
         {{- with .Values.front.resources }}
         resources:
         {{- .|toYaml|nindent 10}}
