@@ -149,6 +149,9 @@ rspamd:
     repository: mailu/rspamd
     # tag defaults to mailuVersion
     # tag: master
+  nameservers: {}
+  #  - 8.8.8.8
+  #  - 8.8.4.4
   resources:
     requests:
       memory: 100Mi

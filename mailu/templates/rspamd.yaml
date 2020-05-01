@@ -25,6 +25,14 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.rspamd.nameservers }}
+      {{- with .Values.rspamd.nameservers }}
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          {{- toYaml . | nindent 12 }}
+      {{- end }}
+      {{- end }}
       containers:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}

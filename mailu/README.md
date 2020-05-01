@@ -47,6 +47,7 @@
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
+| `rspamd.nameservers`                  | Custom nameservers for rspamd              | `{}`                                    |
 
 ### Example values.yaml to get started
 
