@@ -140,6 +140,7 @@ spec:
           - name: http
             containerPort: 80
             protocol: TCP
+          
         resources:
           limits:
             cpu: 200m
