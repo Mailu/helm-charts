@@ -61,7 +61,7 @@ spec:
 {{- if (eq .Values.database.type "roundcubeType") }}
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
-{{- end }
+{{- end }}
         env:
           {{ if .Values.database.mysql.rootPassword }}
           - name: MYSQL_ROOT_PASSWORD
