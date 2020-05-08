@@ -29,8 +29,8 @@
 | `subnet`                          | Subnet of PODs, used to configure from which IPs internal requests are allowed | `10.42.0.0/16` |
 | `mail.messageSizeLimitInMegabytes`| Message size limit in Megabytes      | `50`                                      |
 | `mail.authRatelimit`              | Rate limit for authentication requests | `10/minute;1000/hour`                   |
-| `initialAccount.username`         | Local part (part before @) for initial admin account | not set                    |
-| `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                  |
+| `initialAccount.username`         | Local part (part before @) for initial admin account | not set                   |
+| `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
@@ -47,6 +47,9 @@
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
+| `database.type`                   | type of database used for mailu      | `sqlite`                                  |
+| `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
+| `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
 
 ### Example values.yaml to get started
 
@@ -103,3 +106,23 @@ By setting `ingress.externalIngress` to false, the internal NGINX instance provi
  `ingress.tlsFlavor` and redirect `http` scheme connections to `https`. 
  
  CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
+
+## Database
+
+By default both, mailu and dovecot uses an embedded sqlite database. The chart allows to use an embedded or external mysql database instead. It can be controlled by the following values:
+
+### Using mysql for mailu
+
+Set ``database.type`` to ``mysql``. ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.password`` must also be set.
+
+### Using mysql for roundcube
+
+Set ``database.roundcubeType`` to ``mysql``. ``database.mysql.roundcubeDatabase``, ``database.mysql.roundcubeUser``, and ``database.mysql.roundcubePassword`` must also be set.
+
+### Using the internal mysql database
+
+The chart deploys an instance of mariadb if either ``database.type`` or ``database.roundcubeType`` is set to ``mysql``. If both are set, they use the same mariadb instance. A database root password can be set with ``database.mysql.rootPassword``. If not set, a random root password will be used.
+
+### Using an external mysql database
+
+An external mysql database can be used by setting ``database.mysql.host``. The chart does not support different mysql hosts for mailu and dovecot. Using other mysql ports than the default 3306 port is also nur supported by the chart.
