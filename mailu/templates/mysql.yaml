@@ -1,6 +1,6 @@
-{{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.type "roundcubeType")) (not .Values.database.mysql.host) }}
+{{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcubeType "mysql")) (not .Values.database.mysql.host) }}
 
-{{ if (eq .Values.database.type "roundcubeType") }}
+{{ if (eq .Values.database.roundcubeType "mysql") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -58,7 +58,7 @@ spec:
           - name: data
             subPath: mysql
             mountPath: /var/lib/mysql
-{{- if (eq .Values.database.type "roundcubeType") }}
+{{- if (eq .Values.database.roundcubeType "mysql") }}
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
 {{- end }}
