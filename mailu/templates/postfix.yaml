@@ -63,6 +63,12 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
+          - name: RELAYHOST
+            value: {{ .Values.postfix.relayhost }}
+          - name: RELAYUSER
+            value: {{ .Values.postfix.relayuser }}
+          - name: RELAYPASSWORD
+            value: {{ .Values.postfix.relaypassword }}
         ports:
           - name: smtp
             containerPort: 25

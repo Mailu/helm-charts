@@ -151,6 +151,9 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
+  relayhost: ""
+  relayuser: ""
+  relaypassword: ""
 
 dovecot:
   # logLevel: WARNING

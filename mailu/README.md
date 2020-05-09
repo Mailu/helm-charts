@@ -50,6 +50,9 @@
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
+| `postfix.relayhost`               | mail server relaying outgoing mail   | not set                                   |
+| `postfix.relayuser`               | user for relay server                | not set                                   |
+| `postfix.relaypassword`           | password for relay server            | not set                                   |
 
 ### Example values.yaml to get started
 
