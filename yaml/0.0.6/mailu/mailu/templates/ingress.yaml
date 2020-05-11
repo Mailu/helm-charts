@@ -25,7 +25,6 @@ spec:
         backend:
           serviceName: mailu-front
           servicePort: 80
-  rules:
   - host: "imap.example.com"
     http:
       paths:
