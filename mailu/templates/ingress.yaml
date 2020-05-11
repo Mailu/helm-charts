@@ -20,8 +20,8 @@ spec:
 {{- range .Values.hostnames }}
     - "{{ . }}"
 {{- end }}
-{{- range .Values.hostnames }}
   rules:
+{{- range .Values.hostnames }}
   - host: "{{ . }}"
     http:
       paths:
