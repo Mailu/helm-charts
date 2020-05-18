@@ -43,7 +43,7 @@
 | `persistence.claimNameOverride`   | override the generated claim name    | not set                                   |
 | `webdav.enabled`                  | enable webdav server                 | `false`                                   |
 | `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
-| `ingress.tlsFlavor`               | [Choose from these](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert`                                   |
+| `ingress.tlsFlavor`               | Do not change unless you have a custom way of generating the certificates. [Allowed options](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert` (uses certificates provided by cert-manager)                                   |
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
