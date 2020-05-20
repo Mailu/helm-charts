@@ -17,7 +17,7 @@
 ## Configuration
 | Parameter                         | Description                          | Default                                   |
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
-| `mailuVersion`                    | Version/tag of mailu images          | `master`                                  |
+| `mailuVersion`                    | Version/tag of mailu images - must be master or a version >=1.8 | `master`                                  |
 | `logLevel`                        | Level of logging                     | `WARNING`                                 |
 | `nameOverride`                    | Override the resource name prefix    | `mailu`                                   |
 | `clusterDomain`                   | Change the cluster DNS root          | `cluster.local`                           |
