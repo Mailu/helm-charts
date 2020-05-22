@@ -86,7 +86,7 @@ mail:
   authRatelimit: 10/minute;1000/hour
 
 # if empty defaults [chart-full-name]-certificates
-certificateSecretName:
+certificateSecretName: ""
 
 # certmanager settings
 certmanager:
