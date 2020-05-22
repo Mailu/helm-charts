@@ -32,13 +32,13 @@
 | `initialAccount.username`         | Local part (part before @) for initial admin account | not set                   |
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
+| `certificateSecretName`           | The secret for the certificate       | `[chart-full-name]-certificates`          |
 | `certmanager.enabled`             | Use cert manager true/false          | `true`                                    |
 | `certmanager.apiVersion`          | Custom apiVersion                    | `cert-manager.io/v1alpha2`                |
 | `certmanager.secretName`          | The secret for the certificate       | `[fullname]-certificates`                 |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `ingress.enabled`                 | Use ingress true/false               | `true`                                    |
-| `ingress.secretName`              | The secret for the certificate       | `[fullname]-certificates`                 |
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
 | `persistence.storageClass`        | storageClass to use for persistence  | not set                                   |
 | `persistence.accessMode`          | accessMode to use for persistence    | `ReadWriteOnce`                           |

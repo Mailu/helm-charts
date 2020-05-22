@@ -1,15 +1,15 @@
 # Default values for mailu.
 
 # A list of mail hostnames is required. The first will be used as primary mail hostname
-#hostnames:
+hostnames: []
 #  - mail.example.com
 #  - imap.example.com
 
 # The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
-#domain: example.com
+domain: example.com
 
 # The secret key is required for protecting authentication cookies and must be set individually for each deployment
-# secretKey: chang3m3!
+secretKey: chang3m3!
 
 # An initial account can automatically be created:
 #initialAccount:
@@ -85,15 +85,14 @@ mail:
   messageSizeLimitInMegabytes: 50
   authRatelimit: 10/minute;1000/hour
 
+# if empty defaults [chart-full-name]-certificates
+certificateSecretName:
+
 # certmanager settings
 certmanager:
-  enabled: false
-  # leave emty for default value
-  #apiVersion: cert-manager.io/v1alpha3
-  apiVersion:
-  # leave emty for default value. If set one, make sure to set the same for ingress.secretName
-  #secretName: &secretName wildcard-cert-secret
-  secretName:
+  enabled: true
+  # check your installed cert manager api version using eg. kubectl api-versions | grep -E 'cert.*manager'
+  apiVersion: cert-manager.io/v1alpha2
   # ClusterIssuer or Issuer
   issuerType: ClusterIssuer
   # issuer name set in cert manager deployment
@@ -103,9 +102,6 @@ certmanager:
 # Set ingress and loadbalancer config
 ingress:
   enabled: false
-  # leave emty for default value
-  #secretName: *secretName
-  secretName:
   externalIngress: true
   tlsFlavor: cert
   annotations:
