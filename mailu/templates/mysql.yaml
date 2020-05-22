@@ -1,4 +1,18 @@
-{{ if and (eq .Values.database.type "mysql") (not .Values.database.mysql.host) }}
+{{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcubeType "mysql")) (not .Values.database.mysql.host) }}
+
+{{ if (eq .Values.database.roundcubeType "mysql") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mailu.fullname" . }}-mysql-init
+data:
+  extra.sql: >
+    CREATE DATABASE IF NOT EXISTS {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }};
+    GRANT ALL ON {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }}.* TO
+      '{{ required "database.mysql.roundcubeUser" .Values.database.mysql.roundcubeUser }}'@'%'
+      IDENTIFIED BY '{{ required "database.mysql.roundcubePassword" .Values.database.mysql.roundcubePassword }}';
+{{ end }}
+---
 
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
@@ -20,14 +34,34 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: mysql
     spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
-      - name: admin
+      - name: mysql
         image: {{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}
         imagePullPolicy: Always
+        args:
+          - --character-set-server=utf8
+          - --skip-character-set-client-handshake
+          - --collation-server=utf8_unicode_ci
         volumeMounts:
           - name: data
             subPath: mysql
             mountPath: /var/lib/mysql
+{{- if (eq .Values.database.roundcubeType "mysql") }}
+          - name: initscripts
+            mountPath: /docker-entrypoint-initdb.d/
+{{- end }}
         env:
           {{ if .Values.database.mysql.rootPassword }}
           - name: MYSQL_ROOT_PASSWORD
@@ -36,17 +70,19 @@ spec:
           - name: MYSQL_RANDOM_ROOT_PASSWORD
             value: "yes"
           {{ end }}
+{{- if (eq .Values.database.type "type") }}
           - name: MYSQL_DATABASE
             value: {{ required "database.mysql.database" .Values.database.mysql.database }}
           - name: MYSQL_USER
             value: {{ required "database.mysql.user" .Values.database.mysql.user }}
           - name: MYSQL_PASSWORD
             value: {{ required "database.mysql.password" .Values.database.mysql.password }}
+{{- end }}
         ports:
           - name: mysql
             containerPort: 3306
             protocol: TCP
-        {{- with .Values.front.resources }}
+        {{- with .Values.mysql.resources }}
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
@@ -72,6 +108,9 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.claimName" . }}
+        - name: initscripts
+          configMap:
+            name: {{ include "mailu.fullname" . }}-mysql-init
   strategy:
     # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
     type: RollingUpdate

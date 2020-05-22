@@ -22,6 +22,7 @@ persistence:
   claimNameOverride: false
   existingClaim: false
   hostPath: false
+  annotations: {}
 
 database:
   mysql:

@@ -1,21 +1,20 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
-{{ if .Capabilities.APIVersions.Has "apps/v1/DaemonSet" }}
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 {{ end }}
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-front
-  labels:
-    app: {{ include "mailu.fullname" . }}
-    component: front
 spec:
   selector:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
       component: front
+  replicas: 1
   template:
     metadata:
       labels:
@@ -26,8 +25,14 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 60
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: front
         image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
@@ -39,19 +44,26 @@ spec:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.front.logLevel }}
           - name: KUBERNETES_INGRESS
-            value: "true"
+            value: "{{ .Values.ingress.externalIngress }}"
           - name: TLS_FLAVOR
-            value: cert
+            value: {{ default "cert" .Values.ingress.tlsFlavor }}
           - name: HOSTNAMES
             value: "{{ join "," .Values.hostnames }}"
           - name: ADMIN_ADDRESS
-            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.cluster.local
+            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: ANTISPAM_WEBUI_ADDRESS
-            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.cluster.local:11334
+            value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
+          {{- if .Values.roundcube.enabled }}
           - name: WEBMAIL
             value: roundcube
           - name: WEBMAIL_ADDRESS
-            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.cluster.local
+            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          {{- else }}
+          - name: WEBMAIL
+            value: none
+          - name: WEBMAIL_ADDRESS
+            value: localhost
+          {{- end }}
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
           - name: WEB_WEBMAIL
@@ -68,8 +80,10 @@ spec:
           - name: WEBDAV
             value: radicale
           - name: WEBDAV_ADDRESS
-            value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.cluster.local:5232
+            value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:5232
           {{- end }}
+          - name: SUBNET
+            value: {{ .Values.subnet }}
         ports:
           - name: pop3
             containerPort: 110
@@ -91,17 +105,15 @@ spec:
             containerPort: 25
             hostPort: 25
             protocol: TCP
-          - name: smtp-auth
-            containerPort: 10025
-            hostPort: 10025
-            protocol: TCP
-          - name: imap-auth
-            containerPort: 10143
-            hostPort: 10143
-            protocol: TCP
           - name: smtps
             containerPort: 465
             hostPort: 465
+            protocol: TCP
+          - name: smtp-auth
+            containerPort: 10025
+            protocol: TCP
+          - name: imap-auth
+            containerPort: 10143
             protocol: TCP
           - name: smtpd
             containerPort: 587
@@ -113,6 +125,11 @@ spec:
           - name: http
             containerPort: 80
             protocol: TCP
+          {{ if not .Values.ingress.externalIngress }}
+          - name: https
+            containerPort: 443
+            protocol: TCP
+          {{end}}
         {{- with .Values.front.resources }}
         resources:
         {{- .|toYaml|nindent 10}}
@@ -140,10 +157,13 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: {{ include "mailu.fullname" . }}-certificates
-  updateStrategy:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+  strategy:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: 1
+      maxSurge: 0
 
 ---
 
@@ -189,3 +209,8 @@ spec:
   - name: http
     port: 80
     protocol: TCP
+{{ if not .Values.ingress.externalIngress }}
+  - name: https
+    port: 443
+    protocol: TCP
+{{end}}

@@ -20,27 +20,53 @@
 
 nameOverride: ""
 fullnameOverride: ""
+clusterDomain: cluster.local
 
 nodeSelector: {}
 
+# Tolerations for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: {}
+
+# Affinity for pod assignment
+# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
+
 database:
-# default database is an embedded sqlite
+  # type of the database for mailu (sqlite or mysql)
+  # default database is an embedded sqlite
+  # for mysql, see settings below
   type: sqlite
+
+  # type of the database for roundcube (sqlite or mysql)
+  # default database is an embedded sqlite
+  # for mysql, see settings below
+  roundcubeType: sqlite
 
 # For mysql/mariadb use the following config:
 # Set the host to use an external database.
 # If not host is set, a database instance is created by this chart.
 #   type: mysql
   mysql: {}
+#    host: external-db-hostname
+    # root password for mysql database
+#    rootPassword: chang3m3! # can only be set for embedded mysql
+
+    # settings for mailu (required if mailu database type is "mysql")
 #    database: mailu
 #    user: mailu
 #    password: chang3m3!
-#    host: external-db-hostname
-#    rootPassword: chang3m3! # can only be set for embedded mysql
+
+    # settings for roundcube (required if roundcube database type is "mysql")
+#    roundcubeDatabase: roundcube
+#    roundcubeUser: roundcube
+#    roundcubePassword: chang3m3!
 
 persistence:
   size: 100Gi
   accessMode: ReadWriteOnce
+  #annotations:
+  #  "helm.sh/resource-policy": keep
   #hostPath: /path/on/the/host
   #existingClaim: name-of-existing.claim
   #storageClass: "-"
@@ -73,11 +99,17 @@ certmanager:
   # issuer name set in cert manager deployment
   issuerName: letsencrypt
 
+
+# Set ingress and loadbalancer config
 ingress:
   enabled: false
   # leave emty for default value
   #secretName: *secretName
   secretName:
+  externalIngress: true
+  tlsFlavor: cert
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
 # Frontend load balancer for non-HTTP(s) services
 front:
@@ -163,6 +195,7 @@ rspamd:
       cpu: 200m
 
 clamav:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/clamav
@@ -177,6 +210,7 @@ clamav:
       cpu: 1000m
 
 roundcube:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/roundcube
