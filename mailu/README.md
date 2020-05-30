@@ -4,9 +4,22 @@
 
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
 * cert-manager v0.12 or higher installed and configured (including a working cert issuer).  
-* A node which has a public reachable IP address because mail service binds directly to the node's IP
-    * alternatively, inbound traffic routing for mail must be setup externally
+* A node which has a public reachable IP, static address because mail service binds directly to the node's IP
+* A hosting service that allows inbound and outbound traffic on port 25.
 
+### Warning, this will not work on most cloud providers
+
+* Google cloud does not allow outgoing connections to connect to port 25. You will not be able to send
+  mails with mailu on google cloud (https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec)
+* Many cloud providers don't allow to assign fixed IPs directly to nodes. They use proxies or load balancers instead. While
+  this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP get's lost.
+  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by mailu (due the lack of
+  support in the nginx mail modules). Without the original IP information, a mail server will not work properly, or worse, will be
+  an open relay.
+* If you'd like to run mailu on kubernetes, consider to rent a cheap VPS and run kuberneres on it (e.g. using rancher2). A good option is to
+  use hetzner cloud VPS (author's personal opinion).
+* Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides
+  source ip addresses behind a load balancer.
 
 ## Installation
 
