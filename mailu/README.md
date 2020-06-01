@@ -50,6 +50,7 @@
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
+| `configmap.enabled`               | employ a single configmap instead of environment variables on each container | `false`                                    |
 
 ### Example values.yaml to get started
 

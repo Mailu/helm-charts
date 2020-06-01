@@ -17,6 +17,9 @@ secretKey: chang3m3!
 
 passwordScheme: PBKDF2
 
+configmap:
+  enabled: false
+
 persistence:
   storageClass: default
   claimNameOverride: false

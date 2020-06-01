@@ -43,6 +43,14 @@ spec:
           - name: data
             mountPath: /dkim
             subPath: dkim
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.admin.logLevel }}
+        {{- else }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.admin.logLevel }}
@@ -109,6 +117,7 @@ spec:
           {{- else }}
           value: {{ required "database.type must be one of sqlite/mysql" .None }}
           {{- end }}
+        {{- end }}
         ports:
           - name: http
             containerPort: 80

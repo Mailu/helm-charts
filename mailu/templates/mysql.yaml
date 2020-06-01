@@ -62,6 +62,11 @@ spec:
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
 {{- end }}
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: mailu-config
+        {{- else }}
         env:
           {{ if .Values.database.mysql.rootPassword }}
           - name: MYSQL_ROOT_PASSWORD
@@ -78,6 +83,7 @@ spec:
           - name: MYSQL_PASSWORD
             value: {{ required "database.mysql.password" .Values.database.mysql.password }}
 {{- end }}
+        {{- end }}
         ports:
           - name: mysql
             containerPort: 3306

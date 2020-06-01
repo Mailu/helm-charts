@@ -44,6 +44,14 @@ spec:
           - name: data
             subPath: dkim
             mountPath: /dkim
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
+        {{- else }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
@@ -64,6 +72,7 @@ spec:
           {{- end }}
           - name: SUBNET
             value: "{{ .Values.subnet }}"
+        {{- end }}
         ports:
           - name: rspamd
             containerPort: 11332

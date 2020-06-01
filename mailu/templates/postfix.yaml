@@ -40,6 +40,14 @@ spec:
           - mountPath: /queue
             name: data
             subPath: mailqueue
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.postfix.logLevel }}
+        {{- else }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -63,6 +71,7 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
+        {{- end }}
         ports:
           - name: smtp
             containerPort: 25

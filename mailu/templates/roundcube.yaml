@@ -42,6 +42,11 @@ spec:
           - mountPath: /data
             name: data
             subPath: roundcube
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        {{- else }}
         env:
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
@@ -73,6 +78,7 @@ spec:
           {{- else }}
           value: {{ required "database.type must be one of sqlite/mysql" .None }}
           {{- end }}
+        {{- end }}
         ports:
           - name: http
             containerPort: 80

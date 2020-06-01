@@ -40,6 +40,14 @@ spec:
         volumeMounts:
           - name: certs
             mountPath: /certs
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.front.logLevel }}
+        {{- else }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.front.logLevel }}
@@ -84,6 +92,7 @@ spec:
           {{- end }}
           - name: SUBNET
             value: {{ .Values.subnet }}
+        {{- end }}
         ports:
           - name: pop3
             containerPort: 110

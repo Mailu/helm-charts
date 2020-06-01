@@ -43,6 +43,14 @@ spec:
           - name: data
             mountPath: /mail
             subPath: dovecotmail
+        {{- if .Values.configmap.enabled }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "mailu.fullname" . }}-config
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
+        {{- else }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
@@ -69,6 +77,7 @@ spec:
             value: none
           - name: SECRET_KEY
             value: "{{ required "secretKey" .Values.secretKey }}"
+        {{- end }}
         ports:
           - name: auth
             containerPort: 2102

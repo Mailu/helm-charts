@@ -1,0 +1,102 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/configmap.yaml
+
+{{- if .Values.configmap.enabled }}
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mailu.fullname" . }}-config
+data:
+  DOMAIN: "{{ required "domain" .Values.domain }}"
+  HOSTNAMES: "{{ join "," .Values.hostnames }}"
+  FRONT_ADDRESS: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  ADMIN_ADDRESS: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  IMAP_ADDRESS: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  POP3_ADDRESS: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  SMTP_ADDRESS: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  AUTHSMTP_ADDRESS: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  ANTISPAM_WEBUI_ADDRESS: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
+  LMTP_ADDRESS: {{ include "mailu.fullname" . }}-dovecot.svc.{{ $clusterDomain }}:2525
+  ANTISPAM_MILTER_ADDRESS: {{ include "mailu.fullname" . }}-rspamd.svc.{{ $clusterDomain }}:11332
+  REDIS_ADDRESS: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+{{- if .Values.roundcube.enabled }}
+  WEBMAIL_ADDRESS: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+  WEBMAIL: roundcube
+{{- else }}
+  WEBMAIL_ADDRESS: localhost
+  WEBMAIL: none
+{{- end }}
+{{- if .Values.webdav.enabled }}
+  WEBDAV_ADDRESS: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:5232
+  WEBDAV: radicale
+{{- else }}
+  WEBDAV_ADDRESS: localhost
+  WEBDAV: none
+{{- end }}
+  QUOTA_STORAGE_URL: redis://{{ include "mailu.fullname" . }}-redis/1
+  RATELIMIT_STORAGE_URL: redis://{{ include "mailu.fullname" . }}-redis/2
+  MESSAGE_SIZE_LIMIT: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+  REJECT_UNLISTED_RECIPIENT: "yes"
+  KUBERNETES_INGRESS: "{{ .Values.ingress.externalIngress }}"
+  TLS_FLAVOR: {{ default "cert" .Values.ingress.tlsFlavor }}
+  POSTMASTER: postmaster
+  ADMIN: "true"
+  WEB_ADMIN: "/admin"
+  WEB_WEBMAIL: "/"
+  RECIPIENT_DELIMITER: +
+  SUBNET: {{ .Values.subnet }}
+  PASSWORD_SCHEME: "{{ default "PBKDF2" .Values.passwordScheme }}"
+  SECRET_KEY: "{{ required "secretKey" .Values.secretKey }}"
+  AUTH_RATELIMIT: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
+{{- if .Values.initialAccount }}
+  INITIAL_ADMIN_ACCOUNT: {{ required "initialAccount.username" .Values.initialAccount.username }}
+  INITIAL_ADMIN_DOMAIN: {{ required "initialAccount.domain" .Values.initialAccount.domain }}
+  INITIAL_ADMIN_PW: {{ required "initialAccount.password" .Values.initialAccount.password }}
+{{- end }}
+{{- if eq .Values.database.type "sqlite" }}
+  DB_FLAVOR: sqlite
+{{- else if eq .Values.database.type "mysql" }}
+  DB_FLAVOR: mysql
+  DB_USER: {{ required "database.mysql.user" .Values.database.mysql.user }}
+  DB_PW: {{ required "database.mysql.password" .Values.database.mysql.password }}
+  DB_NAME: {{ required "database.mysql.database" .Values.database.mysql.database }}
+{{- if .Values.database.mysql.host }}
+  DB_HOST: {{ .Values.database.mysql.host }}
+{{- else }}
+  DB_HOST: {{ include "mailu.fullname" . }}-mysql
+{{- end }}
+{{- else }}
+  DB_FLAVOR: {{ required "database.type must be one of sqlite/mysql" .None }}
+{{- end }}
+{{- if .Values.clamav.enabled }}
+  ANTIVIRUS: clamav
+  ANTIVIRUS_ADDRESS: {{ include "mailu.fullname" . }}-clamav.svc.{{ $clusterDomain }}:3310
+{{- else }}
+  ANTIVIRUS: none
+  ANTIVIRUS_ADDRESS: localhost
+{{- end }}
+{{- if .Values.database.mysql.rootPassword }}
+  MYSQL_ROOT_PASSWORD: {{ .Values.database.mysql.rootPassword }}
+{{- else }}
+  MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+{{- end }}
+{{- if (eq .Values.database.type "type") }}
+  MYSQL_DATABASE: {{ required "database.mysql.database" .Values.database.mysql.database }}
+  MYSQL_USER: {{ required "database.mysql.user" .Values.database.mysql.user }}
+  MYSQL_PASSWORD: {{ required "database.mysql.password" .Values.database.mysql.password }}
+{{- end }}
+{{- if eq .Values.database.roundcubeType "sqlite" }}
+  ROUNDCUBE_DB_FLAVOR: sqlite
+{{- else if eq .Values.database.roundcubeType "mysql" }}
+  ROUNDCUBE_DB_FLAVOR: mysql
+  ROUNDCUBE_DB_USER: {{ required "database.mysql.roundcubeUser" .Values.database.mysql.roundcubeUser }}
+  ROUNDCUBE_DB_PW: {{ required "database.mysql.roundcubePassword" .Values.database.mysql.roundcubePassword }}
+  ROUNDCUBE_DB_NAME: {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }}
+{{- if .Values.database.mysql.host }}
+  ROUNDCUBE_DB_HOST: {{ .Values.database.mysql.host }}
+{{- end }}
+  ROUNDCUBE_DB_HOST: {{ include "mailu.fullname" . }}-mysql
+{{- else }}
+  ROUNDCUBE_DB_FLAVOR: {{ required "database.type must be one of sqlite/mysql" .None }}
+{{- end }}
+{{- end }}
