@@ -107,7 +107,11 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+            {{- if .Values.mysql.persistentVolume.existingClaim }}
+            claimName: {{ .Values.mysql.persistentVolume.existingClaim }}
+            {{- else }}
             claimName: {{ include "mailu.claimName" . }}
+            {{- end }}
         - name: initscripts
           configMap:
             name: {{ include "mailu.fullname" . }}-mysql-init
