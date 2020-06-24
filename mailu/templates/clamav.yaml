@@ -72,8 +72,12 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if .Values.clamav.persistentVolume.existingClaim }}
+            {{- if (hasKey .Values.clamav "persistentVolume") }}
+              {{- if (hasKey .Values.clamav.persistentVolume "existingClaim") }}
             claimName: {{ .Values.clamav.persistentVolume.existingClaim }}
+              {{- else }}
+            claimName: {{ include "mailu.claimName" . }}
+              {{- end }}
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}

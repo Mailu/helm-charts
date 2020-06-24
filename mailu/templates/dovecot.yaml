@@ -110,8 +110,12 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if .Values.dovecot.persistentVolume.existingClaim }}
+            {{- if (hasKey .Values.dovecot "persistentVolume") }}
+              {{- if (hasKey .Values.dovecot.persistentVolume "existingClaim") }}
             claimName: {{ .Values.dovecot.persistentVolume.existingClaim }}
+              {{- else }}
+            claimName: {{ include "mailu.claimName" . }}
+              {{- end }}
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}

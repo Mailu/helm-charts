@@ -101,8 +101,12 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if .Values.postfix.persistentVolume.existingClaim }}
+            {{- if (hasKey .Values.postfix "persistentVolume") }}
+              {{- if (hasKey .Values.postfix.persistentVolume "existingClaim") }}
             claimName: {{ .Values.postfix.persistentVolume.existingClaim }}
+              {{- else }}
+            claimName: {{ include "mailu.claimName" . }}
+              {{- end }}
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}
