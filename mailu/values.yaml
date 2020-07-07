@@ -198,7 +198,14 @@ rspamd:
       memory: 200Mi
       cpu: 200m
 #  persistence:
-#    existingClaim: name-of-existing.claim      
+#    existingClaim: name-of-existing.claim    
+  customConfig: {}
+#    localD:
+#      history_redis.conf: |-
+#        servers = "\{{ REDIS_ADDRESS \}}";
+#        nrows = 2000;
+#        compress = true;
+#        subject_privacy = false;
 
 clamav:
   enabled: true

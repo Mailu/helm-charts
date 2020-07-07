@@ -44,6 +44,11 @@ spec:
           - name: data
             subPath: dkim
             mountPath: /dkim
+{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
+          - name: custom-config
+            mountPath: "/conf/{{ $cfgName }}"
+            subPath: {{ $cfgName }}
+{{- end }}            
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
@@ -101,6 +106,16 @@ spec:
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}
+{{- if .Values.rspamd.customConfig.localD }}
+        - name: custom-config
+          configMap:
+            name: {{ template "mailu.fullname" . }}-rspamd-custom-config-map
+            items:
+{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
+              - key: {{ $cfgName }}
+                path: {{ $cfgName }}
+{{- end }}
+{{- end }}            
 
 ---
 
