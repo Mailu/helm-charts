@@ -18,7 +18,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "mailu.fullname" $dot }}-{{ $deploy }}-storage
+  name: {{ include "mailu.deployClaimName" $dot }}
 {{- if $deployValues.persistence.annotations }}
   annotations:
 {{ toYaml $deployValues.persistence.annotations | indent 4 }}
@@ -26,7 +26,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: {{ include "mailu.fullname" $dot }}-{{ $deploy }}-storage
+  volumeName: {{ include "mailu.deployClaimName" $dot }}
   resources:
     requests:
       storage: {{ $deployValues.persistence.size }}
