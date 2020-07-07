@@ -97,11 +97,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if .Values.roundcube.persistentVolume.existingClaim }}
-            claimName: {{ .Values.roundcube.persistentVolume.existingClaim }}
-            {{- else }}
             claimName: {{ include "mailu.claimName" . }}
-            {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

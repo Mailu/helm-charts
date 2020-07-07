@@ -135,8 +135,6 @@ admin:
     limits:
       memory: 500Mi
       cpu: 500m
-#  persistence:
-#    existingClaim: name-of-existing.claim
 
 redis:
   image:
@@ -149,8 +147,6 @@ redis:
     limits:
       memory: 300Mi
       cpu: 200m
-#  persistence:
-#    existingClaim: name-of-existing.claim    
 
 postfix:
   # logLevel: WARNING
@@ -165,8 +161,6 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
-#  persistence:
-#    existingClaim: name-of-existing.claim      
 
 dovecot:
   # logLevel: WARNING
@@ -181,8 +175,6 @@ dovecot:
     limits:
       memory: 500Mi
       cpu: 500m
-#  persistence:
-#    existingClaim: name-of-existing.claim      
 
 rspamd:
   # logLevel: WARNING
@@ -196,9 +188,7 @@ rspamd:
       cpu: 100m
     limits:
       memory: 200Mi
-      cpu: 200m
-#  persistence:
-#    existingClaim: name-of-existing.claim    
+      cpu: 200m   
   customConfig: {}
 #    localD:
 #      history_redis.conf: |-
@@ -221,8 +211,6 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
-#  persistence:
-#    existingClaim: name-of-existing.claim        
 
 roundcube:
   enabled: true
@@ -238,8 +226,6 @@ roundcube:
     limits:
       memory: 200Mi
       cpu: 200m
-#  persistence:
-#    existingClaim: name-of-existing.claim      
 
 
 webdav:
@@ -249,8 +235,6 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
-#  persistence:
-#    existingClaim: name-of-existing.claim    
 
 mysql:
   image:
@@ -263,5 +247,3 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
-#  persistence:
-#    existingClaim: name-of-existing.claim      

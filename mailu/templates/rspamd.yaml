@@ -97,9 +97,6 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if .Values.rspamd.persistentVolume.existingClaim }}
-            claimName: {{ .Values.rspamd.persistentVolume.existingClaim }}
-            {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}
 {{- if .Values.rspamd.customConfig.localD }}
