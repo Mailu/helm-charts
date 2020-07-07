@@ -98,7 +98,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.claimName" . }}
-            {{- end }}
 {{- if .Values.rspamd.customConfig.localD }}
         - name: custom-config
           configMap:
