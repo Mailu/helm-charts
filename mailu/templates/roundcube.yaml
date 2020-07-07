@@ -97,12 +97,8 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if (hasKey .Values.roundcube "persistentVolume") }}
-              {{- if (hasKey .Values.roundcube.persistentVolume "existingClaim") }}
+            {{- if .Values.roundcube.persistentVolume.existingClaim }}
             claimName: {{ .Values.roundcube.persistentVolume.existingClaim }}
-              {{- else }}
-            claimName: {{ include "mailu.claimName" . }}
-              {{- end }}
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}

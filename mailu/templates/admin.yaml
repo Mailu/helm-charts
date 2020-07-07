@@ -134,12 +134,8 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            {{- if (hasKey .Values.admin "persistentVolume") }}
-              {{- if (hasKey .Values.admin.persistentVolume "existingClaim") }}
+            {{- if .Values.admin.persistentVolume.existingClaim }}
             claimName: {{ .Values.admin.persistentVolume.existingClaim }}
-              {{- else }}
-            claimName: {{ include "mailu.claimName" . }}
-              {{- end }}
             {{- else }}
             claimName: {{ include "mailu.claimName" . }}
             {{- end }}
