@@ -202,7 +202,7 @@ rspamd:
   customConfig: {}
 #    localD:
 #      history_redis.conf: |-
-#        servers = "\{{ REDIS_ADDRESS \}}";
+#        servers = "{{ REDIS_ADDRESS }}";
 #        nrows = 2000;
 #        compress = true;
 #        subject_privacy = false;

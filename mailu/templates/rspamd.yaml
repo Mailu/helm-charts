@@ -137,3 +137,18 @@ spec:
   - name: rspamd-http
     protocol: TCP
     port: 11334
+    
+---
+
+{{- if .Values.rspamd.customConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mailu.fullname" . }}-rspamd-custom-config-map
+data:
+# /etc/local.d/
+{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
+  {{ $cfgName }} : |-
+{{ $cfgContent | indent 4 }}
+{{- end }}
+{{- end }}
