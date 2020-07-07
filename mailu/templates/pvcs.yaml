@@ -1,0 +1,92 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
+
+{{- $dot := . }}
+
+{{- range $deploy := tuple "admin" "clamav" "dovecot" "mysql" "postfix" "redis" "roundcube" "rspamd" "webdav" }}
+
+{{- $deployValues := index $dot.Values $deploy }}
+{{- $_ := set $dot "deploy" $deploy }}
+
+{{- if $deployValues.persistence.claimEnabled }}
+
+{{- if $deployValues.persistence.hostPath }}
+########################################
+###
+### Variant: persistence.hostPath is set
+###
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.fullname" $dot }}-{{ $deploy }}-storage
+{{- if $deployValues.persistence.annotations }}
+  annotations:
+{{ toYaml $deployValues.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: {{ include "mailu.fullname" $dot }}-{{ $deploy }}-storage
+  resources:
+    requests:
+      storage: {{ $deployValues.persistence.size }}
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "mailu.deployClaimName" $dot }}
+spec:
+  capacity:
+    storage: {{ $deployValues.persistence.size }}
+  accessModes:
+  - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  hostPath:
+    path: {{ required "persistence.hostPath" $deployValues.persistence.hostPath }}
+    type: DirectoryOrCreate
+  {{ if $dot.Values.nodeSelector }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        {{- range $k,$v := $dot.Values.nodeSelector }}
+        - key: "{{ $k }}"
+          operator: In
+          values:
+            - "{{ $v }}"
+        {{- end }}
+  {{- end }}
+{{- else if not $deployValues.persistence.existingClaim }}
+########################################
+###
+### Variant: normal volume claim
+###
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.deployClaimName" $dot }}
+{{- if $deployValues.persistence.annotations }}
+  annotations:
+{{ toYaml $deployValues.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ $deployValues.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ $deployValues.persistence.size }}
+  {{- if $deployValues.persistence.storageClass }}
+  {{- if (eq "-" $deployValues.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ $deployValues.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- end }}
+
+{{- end }}

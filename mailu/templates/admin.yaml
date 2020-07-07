@@ -134,7 +134,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.admin.persistence.claimEnabled }}  
+{{- if .Values.admin.persistence.existingClaim }}
+            claimName: {{ .Values.admin.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "admin" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}  
   strategy:
     type: RollingUpdate
     rollingUpdate:

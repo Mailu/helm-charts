@@ -101,7 +101,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.postfix.persistence.claimEnabled }}  
+{{- if .Values.postfix.persistence.existingClaim }}
+            claimName: {{ .Values.postfix.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "postfix" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

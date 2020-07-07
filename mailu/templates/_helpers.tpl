@@ -37,6 +37,20 @@ Create the claimName: existingClaim if provided, otherwise claimNameOverride if 
 {{- end -}}
 {{- end -}}
 
+
+{{- define "mailu.deployClaimName" -}}
+{{- $deployValues := index .Values .deploy }}
+{{- if $deployValues.persistence.claimEnabled -}}
+{{- if $deployValues.persistence.existingClaim -}}
+{{- $deployValues.persistence.existingClaim -}}
+{{- else if $deployValues.persistence.claimNameOverride -}}
+{{- $deployValues.persistence.claimNameOverride -}}
+{{- else -}}
+{{ include "mailu.fullname" . }}-{{.deploy}}-storage
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}

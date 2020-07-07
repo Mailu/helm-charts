@@ -110,7 +110,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.dovecot.persistence.claimEnabled }}  
+{{- if .Values.dovecot.persistence.existingClaim }}
+            claimName: {{ .Values.dovecot.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "dovecot" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

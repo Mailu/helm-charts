@@ -97,7 +97,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.rspamd.persistence.claimEnabled }}  
+{{- if .Values.rspamd.persistence.existingClaim }}
+            claimName: {{ .Values.rspamd.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "rspamd" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
 {{- if .Values.rspamd.customConfig.localD }}
         - name: custom-config
           configMap:

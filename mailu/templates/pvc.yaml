@@ -1,5 +1,7 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
 
+{{- if or (not (hasKey .Values.persistence "claimEnabled")) .Values.persistence.claimEnabled }}
+
 {{- if .Values.persistence.hostPath }}
 ########################################
 ###
@@ -75,4 +77,6 @@ spec:
   storageClassName: {{ .Values.persistence.storageClass }}
   {{- end }}
   {{- end }}
+{{- end }}
+
 {{- end }}

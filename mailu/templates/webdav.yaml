@@ -66,7 +66,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.webdav.persistence.claimEnabled }} 
+{{- if .Values.webdav.persistence.existingClaim }}
+            claimName: {{ .Values.webdav.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "webdav" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

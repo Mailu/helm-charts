@@ -63,6 +63,7 @@ database:
 #    roundcubePassword: chang3m3!
 
 persistence:
+#  claimEnabled: false
   size: 100Gi
   accessMode: ReadWriteOnce
   #annotations:
@@ -135,6 +136,17 @@ admin:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name    
 
 redis:
   image:
@@ -147,6 +159,17 @@ redis:
     limits:
       memory: 300Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 postfix:
   # logLevel: WARNING
@@ -161,6 +184,17 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 dovecot:
   # logLevel: WARNING
@@ -175,6 +209,17 @@ dovecot:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 rspamd:
   # logLevel: WARNING
@@ -196,6 +241,17 @@ rspamd:
 #        nrows = 2000;
 #        compress = true;
 #        subject_privacy = false;
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name
 
 clamav:
   enabled: true
@@ -211,6 +267,17 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 roundcube:
   enabled: true
@@ -226,6 +293,17 @@ roundcube:
     limits:
       memory: 200Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 
 webdav:
@@ -235,6 +313,17 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name    
 
 mysql:
   image:
@@ -247,3 +336,14 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name     
