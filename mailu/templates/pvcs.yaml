@@ -2,7 +2,7 @@
 
 {{- $dot := . }}
 
-{{- range $deploy := tuple "admin" "clamav" "dovecot" "mysql" "postfix" "redis" "roundcube" "rspamd" "webdav" }}
+{{- range $deploy := list "admin" "clamav" "dovecot" "mysql" "postfix" "redis" "roundcube" "rspamd" "webdav" }}
 
 {{- $deployValues := index $dot.Values $deploy }}
 {{- $_ := set $dot "deploy" $deploy }}
