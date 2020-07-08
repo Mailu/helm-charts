@@ -64,7 +64,7 @@ spec:
 ###
 ### Variant: normal volume claim
 ###
-
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
