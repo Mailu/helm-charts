@@ -7,8 +7,7 @@
 {{- $deployValues := index $dot.Values $deploy }}
 {{- $_ := set $dot "deploy" $deploy }}
 
-{{- if $deployValues.enabled }}
-
+{{- if or (not (hasKey $deployValues "enabled")) $deployValues.enabled }}
 {{- if $deployValues.persistence.claimEnabled }}
 
 {{- if $deployValues.persistence.hostPath }}
