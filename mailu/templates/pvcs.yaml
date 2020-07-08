@@ -7,6 +7,8 @@
 {{- $deployValues := index $dot.Values $deploy }}
 {{- $_ := set $dot "deploy" $deploy }}
 
+{{- if $deployValues.enabled }}
+
 {{- if $deployValues.persistence.claimEnabled }}
 
 {{- if $deployValues.persistence.hostPath }}
@@ -88,5 +90,5 @@ spec:
 {{- end }}
 
 {{- end }}
-
+{{- end }}
 {{- end }}
