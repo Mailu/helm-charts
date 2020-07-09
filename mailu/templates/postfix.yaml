@@ -36,6 +36,13 @@ spec:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
         imagePullPolicy: Always
+        args:  
+          - sh
+          - -c
+{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}          
+            postmap /etc/postfix/{{ $cfgName }};
+{{- end }}         
+            /start.py;
         volumeMounts:
           - mountPath: /queue
             name: data
@@ -111,19 +118,7 @@ spec:
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
           periodSeconds: 10
           failureThreshold: 3
-          timeoutSeconds: 5
-{{- if .Values.postfix.customConfig.etcPostfix }}
-        lifecycle:
-         postStart:
-           exec:
-              command: 
-              - "sh"
-              - "-c"
-              - >
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}              
-                postmap /etc/postfix/{{$cfgName}};
-{{- end }}
-{{- end }}                
+          timeoutSeconds: 5                
       volumes:
         - name: data
           persistentVolumeClaim:
