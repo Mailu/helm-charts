@@ -40,6 +40,11 @@ spec:
           - mountPath: /queue
             name: data
             subPath: mailqueue
+{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
+          - name: custom-config
+            mountPath: "/etc/postfix/{{ $cfgName }}"
+            subPath: {{ $cfgName }}
+{{- end }}            
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -111,6 +116,16 @@ spec:
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
 {{- end }}
+{{- if .Values.postfix.customConfig.etcPostfix }}
+        - name: custom-config
+          configMap:
+            name: {{ template "mailu.fullname" . }}-postfix-custom-config-map
+            items:
+{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
+              - key: {{ $cfgName }}
+                path: {{ $cfgName }}
+{{- end }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -143,3 +158,18 @@ spec:
   - name: smtp-auth
     port: 10025
     protocol: TCP
+    
+---
+
+{{- if .Values.postfix.customConfig }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "mailu.fullname" . }}-postfix-custom-config-map
+data:
+# /etc/local.d/
+{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
+  {{ $cfgName }} : |-
+{{ $cfgContent | indent 4 }}
+{{- end }}
+{{- end }}    
