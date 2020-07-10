@@ -32,6 +32,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- if .Values.postfix.customConfig.etcPostfix }}
+      initContainers:
+      - name: copy-ro-custom-config
+        image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
+        command: ['sh', '-c', 'mkdir -p /etc/postfix-custom && cp -r /etc/postfix/* /etc/postfix-custom && cp /custom-config/* /etc/postfix-custom']
+        volumeMounts:
+          - name: custom-config
+            mountPath: /custom-config           
+          - name: etc-postfix-custom
+            mountPath: /etc/postfix-custom
+{{- end }}
       containers:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
@@ -39,12 +50,11 @@ spec:
         volumeMounts:
           - mountPath: /queue
             name: data
-            subPath: mailqueue
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
-          - name: custom-config
-            mountPath: "/etc/postfix/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
-{{- end }}            
+            subPath: mailqueue 
+{{- if .Values.postfix.customConfig.etcPostfix }}
+          - name: etc-postfix-custom
+            mountPath: /etc/postfix
+{{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -123,9 +133,12 @@ spec:
             items:
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
               - key: {{ $cfgName }}
-                path: {{ $cfgName }}
+                path: {{ $cfgName }}       
 {{- end }}
+        - name: etc-postfix-custom
+          emptyDir: {} 
 {{- end }}
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
