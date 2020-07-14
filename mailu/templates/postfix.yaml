@@ -40,16 +40,20 @@ spec:
           - mountPath: /queue
             name: data
             subPath: mailqueue
+{{- if .Values.postfix.customConfig.etcPostfix }}            
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
           - name: postfix-etc-postfix
             mountPath: "/etc/postfix/{{ $cfgName }}"
             subPath: {{ $cfgName }}
 {{- end }}
+{{- end }}
+{{- if .Values.postfix.customConfig.conf }} 
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
           - name: postfix-conf
             mountPath: "/conf/{{ $cfgName }}"
             subPath: {{ $cfgName }}
 {{- end }} 
+{{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -108,6 +112,18 @@ spec:
           periodSeconds: 10
           failureThreshold: 3
           timeoutSeconds: 5
+{{- if .Values.postfix.customConfig.etcPostfix }}
+        lifecycle:
+         postStart:
+           exec:
+              command: 
+              - "sh"
+              - "-c"
+              - >
+{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}              
+                postmap /etc/postfix/{{$cfgName}};
+{{- end }}
+{{- end }}                
       volumes:
         - name: data
           persistentVolumeClaim:
@@ -130,6 +146,7 @@ spec:
               - key: {{ $cfgName }}
                 path: {{ $cfgName }}
 {{- end }}
+{{- end }}
 {{- if .Values.postfix.customConfig.conf }}
         - name: postfix-conf
           configMap:
@@ -138,7 +155,6 @@ spec:
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
               - key: {{ $cfgName }}
                 path: {{ $cfgName }}
-{{- end }}
 {{- end }}
 {{- end }}
   strategy:
@@ -176,13 +192,13 @@ spec:
     
 ---
 
-{{- if .Values.postfix.customConfig }}
+{{- if .Values.postfix.customConfig.etcPostfix }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "mailu.fullname" . }}-postfix-etc-postfix-map
 data:
-# /etc/local.d/
+# /etc/postfix/
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
   {{ $cfgName }} : |-
 {{ $cfgContent | indent 4 }}
@@ -191,13 +207,13 @@ data:
 
 ---
 
-{{- if .Values.postfix.customConfig }}
+{{- if .Values.postfix.customConfig.conf }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "mailu.fullname" . }}-postfix-conf-map
 data:
-# /etc/local.d/
+# /conf/
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
   {{ $cfgName }} : |-
 {{ $cfgContent | indent 4 }}
