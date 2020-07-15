@@ -196,6 +196,9 @@ postfix:
 #    #storageClass: "-"
 #    #claimNameOverride: my-claim-name 
   customConfig: 
+    etcPostfix:
+      restricted_senders:
+        someone@example.com      OK
     conf:  
       main.cf: |-
         ###############
@@ -296,7 +299,8 @@ postfix:
 
         smtpd_client_restrictions =
           permit_mynetworks,
-          check_sender_access ${podop}senderaccess,
+          # check_sender_access ${podop}senderaccess,
+          check_sender_access hash:/etc/postfix/restricted_senders
           reject_non_fqdn_sender,
           reject_unknown_sender_domain,
           reject_unknown_recipient_domain,
