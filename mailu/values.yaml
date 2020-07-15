@@ -261,10 +261,13 @@ postfix:
 
         # The alias map actually returns both aliases and local mailboxes, which is
         # required for reject_unlisted_sender to work properly
+        # https://www.digitalocean.com/community/questions/postfix-won-t-send-to-external-server-with-same-domain-name
+        # https://stackoverflow.com/a/17622199
+        
         virtual_alias_domains =
-        virtual_alias_maps = ${podop}alias
-        virtual_mailbox_domains = ${podop}domain
-        virtual_mailbox_maps = ${podop}mailbox
+        # virtual_alias_maps = ${podop}alias
+        # virtual_mailbox_domains = ${podop}domain
+        # virtual_mailbox_maps = ${podop}mailbox
 
         # Mails are transported if required, then forwarded to Dovecot for delivery
         relay_domains = ${podop}transport
