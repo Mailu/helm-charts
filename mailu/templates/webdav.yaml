@@ -18,6 +18,10 @@ spec:
   replicas: 1
   template:
     metadata:
+      {{- with .Values.webdav.annotations }}
+      annotations:
+      {{- .|toYaml|nindent 8}}
+      {{- end }}
       labels:
         app: {{ include "mailu.fullname" . }}
         component: webdav

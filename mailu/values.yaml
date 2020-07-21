@@ -31,6 +31,15 @@ tolerations: {}
 # Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
+#  podAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#    - labelSelector:
+#        matchExpressions:
+#        - key: app
+#          operator: In
+#          values:
+#          - release-name
+#      topologyKey: kubernetes.io/hostname
 
 database:
   # type of the database for mailu (sqlite or mysql)
@@ -154,6 +163,8 @@ postfix:
 
 dovecot:
   # logLevel: WARNING
+  # annotations:
+    # config.linkerd.io/disable-tap: "true"
   image:
     repository: mailu/dovecot
     # tag defaults to mailuVersion
