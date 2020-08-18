@@ -79,6 +79,9 @@ spec:
           - name: imap
             containerPort: 143
             protocol: TCP
+          - name: imaps
+            containerPort: 993
+            protocol: TCP
           - name: pop3
             containerPort: 110
             protocol: TCP
@@ -139,6 +142,9 @@ spec:
     protocol: TCP
   - name: imap-default
     port: 143
+    protocol: TCP
+  - name: imap-ssl
+    port: 993
     protocol: TCP
   - name: pop3
     port: 110
