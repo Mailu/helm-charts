@@ -36,12 +36,15 @@ spec:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
         imagePullPolicy: Always
+{{- if .Values.postfix.customConfig.etcPostfix }}        
         args:  
           - sh
           - -c
+          - |
 {{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}          
             postmap /etc/postfix/{{ $cfgName }};
-{{- end }}         
+{{- end }}
+{{- end }}
             /start.py;
         volumeMounts:
           - mountPath: /queue
