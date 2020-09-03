@@ -1,0 +1,73 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/fetchmail.yaml
+
+{{- if .Values.fetchmail.enabled }}
+
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
+apiVersion: apps/v1
+{{ else }}
+apiVersion: extensions/v1beta1
+{{ end }}
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-fetchmail
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: fetchmail
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: fetchmail
+    spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: admin
+        image: {{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: dovecotdata
+            mountPath: /data
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.fetchmail.logLevel }}
+          - name: HOST_SMTP
+            value: {{ include "mailu.fullname" . }}-front
+          - name: HOST_ADMIN
+            value: {{ include "mailu.fullname" . }}-admin
+          - name: DEBUG
+            value: "False"
+          - name: FETCHMAIL_DELAY
+            value: "{{ .Values.fetchmail.delay }}"
+        ports:
+          - containerPort: 5232
+          - containerPort: 80
+        {{- with .Values.fetchmail.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.claimName" . }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+{{- end }}
