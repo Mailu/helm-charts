@@ -105,7 +105,7 @@ front:
     # tag defaults to mailuVersion
     # tag: master
   resources:
-    requests: 
+    requests:
       memory: 100Mi
       cpu: 100m
     limits:
@@ -229,4 +229,19 @@ mysql:
       cpu: 100m
     limits:
       memory: 512Mi
+      cpu: 200m
+
+fetchmail:
+  # debug: "False"
+  # delay: "600"
+  image:
+    repository: mailu/fetchmail
+    # tag defaults to mailuVersion
+    # tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
       cpu: 200m

@@ -1,0 +1,65 @@
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/fetchmail.yaml
+# Environment vars from: https://github.com/Mailu/Mailu/blob/master/optional/fetchmail/fetchmail.py
+
+{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
+apiVersion: apps/v1
+{{ else }}
+apiVersion: extensions/v1beta1
+{{ end }}
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-fetchmail
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: fetchmail
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        role: mail
+        tier: backend
+        component: fetchmail
+    spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: fetchmail
+        image: {{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
+        imagePullPolicy: Always
+        env:
+          - name: HOST_ADMIN
+            value: {{ include "mailu.fullname" . }}-admin
+          - name: HOST_SMTP
+            value: {{ include "mailu.fullname" . }}-postfix
+          - name: FETCHMAIL_DELAY
+            value: "{{ .Values.fetchmail.delay }}"
+          - name: DEBUG
+            value: "{{ .Values.fetchmail.debug }}"
+        volumeMounts:
+          - name: data
+            mountPath: /data
+            subPath: dovecotdata
+        ports:
+          - containerPort: 5232
+          - containerPort: 80
+        {{- with .Values.fetchmail.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.claimName" . }}
