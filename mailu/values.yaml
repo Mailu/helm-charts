@@ -237,7 +237,7 @@ fetchmail:
   image:
     repository: mailu/fetchmail
     # tag defaults to mailuVersion
-    # tag: master
+    tag: master
   resources:
     requests:
       memory: 100Mi
