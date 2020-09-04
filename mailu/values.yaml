@@ -232,8 +232,8 @@ mysql:
       cpu: 200m
 
 fetchmail:
-  # debug: "False"
-  # delay: "600"
+  debug: "False"
+  delay: "600"
   image:
     repository: mailu/fetchmail
     # tag defaults to mailuVersion
