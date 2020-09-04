@@ -6,7 +6,11 @@ apiVersion: apps/v1
 {{ else }}
 apiVersion: extensions/v1beta1
 {{ end }}
+{{- if eq .Values.front.controller.kind "Deployment" }}
 kind: Deployment
+{{- else if eq .Values.front.controller.kind "DaemonSet" }}
+kind: DaemonSet
+{{- end }}
 metadata:
   name: {{ include "mailu.fullname" . }}-front
 spec:
@@ -14,7 +18,18 @@ spec:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
       component: front
+  {{- if eq .Values.front.controller.kind "Deployment" }}
   replicas: 1
+  strategy:
+  {{- else if eq .Values.front.controller.kind "DaemonSet" }}
+  updateStrategy:
+  {{- end }}
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      {{- if eq .Values.front.controller.kind "Deployment" }}
+      maxSurge: 0
+      {{- end }}
   template:
     metadata:
       labels:
@@ -159,11 +174,6 @@ spec:
             secretName: {{ include "mailu.fullname" . }}-certificates
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
 
 ---
 

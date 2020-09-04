@@ -45,6 +45,7 @@
 | `initialAccount.username`         | Local part (part before @) for initial admin account | not set                   |
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
+| `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
@@ -109,6 +110,12 @@ deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadW
 ### All services are running but authentication fails for webmail and imap
 
 It's very likely that your PODs run on a different subnet than the default `10.42.0.0/16`. Set the `subnet` value to the correct subnet and try again.
+
+## Deployment of DaemonSet for front nginx pod(s)
+
+Depending on your environment you might want to shedule "only one pod" (`Deployment`) or "one pod per node" (`DaemonSet`) for the `front` nginx pod(s).
+
+A `DaemonSet` can e.g. be usefull if you have multiple DNS entries / IPs in your MX record and want `front` to be reachable on every IP.
 
 ## Ingress
 

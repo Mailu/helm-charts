@@ -111,6 +111,9 @@ front:
     limits:
       memory: 200Mi
       cpu: 200m
+  # Deployment or DaemonSet
+  controller:
+    kind: Deployment
 
 admin:
   # logLevel: WARNING
