@@ -1,5 +1,11 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/imap.yaml
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "dovecot" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -43,20 +49,13 @@ spec:
           - name: data
             mountPath: /mail
             subPath: dovecotmail
-{{- if .Values.dovecot.customConfig.overrides }} 
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.overrides }}
-          - name: dovecot-overrides
-            mountPath: "/overrides/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
-{{- end }} 
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "configmap.name" $scope }}
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.name" $scope }}
 {{- end }}
-{{- if .Values.dovecot.customConfig.etcDovecotConfD }}            
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.etcDovecotConfD }}
-          - name: dovecot-etc-dovecot-confd
-            mountPath: "/etc/dovecot/conf.d/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
-{{- end }}            
-{{- end }}
+
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
@@ -134,26 +133,17 @@ spec:
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
 {{- end }}
-{{- if .Values.dovecot.customConfig.overrides }}
-        - name: dovecot-overrides
+
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+        - name: {{ include "configmap.name" $scope }}
           configMap:
-            name: {{ template "mailu.fullname" . }}-dovecot-overrides-map
+            name: {{ include "configmap.name" $scope }}-map
             items:
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.overrides }}
-              - key: {{ $cfgName }}
-                path: {{ $cfgName }}
-{{- end }}
-{{- end }}
-{{- if .Values.dovecot.customConfig.etcDovecotConfD }}
-        - name: dovecot-etc-dovecot-confd
-          configMap:
-            name: {{ template "mailu.fullname" . }}-dovecot-etc-dovecot-confd-map
-            items:
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.etcDovecotConfD }}
-              - key: {{ $cfgName }}
-                path: {{ $cfgName }}
-{{- end }}
-{{- end }}
+              - key: {{ include "configmap.name" $scope }}
+                path: {{ include "configmap.name" $scope }}
+{{- end }}                
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -189,33 +179,3 @@ spec:
   - name: sieve
     port: 4190
     protocol: TCP
-
----
-
-{{- if .Values.dovecot.customConfig.overrides }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "mailu.fullname" . }}-dovecot-overrides-map
-data:
-# /conf/
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.overrides }}
-  {{ $cfgName }} : |-
-{{ $cfgContent | indent 4 }}
-{{- end }}
-{{- end }}
-
----
-
-{{- if .Values.dovecot.customConfig.etcDovecotConfD }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "mailu.fullname" . }}-dovecot-etc-dovecot-confd-map
-data:
-# /etc/dovecot/conf.d
-{{- range $cfgName, $cfgContent := .Values.dovecot.customConfig.etcDovecotConfD }}
-  {{ $cfgName }} : |-
-{{ $cfgContent | indent 4 }}
-{{- end }}
-{{- end }}

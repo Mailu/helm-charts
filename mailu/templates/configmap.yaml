@@ -1,0 +1,22 @@
+{{- $dot := . }}
+{{- $files := .Files }}
+
+{{- range $deploy := list "admin" "clamav" "dovecot" "mysql" "postfix" "redis" "roundcube" "rspamd" "webdav" }}
+
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "configmap.name" $scope }}-map
+data:
+{{- $fcontent := $files.Get $path }}
+  {{ include "configmap.name" $scope }}: |-
+{{ tpl $fcontent $dot | indent 4 }}
+---
+{{- end }}
+---
+{{- end }}

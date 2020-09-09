@@ -82,3 +82,7 @@ Certmanager secretName template
 {{- printf "%s-%s" $fullname "certificates" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "configmap.name" -}}
+{{- .path | replace .prefix "" | replace "/" "-" | replace "_" "-" | replace "." "-" -}}
+{{- end -}}

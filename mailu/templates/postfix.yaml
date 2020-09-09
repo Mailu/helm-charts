@@ -1,5 +1,11 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "postfix" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -35,34 +41,24 @@ spec:
       containers:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
-        imagePullPolicy: Always
-{{- if .Values.postfix.customConfig.etcPostfix }}        
+        imagePullPolicy: Always       
         args:  
           - sh
           - -c
           - |
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}          
-            postmap /etc/postfix/{{ $cfgName }};
-{{- end }}
+{{- range $path, $bytes := $files.Glob "postfix/etc/postfix" }}          
+            postmap /etc/postfix/{{ base $path }};
 {{- end }}
             /start.py;
         volumeMounts:
           - mountPath: /queue
             name: data
             subPath: mailqueue
-{{- if .Values.postfix.customConfig.etcPostfix }}            
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
-          - name: postfix-etc-postfix
-            mountPath: "/etc/postfix/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
-{{- end }}
-{{- end }}
-{{- if .Values.postfix.customConfig.conf }} 
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
-          - name: postfix-conf
-            mountPath: "/conf/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
-{{- end }} 
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "configmap.name" $scope }}
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.name" $scope }}
 {{- end }}
         env:
           - name: LOG_LEVEL
@@ -135,26 +131,17 @@ spec:
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
 {{- end }}
-{{- if .Values.postfix.customConfig.etcPostfix }}
-        - name: postfix-etc-postfix
+
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+        - name: {{ include "configmap.name" $scope }}
           configMap:
-            name: {{ template "mailu.fullname" . }}-postfix-etc-postfix-map
+            name: {{ include "configmap.name" $scope }}-map
             items:
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
-              - key: {{ $cfgName }}
-                path: {{ $cfgName }}
+              - key: {{ include "configmap.name" $scope }}
+                path: {{ include "configmap.name" $scope }}
 {{- end }}
-{{- end }}
-{{- if .Values.postfix.customConfig.conf }}
-        - name: postfix-conf
-          configMap:
-            name: {{ template "mailu.fullname" . }}-postfix-conf-map
-            items:
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
-              - key: {{ $cfgName }}
-                path: {{ $cfgName }}
-{{- end }}
-{{- end }}
+
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -187,33 +174,3 @@ spec:
   - name: smtp-auth
     port: 10025
     protocol: TCP
-    
----
-
-{{- if .Values.postfix.customConfig.etcPostfix }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "mailu.fullname" . }}-postfix-etc-postfix-map
-data:
-# /etc/postfix/
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.etcPostfix }}
-  {{ $cfgName }} : |-
-{{ $cfgContent | indent 4 }}
-{{- end }}
-{{- end }} 
-
----
-
-{{- if .Values.postfix.customConfig.conf }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "mailu.fullname" . }}-postfix-conf-map
-data:
-# /conf/
-{{- range $cfgName, $cfgContent := .Values.postfix.customConfig.conf }}
-  {{ $cfgName }} : |-
-{{ $cfgContent | indent 4 }}
-{{- end }}
-{{- end }}

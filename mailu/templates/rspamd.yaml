@@ -1,6 +1,12 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
 # (file is split into rspamd.yaml and clamav.yaml)
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "rspamd" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -43,11 +49,12 @@ spec:
             mountPath: /var/lib/rspamd
           - name: data
             subPath: dkim
-            mountPath: /dkim
-{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
-          - name: custom-config
-            mountPath: "/conf/{{ $cfgName }}"
-            subPath: {{ $cfgName }}
+            mountPath: /dkim  
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "configmap.name" $scope }}
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.name" $scope }}
 {{- end }}            
         env:
           - name: LOG_LEVEL
@@ -106,17 +113,17 @@ spec:
 {{- end }}   
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
-{{- end }}
-{{- if .Values.rspamd.customConfig.localD }}
-        - name: custom-config
+{{- end }} 
+
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+        - name: {{ include "configmap.name" $scope }}
           configMap:
-            name: {{ template "mailu.fullname" . }}-rspamd-custom-config-map
+            name: {{ include "configmap.name" $scope }}-map
             items:
-{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
-              - key: {{ $cfgName }}
-                path: {{ $cfgName }}
+              - key: {{ include "configmap.name" $scope }}
+                path: {{ include "configmap.name" $scope }}
 {{- end }}
-{{- end }}            
 
 ---
 
@@ -138,18 +145,3 @@ spec:
   - name: rspamd-http
     protocol: TCP
     port: 11334
-    
----
-
-{{- if .Values.rspamd.customConfig }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ template "mailu.fullname" . }}-rspamd-custom-config-map
-data:
-# /etc/local.d/
-{{- range $cfgName, $cfgContent := .Values.rspamd.customConfig.localD }}
-  {{ $cfgName }} : |-
-{{ $cfgContent | indent 4 }}
-{{- end }}
-{{- end }}
