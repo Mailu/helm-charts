@@ -3,7 +3,7 @@
 
 {{- range $deploy := list "admin" "clamav" "dovecot" "mysql" "postfix" "redis" "roundcube" "rspamd" "webdav" }}
 
-{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $prefix := printf "%s/%s/"  $dot.Values.configpath $deploy }}
 {{- $pattern := printf "%s%s" $prefix "**" }}
 
 {{- range $path, $bytes := $files.Glob $pattern }}

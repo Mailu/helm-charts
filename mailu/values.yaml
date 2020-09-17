@@ -340,3 +340,5 @@ mysql:
 #    #existingClaim: name-of-existing.claim
 #    #storageClass: "-"
 #    #claimNameOverride: my-claim-name     
+
+configpath: files
