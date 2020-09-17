@@ -341,4 +341,4 @@ mysql:
 #    #storageClass: "-"
 #    #claimNameOverride: my-claim-name     
 
-configpath: files
+filesGlob: files
