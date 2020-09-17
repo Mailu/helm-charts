@@ -42,6 +42,11 @@ spec:
       - name: admin
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
         imagePullPolicy: Always
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          ./start.sh &&
+          ./start.py            
         volumeMounts:
           - name: data
             subPath: dovecotdata
@@ -138,6 +143,7 @@ spec:
 {{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
         - name: {{ include "configmap.name" $scope }}
           configMap:
+            defaultMode: 0777
             name: {{ include "configmap.name" $scope }}-map
             items:
               - key: {{ include "configmap.name" $scope }}
