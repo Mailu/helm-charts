@@ -19,6 +19,10 @@ spec:
       labels:
         app: {{ include "mailu.fullname" . }}
         component: admin
+      {{- with .Values.admin.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
