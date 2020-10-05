@@ -1,6 +1,14 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
 
+#
+# Certificate request deployment is only needed if Letsencrypt is
+# supposed to be the TLS Flavor
+#
+{{- $letsEncryptTlsFlavors := list "letsencrypt" "mail-letsencrypt" -}}
+
+{{ if has .Values.ingress.tlsFlavor $letsEncryptTlsFlavors }}
+
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
@@ -16,3 +24,21 @@ spec:
   issuerRef:
     kind: {{ .Values.certmanager.issuerType }}
     name: {{ .Values.certmanager.issuerName }}
+
+{{ else if (eq .Values.ingress.tlsFlavor "notls") }}
+
+# TLS is not needed
+# Defining a dummy certificate secret to allow the "front" container
+# to start (needs mounting the secrets)
+
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/tls
+metadata:
+  name: {{ include "mailu.fullname" . }}-certificates
+data: {
+  tls.crt: 'ZHVtbXk=',
+  tls.key: 'ZHVtbXk='
+}
+
+{{ end }}
