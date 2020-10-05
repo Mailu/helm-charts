@@ -124,7 +124,7 @@ By setting `ingress.externalIngress` to false, the internal NGINX instance provi
 
 By default both, Mailu and RoundCube uses an embedded SQLite database. 
 
-The chart allows to use an embedded MySQL or external MySQL database instead. It can be controlled by the following values:
+The chart allows to use an embedded MySQL or external MySQL or PostgreSQL databases instead. It can be controlled by the following values:
 
 ### MySQL / MariaDB
 
@@ -151,3 +151,23 @@ Mailu and RoundCube will use the same MariaDB instance. A database root password
 ### Using an external mysql database
 
 An external mysql database can be used by setting ``database.mysql.host``. The chart does not support different mysql hosts for mailu and dovecot. Using other mysql ports than the default 3306 port is also nur supported by the chart.
+
+### PostgreSQL
+
+PostgreSQL can be used as an external database management system for Mailu and Roundcube.
+
+An external PostgreSQL database can be used by setting ``database.postgresql.host``.
+
+The chart does not support different PostgreSQL hosts for Mailu and RoundCube. Using other PostgreSQL ports than the default 5432 port is also not supported by the chart.
+
+#### Using PostgreSQL for Mailu
+
+Set ``database.type`` to ``postgresql``.
+ 
+The ``database.postgresql.database``, ``database.postgresql.user``, and ``database.postgresql.password`` chart values must also be set.
+
+#### Using Postgresql for Roundcube
+
+Set ``database.roundcubeType`` to ``postgresql``.
+ 
+The``database.postgresql.roundcubeDatabase``, ``database.postgresql.roundcubeUser``, and ``database.postgresql.roundcubePassword`` must also be set.
