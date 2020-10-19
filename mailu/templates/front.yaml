@@ -180,37 +180,37 @@ spec:
     component: front
   ports:
   - name: pop3
-    port: 110
+    port: {{ .Values.front.service.port.pop3 }}
     protocol: TCP
   - name: pop3s
-    port: 995
+    port: {{ .Values.front.service.port.pop3s }}
     protocol: TCP
   - name: imap
-    port: 143
+    port: {{ .Values.front.service.port.imap }}
     protocol: TCP
   - name: imaps
-    port: 993
+    port: {{ .Values.front.service.port.imaps }}
     protocol: TCP
   - name: smtp
-    port: 25
+    port: {{ .Values.front.service.port.smtp }}
     protocol: TCP
   - name: smtps
-    port: 465
+    port: {{ .Values.front.service.port.smtps }}
     protocol: TCP
   - name: smtpd
-    port: 587
+    port: {{ .Values.front.service.port.smtpd }}
     protocol: TCP
   - name: smtp-auth
-    port: 10025
+    port: {{ .Values.front.service.port.smtp-auth }}
     protocol: TCP
   - name: imap-auth
-    port: 10143
+    port: {{ .Values.front.service.port.imap-auth }}
     protocol: TCP
   - name: http
-    port: 80
+    port: {{ .Values.front.service.port.http }}
     protocol: TCP
 {{ if not .Values.ingress.externalIngress }}
   - name: https
-    port: 443
+    port: {{ .Values.front.service.port.https }}
     protocol: TCP
 {{end}}
