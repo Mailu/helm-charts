@@ -201,10 +201,10 @@ spec:
     port: {{ .Values.front.service.port.smtpd }}
     protocol: TCP
   - name: smtp-auth
-    port: {{ .Values.front.service.port.smtp-auth }}
+    port: {{ .Values.front.service.port.smtp_auth }}
     protocol: TCP
   - name: imap-auth
-    port: {{ .Values.front.service.port.imap-auth }}
+    port: {{ .Values.front.service.port.imap_auth }}
     protocol: TCP
   - name: http
     port: {{ .Values.front.service.port.http }}

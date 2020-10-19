@@ -129,10 +129,10 @@ front:
       imap: 143
       imaps: 993
       smtp: 25
-      sptmps: 465
+      smtps: 465
       smtpd: 587
-      smtp-auth: 1025
-      imap-auth: 10143
+      smtp_auth: 1025
+      imap_auth: 10143
       http: 80
       https: 443    
 
