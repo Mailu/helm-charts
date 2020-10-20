@@ -43,6 +43,13 @@ spec:
   accessModes:
   - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  {{- if $deployValues.persistence.storageClass }}
+  {{- if (eq "-" $deployValues.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ $deployValues.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
   volumeMode: Filesystem
   hostPath:
     path: {{ required "persistence.hostPath" $deployValues.persistence.hostPath }}
