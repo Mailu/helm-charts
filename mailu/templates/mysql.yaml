@@ -70,7 +70,7 @@ spec:
           - name: MYSQL_RANDOM_ROOT_PASSWORD
             value: "yes"
           {{ end }}
-{{- if (eq .Values.database.type "type") }}
+{{- if (eq .Values.database.type "mysql") }}
           - name: MYSQL_DATABASE
             value: {{ required "database.mysql.database" .Values.database.mysql.database }}
           - name: MYSQL_USER
