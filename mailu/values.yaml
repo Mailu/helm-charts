@@ -131,7 +131,7 @@ front:
       smtp: 25
       smtps: 465
       smtpd: 587
-      smtp_auth: 1025
+      smtp_auth: 10025
       imap_auth: 10143
       http: 80
       https: 443    
