@@ -122,20 +122,52 @@ By setting `ingress.externalIngress` to false, the internal NGINX instance provi
 
 ## Database
 
-By default both, mailu and dovecot uses an embedded sqlite database. The chart allows to use an embedded or external mysql database instead. It can be controlled by the following values:
+By default both, Mailu and RoundCube uses an embedded SQLite database. 
 
-### Using mysql for mailu
+The chart allows to use an embedded MySQL or external MySQL or PostgreSQL databases instead. It can be controlled by the following values:
 
-Set ``database.type`` to ``mysql``. ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.password`` must also be set.
+### MySQL / MariaDB
 
-### Using mysql for roundcube
+In the sub-sections, we we use the reference "MySQL", it is meant for any MySQL-compatible database system (like MariaDB). 
 
-Set ``database.roundcubeType`` to ``mysql``. ``database.mysql.roundcubeDatabase``, ``database.mysql.roundcubeUser``, and ``database.mysql.roundcubePassword`` must also be set.
+#### Using MySQL for Mailu
 
-### Using the internal mysql database
+Set ``database.type`` to ``mysql``.
+ 
+The ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.password`` variables must also be set.
 
-The chart deploys an instance of mariadb if either ``database.type`` or ``database.roundcubeType`` is set to ``mysql``. If both are set, they use the same mariadb instance. A database root password can be set with ``database.mysql.rootPassword``. If not set, a random root password will be used.
+### Using MySQL for RoundCube
+
+Set ``database.roundcubeType`` to ``mysql``.
+ 
+The ``database.mysql.roundcubeDatabase``, ``database.mysql.roundcubeUser``, and ``database.mysql.roundcubePassword`` variables must also be set.
+
+### Using the internal MySQL database
+
+The chart deploys an instance of MariaDB if either ``database.type`` or ``database.roundcubeType`` is set to ``mysql`` and the ``database.mysql.host`` is NOT set.
+
+Mailu and RoundCube will use the same MariaDB instance. A database root password can be set with ``database.mysql.rootPassword``. If not set, a random root password will be used.
 
 ### Using an external mysql database
 
 An external mysql database can be used by setting ``database.mysql.host``. The chart does not support different mysql hosts for mailu and dovecot. Using other mysql ports than the default 3306 port is also nur supported by the chart.
+
+### PostgreSQL
+
+PostgreSQL can be used as an external database management system for Mailu and Roundcube.
+
+An external PostgreSQL database can be used by setting ``database.postgresql.host``.
+
+The chart does not support different PostgreSQL hosts for Mailu and RoundCube. Using other PostgreSQL ports than the default 5432 port is also not supported by the chart.
+
+#### Using PostgreSQL for Mailu
+
+Set ``database.type`` to ``postgresql``.
+ 
+The ``database.postgresql.database``, ``database.postgresql.user``, and ``database.postgresql.password`` chart values must also be set.
+
+#### Using Postgresql for Roundcube
+
+Set ``database.roundcubeType`` to ``postgresql``.
+ 
+The``database.postgresql.roundcubeDatabase``, ``database.postgresql.roundcubeUser``, and ``database.postgresql.roundcubePassword`` must also be set.

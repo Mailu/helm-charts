@@ -70,8 +70,21 @@ spec:
             value: {{ .Values.database.mysql.host }}
             {{- end }}
             value: {{ include "mailu.fullname" . }}-mysql
+          {{- else if eq .Values.database.roundcubeType "postgresql" }}
+          - name: ROUNDCUBE_DB_FLAVOR
+          value: postgresql
+          - name: ROUNDCUBE_DB_USER
+            value: {{ required "database.postgresql.roundcubeUser" .Values.database.postgresql.roundcubeUser }}
+          - name: ROUNDCUBE_DB_PW
+            value: {{ required "database.postgresql.roundcubePassword" .Values.database.postgresql.roundcubePassword }}
+          - name: ROUNDCUBE_DB_NAME
+            value: {{ required "database.postgresql.roundcubeDatabase" .Values.database.postgresql.roundcubeDatabase }}
+          - name: ROUNDCUBE_DB_HOST
+            {{- if .Values.database.postgresql.host }}
+            value: {{ .Values.database.postgresql.host }}
+            {{- end }}
           {{- else }}
-          value: {{ required "database.type must be one of sqlite/mysql" .None }}
+          value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
           {{- end }}
         ports:
           - name: http

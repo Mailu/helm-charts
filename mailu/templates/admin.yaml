@@ -106,8 +106,21 @@ spec:
             {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
             {{- end }}
+          {{- else if eq .Values.database.type "postgresql" }}
+          - name: DB_FLAVOR
+            value: postgresql
+          - name: DB_USER
+            value: {{ required "database.postgresql.user" .Values.database.postgresql.user }}
+          - name: DB_PW
+            value: {{ required "database.postgresql.password" .Values.database.postgresql.password }}
+          - name: DB_NAME
+            value: {{ required "database.postgresql.database" .Values.database.postgresql.database }}
+          - name: DB_HOST
+            {{- if .Values.database.postgresql.host }}
+            value: {{ .Values.database.postgresql.host }}
+            {{- end }}
           {{- else }}
-          value: {{ required "database.type must be one of sqlite/mysql" .None }}
+          value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
           {{- end }}
         ports:
           - name: http

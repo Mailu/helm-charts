@@ -57,7 +57,14 @@ database:
 #    user: mailu
 #    password: chang3m3!
 
-    # settings for roundcube (required if roundcube database type is "mysql")
+  # For an external PostgreSQL database, use the following config:
+  postgresql: {}
+    #    host: external-db-hostname
+    #    database: mailu
+    #    user: mailu
+    #    password: chang3m3!
+
+    # settings for roundcube (required if roundcube database type is "mysql" or "postgresql")
 #    roundcubeDatabase: roundcube
 #    roundcubeUser: roundcube
 #    roundcubePassword: chang3m3!
