@@ -2,5 +2,5 @@ apiVersion: v1
 appVersion: "1.8"
 description: Mailu mail system
 name: mailu
-version: 0.0.7
+version: 0.0.8
 icon: https://mailu.io/master/_images/logo.png
