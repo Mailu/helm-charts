@@ -72,7 +72,7 @@ spec:
             value: {{ include "mailu.fullname" . }}-mysql
           {{- else if eq .Values.database.roundcubeType "postgresql" }}
           - name: ROUNDCUBE_DB_FLAVOR
-          value: postgresql
+            value: postgresql
           - name: ROUNDCUBE_DB_USER
             value: {{ required "database.postgresql.roundcubeUser" .Values.database.postgresql.roundcubeUser }}
           - name: ROUNDCUBE_DB_PW

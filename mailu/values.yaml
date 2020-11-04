@@ -48,26 +48,26 @@ database:
 # If not host is set, a database instance is created by this chart.
 #   type: mysql
   mysql: {}
-#    host: external-db-hostname
+    # host: external-db-hostname
     # root password for mysql database
-#    rootPassword: chang3m3! # can only be set for embedded mysql
+    # rootPassword: chang3m3! # can only be set for embedded mysql
 
     # settings for mailu (required if mailu database type is "mysql")
-#    database: mailu
-#    user: mailu
-#    password: chang3m3!
+    # database: mailu
+    # user: mailu
+    # password: chang3m3!
 
   # For an external PostgreSQL database, use the following config:
   postgresql: {}
-    #    host: external-db-hostname
-    #    database: mailu
-    #    user: mailu
-    #    password: chang3m3!
+    # host: external-db-hostname
+    # database: mailu
+    # user: mailu
+    # password: chang3m3!
 
     # settings for roundcube (required if roundcube database type is "mysql" or "postgresql")
-#    roundcubeDatabase: roundcube
-#    roundcubeUser: roundcube
-#    roundcubePassword: chang3m3!
+    # roundcubeDatabase: roundcube
+    # roundcubeUser: roundcube
+    # roundcubePassword: chang3m3!
 
 persistence:
   size: 100Gi
