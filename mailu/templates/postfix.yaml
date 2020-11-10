@@ -56,9 +56,9 @@ spec:
             subPath: mailqueue
 {{- range $path, $bytes := $files.Glob $pattern }}
 {{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
-          - name: {{ include "configmap.name" $scope }}
+          - name: {{ include "mailu.fullname" $dot }}-postfix
             mountPath: "{{ $path | replace $prefix "/" }}"
-            subPath: {{ include "configmap.name" $scope }}
+            subPath: {{ include "configmap.key" $scope }}
 {{- end }}
         env:
           - name: LOG_LEVEL
@@ -132,14 +132,14 @@ spec:
             claimName: {{ include "mailu.claimName" . }}
 {{- end }}
 
-{{- range $path, $bytes := $files.Glob $pattern }}
-{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
-        - name: {{ include "configmap.name" $scope }}
+        - name: {{ include "mailu.fullname" . }}-postfix
           configMap:
-            name: {{ include "configmap.name" $scope }}-map
+            name: {{ include "mailu.fullname" . }}-postfix-map
             items:
-              - key: {{ include "configmap.name" $scope }}
-                path: {{ include "configmap.name" $scope }}
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
 {{- end }}
 
   strategy:

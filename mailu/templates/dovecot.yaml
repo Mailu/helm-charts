@@ -56,9 +56,9 @@ spec:
             subPath: dovecotmail
 {{- range $path, $bytes := $files.Glob $pattern }}
 {{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
-          - name: {{ include "configmap.name" $scope }}
+          - name: {{ include "mailu.fullname" $dot }}-dovecot
             mountPath: "{{ $path | replace $prefix "/" }}"
-            subPath: {{ include "configmap.name" $scope }}
+            subPath: {{ include "configmap.key" $scope }}
 {{- end }}
 
         env:
@@ -138,16 +138,15 @@ spec:
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
 {{- end }}
-
-{{- range $path, $bytes := $files.Glob $pattern }}
-{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
-        - name: {{ include "configmap.name" $scope }}
+        - name: {{ include "mailu.fullname" . }}-dovecot
           configMap:
             defaultMode: 0777
-            name: {{ include "configmap.name" $scope }}-map
+            name: {{ include "mailu.fullname" . }}-dovecot-map
             items:
-              - key: {{ include "configmap.name" $scope }}
-                path: {{ include "configmap.name" $scope }}
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
 {{- end }}                
 
   strategy:

@@ -83,6 +83,6 @@ Certmanager secretName template
 {{- end -}}
 {{- end -}}
 
-{{- define "configmap.name" -}}
+{{- define "configmap.key" -}}
 {{- .path | replace .prefix "" | replace "/" "-" | replace "_" "-" | replace "." "-" -}}
 {{- end -}}

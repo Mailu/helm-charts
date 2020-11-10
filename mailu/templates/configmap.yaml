@@ -6,17 +6,16 @@
 {{- $prefix := printf "%s/%s/"  $dot.Values.filesGlob $deploy }}
 {{- $pattern := printf "%s%s" $prefix "**" }}
 
-{{- range $path, $bytes := $files.Glob $pattern }}
-{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "configmap.name" $scope }}-map
+  name: {{ include "mailu.fullname" $dot }}-{{ $deploy }}-map
 data:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
 {{- $fcontent := $files.Get $path }}
-  {{ include "configmap.name" $scope }}: |-
+  {{ include "configmap.key" $scope }}: |-
 {{ tpl $fcontent $dot | indent 4 }}
----
 {{- end }}
 ---
 {{- end }}
