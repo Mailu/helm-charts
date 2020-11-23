@@ -1,5 +1,11 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "postfix" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -35,11 +41,25 @@ spec:
       containers:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy: Always       
+        args:  
+          - sh
+          - -c
+          - |
+{{- range $path, $bytes := $files.Glob "postfix/etc/postfix" }}          
+            postmap /etc/postfix/{{ base $path }};
+{{- end }}
+            /start.py;
         volumeMounts:
           - mountPath: /queue
             name: data
             subPath: mailqueue
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "mailu.fullname" $dot }}-postfix
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.key" $scope }}
+{{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -97,11 +117,31 @@ spec:
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
           periodSeconds: 10
           failureThreshold: 3
-          timeoutSeconds: 5
+          timeoutSeconds: 5                
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.postfix.persistence.claimEnabled }}  
+{{- if .Values.postfix.persistence.existingClaim }}
+            claimName: {{ .Values.postfix.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "postfix" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
+
+        - name: {{ include "mailu.fullname" . }}-postfix
+          configMap:
+            name: {{ include "mailu.fullname" . }}-postfix-map
+            items:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
+{{- end }}
+
   strategy:
     type: RollingUpdate
     rollingUpdate:

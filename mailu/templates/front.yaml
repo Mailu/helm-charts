@@ -87,27 +87,21 @@ spec:
         ports:
           - name: pop3
             containerPort: 110
-            hostPort: 110
             protocol: TCP
           - name: pop3s
             containerPort: 995
-            hostPort: 995
             protocol: TCP
           - name: imap
             containerPort: 143
-            hostPort: 143
             protocol: TCP
           - name: imaps
             containerPort: 993
-            hostPort: 993
             protocol: TCP
           - name: smtp
             containerPort: 25
-            hostPort: 25
             protocol: TCP
           - name: smtps
             containerPort: 465
-            hostPort: 465
             protocol: TCP
           - name: smtp-auth
             containerPort: 10025
@@ -117,7 +111,6 @@ spec:
             protocol: TCP
           - name: smtpd
             containerPort: 587
-            hostPort: 587
             protocol: TCP
           - name: auth
             containerPort: 8000
@@ -180,37 +173,37 @@ spec:
     component: front
   ports:
   - name: pop3
-    port: 110
+    port: {{ .Values.front.service.port.pop3 }}
     protocol: TCP
   - name: pop3s
-    port: 995
+    port: {{ .Values.front.service.port.pop3s }}
     protocol: TCP
   - name: imap
-    port: 143
+    port: {{ .Values.front.service.port.imap }}
     protocol: TCP
   - name: imaps
-    port: 993
+    port: {{ .Values.front.service.port.imaps }}
     protocol: TCP
   - name: smtp
-    port: 25
+    port: {{ .Values.front.service.port.smtp }}
     protocol: TCP
   - name: smtps
-    port: 465
+    port: {{ .Values.front.service.port.smtps }}
     protocol: TCP
   - name: smtpd
-    port: 587
+    port: {{ .Values.front.service.port.smtpd }}
     protocol: TCP
   - name: smtp-auth
-    port: 10025
+    port: {{ .Values.front.service.port.smtp_auth }}
     protocol: TCP
   - name: imap-auth
-    port: 10143
+    port: {{ .Values.front.service.port.imap_auth }}
     protocol: TCP
   - name: http
-    port: 80
+    port: {{ .Values.front.service.port.http }}
     protocol: TCP
 {{ if not .Values.ingress.externalIngress }}
   - name: https
-    port: 443
+    port: {{ .Values.front.service.port.https }}
     protocol: TCP
 {{end}}

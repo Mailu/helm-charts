@@ -1,15 +1,15 @@
 # Default values for mailu.
 
 # A list of mail hostnames is required. The first will be used as primary mail hostname
-#hostnames:
+hostnames: []
 #  - mail.example.com
 #  - imap.example.com
 
 # The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
-#domain: example.com
+domain: example.com
 
 # The secret key is required for protecting authentication cookies and must be set individually for each deployment
-# secretKey: chang3m3!
+secretKey: chang3m3!
 
 # An initial account can automatically be created:
 #initialAccount:
@@ -70,6 +70,7 @@ database:
     # roundcubePassword: chang3m3!
 
 persistence:
+#  claimEnabled: false
   size: 100Gi
   accessMode: ReadWriteOnce
   #annotations:
@@ -92,13 +93,23 @@ mail:
   messageSizeLimitInMegabytes: 50
   authRatelimit: 10/minute;1000/hour
 
+# if empty defaults [chart-full-name]-certificates
+certificateSecretName: ""
+
 # certmanager settings
 certmanager:
+  enabled: true
+  # check your installed cert manager api version using eg. kubectl api-versions | grep -E 'cert.*manager'
+  apiVersion: cert-manager.io/v1alpha2
+  # ClusterIssuer or Issuer
   issuerType: ClusterIssuer
+  # issuer name set in cert manager deployment
   issuerName: letsencrypt
+
 
 # Set ingress and loadbalancer config
 ingress:
+  enabled: false
   externalIngress: true
   tlsFlavor: cert
   annotations:
@@ -112,12 +123,25 @@ front:
     # tag defaults to mailuVersion
     # tag: master
   resources:
-    requests: 
+    requests:
       memory: 100Mi
       cpu: 100m
     limits:
       memory: 200Mi
       cpu: 200m
+  service:
+    port:
+      pop3: 110 
+      pop3s: 995
+      imap: 143
+      imaps: 993
+      smtp: 25
+      smtps: 465
+      smtpd: 587
+      smtp_auth: 10025
+      imap_auth: 10143
+      http: 80
+      https: 443    
 
 admin:
   # logLevel: WARNING
@@ -132,6 +156,17 @@ admin:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name    
 
 redis:
   image:
@@ -144,6 +179,17 @@ redis:
     limits:
       memory: 300Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 postfix:
   # logLevel: WARNING
@@ -158,6 +204,17 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name 
 
 dovecot:
   # logLevel: WARNING
@@ -172,6 +229,17 @@ dovecot:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 rspamd:
   # logLevel: WARNING
@@ -185,7 +253,18 @@ rspamd:
       cpu: 100m
     limits:
       memory: 200Mi
-      cpu: 200m
+      cpu: 200m   
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name
 
 clamav:
   enabled: true
@@ -201,6 +280,17 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 roundcube:
   enabled: true
@@ -216,6 +306,17 @@ roundcube:
     limits:
       memory: 200Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name      
 
 
 webdav:
@@ -225,6 +326,17 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name    
 
 mysql:
   image:
@@ -237,3 +349,16 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
+  persistence: {}    
+#  persistence:
+#    claimEnabled: true
+#    size: 100Gi
+#    accessMode: ReadWriteOnce
+#    #annotations:
+#    #  "helm.sh/resource-policy": keep
+#    #hostPath: /path/on/the/host
+#    #existingClaim: name-of-existing.claim
+#    #storageClass: "-"
+#    #claimNameOverride: my-claim-name     
+
+filesGlob: files

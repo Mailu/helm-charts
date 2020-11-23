@@ -72,7 +72,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.clamav.persistence.claimEnabled }}  
+{{- if .Values.clamav.persistence.existingClaim }}
+            claimName: {{ .Values.clamav.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "clamav" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

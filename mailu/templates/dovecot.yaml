@@ -1,5 +1,11 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/imap.yaml
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "dovecot" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -36,6 +42,11 @@ spec:
       - name: admin
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
         imagePullPolicy: Always
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          ./start.sh &&
+          ./start.py            
         volumeMounts:
           - name: data
             subPath: dovecotdata
@@ -43,6 +54,13 @@ spec:
           - name: data
             mountPath: /mail
             subPath: dovecotmail
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "mailu.fullname" $dot }}-dovecot
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.key" $scope }}
+{{- end }}
+
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
@@ -110,7 +128,27 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.dovecot.persistence.claimEnabled }}  
+{{- if .Values.dovecot.persistence.existingClaim }}
+            claimName: {{ .Values.dovecot.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "dovecot" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
+        - name: {{ include "mailu.fullname" . }}-dovecot
+          configMap:
+            defaultMode: 0777
+            name: {{ include "mailu.fullname" . }}-dovecot-map
+            items:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
+{{- end }}                
+
   strategy:
     type: RollingUpdate
     rollingUpdate:

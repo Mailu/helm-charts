@@ -1,6 +1,12 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
 # (file is split into rspamd.yaml and clamav.yaml)
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "rspamd" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -43,7 +49,13 @@ spec:
             mountPath: /var/lib/rspamd
           - name: data
             subPath: dkim
-            mountPath: /dkim
+            mountPath: /dkim  
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "mailu.fullname" $dot }}-rspamd
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.key" $scope }}
+{{- end }}            
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
@@ -92,7 +104,26 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.rspamd.persistence.claimEnabled }}  
+{{- if .Values.rspamd.persistence.existingClaim }}
+            claimName: {{ .Values.rspamd.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "rspamd" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }} 
+
+        - name: {{ include "mailu.fullname" . }}-rspamd
+          configMap:
+            name: {{ include "mailu.fullname" . }}-rspamd-map
+            items:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
+{{- end }}
 
 ---
 

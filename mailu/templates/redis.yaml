@@ -69,7 +69,16 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+{{- if .Values.redis.persistence.claimEnabled }}  
+{{- if .Values.redis.persistence.existingClaim }}
+            claimName: {{ .Values.redis.persistence.existingClaim }}
+{{- else }}
+            {{- $_ := set . "deploy" "redis" }}
+            claimName: {{ include "mailu.deployClaimName" . }}
+{{- end }}   
+{{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
