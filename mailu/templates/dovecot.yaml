@@ -140,7 +140,6 @@ spec:
 {{- end }}
         - name: {{ include "mailu.fullname" . }}-dovecot
           configMap:
-            defaultMode: 0777
             name: {{ include "mailu.fullname" . }}-dovecot-map
             items:
 {{- range $path, $bytes := $files.Glob $pattern }}
