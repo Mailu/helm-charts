@@ -70,9 +70,9 @@ database:
     # roundcubePassword: chang3m3!
 
 external_relay: {}
-#    relayhost: "[domain.tld]:port"
-#    relayuser: username
-#    relaypassword: SECRET
+#    host: "[domain.tld]:port"
+#    username: username
+#    password: SECRET
 
 persistence:
   size: 100Gi
@@ -117,7 +117,7 @@ front:
     # tag defaults to mailuVersion
     # tag: master
   resources:
-    requests: 
+    requests:
       memory: 100Mi
       cpu: 100m
     limits:

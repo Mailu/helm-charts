@@ -63,14 +63,14 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
-          {{ if hasKey .Values.external_relay "relayhost" }}
+          {{ if hasKey .Values.external_relay "host" }}
           - name: RELAYHOST
-            value: "{{ .Values.external_relay.relayhost }}"
-          {{ if hasKey .Values.external_relay "relayuser" }}
+            value: "{{ .Values.external_relay.host }}"
+          {{ if hasKey .Values.external_relay "username" }}
           - name: RELAYUSER
-            value: "{{ .Values.external_relay.relayuser }}"
+            value: "{{ .Values.external_relay.username }}"
           - name: RELAYPASSWORD
-            value: "{{ .Values.external_relay.relaypassword }}"
+            value: "{{ .Values.external_relay.password }}"
           {{- end}}
           {{- end}}
         ports:
