@@ -31,9 +31,7 @@ spec:
 # Source: mailu/templates/dovecot.yaml
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/imap.yaml
 
-
-apiVersion: extensions/v1beta1
-
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mailu-dovecot
