@@ -1,10 +1,6 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
-{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
-{{ else }}
-apiVersion: extensions/v1beta1
-{{ end }}
 kind: Deployment
 metadata:
   name: {{ include "mailu.fullname" . }}-admin
