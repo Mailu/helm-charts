@@ -2,7 +2,7 @@
 
 {{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
 apiVersion: apps/v1
-kind: {{- required "front.controller.kind" .Values.front.controller.kind "Deployment" }}
+kind: {{ required "front.controller.kind" .Values.front.controller.kind }}
 metadata:
   name: {{ include "mailu.fullname" . }}-front
 spec:
