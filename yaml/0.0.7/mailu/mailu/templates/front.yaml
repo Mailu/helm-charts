@@ -99,6 +99,8 @@ spec:
             value: "true"
           - name: WEB_ADMIN
             value: "/admin"
+          - name: SUBNET
+            value: 10.42.0.0/16
         ports:
           - name: pop3
             containerPort: 110

@@ -54,6 +54,10 @@ spec:
             value: mailu-front
           - name: SECRET_KEY
             value: "chang3m3!"
+          - name: SUBNET
+            value: 10.42.0.0/16
+          - name: ROUNDCUBE_DB_FLAVOR
+            value: sqlite
         ports:
           - name: http
             containerPort: 80
