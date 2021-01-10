@@ -75,6 +75,7 @@ spec:
             value: mailu-admin
           - name: FRONT_ADDRESS
             value: mailu-front
+          
         ports:
           - name: smtp
             containerPort: 25
