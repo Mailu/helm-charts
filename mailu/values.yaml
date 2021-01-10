@@ -160,6 +160,7 @@ postfix:
       cpu: 500m
 
 dovecot:
+  enabled: true
   # logLevel: WARNING
   image:
     repository: mailu/dovecot
