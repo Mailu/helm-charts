@@ -80,4 +80,4 @@ echo "Rendering helm chart to yaml"
 VERSION=$( grep mailu/Chart.yaml -e '^version:' | awk '{ print $2 }' )
 mkdir -p gh-pages/yaml
 rm -rf gh-pages/yaml/${VERSION}
-${HELM} template mailu --values mailu/helm-lint-values.yaml --release-name mailu --namespace mailu --output-dir gh-pages/yaml/0.0.6
+${HELM} template mailu --values mailu/helm-lint-values.yaml --release-name mailu --namespace mailu --output-dir gh-pages/yaml/${VERSION}
