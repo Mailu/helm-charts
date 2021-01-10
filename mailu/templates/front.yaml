@@ -1,16 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
 {{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
-{{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
-{{ else }}
-apiVersion: extensions/v1beta1
-{{ end }}
-{{- if eq .Values.front.controller.kind "Deployment" }}
-kind: Deployment
-{{- else if eq .Values.front.controller.kind "DaemonSet" }}
-kind: DaemonSet
-{{- end }}
+kind: {{- required "front.controller.kind" .Values.front.controller.kind "Deployment" }}
 metadata:
   name: {{ include "mailu.fullname" . }}-front
 spec:
