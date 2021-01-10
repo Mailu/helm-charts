@@ -48,6 +48,7 @@
 | `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
+| `certmanager.apiVersion`          | API-Version for certmanager CRDs     | `cert-manager.io/v1alpha2`                |
 | `persistence.size`                | requested PVC size                   | `100Gi`                                   |
 | `persistence.storageClass`        | storageClass to use for persistence  | not set                                   |
 | `persistence.accessMode`          | accessMode to use for persistence    | `ReadWriteOnce`                           |

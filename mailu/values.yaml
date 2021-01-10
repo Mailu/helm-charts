@@ -101,6 +101,7 @@ mail:
 certmanager:
   issuerType: ClusterIssuer
   issuerName: letsencrypt
+  apiVersion: cert-manager.io/v1alpha2
 
 # Set ingress and loadbalancer config
 ingress:
