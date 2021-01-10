@@ -2,7 +2,7 @@
 
 {{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ required "front.controller.kind" .Values.front.controller.kind }}
 metadata:
   name: {{ include "mailu.fullname" . }}-front
 spec:
@@ -10,7 +10,18 @@ spec:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
       component: front
+  {{- if eq .Values.front.controller.kind "Deployment" }}
   replicas: 1
+  strategy:
+  {{- else if eq .Values.front.controller.kind "DaemonSet" }}
+  updateStrategy:
+  {{- end }}
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      {{- if eq .Values.front.controller.kind "Deployment" }}
+      maxSurge: 0
+      {{- end }}
   template:
     metadata:
       labels:
@@ -155,11 +166,6 @@ spec:
             secretName: {{ include "mailu.fullname" . }}-certificates
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
 
 ---
 
