@@ -55,6 +55,11 @@ spec:
       app: mailu
       component: front
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
   template:
     metadata:
       labels:
@@ -173,8 +178,3 @@ spec:
             secretName: mailu-certificates
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
