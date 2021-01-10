@@ -2,11 +2,11 @@ language: generic
 fail_fast: true
 install:
   - >
-    curl -s -L https://get.helm.sh/helm-v3.1.1-linux-amd64.tar.gz
+    curl -s -L https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm; mv helm helm3
   - >
-    curl -s -L https://get.helm.sh/helm-v2.16.1-linux-amd64.tar.gz
+    curl -s -L https://get.helm.sh/helm-v2.17.0-linux-amd64.tar.gz
     | tar xfvz - --strip-components=1 linux-amd64/helm
   - chmod 0700 helm; mv helm helm2
   - |
