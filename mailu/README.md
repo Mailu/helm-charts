@@ -46,9 +46,6 @@
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
-| `front.loadBalancer`              | Enable loadBalancer for front Services, hostPort is used by default. To enable it you have to set at least one option below. | not set  |
-| `front.externalTrafficPolicy`     | Only used if loadBalancer is enabled | not set                                   |
-| `front.loadBalancerIP`            | Request specific IP address, if loadBalancer is enabled | not set                |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `certmanager.apiVersion`          | API-Version for certmanager CRDs     | `cert-manager.io/v1alpha2`                |
