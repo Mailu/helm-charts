@@ -94,27 +94,39 @@ spec:
         ports:
           - name: pop3
             containerPort: 110
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 110
+            {{- end }}
             protocol: TCP
           - name: pop3s
             containerPort: 995
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 995
+            {{- end }}
             protocol: TCP
           - name: imap
             containerPort: 143
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 143
+            {{- end }}
             protocol: TCP
           - name: imaps
             containerPort: 993
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 993
+            {{- end }}
             protocol: TCP
           - name: smtp
             containerPort: 25
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 25
+            {{- end }}
             protocol: TCP
           - name: smtps
             containerPort: 465
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 465
+            {{- end }}
             protocol: TCP
           - name: smtp-auth
             containerPort: 10025
@@ -124,7 +136,9 @@ spec:
             protocol: TCP
           - name: smtpd
             containerPort: 587
+            {{- if not .Values.front.loadBalancer }}
             hostPort: 587
+            {{- end }}
             protocol: TCP
           - name: auth
             containerPort: 8000
@@ -180,6 +194,12 @@ spec:
   selector:
     app: {{ include "mailu.fullname" . }}
     component: front
+  {{- if .Values.front.loadBalancer }}
+  type: LoadBalancer
+  {{- with .Values.front.loadBalancer }}
+  {{- .|toYaml|nindent 2 }}
+  {{- end }}
+  {{- end }}
   ports:
   - name: pop3
     port: 110
