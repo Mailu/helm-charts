@@ -129,10 +129,10 @@ front:
     kind: Deployment
   # Use LoadBalancer instead og hostPort
   # kind must be set to Deployment
-  service:
-    loadBalancer: true
-    externalTrafficPolicy: Local
-    #loadBalancerIP: 192.168.1.34
+  # set at least externalTrafficPolicy to enable loadBalancer
+  loadBalancer: {}
+    # externalTrafficPolicy: Local
+    # loadBalancerIP: 192.168.1.34
 
 
 admin:
