@@ -64,8 +64,9 @@ spec:
           - name: ROUNDCUBE_DB_HOST
             {{- if .Values.database.mysql.host }}
             value: {{ .Values.database.mysql.host }}
-            {{- end }}
+            {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
+            {{- end }}
           {{- else if eq .Values.database.roundcubeType "postgresql" }}
           - name: ROUNDCUBE_DB_FLAVOR
             value: postgresql
