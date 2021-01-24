@@ -127,12 +127,21 @@ front:
   # Deployment or DaemonSet
   controller:
     kind: Deployment
-  # Use LoadBalancer instead og hostPort
-  # kind must be set to Deployment
-  # set at least externalTrafficPolicy to enable loadBalancer
-  loadBalancer: {}
-    # externalTrafficPolicy: Local
-    # loadBalancerIP: 192.168.1.34
+
+  # hostPort can be disabled below
+  # hostPort: true
+   
+  # If service.type is set to "loadBalancer" you can also specify
+  # externalTrafficPolicy and loadBalancerIP
+  # service:
+  #   type: "clusterIP"
+  #   externalTrafficPolicy: "Cluster"
+  #   loadBalancerIP: 192.168.0.1
+
+    # Set annotations if needed
+    # annotations:
+      # metallb.universe.tf/address-pool: production-public-ips
+      # metallb.universe.tf/allow-shared-ip: sharingKey
 
 
 admin:

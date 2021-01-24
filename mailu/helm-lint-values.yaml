@@ -36,6 +36,8 @@ front:
   logLevel: WARNING
   image:
     tag: master
+  service:
+    type: "clusterIP"
 
 admin:
   logLevel: WARNING
