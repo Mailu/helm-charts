@@ -116,7 +116,7 @@ spec:
         {{- if .Values.dovecot.overrides }}
         - name: overrides
           configMap:
-            name: override-dovecot
+            name: {{ include "mailu.fullname" . }}-dovecot-override
         {{- end }}
   strategy:
     type: RollingUpdate
@@ -160,7 +160,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: override-dovecot
+  name: {{ include "mailu.fullname" . }}-dovecot-override
 {{- with .Values.dovecot.overrides }}
 data:
 {{- .|toYaml|nindent 2 }}
