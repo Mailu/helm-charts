@@ -202,7 +202,9 @@ spec:
     component: front
   type: {{ $serviceType }}
   {{- if eq $serviceType "loadBalancer" }}
+  {{- if .Values.front.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.front.service.loadBalancerIP }}
+  {{- end }}
   externalTrafficPolicy: {{ default "Cluster" .Values.front.service.externalTrafficPolicy }}
   {{- end }}
   ports:

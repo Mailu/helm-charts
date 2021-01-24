@@ -133,7 +133,7 @@ front:
    
   # If service.type is set to "loadBalancer" you can also specify
   # externalTrafficPolicy and loadBalancerIP
-  # service:
+  service: {}
   #   type: "clusterIP"
   #   externalTrafficPolicy: "Cluster"
   #   loadBalancerIP: 192.168.0.1
