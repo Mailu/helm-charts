@@ -74,6 +74,46 @@ external_relay: {}
 #    username: username
 #    password: SECRET
 
+# Which (if any) services to expose to the internet
+# If this is not enabled, only webmail is exposed via the
+# main domain
+external_services:
+  enabled: false
+  annotations: {}
+      ## If you're using AWS, use nlb to preserve IP
+      # service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      ## If you have external-dns installed, you can use this to make a DNS
+      ## entry. This DNS entry will be what you use to configure your clients to
+      # external-dns.alpha.kubernetes.io/hostname: relay.domain
+  services: {}
+  # - name: pop3
+  #   port: 110
+  #   protocol: TCP
+  # - name: pop3s
+  #   port: 995
+  #   protocol: TCP
+  # - name: imap
+  #   port: 143
+  #   protocol: TCP
+  # - name: imaps
+  #   port: 993
+  #   protocol: TCP
+  # - name: smtp
+  #   port: 25
+  #   protocol: TCP
+  # - name: smtps
+  #   port: 465
+  #   protocol: TCP
+  # - name: smtpd
+  #   port: 587
+  #   protocol: TCP
+  # - name: smtp-auth
+  #   port: 10025
+  #   protocol: TCP
+  # - name: imap-auth
+  #   port: 10143
+  #   protocol: TCP
+
 persistence:
   size: 100Gi
   accessMode: ReadWriteOnce
