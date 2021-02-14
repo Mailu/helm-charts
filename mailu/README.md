@@ -65,7 +65,7 @@
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
-| `external_services.enabled`       | enable the public services load balancer   | `false`                             |
+| `external_services.enabled`       | enable the public services load balancer (see below)   | `false`                             |
 | `external_services.annotations`   | annotation(s) to add to the LB (e.g. for External DNS). See the values.yaml for examples   | not set                                   |
 | `external_services.services`                | list of ports (as required for a service definition) to add to the LB definition. See the values.yaml for examples   | not set                                   |
 
@@ -131,6 +131,48 @@ By setting `ingress.externalIngress` to false, the internal NGINX instance provi
  `ingress.tlsFlavor` and redirect `http` scheme connections to `https`.
 
  CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
+
+## External Services
+
+By default, the chart does not expose any of the MTA services (POP, SMTP, IMAP, etc) to the world. If you want this to happen, set `external_services.enabled` to `true` and then add any annotations to the `external_services.annotations` block and the ports you want to expose to the `external_services.services` array.)
+
+If you're using the External DNS addon, you'll need to add the corresponding annotation to configure the addon to create the DNS entry for the service. If you have `ingress.externalIngress` set to `true`, then you'll get DNS conflicts.
+
+You should use a Network Load Balancer if your provider offers it, in order to preserve the client IP, otherwise you'll have yourself an open relay.
+
+An example configuration block using AWS EKS and only allowing
+webmail (80/443), and SMTP (25)
+
+```
+# Which (if any) services to expose to the internet
+external_services:
+  enabled: true
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    external-dns.alpha.kubernetes.io/hostname: mail.domain.com
+  services:
+  # Enable HTTP for the webmail
+  - name: http
+    port: 80
+    protocol: TCP
+  # Enable HTTPS to allow SSL on webmail
+  - name: https
+    port: 443
+    protocol: TCP
+  # Enable SMTP
+  - name: smtp
+    port: 25
+    protocol: TCP
+....
+# Set ingress and loadbalancer config
+ingress:
+  # externalIngress must be false to prevent External DNS conflicts
+  externalIngress: false
+  tlsFlavor: cert
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+```
 
 ## Database
 
