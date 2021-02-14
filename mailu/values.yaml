@@ -76,7 +76,8 @@ external_relay: {}
 
 # Which (if any) services to expose to the internet
 # If this is not enabled, only webmail is exposed via the
-# main domain
+# main domain. If you enable this, you should not include
+# a public ingress, or the DNS will conflict.
 external_services:
   enabled: false
   annotations: {}
