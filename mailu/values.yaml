@@ -85,7 +85,7 @@ external_services:
       ## If you have external-dns installed, you can use this to make a DNS
       ## entry. This DNS entry will be what you use to configure your clients to
       # external-dns.alpha.kubernetes.io/hostname: relay.domain
-  services: {}
+  services: []
   # - name: pop3
   #   port: 110
   #   protocol: TCP
