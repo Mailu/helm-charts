@@ -143,6 +143,8 @@ You should use a Network Load Balancer if your provider offers it, in order to p
 An example configuration block using AWS EKS and only allowing
 webmail (80/443), and SMTP (25)
 
+The NLB annotation is required to enable TCP traffic, while preserving client IP. Details on NLB are available here: https://aws.amazon.com/elasticloadbalancing/features/ and the available annotations here: https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html#load-balancer-instance
+
 ```
 # Which (if any) services to expose to the internet
 external_services:
