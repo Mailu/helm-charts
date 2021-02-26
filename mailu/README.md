@@ -143,7 +143,7 @@ You should use a Network Load Balancer if your provider offers it, in order to p
 An example configuration block using AWS EKS and only allowing
 webmail (80/443), and SMTP (25)
 
-The NLB annotation is required to enable TCP traffic, while preserving client IP. Details on NLB are available here: https://aws.amazon.com/elasticloadbalancing/features/ and the available annotations here: https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html#load-balancer-instance
+The NLB annotation is required to enable TCP traffic on AWS, while preserving client IP. Details on NLB are available here: https://aws.amazon.com/elasticloadbalancing/features/ and the available annotations here: https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html#load-balancer-instance
 
 ```
 # Which (if any) services to expose to the internet
@@ -175,6 +175,39 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
 ```
+
+A similar example for GKE (note the NLB annotation isn't needed)
+
+```
+# Which (if any) services to expose to the internet
+external_services:
+  enabled: true
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mail.domain.com
+  services:
+  # Enable HTTP for the webmail
+  - name: http
+    port: 80
+    protocol: TCP
+  # Enable HTTPS to allow SSL on webmail
+  - name: https
+    port: 443
+    protocol: TCP
+  # Enable SMTP
+  - name: smtp
+    port: 25
+    protocol: TCP
+....
+# Set ingress and loadbalancer config
+ingress:
+  # externalIngress must be false to prevent External DNS conflicts
+  externalIngress: false
+  tlsFlavor: cert
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+```
+
 
 ## Database
 
