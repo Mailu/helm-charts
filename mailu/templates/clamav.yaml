@@ -107,7 +107,7 @@ metadata:
   {{- end }}
 spec:
   accessModes:
-    - {{ .Values.persistence.accessMode }}
+    - {{ .Values.clamav.persistence.accessMode }}
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
