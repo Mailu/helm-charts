@@ -93,6 +93,9 @@ mailuVersion: 1.8
 # default log level. can be overridden globally or per service
 logLevel: WARNING
 
+# Set to true if Redis and Admin containers should run from the same pod to share DKIM mount
+combineRspamdAdmin: false
+
 mail:
   messageSizeLimitInMegabytes: 50
   authRatelimit: 10/minute;1000/hour

@@ -1,25 +1,21 @@
-# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
 
-{{ if not .Values.combineRspamdAdmin  }}
+{{ if .Values.combineRspamdAdmin }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mailu.fullname" . }}-admin
+  name: {{ include "mailu.fullname" . }}-combined
 spec:
   selector:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
-      component: admin
+      component: combined
   replicas: 1
   template:
     metadata:
       labels:
         app: {{ include "mailu.fullname" . }}
-        component: admin
-      {{- with .Values.admin.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        component: combined
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -107,22 +103,9 @@ spec:
             {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
             {{- end }}
-          {{- else if eq .Values.database.type "postgresql" }}
-          - name: DB_FLAVOR
-            value: postgresql
-          - name: DB_USER
-            value: {{ required "database.postgresql.user" .Values.database.postgresql.user }}
-          - name: DB_PW
-            value: {{ required "database.postgresql.password" .Values.database.postgresql.password }}
-          - name: DB_NAME
-            value: {{ required "database.postgresql.database" .Values.database.postgresql.database }}
-          - name: DB_HOST
-            {{- if .Values.database.postgresql.host }}
-            value: {{ .Values.database.postgresql.host }}
-            {{- end }}
           {{- else }}
-          value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
-          {{- end }}
+          value: {{ required "database.type must be one of sqlite/mysql" .None }}
+        {{- end }}
         ports:
           - name: http
             containerPort: 80
@@ -145,10 +128,43 @@ spec:
           periodSeconds: 10
           failureThreshold: 1
           timeoutSeconds: 5
+      - name: redis
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: redis
+            mountPath: /data
+        ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+        {{- with .Values.redis.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+        livenessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds: 10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.combineRspamdAdmin  }}-combined{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -163,13 +179,54 @@ metadata:
   name: {{ include "mailu.fullname" . }}-admin
   labels:
     app: {{ include "mailu.fullname" . }}
-    component: admin
+    component: combined
 spec:
   selector:
     app: {{ include "mailu.fullname" . }}
-    component: admin
+    component: combined
   ports:
-  - name: http
-    port: 80
+    - name: http
+      port: 80
+      protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-rspamd
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: combined
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: combined
+  ports:
+  - name: redis
+    port: 6379
     protocol: TCP
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-combined
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
 {{ end }}

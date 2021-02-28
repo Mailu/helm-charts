@@ -49,6 +49,7 @@ spec:
         {{- end }}
   {{- end }}
 {{- else if not .Values.persistence.existingClaim }}
+{{ if not .Values.combineRspamdAdmin  }}
 ########################################
 ###
 ### Variant: normal volume claim
@@ -76,3 +77,4 @@ spec:
   {{- end }}
   {{- end }}
 {{- end }}
+{{ end }}
