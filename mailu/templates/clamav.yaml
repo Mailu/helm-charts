@@ -103,6 +103,7 @@ metadata:
   name: {{ include "mailu.claimName" . }}-clamav
   {{- if .Values.persistence.annotations }}
   annotations:
+    helm.sh/resource-policy: "keep"
   {{ toYaml .Values.persistence.annotations | indent 4 }}
   {{- end }}
 spec:
