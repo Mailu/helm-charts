@@ -33,7 +33,7 @@ spec:
       containers:
       - name: webdav
         image: {{ .Values.webdav.image.repository }}:{{ default .Values.mailuVersion .Values.webdav.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - mountPath: /data
             name: data

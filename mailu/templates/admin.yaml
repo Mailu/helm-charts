@@ -36,7 +36,7 @@ spec:
       containers:
       - name: admin
         image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: admin

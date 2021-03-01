@@ -32,7 +32,7 @@ spec:
       containers:
       - name: admin
         image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy: {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: admin
@@ -130,7 +130,7 @@ spec:
           timeoutSeconds: 5
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: rspamd

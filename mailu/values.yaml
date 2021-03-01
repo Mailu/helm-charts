@@ -21,6 +21,7 @@
 nameOverride: ""
 fullnameOverride: ""
 clusterDomain: cluster.local
+imagePullPolicy: Always
 
 nodeSelector: {}
 
