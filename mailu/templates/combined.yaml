@@ -225,7 +225,7 @@ spec:
     app: {{ include "mailu.fullname" . }}
     component: combined
   ports:
-  - name: redis
+  - name: rspamd
     port: 6379
     protocol: TCP
 
