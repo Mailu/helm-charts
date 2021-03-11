@@ -42,6 +42,12 @@ spec:
           - mountPath: /data
             name: data
             subPath: roundcube
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "mailu.fullname" $dot }}-rspamd
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.key" $scope }}
+{{- end }}    
         env:
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
@@ -106,6 +112,15 @@ spec:
 {{- end }}   
 {{- else }}
             claimName: {{ include "mailu.claimName" . }}
+{{- end }}
+        - name: {{ include "mailu.fullname" . }}-roundcube
+          configMap:
+            name: {{ include "mailu.fullname" . }}-roundcube
+            items:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
 {{- end }}
   strategy:
     type: RollingUpdate
