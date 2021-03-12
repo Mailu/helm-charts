@@ -92,7 +92,7 @@ spec:
             command:
               - sh
               - -c
-              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+              - 'echo QUIT|nc localhost 110|grep "POP3 ready"'
           periodSeconds: 10
           failureThreshold: 30
           timeoutSeconds: 5
@@ -101,7 +101,7 @@ spec:
             command:
               - sh
               - -c
-              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+              - 'echo QUIT|nc localhost 110|grep "POP3 ready"'
           periodSeconds: 10
           failureThreshold: 3
           timeoutSeconds: 5

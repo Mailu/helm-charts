@@ -91,7 +91,7 @@ spec:
             command:
               - sh
               - -c
-              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP ready"'
           periodSeconds: 10
           failureThreshold: 30
           timeoutSeconds: 5
@@ -100,7 +100,7 @@ spec:
             command:
               - sh
               - -c
-              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP ready"'
           periodSeconds: 10
           failureThreshold: 3
           timeoutSeconds: 5
