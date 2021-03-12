@@ -112,6 +112,20 @@ ingress:
 
 # Frontend load balancer for non-HTTP(s) services
 front:
+  externalService:
+    enabled: false
+    type: ClusterIP
+    annotations: {}
+    pop3:
+      pop3: false
+      pop3s: true
+    imap:
+      imap: false
+      imaps: true
+    smtp:
+      smtp: true
+      smtps: true
+      submission: true
   # logLevel: WARNING
   image:
     repository: mailu/nginx
