@@ -2,6 +2,12 @@
 
 {{- if .Values.roundcube.enabled }}
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "roundcube" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -44,7 +50,7 @@ spec:
             subPath: roundcube
 {{- range $path, $bytes := $files.Glob $pattern }}
 {{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
-          - name: {{ include "mailu.fullname" $dot }}-rspamd
+          - name: {{ include "mailu.fullname" $dot }}-roundcube
             mountPath: "{{ $path | replace $prefix "/" }}"
             subPath: {{ include "configmap.key" $scope }}
 {{- end }}    
@@ -115,7 +121,7 @@ spec:
 {{- end }}
         - name: {{ include "mailu.fullname" . }}-roundcube
           configMap:
-            name: {{ include "mailu.fullname" . }}-roundcube
+            name: {{ include "mailu.fullname" . }}-roundcube-map
             items:
 {{- range $path, $bytes := $files.Glob $pattern }}
 {{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
