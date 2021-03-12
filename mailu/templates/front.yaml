@@ -75,10 +75,6 @@ spec:
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
           - name: WEB_WEBMAIL
             value: "/"
-          - name: WEBDAV
-            value: none
-          - name: WEBDAV_ADDRESS
-            value: localhost
           - name: ADMIN
             value: "true"
           - name: WEB_ADMIN
@@ -88,6 +84,11 @@ spec:
             value: radicale
           - name: WEBDAV_ADDRESS
             value: {{ include "mailu.fullname" . }}-webdav.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:5232
+          {{- else }}
+          - name: WEBDAV
+            value: none
+          - name: WEBDAV_ADDRESS
+            value: localhost
           {{- end }}
           - name: SUBNET
             value: {{ .Values.subnet }}
