@@ -256,9 +256,6 @@ spec:
     port: 993
     protocol: TCP
   {{- end }}
-  - name: imap-auth
-    port: 10143
-    protocol: TCP
 {{- end }}
 
 {{- with .smtp }}
@@ -277,9 +274,6 @@ spec:
     port: 587
     protocol: TCP
   {{- end }}
-  - name: smtp-auth
-    port: 10025
-    protocol: TCP
   {{- end }}
   {{- if not $.Values.ingress.externalIngress }}
   - name: http
