@@ -1,5 +1,11 @@
 {{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcubeType "mysql")) (not .Values.database.mysql.host) }}
 
+{{- $dot := . }}
+{{- $files := .Files }}
+{{- $deploy := "mysql" }}
+{{- $prefix := printf "%s/%s/"  "files" $deploy }}
+{{- $pattern := printf "%s%s" $prefix "**" }}
+
 {{ if (eq .Values.database.roundcubeType "mysql") }}
 apiVersion: v1
 kind: ConfigMap
@@ -58,6 +64,13 @@ spec:
           - name: data
             subPath: mysql
             mountPath: /var/lib/mysql
+            {{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}
+          - name: {{ include "mailu.fullname" $dot }}-mysql
+            mountPath: "{{ $path | replace $prefix "/" }}"
+            subPath: {{ include "configmap.key" $scope }}
+{{- end }}
+
 {{- if (eq .Values.database.roundcubeType "mysql") }}
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
@@ -120,6 +133,15 @@ spec:
         - name: initscripts
           configMap:
             name: {{ include "mailu.fullname" . }}-mysql-init
+        - name: {{ include "mailu.fullname" . }}-mysql
+          configMap:
+            name: {{ include "mailu.fullname" . }}-mysql-map
+            items:
+{{- range $path, $bytes := $files.Glob $pattern }}
+{{ $scope := (dict "root" $dot.Values "path" $path "prefix" $prefix) }}              
+              - key: {{ include "configmap.key" $scope }}
+                path: {{ include "configmap.key" $scope }}
+{{- end }}            
   strategy:
     # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
     type: RollingUpdate
