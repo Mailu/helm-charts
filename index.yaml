@@ -3,9 +3,9 @@ entries:
   mailu:
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.317791355Z"
+    created: "2021-04-16T00:20:08.969050573Z"
     description: Mailu mail system
-    digest: 9cbd494b398b0ebe533a10245edf284bba4a6eb407ac153a91b79359bdb9e170
+    digest: b6064c864b7408867815ef6051c6ed76f00641cd55807b9c8b340bbf5bc44fe9
     icon: https://mailu.io/master/_images/logo.png
     name: mailu
     urls:
@@ -13,7 +13,7 @@ entries:
     version: 0.1.0
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.316524728Z"
+    created: "2021-04-16T00:20:08.967656618Z"
     description: Mailu mail system
     digest: 0bf6427a9e61a9b042be9a9729e1d005b3305ced52506b75d228b4fc62a8fee9
     icon: https://mailu.io/master/_images/logo.png
@@ -23,7 +23,7 @@ entries:
     version: 0.0.8
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.315276684Z"
+    created: "2021-04-16T00:20:08.966472155Z"
     description: Mailu mail system
     digest: 3a8d9fea5aaf3d5c1cca9c9c9c409a68243fb673c035ba91e587eedbef48e334
     icon: https://mailu.io/master/_images/logo.png
@@ -33,7 +33,7 @@ entries:
     version: 0.0.7
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.314225451Z"
+    created: "2021-04-16T00:20:08.965257Z"
     description: Mailu mail system
     digest: 399491482f1f3a77d1f22b946c68eca6b63498e474ef3d22873b70c56542e339
     icon: https://mailu.io/master/_images/logo.png
@@ -43,7 +43,7 @@ entries:
     version: 0.0.6
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.313287338Z"
+    created: "2021-04-16T00:20:08.964208486Z"
     description: Mailu mail system
     digest: f8297664c0dd7f10e46373922058800c14d2726e8aeecbf6bcdd67935f8678e1
     name: mailu
@@ -52,7 +52,7 @@ entries:
     version: 0.0.5
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.312474969Z"
+    created: "2021-04-16T00:20:08.963338193Z"
     description: Mailu mail system
     digest: b116b48b161f46f9f836769c6100958db95e65d173f52a1a152d1c2276dcd3a9
     name: mailu
@@ -61,7 +61,7 @@ entries:
     version: 0.0.4
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.311638369Z"
+    created: "2021-04-16T00:20:08.962477408Z"
     description: Mailu mail system
     digest: 9f4a4ffc80d94f3c49b2e0a80c7cc3a98d3944cb9b118d6638b701eab10eadad
     name: mailu
@@ -70,7 +70,7 @@ entries:
     version: 0.0.3
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.310774992Z"
+    created: "2021-04-16T00:20:08.960553739Z"
     description: Mailu mail system
     digest: 2c6e3733a5aa899cfb34b583b4d11df0afd919970c1f0c49cecdb9e53aead43c
     name: mailu
@@ -79,11 +79,11 @@ entries:
     version: 0.0.2
   - apiVersion: v1
     appVersion: "1.8"
-    created: "2021-01-10T15:15:18.30984532Z"
+    created: "2021-04-16T00:20:08.958661704Z"
     description: Mailu mail system
     digest: b445932d76377ec97a033be84d24e45d8234b751d219f8bf9db485d84697b757
     name: mailu
     urls:
     - https://mailu.github.io/helm-charts/mailu-0.0.1.tgz
     version: 0.0.1
-generated: "2021-01-10T15:15:18.308080683Z"
+generated: "2021-04-16T00:20:08.957152649Z"

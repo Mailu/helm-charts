@@ -50,7 +50,7 @@ spec:
       containers:
       - name: admin
         image: mailu/dovecot:master
-        imagePullPolicy: Always
+        imagePullPolicy:  Always
         volumeMounts:
           - name: data
             subPath: dovecotdata

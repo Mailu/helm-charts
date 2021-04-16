@@ -39,7 +39,7 @@ spec:
       containers:
       - name: clamav
         image: mailu/clamav:master
-        imagePullPolicy: Always
+        imagePullPolicy:  Always
         volumeMounts:
           - name: data
             subPath: clamav

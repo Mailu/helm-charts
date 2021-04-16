@@ -47,7 +47,7 @@ spec:
       containers:
       - name: postfix
         image: mailu/postfix:master
-        imagePullPolicy: Always
+        imagePullPolicy:  Always
         volumeMounts:
           - mountPath: /queue
             name: data
