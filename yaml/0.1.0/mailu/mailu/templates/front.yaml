@@ -69,7 +69,7 @@ spec:
       containers:
       - name: front
         image: mailu/nginx:master
-        imagePullPolicy:  Always
+        imagePullPolicy: Always
         volumeMounts:
           - name: certs
             mountPath: /certs

@@ -19,7 +19,6 @@ spec:
 # Source: mailu/templates/admin.yaml
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:

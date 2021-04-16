@@ -38,7 +38,7 @@ spec:
       containers:
       - name: roundcube
         image: mailu/roundcube:master
-        imagePullPolicy:  Always
+        imagePullPolicy: Always
         volumeMounts:
           - mountPath: /data
             name: data
