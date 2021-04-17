@@ -128,6 +128,22 @@ front:
   controller:
     kind: Deployment
 
+  # hostPort can be disabled below
+  # hostPort: true
+   
+  # If service.type is set to "loadBalancer" you can also specify
+  # externalTrafficPolicy and loadBalancerIP
+  service: {}
+  #   type: "clusterIP"
+  #   externalTrafficPolicy: "Cluster"
+  #   loadBalancerIP: 192.168.0.1
+
+    # Set annotations if needed
+    # annotations:
+      # metallb.universe.tf/address-pool: production-public-ips
+      # metallb.universe.tf/allow-shared-ip: sharingKey
+
+
 admin:
   # logLevel: WARNING
   image:

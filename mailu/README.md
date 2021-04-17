@@ -46,6 +46,11 @@
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
+| `front.hostPort`                  | Enable hostPort                      | 'true'                                    |
+| `front.service.type`              | service.spec.type                    | 'clusterIP'                               |
+| `front.service.externalTrafficPolicy` | service.spec.externalTrafficPolicy. Only if front.service.type: loadBalancer | 'Local'  |
+| `front.service.loadBalancerIP`    | Request specific IP address, if front.service.type: loadBalancer | not set       |
+| `front.service.annotations`       | Specify service annotations          | not set                                   |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `certmanager.apiVersion`          | API-Version for certmanager CRDs     | `cert-manager.io/v1alpha2`                |

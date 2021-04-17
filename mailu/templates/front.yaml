@@ -1,6 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
 
 {{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
+{{- $hostPort := default nil .Values.front.hostPort }}
+{{- $serviceType := default "clusterIP" .Values.front.service.type }}
 apiVersion: apps/v1
 kind: {{ required "front.controller.kind" .Values.front.controller.kind }}
 metadata:
@@ -94,27 +96,39 @@ spec:
         ports:
           - name: pop3
             containerPort: 110
+            {{- if $hostPort }}
             hostPort: 110
+            {{- end }}
             protocol: TCP
           - name: pop3s
             containerPort: 995
+            {{- if $hostPort }}
             hostPort: 995
+            {{- end }}
             protocol: TCP
           - name: imap
             containerPort: 143
+            {{- if $hostPort }}
             hostPort: 143
+            {{- end }}
             protocol: TCP
           - name: imaps
             containerPort: 993
+            {{- if $hostPort }}
             hostPort: 993
+            {{- end }}
             protocol: TCP
           - name: smtp
             containerPort: 25
+            {{- if $hostPort }}
             hostPort: 25
+            {{- end }}
             protocol: TCP
           - name: smtps
             containerPort: 465
+            {{- if $hostPort }}
             hostPort: 465
+            {{- end }}
             protocol: TCP
           - name: smtp-auth
             containerPort: 10025
@@ -124,7 +138,9 @@ spec:
             protocol: TCP
           - name: smtpd
             containerPort: 587
+            {{- if $hostPort }}
             hostPort: 587
+            {{- end }}
             protocol: TCP
           - name: auth
             containerPort: 8000
@@ -173,6 +189,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "mailu.fullname" . }}-front
+  {{- with .Values.front.service.annotations }}
+  annotations:
+  {{- .|toYaml|nindent 4 }}
+  {{- end }}
   labels:
     app: {{ include "mailu.fullname" . }}
     component: front
@@ -180,6 +200,13 @@ spec:
   selector:
     app: {{ include "mailu.fullname" . }}
     component: front
+  type: {{ $serviceType }}
+  {{- if eq $serviceType "loadBalancer" }}
+  {{- if .Values.front.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.front.service.loadBalancerIP }}
+  {{- end }}
+  externalTrafficPolicy: {{ default "Cluster" .Values.front.service.externalTrafficPolicy }}
+  {{- end }}
   ports:
   - name: pop3
     port: 110
