@@ -49,6 +49,7 @@ spec:
 {{- range $path, $bytes := $files.Glob "postfix/etc/postfix" }}          
             postmap /etc/postfix/{{ base $path }};
 {{- end }}
+            apk add postfix-mysql;
             /start.py;
         volumeMounts:
           - mountPath: /queue
