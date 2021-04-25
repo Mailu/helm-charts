@@ -3,7 +3,7 @@
 ## Prerequisites
 
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
-* cert-manager v0.12 or higher installed and configured (including a working cert issuer).  
+* cert-manager v0.12 or higher installed and configured (including a working cert issuer).
 * A node which has a public reachable IP, static address because mail service binds directly to the node's IP
 * A hosting service that allows inbound and outbound traffic on port 25.
 
@@ -65,6 +65,10 @@
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
+| `external_services.enabled`       | enable the public services load balancer (see below)   | `false`                             |
+| `external_services.annotations`   | annotation(s) to add to the LB (e.g. for External DNS). See the values.yaml for examples   | not set                                   |
+| `external_services.services`                | list of ports (as required for a service definition) to add to the LB definition. See the values.yaml for examples   | not set                                   |
+
 
 ### Example values.yaml to get started
 
@@ -122,32 +126,109 @@ A `DaemonSet` can e.g. be usefull if you have multiple DNS entries / IPs in your
 
 The default ingress is handled externally. In some situations, this is problematic, such as when webmail should be accessible
  on the same address as the exposed ports. Kubernetes services cannot provide such capabilities without vendor-specific annotations.
- 
+
 By setting `ingress.externalIngress` to false, the internal NGINX instance provided by `front` will configure TLS according to
- `ingress.tlsFlavor` and redirect `http` scheme connections to `https`. 
- 
+ `ingress.tlsFlavor` and redirect `http` scheme connections to `https`.
+
  CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
+
+## External Services
+
+By default, the chart does not expose any of the MTA services (POP, SMTP, IMAP, etc) to the world. If you want this to happen, set `external_services.enabled` to `true` and then add any annotations to the `external_services.annotations` block and the ports you want to expose to the `external_services.services` array.)
+
+If you're using the External DNS addon, you'll need to add the corresponding annotation to configure the addon to create the DNS entry for the service. If you have `ingress.externalIngress` set to `true`, then you'll get DNS conflicts.
+
+You should use a Network Load Balancer if your provider offers it, in order to preserve the client IP, otherwise you'll have yourself an open relay.
+
+An example configuration block using AWS EKS and only allowing
+webmail (80/443), and SMTP (25)
+
+The NLB annotation is required to enable TCP traffic on AWS, while preserving client IP. Details on NLB are available here: https://aws.amazon.com/elasticloadbalancing/features/ and the available annotations here: https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html#load-balancer-instance
+
+```
+# Which (if any) services to expose to the internet
+external_services:
+  enabled: true
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    external-dns.alpha.kubernetes.io/hostname: mail.domain.com
+  services:
+  # Enable HTTP for the webmail
+  - name: http
+    port: 80
+    protocol: TCP
+  # Enable HTTPS to allow SSL on webmail
+  - name: https
+    port: 443
+    protocol: TCP
+  # Enable SMTP
+  - name: smtp
+    port: 25
+    protocol: TCP
+....
+# Set ingress and loadbalancer config
+ingress:
+  # externalIngress must be false to prevent External DNS conflicts
+  externalIngress: false
+  tlsFlavor: cert
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+```
+
+A similar example for GKE (note the NLB annotation isn't needed)
+
+```
+# Which (if any) services to expose to the internet
+external_services:
+  enabled: true
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: mail.domain.com
+  services:
+  # Enable HTTP for the webmail
+  - name: http
+    port: 80
+    protocol: TCP
+  # Enable HTTPS to allow SSL on webmail
+  - name: https
+    port: 443
+    protocol: TCP
+  # Enable SMTP
+  - name: smtp
+    port: 25
+    protocol: TCP
+....
+# Set ingress and loadbalancer config
+ingress:
+  # externalIngress must be false to prevent External DNS conflicts
+  externalIngress: false
+  tlsFlavor: cert
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+```
+
 
 ## Database
 
-By default both, Mailu and RoundCube uses an embedded SQLite database. 
+By default both, Mailu and RoundCube uses an embedded SQLite database.
 
 The chart allows to use an embedded MySQL or external MySQL or PostgreSQL databases instead. It can be controlled by the following values:
 
 ### MySQL / MariaDB
 
-In the sub-sections, we we use the reference "MySQL", it is meant for any MySQL-compatible database system (like MariaDB). 
+In the sub-sections, we we use the reference "MySQL", it is meant for any MySQL-compatible database system (like MariaDB).
 
 #### Using MySQL for Mailu
 
 Set ``database.type`` to ``mysql``.
- 
+
 The ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.password`` variables must also be set.
 
 ### Using MySQL for RoundCube
 
 Set ``database.roundcubeType`` to ``mysql``.
- 
+
 The ``database.mysql.roundcubeDatabase``, ``database.mysql.roundcubeUser``, and ``database.mysql.roundcubePassword`` variables must also be set.
 
 ### Using the internal MySQL database
@@ -171,11 +252,11 @@ The chart does not support different PostgreSQL hosts for Mailu and RoundCube. U
 #### Using PostgreSQL for Mailu
 
 Set ``database.type`` to ``postgresql``.
- 
+
 The ``database.postgresql.database``, ``database.postgresql.user``, and ``database.postgresql.password`` chart values must also be set.
 
 #### Using Postgresql for Roundcube
 
 Set ``database.roundcubeType`` to ``postgresql``.
- 
+
 The``database.postgresql.roundcubeDatabase``, ``database.postgresql.roundcubeUser``, and ``database.postgresql.roundcubePassword`` must also be set.

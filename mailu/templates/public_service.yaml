@@ -1,0 +1,22 @@
+{{- if eq .Values.external_services.enabled true }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-external
+  labels:
+    app: mailu
+{{- if .Values.external_services.annotations }}
+  annotations:
+{{ toYaml .Values.external_services.annotations | indent 4 }}
+{{- end }}
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app: mailu
+    component: front
+{{- if .Values.external_services.services }}
+  ports:
+{{ toYaml .Values.external_services.services | indent 4 }}
+{{- end }}
+{{- end }}
