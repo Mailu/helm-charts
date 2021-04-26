@@ -86,6 +86,23 @@ persistence:
 secretKey: chang3m3!
 ```
 
+## Avoiding use of Read-Write Multiple (`RWX`) Volumes
+The traditional configuration of Mailu deployment to Kubernetes is to have a separate pod for each container. This works, but the
+`admin` and `rspamd` pods must write to a shared volume. In turn, the shared volume they write to must contain privileges of
+`RWX` (ReadWriteMany) instead of `RWO` to do so.
+
+For many storage providers, RWX requires volume types that may be inconvenient or undesirable to provision. For instance in Ceph,
+`RWX` volumes must be provisioned with CephFS instead of RBD. 
+
+By using the `avoidRWXVolumes` flag, the `admin` and `rspamd` containers are combined into a single pod, avoiding a shared volume. 
+Additionally, each remaining pod is given it's own storage PVC. This allows each pod to access a single volume mount as `RWO`. 
+The downside of this configuration is the pods may not be scaled beyond a single replica.
+
+For smaller environments where a single replica is sufficient, this works well. For environments where either `admin` or `rspamd`
+need to scale beyond a single replica, users are advised to not use this flag.
+
+Once the `/dkim` mounts can be moved to Redis, this distinction will not be required.
+
 ## Persistence
 
 ### hostPath persistence

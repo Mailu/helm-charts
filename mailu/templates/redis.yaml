@@ -31,7 +31,7 @@ spec:
       containers:
       - name: redis
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: redis
@@ -65,7 +65,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-redis{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -89,3 +89,29 @@ spec:
   - name: redis
     port: 6379
     protocol: TCP
+
+
+{{ if .Values.avoidRWXVolumes  }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-redis
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{ end }}

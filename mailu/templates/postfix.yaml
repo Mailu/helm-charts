@@ -31,7 +31,7 @@ spec:
       containers:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - mountPath: /queue
             name: data
@@ -107,7 +107,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-postfix{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -140,3 +140,28 @@ spec:
   - name: smtp-auth
     port: 10025
     protocol: TCP
+
+{{ if .Values.avoidRWXVolumes  }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-postfix
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.postfix.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.postfix.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{ end }}

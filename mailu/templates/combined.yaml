@@ -1,25 +1,21 @@
-# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
 
-{{ if not .Values.avoidRWXVolumes  }}
+{{ if .Values.avoidRWXVolumes }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mailu.fullname" . }}-admin
+  name: {{ include "mailu.fullname" . }}-combined
 spec:
   selector:
     matchLabels:
       app: {{ include "mailu.fullname" . }}
-      component: admin
+      component: combined
   replicas: 1
   template:
     metadata:
       labels:
         app: {{ include "mailu.fullname" . }}
-        component: admin
-      {{- with .Values.admin.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        component: combined
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -107,22 +103,9 @@ spec:
             {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
             {{- end }}
-          {{- else if eq .Values.database.type "postgresql" }}
-          - name: DB_FLAVOR
-            value: postgresql
-          - name: DB_USER
-            value: {{ required "database.postgresql.user" .Values.database.postgresql.user }}
-          - name: DB_PW
-            value: {{ required "database.postgresql.password" .Values.database.postgresql.password }}
-          - name: DB_NAME
-            value: {{ required "database.postgresql.database" .Values.database.postgresql.database }}
-          - name: DB_HOST
-            {{- if .Values.database.postgresql.host }}
-            value: {{ .Values.database.postgresql.host }}
-            {{- end }}
           {{- else }}
-          value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
-          {{- end }}
+          value: {{ required "database.type must be one of sqlite/mysql" .None }}
+        {{- end }}
         ports:
           - name: http
             containerPort: 80
@@ -145,10 +128,65 @@ spec:
           periodSeconds: 10
           failureThreshold: 1
           timeoutSeconds: 5
+      - name: rspamd
+        image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
+        volumeMounts:
+          - name: data
+            subPath: rspamd
+            mountPath: /var/lib/rspamd
+          - name: data
+            subPath: dkim
+            mountPath: /dkim
+        env:
+          - name: LOG_LEVEL
+            value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
+          - name: FRONT_ADDRESS
+            value: {{ include "mailu.fullname" . }}-front
+          - name: REDIS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-redis
+          {{- if .Values.clamav.enabled }}
+          - name: ANTIVIRUS
+            value: clamav
+          - name: ANTIVIRUS_ADDRESS
+            value: {{ include "mailu.fullname" . }}-clamav:3310
+          {{- else }}
+          - name: ANTIVIRUS
+            value: none
+          - name: ANTIVIRUS_ADDRESS
+            value: localhost
+          {{- end }}
+          - name: SUBNET
+            value: "{{ .Values.subnet }}"
+        ports:
+          - name: rspamd
+            containerPort: 11332
+            protocol: TCP
+          - name: rspamd-http
+            containerPort: 11334
+            protocol: TCP
+        {{- with .Values.rspamd.resources }}
+        resources:
+        {{- .|toYaml|nindent 10}}
+        {{- end }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds: 5
+          failureThreshold: 30
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-combined{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -163,13 +201,54 @@ metadata:
   name: {{ include "mailu.fullname" . }}-admin
   labels:
     app: {{ include "mailu.fullname" . }}
-    component: admin
+    component: combined
 spec:
   selector:
     app: {{ include "mailu.fullname" . }}
-    component: admin
+    component: combined
   ports:
-  - name: http
-    port: 80
+    - name: http
+      port: 80
+      protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-rspamd
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: combined
+spec:
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: combined
+  ports:
+  - name: rspamd
+    port: 6379
     protocol: TCP
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-combined
+  {{- if .Values.admin.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.admin.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.admin.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
 {{ end }}

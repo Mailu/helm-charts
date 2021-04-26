@@ -1,6 +1,7 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
 # (file is split into rspamd.yaml and clamav.yaml)
 
+{{ if not .Values.avoidRWXVolumes  }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,7 +33,7 @@ spec:
       containers:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: rspamd
@@ -110,3 +111,4 @@ spec:
   - name: rspamd-http
     protocol: TCP
     port: 11334
+{{ end }}

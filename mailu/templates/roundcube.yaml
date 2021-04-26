@@ -33,7 +33,7 @@ spec:
       containers:
       - name: roundcube
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - mountPath: /data
             name: data
@@ -106,7 +106,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-roundcube{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -130,4 +130,28 @@ spec:
     port: 80
     protocol: TCP
 
+{{ if .Values.avoidRWXVolumes  }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-roundcube
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.roundcube.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.roundcube.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{ end }}
 {{- end }}

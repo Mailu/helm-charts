@@ -33,7 +33,7 @@ spec:
       containers:
       - name: webdav
         image: {{ .Values.webdav.image.repository }}:{{ default .Values.mailuVersion .Values.webdav.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - mountPath: /data
             name: data
@@ -62,7 +62,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-webdav{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -86,4 +86,28 @@ spec:
     port: 5232
     protocol: TCP
 
+{{ if .Values.avoidRWXVolumes  }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-webdav
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.webdav.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.webdav.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{ end }}
 {{- end }}

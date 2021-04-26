@@ -21,6 +21,7 @@
 nameOverride: ""
 fullnameOverride: ""
 clusterDomain: cluster.local
+imagePullPolicy: Always
 
 nodeSelector: {}
 
@@ -77,8 +78,8 @@ external_relay: {}
 persistence:
   size: 100Gi
   accessMode: ReadWriteOnce
-  #annotations:
-  #  "helm.sh/resource-policy": keep
+  annotations:
+    "helm.sh/resource-policy": keep
   #hostPath: /path/on/the/host
   #existingClaim: name-of-existing.claim
   #storageClass: "-"
@@ -141,6 +142,9 @@ admin:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
   podAnnotations: {}
 
 redis:
@@ -154,6 +158,9 @@ redis:
     limits:
       memory: 300Mi
       cpu: 200m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
 
 postfix:
   # logLevel: WARNING
@@ -168,6 +175,9 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
+  persistence:
+    size: 100G
+    accessMode: ReadWriteOnce
 
 dovecot:
   enabled: true
@@ -183,6 +193,9 @@ dovecot:
     limits:
       memory: 500Mi
       cpu: 500m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
 
 rspamd:
   # logLevel: WARNING
@@ -197,6 +210,7 @@ rspamd:
     limits:
       memory: 200Mi
       cpu: 200m
+  # shares persistence with admin
 
 clamav:
   enabled: true
@@ -212,6 +226,9 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
 
 roundcube:
   enabled: true
@@ -227,6 +244,9 @@ roundcube:
     limits:
       memory: 200Mi
       cpu: 200m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
 
 
 webdav:
@@ -236,6 +256,9 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce
 
 mysql:
   image:
@@ -248,3 +271,6 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
+  persistence:
+    size: 10G
+    accessMode: ReadWriteOnce

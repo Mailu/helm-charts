@@ -33,7 +33,7 @@ spec:
       containers:
       - name: admin
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
-        imagePullPolicy: Always
+        imagePullPolicy:  {{ default "Always" .Values.imagePullPolicy }}
         volumeMounts:
           - name: data
             subPath: dovecotdata
@@ -108,7 +108,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.claimName" . }}{{ if .Values.avoidRWXVolumes  }}-dovecot{{ end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -144,5 +144,30 @@ spec:
   - name: sieve
     port: 4190
     protocol: TCP
+
+{{ if .Values.avoidRWXVolumes  }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mailu.claimName" . }}-dovecot
+  {{- if .Values.persistence.annotations }}
+  annotations:
+  {{ toYaml .Values.persistence.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.dovecot.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.dovecot.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- end }}
+{{ end }}
 
 {{ end }}
