@@ -208,6 +208,11 @@ postfix:
 #    #existingClaim: name-of-existing.claim
 #    #storageClass: "-"
 #    #claimNameOverride: my-claim-name 
+  relay:
+    enabled: false
+    host:
+    user:
+    password:
 
 dovecot:
   # logLevel: WARNING

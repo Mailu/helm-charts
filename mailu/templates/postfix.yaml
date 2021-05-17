@@ -84,6 +84,14 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
+        {{- if .Values.postfix.relay.enabled -}}
+          - name: RELAYHOST
+            value: {{ .Values.postfix.relay.host }}
+          - name: RELAYUSER
+            value: {{ .Values.postfix.relay.user }}
+          - name: RELAYPASSWORD
+            value: {{ .Values.postfix.relay.password }}
+        {{- end -}}
         ports:
           - name: smtp
             containerPort: 25
