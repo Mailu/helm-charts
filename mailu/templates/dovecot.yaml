@@ -17,6 +17,10 @@ spec:
       labels:
         app: {{ include "mailu.fullname" . }}
         component: dovecot
+      {{- with .Values.dovecot.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
