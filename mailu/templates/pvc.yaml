@@ -14,6 +14,7 @@ metadata:
 {{ toYaml .Values.persistence.annotations | indent 4 }}
 {{- end }}
 spec:
+  storageClassName: manual
   accessModes:
     - ReadWriteMany
   volumeName: {{ include "mailu.fullname" . }}-storage
@@ -27,6 +28,7 @@ kind: PersistentVolume
 metadata:
   name: {{ include "mailu.claimName" . }}
 spec:
+  storageClassName: manual
   capacity:
     storage: {{ .Values.persistence.size }}
   accessModes:

@@ -17,6 +17,10 @@ spec:
       labels:
         app: {{ include "mailu.fullname" . }}
         component: roundcube
+      {{- with .Values.roundcube.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
