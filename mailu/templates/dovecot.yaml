@@ -41,6 +41,10 @@ spec:
           - name: data
             mountPath: /mail
             subPath: dovecotmail
+          {{- if .Values.dovecot.overrides }}
+          - name: overrides
+            mountPath: /overrides
+          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
@@ -109,6 +113,11 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.claimName" . }}
+        {{- if .Values.dovecot.overrides }}
+        - name: overrides
+          configMap:
+            name: {{ include "mailu.fullname" . }}-dovecot-override
+        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -144,5 +153,18 @@ spec:
   - name: sieve
     port: 4190
     protocol: TCP
+
+---
+
+{{- if .Values.dovecot.overrides }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mailu.fullname" . }}-dovecot-override
+{{- with .Values.dovecot.overrides }}
+data:
+{{- .|toYaml|nindent 2 }}
+{{ end }}
+{{ end }}
 
 {{ end }}
