@@ -62,6 +62,8 @@
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
+| `fetchmail.enabled`               | enable fetchmail                     | `false`                                   |
+| `fetchmail.delay`                 | delay between fetch attempts         | `600`                                     |
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
