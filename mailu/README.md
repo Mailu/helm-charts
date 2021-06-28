@@ -63,6 +63,8 @@
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 | `dovecot.overrides`               | enable dovecot overrides             | not set                                   |
+| `fetchmail.enabled`               | enable fetchmail                     | `false`                                   |
+| `fetchmail.delay`                 | delay between fetch attempts         | `600`                                     |
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |

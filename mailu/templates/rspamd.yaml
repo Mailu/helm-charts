@@ -29,6 +29,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      hostname: rspamd # https://github.com/Mailu/helm-charts/issues/95
       containers:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}

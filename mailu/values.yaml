@@ -257,3 +257,19 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
+
+fetchmail:
+  enabled: false
+  # logLevel: WARNING
+  image:
+    repository: mailu/fetchmail
+    # tag defaults to mailuVersion
+    # tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 200m
+  delay: 600
