@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Helm lint
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  lint:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout chart
+        uses: actions/checkout@v2
+      - name: Install helm 2+3
+        run: |
+          curl -s -L https://get.helm.sh/helm-v2.17.0-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
+          chmod 0700 helm
+          mv helm helm2
+          ./helm2 init --client-only
+          curl -s -L https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
+          chmod 0700 helm
+          mv helm helm3
+      - name: Running lint with helm v2
+        run: ./helm2 lint --strict --values mailu/helm-lint-values.yaml mailu
+      - name: Running lint with helm v3
+        run: ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
