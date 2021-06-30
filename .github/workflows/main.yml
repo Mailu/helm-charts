@@ -22,11 +22,22 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Install helm 3
+      - name: Install helm 2+3
         run: |
-          curl -s -L https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
+          curl -s -L https://get.helm.sh/helm-v2.17.0-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
+          chmod 0700 helm
+          mv helm helm2
+          ./helm2 init --client-only
+          curl -s -L https://get.helm.sh/helm-v3.6.2-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
           chmod 0700 helm
           mv helm helm3
+      - name: Checkout chart
+        uses: actions/checkout@v2
+      - name: Linting and packing chart
+        run: |
+          pwd
+          echo  $GITHUB_WORKSPACE
+          ls -al
 #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 #      - uses: actions/checkout@v2
 #
