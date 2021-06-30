@@ -42,7 +42,21 @@ jobs:
         with:
           ref: 'gh-pages'
           path: gh-pages
-      - run: ls -al
+      - name: Pack chart
+        run: |
+          ./helm3 package mailu -d gh-pages
+          ./helm3 repo index --url https://mailu.github.io/helm-charts/ gh-pages
+          ( cd gh-pages && ./index.html.sh > index.html )
+      - name: Render chart to yamls
+        run: |
+          VERSION=$( grep mailu/Chart.yaml -e '^version:' | awk '{ print $2 }' )
+          mkdir -p gh-pages/yaml
+          rm -rf gh-pages/yaml/${VERSION}
+          helm3 template mailu --values mailu/helm-lint-values.yaml --release-name mailu --namespace mailu --output-dir gh-pages/yaml/${VERSION}
+      - name: Show gh-pages changes
+        run: |
+          cd gh-pages
+          git status
 
 #      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 #      - uses: actions/checkout@v2
