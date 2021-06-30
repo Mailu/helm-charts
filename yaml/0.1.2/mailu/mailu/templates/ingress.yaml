@@ -1,0 +1,34 @@
+---
+# Source: mailu/templates/ingress.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin-ingress.yaml
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: mailu-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  labels:
+    app: mailu
+    component: admin
+spec:
+  tls:
+  - secretName: mailu-certificates
+    hosts:
+    - "mail.example.com"
+    - "imap.example.com"
+  rules:
+  - host: "mail.example.com"
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: mailu-front
+          servicePort: 80
+  - host: "imap.example.com"
+    http:
+      paths:
+      - path: "/"
+        backend:
+          serviceName: mailu-front
+          servicePort: 80
