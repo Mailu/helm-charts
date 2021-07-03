@@ -62,7 +62,18 @@ spec:
           {{ if hasKey .Values.external_relay "host" }}
           - name: RELAYHOST
             value: "{{ .Values.external_relay.host }}"
-          {{ if hasKey .Values.external_relay "username" }}
+          {{ if hasKey .Values.external_relay "secretName" }}
+          - name: RELAYUSER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.external_relay.secretName }}
+                key: {{ .Values.external_relay.usernameKey}}
+          - name: RELAYPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.external_relay.secretName }}
+                key: {{ .Values.external_relay.passwordKey }}
+          {{ else if hasKey .Values.external_relay "username" }}
           - name: RELAYUSER
             value: "{{ .Values.external_relay.username }}"
           - name: RELAYPASSWORD
