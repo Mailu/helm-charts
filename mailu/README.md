@@ -46,7 +46,7 @@
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
-| `certmanager.use`                 | Enable the use of CertManager to generate secrets         | `ClusterIssuer`      |
+| `certmanager.enabled`             | Enable the use of CertManager to generate secrets         | `ClusterIssuer`      |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `certmanager.apiVersion`          | API-Version for certmanager CRDs     | `cert-manager.io/v1alpha2`                |
