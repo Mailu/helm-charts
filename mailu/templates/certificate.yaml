@@ -1,6 +1,6 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
-{{ if .Values.ingress.certmanager.enabled }}
+{{ if .Values.certmanager.enabled }}
 
 apiVersion: {{ .Values.certmanager.apiVersion }}
 kind: Certificate
