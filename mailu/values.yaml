@@ -99,7 +99,7 @@ mail:
 
 # certmanager settings
 certmanager:
-  use: true
+  enabled: true
   issuerType: ClusterIssuer
   issuerName: letsencrypt
   apiVersion: cert-manager.io/v1alpha2
