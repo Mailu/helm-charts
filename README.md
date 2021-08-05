@@ -3,4 +3,4 @@
 [Chart documentation](mailu/README.md)
 
 
-Releases can be found at https://mailu.github.io/helm-charts/
+Releases can be found at https://adi90x.github.io/helm-charts/
