@@ -128,7 +128,7 @@ front:
   # Deployment or DaemonSet
   controller:
     kind: Deployment
-  # nodeSelector: 
+  nodeSelector: {}
   
 admin:
   # logLevel: WARNING
