@@ -94,16 +94,16 @@ spec:
           httpGet:
             path: /
             port: http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.roundcube.livenessProbe -}} {{ default 5 .Values.roundcube.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
+          failureThreshold: {{ if .Values.roundcube.livenessProbe -}} {{ default 30 .Values.roundcube.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.roundcube.livenessProbe -}} {{ default 5 .Values.roundcube.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           httpGet:
             path: /
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.roundcube.readinessProbe -}} {{ default 10 .Values.roundcube.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.roundcube.readinessProbe -}} {{ default 1 .Values.roundcube.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
+          timeoutSeconds: {{ if .Values.roundcube.readinessProbe -}} {{ default 5 .Values.roundcube.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

@@ -134,16 +134,16 @@ spec:
           httpGet:
             path: /ui/login
             port: http
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.admin.livenessProbe -}} {{ default 5 .Values.admin.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.admin.livenessProbe -}} {{ default 30 .Values.admin.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.admin.livenessProbe -}} {{ default 5 .Values.admin.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           httpGet:
             path: /ui/login
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.admin.readinessProbe -}} {{ default 10 .Values.admin.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.admin.readinessProbe -}} {{ default 1 .Values.admin.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
+          timeoutSeconds: {{ if .Values.admin.readinessProbe -}} {{ default 5 .Values.admin.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

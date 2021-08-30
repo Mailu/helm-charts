@@ -55,16 +55,16 @@ spec:
           exec:
             command:
               - /health.sh
-          periodSeconds: 10
-          failureThreshold: 60
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.clamav.livenessProbe -}} {{ default 10 .Values.clamav.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.clamav.livenessProbe -}} {{ default 60 .Values.clamav.livenessProbe.failureThreshold }} {{- else -}} 60 {{- end }}
+          timeoutSeconds: {{ if .Values.clamav.livenessProbe -}} {{ default 5 .Values.clamav.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           exec:
             command:
               - /health.sh
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.clamav.readinessProbe -}} {{ default 10 .Values.clamav.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.clamav.readinessProbe -}} {{ default 3 .Values.clamav.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
+          timeoutSeconds: {{ if .Values.clamav.readinessProbe -}} {{ default 5 .Values.clamav.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

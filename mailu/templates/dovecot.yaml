@@ -97,18 +97,18 @@ spec:
               - sh
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.dovecot.livenessProbe -}} {{ default 5 .Values.dovecot.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.dovecot.livenessProbe -}} {{ default 30 .Values.dovecot.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.dovecot.livenessProbe -}} {{ default 5 .Values.dovecot.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 10 .Values.dovecot.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.dovecot.readinessProbe -}} {{ default 3 .Values.dovecot.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
+          timeoutSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 5 .Values.dovecot.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

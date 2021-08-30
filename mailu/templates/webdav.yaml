@@ -49,16 +49,16 @@ spec:
           httpGet:
             path: /
             port: http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.webdav.livenessProbe -}} {{ default 5 .Values.webdav.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
+          failureThreshold: {{ if .Values.webdav.livenessProbe -}} {{ default 30 .Values.webdav.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.webdav.livenessProbe -}} {{ default 5 .Values.webdav.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           httpGet:
             path: /
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.webdav.readinessProbe -}} {{ default 10 .Values.webdav.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.webdav.readinessProbe -}} {{ default 1 .Values.webdav.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
+          timeoutSeconds: {{ if .Values.webdav.readinessProbe -}} {{ default 5 .Values.webdav.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
