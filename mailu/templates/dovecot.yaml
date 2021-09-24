@@ -109,16 +109,16 @@ spec:
           periodSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 10 .Values.dovecot.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
           failureThreshold: {{ if .Values.dovecot.readinessProbe -}} {{ default 3 .Values.dovecot.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
           timeoutSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 5 .Values.dovecot.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        {{- if .Values.admin.startupProbe}}
+        {{- if .Values.dovecot.startupProbe}}
         startupProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds:  {{ default 10 .Values.admin.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 3 .Values.admin.startupProbe.failureThreshold }} 
-          timeoutSeconds: {{ default 5 .Values.admin.startupProbe.timeoutSeconds }} 
+          periodSeconds:  {{ default 10 .Values.dovecot.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.dovecot.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.startupProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data

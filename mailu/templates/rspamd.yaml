@@ -86,14 +86,14 @@ spec:
           periodSeconds: {{ if .Values.rspamd.readinessProbe -}} {{ default 10 .Values.rspamd.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
           failureThreshold: {{ if .Values.rspamd.readinessProbe -}} {{ default 1 .Values.rspamd.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
           timeoutSeconds: {{ if .Values.rspamd.readinessProbe -}} {{ default 5 .Values.rspamd.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        {{- if .Values.admin.startupProbe}}
+        {{- if .Values.rspamd.startupProbe}}
         startupProbe:
           httpGet:
             path: /
             port: rspamd-http
-          periodSeconds:  {{ default 10 .Values.admin.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 1 .Values.admin.startupProbe.failureThreshold }} 
-          timeoutSeconds: {{ default 5 .Values.admin.startupProbe.timeoutSeconds }} 
+          periodSeconds:  {{ default 10 .Values.rspamd.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.rspamd.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.rspamd.startupProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data
