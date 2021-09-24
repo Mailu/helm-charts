@@ -155,6 +155,15 @@ spec:
           periodSeconds: {{ if .Values.front.readinessProbe -}} {{ default 10 .Values.front.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
           failureThreshold: {{ if .Values.front.readinessProbe -}} {{ default 1 .Values.front.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
           timeoutSeconds: {{ if .Values.front.readinessProbe -}} {{ default 5 .Values.front.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
+        {{- if .Values.admin.startupProbe}}
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  {{ default 10 .Values.admin.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.admin.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.admin.startupProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: certs
           secret:
