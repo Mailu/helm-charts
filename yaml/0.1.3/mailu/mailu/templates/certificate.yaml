@@ -3,6 +3,7 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
 
+
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
