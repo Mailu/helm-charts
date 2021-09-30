@@ -46,7 +46,7 @@ spec:
           # LOG_LEVEL is called DEBUG in https://github.com/Mailu/Mailu/blob/master/optional/fetchmail/fetchmail.py#L98
           # and will only give debug output if value is True
           - name: DEBUG
-          {{- if (eq .Values.logLevel "DEBUG") or (eq .Values.fetchmail.logLevel "DEBUG") }}
+          {{- if or (eq .Values.logLevel "DEBUG") (eq .Values.fetchmail.logLevel "DEBUG") }}
             value: "True"
           {{- else }}
             value: "False"

@@ -1,5 +1,6 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
+{{ if .Values.certmanager.enabled }}
 
 apiVersion: {{ .Values.certmanager.apiVersion }}
 kind: Certificate
@@ -7,7 +8,8 @@ metadata:
   name: {{ include "mailu.fullname" . }}-certificates
 spec:
   secretName: {{ include "mailu.fullname" . }}-certificates
-  renewBefore: 1440h # 60d
+  # re-new certificate when it expires in less than 60 days
+  renewBefore: 1440h0m0s
   commonName: "{{ first (required "hostname" .Values.hostnames) }}"
   dnsNames:
 {{- range .Values.hostnames }}
@@ -16,3 +18,5 @@ spec:
   issuerRef:
     kind: {{ .Values.certmanager.issuerType }}
     name: {{ .Values.certmanager.issuerName }}
+    
+{{- end }}   
