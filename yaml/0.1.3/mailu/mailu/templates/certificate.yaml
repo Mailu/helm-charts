@@ -10,7 +10,8 @@ metadata:
   name: mailu-certificates
 spec:
   secretName: mailu-certificates
-  renewBefore: 1440h # 60d
+  # re-new certificate when it expires in less than 60 days
+  renewBefore: 1440h0m0s
   commonName: "mail.example.com"
   dnsNames:
   - "mail.example.com"
