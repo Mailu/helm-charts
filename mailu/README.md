@@ -3,7 +3,7 @@
 ## Prerequisites
 
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
-* cert-manager v0.12 or higher installed and configured (including a working cert issuer).  
+* cert-manager v0.12 or higher installed and configured (including a working cert issuer).( Otherwise you will need to handle it by yourself and provide the secret to Mailu )   
 * A node which has a public reachable IP, static address because mail service binds directly to the node's IP
 * A hosting service that allows inbound and outbound traffic on port 25.
 
@@ -66,6 +66,7 @@ Check that the deployed pods are all running.
 | `initialAccount.domain`           | Domain part (part after @) for initial admin account | not set                   |
 | `initialAccount.password`         | Password for initial admin account   | not set                                   |
 | `front.controller.kind`           | Use Deployment or DaemonSet for `front` pod(s) | `Deployment`                    |
+| `certmanager.enabled`             | Enable the use of CertManager to generate secrets         | `ClusterIssuer`      |
 | `certmanager.issuerType`          | Issuer type for cert manager         | `ClusterIssuer`                           |
 | `certmanager.issuerName`          | Name of a preconfigured cert issuer  | `letsencrypt`                             |
 | `certmanager.apiVersion`          | API-Version for certmanager CRDs     | `cert-manager.io/v1alpha2`                |
@@ -150,6 +151,14 @@ By setting `ingress.externalIngress` to false, the internal NGINX instance provi
  `ingress.tlsFlavor` and redirect `http` scheme connections to `https`. 
  
  CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
+
+## CertManager
+
+The default logic is to use CertManager to generate certificate for Mailu.
+
+In some configuration you want to handle certificate generation and update another way, use `certmanager.use=false` to avoid the use of the CRD.
+
+You will have to create and keep up-to-date your TLS keys. At the moment, this chart is looking for it under the `"mailu.fullname"-certificates` name in the namespace.
 
 ## Database
 
