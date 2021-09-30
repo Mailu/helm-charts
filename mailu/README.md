@@ -23,9 +23,29 @@
 
 ## Installation
 
-* Add the repository via `helm repo add mailu https://mailu.github.io/helm-charts/`
-* create a local values file (see below)
-* run `helm install --values my-values-file.yaml mailu/mailu`
+* Add the repository via:   
+```
+helm repo add mailu https://mailu.github.io/helm-charts/
+```
+
+* create a local values file:   
+```
+helm show values mailu/mailu > my-values-file.yaml
+```   
+Edit the `my-values-file.yaml` to reflect your environment.
+
+* deploy the helm-chart with:   
+```
+helm install mailu mailu/mailu -n mailu-mailserver --values my-values-file.yaml
+```
+
+* Uninstall the helm-chart with:   
+```
+helm uninstall mailu --namespace=mailu-mailserver
+```
+
+Check that the deployed pods are all running.
+
 
 ## Configuration
 | Parameter                         | Description                          | Default                                   |
