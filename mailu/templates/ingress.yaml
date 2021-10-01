@@ -29,7 +29,8 @@ spec:
         backend:
           service:
             name: {{ $fullname }}-front
-            port: 80
+            port: 
+              number: 80
         pathType: ImplementationSpecific
 {{- end }}
 {{ end }}
