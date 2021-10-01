@@ -25,7 +25,8 @@ spec:
         backend:
           service:
             name: mailu-front
-            port: 80
+            port: 
+              number: 80
         pathType: ImplementationSpecific
   - host: "imap.example.com"
     http:
@@ -34,5 +35,6 @@ spec:
         backend:
           service:
             name: mailu-front
-            port: 80
+            port: 
+              number: 80
         pathType: ImplementationSpecific
