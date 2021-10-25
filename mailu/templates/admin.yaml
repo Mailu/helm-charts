@@ -130,20 +130,6 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /ui/login
-            port: http
-          periodSeconds: {{ if .Values.admin.livenessProbe -}} {{ default 10 .Values.admin.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.admin.livenessProbe -}} {{ default 30 .Values.admin.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
-          timeoutSeconds: {{ if .Values.admin.livenessProbe -}} {{ default 5 .Values.admin.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        readinessProbe:
-          httpGet:
-            path: /ui/login
-            port: http
-          periodSeconds: {{ if .Values.admin.readinessProbe -}} {{ default 10 .Values.admin.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.admin.readinessProbe -}} {{ default 1 .Values.admin.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
-          timeoutSeconds: {{ if .Values.admin.readinessProbe -}} {{ default 5 .Values.admin.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         {{- if .Values.admin.startupProbe}}
         startupProbe:
           httpGet:
@@ -152,6 +138,24 @@ spec:
           periodSeconds:  {{ default 10 .Values.admin.startupProbe.periodSeconds }} 
           failureThreshold: {{ default 30 .Values.admin.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.admin.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{ if .Values.admin.livenessProbe -}}
+        livenessProbe:
+          httpGet:
+            path: /ui/login
+            port: http
+          periodSeconds: {{ default 10 .Values.admin.livenessProbe.periodSeconds }}
+          failureThreshold: {{ default 3 .Values.admin.livenessProbe.failureThreshold }}
+          timeoutSeconds: {{ default 5 .Values.admin.livenessProbe.timeoutSeconds }}
+        {{- end }}
+        {{ if .Values.admin.readinessProbe -}}
+        readinessProbe:
+          httpGet:
+            path: /ui/login
+            port: http
+          periodSeconds: {{ default 10 .Values.admin.readinessProbe.periodSeconds }}
+          failureThreshold: {{ default 1 .Values.admin.readinessProbe.failureThreshold }}
+          timeoutSeconds: {{ default 5 .Values.admin.readinessProbe.timeoutSeconds }}
         {{- end }}
       volumes:
         - name: data

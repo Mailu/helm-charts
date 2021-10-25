@@ -50,29 +50,32 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
-        livenessProbe:
-          # give it 10 minutes for initial freshclam update
-          exec:
-            command:
-              - /health.sh
-          periodSeconds: {{ if .Values.clamav.livenessProbe -}} {{ default 10 .Values.clamav.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.clamav.livenessProbe -}} {{ default 60 .Values.clamav.livenessProbe.failureThreshold }} {{- else -}} 60 {{- end }}
-          timeoutSeconds: {{ if .Values.clamav.livenessProbe -}} {{ default 5 .Values.clamav.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        readinessProbe:
-          exec:
-            command:
-              - /health.sh
-          periodSeconds: {{ if .Values.clamav.readinessProbe -}} {{ default 10 .Values.clamav.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.clamav.readinessProbe -}} {{ default 3 .Values.clamav.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
-          timeoutSeconds: {{ if .Values.clamav.readinessProbe -}} {{ default 5 .Values.clamav.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         {{- if .Values.clamav.startupProbe}}
         startupProbe:
           exec:
             command:
               - /health.sh
           periodSeconds:  {{ default 10 .Values.clamav.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 3 .Values.clamav.startupProbe.failureThreshold }} 
+          failureThreshold: {{ default 60 .Values.clamav.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.clamav.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{ if .Values.clamav.livenessProbe -}}
+        livenessProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds:  {{ default 10 .Values.clamav.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.clamav.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.clamav.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{ if .Values.clamav.readinessProbe -}}
+        readinessProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds:  {{ default 10 .Values.clamav.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.clamav.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.clamav.readinessProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data

@@ -90,28 +90,32 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          periodSeconds: {{ if .Values.roundcube.livenessProbe -}} {{ default 5 .Values.roundcube.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
-          failureThreshold: {{ if .Values.roundcube.livenessProbe -}} {{ default 30 .Values.roundcube.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
-          timeoutSeconds: {{ if .Values.roundcube.livenessProbe -}} {{ default 5 .Values.roundcube.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          periodSeconds: {{ if .Values.roundcube.readinessProbe -}} {{ default 10 .Values.roundcube.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.roundcube.readinessProbe -}} {{ default 1 .Values.roundcube.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
-          timeoutSeconds: {{ if .Values.roundcube.readinessProbe -}} {{ default 5 .Values.roundcube.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         {{- if .Values.roundcube.startupProbe}}
         startupProbe:
           httpGet:
             path: /
             port: http
           periodSeconds:  {{ default 10 .Values.roundcube.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 1 .Values.roundcube.startupProbe.failureThreshold }} 
+          failureThreshold: {{ default 30 .Values.roundcube.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.roundcube.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.roundcube.livenessProbe}}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds:  {{ default 10 .Values.roundcube.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.roundcube.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.roundcube.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.roundcube.readinessProbe}}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds:  {{ default 10 .Values.roundcube.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.roundcube.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.roundcube.readinessProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data

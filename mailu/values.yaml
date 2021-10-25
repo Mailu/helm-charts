@@ -125,6 +125,18 @@ front:
     limits:
       memory: 200Mi
       cpu: 200m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
   # Deployment or DaemonSet
   controller:
     kind: Deployment
@@ -143,6 +155,19 @@ admin:
       memory: 500Mi
       cpu: 500m
   podAnnotations: {}
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
+
 
 redis:
   image:
@@ -155,6 +180,18 @@ redis:
     limits:
       memory: 300Mi
       cpu: 200m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 postfix:
   # logLevel: WARNING
@@ -169,6 +206,18 @@ postfix:
     limits:
       memory: 2Gi
       cpu: 500m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 dovecot:
   enabled: true
@@ -184,6 +233,18 @@ dovecot:
     limits:
       memory: 500Mi
       cpu: 500m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
   # enable dovecot overrides
   # overrides:
   #   dovecot.conf: |
@@ -207,6 +268,18 @@ rspamd:
     limits:
       memory: 200Mi
       cpu: 200m
+  startupProbe: # give it 15 minutes for initial rule compilation
+    periodSeconds: 10
+    failureThreshold: 90
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 clamav:
   enabled: true
@@ -222,6 +295,18 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
+  startupProbe: # give it 10 minutes for initial freshclam update
+    periodSeconds: 10
+    failureThreshold: 60
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 roundcube:
   enabled: true
@@ -237,6 +322,18 @@ roundcube:
     limits:
       memory: 200Mi
       cpu: 200m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 
 webdav:
@@ -246,6 +343,18 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 mysql:
   image:
@@ -258,6 +367,18 @@ mysql:
     limits:
       memory: 512Mi
       cpu: 200m
+  startupProbe:
+    periodSeconds: 10
+    failureThreshold: 30
+    timeoutSeconds: 5
+  livenessProbe:
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  readinessProbe:
+    periodSeconds: 10
+    failureThreshold: 1
+    timeoutSeconds: 5
 
 fetchmail:
   enabled: false

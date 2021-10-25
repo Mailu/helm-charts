@@ -91,24 +91,6 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
-        livenessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: {{ if .Values.dovecot.livenessProbe -}} {{ default 5 .Values.dovecot.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.dovecot.livenessProbe -}} {{ default 30 .Values.dovecot.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
-          timeoutSeconds: {{ if .Values.dovecot.livenessProbe -}} {{ default 5 .Values.dovecot.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        readinessProbe:
-          exec:
-            command:
-              - sh
-              - -c
-              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 10 .Values.dovecot.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.dovecot.readinessProbe -}} {{ default 3 .Values.dovecot.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
-          timeoutSeconds: {{ if .Values.dovecot.readinessProbe -}} {{ default 5 .Values.dovecot.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         {{- if .Values.dovecot.startupProbe}}
         startupProbe:
           exec:
@@ -117,8 +99,30 @@ spec:
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
           periodSeconds:  {{ default 10 .Values.dovecot.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 3 .Values.dovecot.startupProbe.failureThreshold }} 
+          failureThreshold: {{ default 30 .Values.dovecot.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.dovecot.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.dovecot.livenessProbe}}
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  {{ default 10 .Values.dovecot.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.dovecot.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.dovecot.readinessProbe}}
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  {{ default 10 .Values.dovecot.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.dovecot.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.readinessProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data

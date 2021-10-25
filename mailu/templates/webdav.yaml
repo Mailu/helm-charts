@@ -45,28 +45,32 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: http
-          periodSeconds: {{ if .Values.webdav.livenessProbe -}} {{ default 5 .Values.webdav.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
-          failureThreshold: {{ if .Values.webdav.livenessProbe -}} {{ default 30 .Values.webdav.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
-          timeoutSeconds: {{ if .Values.webdav.livenessProbe -}} {{ default 5 .Values.webdav.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
-        readinessProbe:
-          httpGet:
-            path: /
-            port: http
-          periodSeconds: {{ if .Values.webdav.readinessProbe -}} {{ default 10 .Values.webdav.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
-          failureThreshold: {{ if .Values.webdav.readinessProbe -}} {{ default 1 .Values.webdav.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
-          timeoutSeconds: {{ if .Values.webdav.readinessProbe -}} {{ default 5 .Values.webdav.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         {{- if .Values.webdav.startupProbe}}
         startupProbe:
           httpGet:
             path: /
             port: http
           periodSeconds:  {{ default 10 .Values.webdav.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 1 .Values.webdav.startupProbe.failureThreshold }} 
+          failureThreshold: {{ default 30 .Values.webdav.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.webdav.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.webdav.livenessProbe}}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds:  {{ default 10 .Values.webdav.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.webdav.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.webdav.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.webdav.readinessProbe}}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds:  {{ default 10 .Values.webdav.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.webdav.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.webdav.readinessProbe.timeoutSeconds }} 
         {{- end }}
       volumes:
         - name: data
