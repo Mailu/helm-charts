@@ -145,16 +145,25 @@ spec:
           httpGet:
             path: /health
             port: http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.front.livenessProbe -}} {{ default 5 .Values.front.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
+          failureThreshold: {{ if .Values.front.livenessProbe -}} {{ default 30 .Values.front.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.front.livenessProbe -}} {{ default 5 .Values.front.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.front.readinessProbe -}} {{ default 10 .Values.front.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.front.readinessProbe -}} {{ default 1 .Values.front.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
+          timeoutSeconds: {{ if .Values.front.readinessProbe -}} {{ default 5 .Values.front.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
+        {{- if .Values.front.startupProbe}}
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  {{ default 10 .Values.front.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.front.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.front.startupProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: certs
           secret:

@@ -76,16 +76,25 @@ spec:
           httpGet:
             path: /
             port: rspamd-http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.rspamd.livenessProbe -}} {{ default 5 .Values.rspamd.livenessProbe.periodSeconds }} {{- else -}} 5 {{- end }}
+          failureThreshold: {{ if .Values.rspamd.livenessProbe -}} {{ default 30 .Values.rspamd.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.rspamd.livenessProbe -}} {{ default 5 .Values.rspamd.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           httpGet:
             path: /
             port: rspamd-http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.rspamd.readinessProbe -}} {{ default 10 .Values.rspamd.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.rspamd.readinessProbe -}} {{ default 1 .Values.rspamd.readinessProbe.failureThreshold }} {{- else -}} 1 {{- end }}
+          timeoutSeconds: {{ if .Values.rspamd.readinessProbe -}} {{ default 5 .Values.rspamd.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
+        {{- if .Values.rspamd.startupProbe}}
+        startupProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds:  {{ default 10 .Values.rspamd.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.rspamd.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.rspamd.startupProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

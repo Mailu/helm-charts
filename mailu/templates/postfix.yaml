@@ -92,18 +92,29 @@ spec:
               - sh
               - -c
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.postfix.livenessProbe -}} {{ default 10 .Values.postfix.livenessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.postfix.livenessProbe -}} {{ default 30 .Values.postfix.livenessProbe.failureThreshold }} {{- else -}} 30 {{- end }}
+          timeoutSeconds: {{ if .Values.postfix.livenessProbe -}} {{ default 5 .Values.postfix.livenessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
         readinessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds: {{ if .Values.postfix.readinessProbe -}} {{ default 10 .Values.postfix.readinessProbe.periodSeconds }} {{- else -}} 10 {{- end }}
+          failureThreshold: {{ if .Values.postfix.readinessProbe -}} {{ default 3 .Values.postfix.readinessProbe.failureThreshold }} {{- else -}} 3 {{- end }}
+          timeoutSeconds: {{ if .Values.postfix.readinessProbe -}} {{ default 5 .Values.postfix.readinessProbe.timeoutSeconds }} {{- else -}} 5 {{- end }}
+        {{- if .Values.postfix.startupProbe}}
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds:  {{ default 10 .Values.postfix.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.postfix.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.postfix.startupProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
