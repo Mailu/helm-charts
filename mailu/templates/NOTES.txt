@@ -21,3 +21,5 @@ After you created an initial admin login (see docs), you can login to the admin 
 
 {{- end }}
 
+!!! Please make sure you read and understand the warning about open relays in the README.md !!!
+

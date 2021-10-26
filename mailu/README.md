@@ -7,6 +7,36 @@
 * A node which has a public reachable IP, static address because mail service binds directly to the node's IP
 * A hosting service that allows inbound and outbound traffic on port 25.
 
+### Warning about open relays
+
+One of the biggest mistakes when running a mail server is a so called "Open Relay". This this kind of misconfiguration is in most cases caused by a badly configured
+load balancer which hides the originating IP address of an email which makes Mailu think, the email comes from an internal address and ommits authentification and other checks. In the result, your mail server can be abused to spread spam and will get blacklisted within hours.
+
+It is very important that you check your setup for open relay at least:
+
+* after installation
+* at any time you change network settings or load balancer configuration
+
+The check is quite simple:
+* watch the logs for the "mailu-front" POD
+* browse to an open relay checker like https://mxtoolbox.com/diagnostic.aspx
+* enter the hostname or IP address of your mail server and start the test
+
+In the logs, you should see some message like
+
+```
+2021/10/26 21:23:25 [info] 12#12: *25691 client 18.205.72.90:56741 connected to 0.0.0.0:25
+```
+
+It is very important that the IP address shown here is an external public IP address, not an internal like 10.x.x.x, 192.168.x.x or 172.x.x.x.
+
+Also verify that the result of the check confirms that there is no open relay:
+
+```
+SMTP Open Relay	OK - Not an open relay.
+```
+
+
 ### Warning, this will not work on most cloud providers
 
 * Google cloud does not allow outgoing connections to connect to port 25. You will not be able to send
