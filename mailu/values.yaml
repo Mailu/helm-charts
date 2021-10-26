@@ -142,6 +142,10 @@ front:
     kind: Deployment
   nodeSelector: {}
   
+  # Expose front mail ports via hostPort
+  hostPort:
+    enabled: true
+
   # Expose front mail ports via external service (ClusterIP or LoadBalancer)
   externalService:
     enabled: false
