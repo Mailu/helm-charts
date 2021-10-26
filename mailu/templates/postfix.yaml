@@ -86,24 +86,39 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.postfix.startupProbe}}
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds:  {{ default 10 .Values.postfix.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.postfix.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.postfix.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.postfix.livenessProbe}}
         livenessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.postfix.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.postfix.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.postfix.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.postfix.readinessProbe}}
         readinessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.postfix.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.postfix.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.postfix.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

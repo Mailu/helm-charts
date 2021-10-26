@@ -82,24 +82,39 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.mysql.startupProbe}}
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+          periodSeconds:  {{ default 10 .Values.mysql.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.mysql.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.mysql.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.mysql.livenessProbe}}
         livenessProbe:
           exec:
             command:
               - sh
               - -c
               - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.mysql.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.mysql.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.mysql.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.mysql.readinessProbe}}
         readinessProbe:
           exec:
             command:
               - sh
               - -c
               - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.mysql.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.mysql.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.mysql.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

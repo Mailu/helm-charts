@@ -44,24 +44,39 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.redis.startupProbe}}
+        startupProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds:  {{ default 10 .Values.redis.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.redis.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.redis.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.redis.livenessProbe}}
         livenessProbe:
           exec:
             command:
               - /usr/local/bin/redis-cli
               - info
               - status
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.redis.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.redis.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.redis.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.redis.readinessProbe}}
         readinessProbe:
           exec:
             command:
               - /usr/local/bin/redis-cli
               - info
               - status
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.redis.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.redis.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.redis.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

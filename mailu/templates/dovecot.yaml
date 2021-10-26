@@ -91,24 +91,39 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.dovecot.startupProbe}}
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  {{ default 10 .Values.dovecot.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.dovecot.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.dovecot.livenessProbe}}
         livenessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: 10
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.dovecot.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.dovecot.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.dovecot.readinessProbe}}
         readinessProbe:
           exec:
             command:
               - sh
               - -c
               - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
-          periodSeconds: 10
-          failureThreshold: 3
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.dovecot.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.dovecot.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.dovecot.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

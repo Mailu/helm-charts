@@ -45,20 +45,33 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.webdav.startupProbe}}
+        startupProbe:
+          httpGet:
+            path: /
+            port: http
+          periodSeconds:  {{ default 10 .Values.webdav.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.webdav.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.webdav.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.webdav.livenessProbe}}
         livenessProbe:
           httpGet:
             path: /
             port: http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.webdav.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.webdav.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.webdav.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.webdav.readinessProbe}}
         readinessProbe:
           httpGet:
             path: /
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.webdav.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.webdav.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.webdav.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

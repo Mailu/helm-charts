@@ -141,20 +141,33 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- if .Values.front.startupProbe}}
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  {{ default 10 .Values.front.startupProbe.periodSeconds }} 
+          failureThreshold: {{ default 30 .Values.front.startupProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.front.startupProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.front.livenessProbe}}
         livenessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds: 5
-          failureThreshold: 30
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.front.livenessProbe.periodSeconds }} 
+          failureThreshold: {{ default 3 .Values.front.livenessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.front.livenessProbe.timeoutSeconds }} 
+        {{- end }}
+        {{- if .Values.front.readinessProbe}}
         readinessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds: 10
-          failureThreshold: 1
-          timeoutSeconds: 5
+          periodSeconds:  {{ default 10 .Values.front.readinessProbe.periodSeconds }} 
+          failureThreshold: {{ default 1 .Values.front.readinessProbe.failureThreshold }} 
+          timeoutSeconds: {{ default 5 .Values.front.readinessProbe.timeoutSeconds }} 
+        {{- end }}
       volumes:
         - name: certs
           secret:
