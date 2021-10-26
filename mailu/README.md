@@ -89,6 +89,7 @@ Check that the deployed pods are all running.
 | `database.type`                   | type of database used for mailu      | `sqlite`                                  |
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
+| `timezone`                        | time zone for PODs, see below        | not set                                 |
 
 ### Example values.yaml to get started
 
@@ -211,3 +212,11 @@ The ``database.postgresql.database``, ``database.postgresql.user``, and ``databa
 Set ``database.roundcubeType`` to ``postgresql``.
  
 The``database.postgresql.roundcubeDatabase``, ``database.postgresql.roundcubeUser``, and ``database.postgresql.roundcubePassword`` must also be set.
+
+## Timezone
+
+By default, no timezone is set to the PODS, so logs and mail timestamps are all UTC. The option `timezone` allows to use specify a time zone to use (e.g. `Europe/Berlin`).
+
+Note that this requires timezone data installed on the host filesystem that will be mounted into pods as localtime. When https://github.com/Mailu/Mailu/issues/1154 is solved, the chart will be modified to use this solution instead of host files.
+
+

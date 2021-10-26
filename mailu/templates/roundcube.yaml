@@ -38,6 +38,15 @@ spec:
           - mountPath: /data
             name: data
             subPath: roundcube
+          {{- if .Values.timezone }}
+          - name: zoneinfo
+            mountPath: /usr/share/zoneinfo
+            readOnly: true
+          - name: zoneinfo
+            subPath: {{ .Values.timezone }}
+            mountPath: /etc/localtime
+            readOnly: true
+          {{- end }}
         env:
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
@@ -121,6 +130,12 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.claimName" . }}
+        {{- if .Values.timezone }}
+        - name: zoneinfo
+          hostPath:
+            path: /usr/share/zoneinfo
+            type: Directory
+        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

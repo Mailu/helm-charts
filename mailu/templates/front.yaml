@@ -47,6 +47,15 @@ spec:
         volumeMounts:
           - name: certs
             mountPath: /certs
+          {{- if .Values.timezone }}
+          - name: zoneinfo
+            mountPath: /usr/share/zoneinfo
+            readOnly: true
+          - name: zoneinfo
+            subPath: {{ .Values.timezone }}
+            mountPath: /etc/localtime
+            readOnly: true
+          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.front.logLevel }}
@@ -177,6 +186,12 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: {{ include "mailu.fullname" . }}-certificates
+        {{- if .Values.timezone }}
+        - name: zoneinfo
+          hostPath:
+            path: /usr/share/zoneinfo
+            type: Directory
+        {{- end }}
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
 

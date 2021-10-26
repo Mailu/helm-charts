@@ -39,6 +39,15 @@ spec:
           - name: data
             subPath: clamav
             mountPath: /data
+          {{- if .Values.timezone }}
+          - name: zoneinfo
+            mountPath: /usr/share/zoneinfo
+            readOnly: true
+          - name: zoneinfo
+            subPath: {{ .Values.timezone }}
+            mountPath: /etc/localtime
+            readOnly: true
+          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.clamav.logLevel }}
@@ -81,6 +90,12 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.claimName" . }}
+        {{- if .Values.timezone }}
+        - name: zoneinfo
+          hostPath:
+            path: /usr/share/zoneinfo
+            type: Directory
+        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
