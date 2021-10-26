@@ -1,0 +1,131 @@
+---
+# Source: mailu/templates/postfix.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-postfix
+  labels:
+    app: mailu
+    component: postfix
+spec:
+  selector:
+    app: mailu
+    component: postfix
+  ports:
+  - name: smtp
+    port: 25
+    protocol: TCP
+  - name: smtp-ssl
+    port: 465
+    protocol: TCP
+  - name: smtp-starttls
+    port: 587
+    protocol: TCP
+  - name: smtp-auth
+    port: 10025
+    protocol: TCP
+---
+# Source: mailu/templates/postfix.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-postfix
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: postfix
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: postfix
+    spec:
+      containers:
+      - name: postfix
+        image: mailu/postfix:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /queue
+            name: data
+            subPath: mailqueue
+        env:
+          - name: LOG_LEVEL
+            value: WARNING
+          - name: REJECT_UNLISTED_RECIPIENT
+            value: "yes"
+          - name: DOMAIN
+            value: "example.com"
+          - name: HOSTNAMES
+            value: "mail.example.com,imap.example.com"
+          - name: MESSAGE_SIZE_LIMIT
+            value: "52428800"
+          - name: SUBNET
+            value: "10.42.0.0/16"
+          - name: RECIPIENT_DELIMITER
+            value: "+"
+          - name: LMTP_ADDRESS
+            value: mailu-dovecot:2525
+          - name: ANTISPAM_MILTER_ADDRESS
+            value: mailu-rspamd:11332
+          - name: ADMIN_ADDRESS
+            value: mailu-admin
+          - name: FRONT_ADDRESS
+            value: mailu-front
+          
+        ports:
+          - name: smtp
+            containerPort: 25
+            protocol: TCP
+          - name: smtp-ssl
+            containerPort: 465
+            protocol: TCP
+          - name: smtp-starttls
+            containerPort: 587
+            protocol: TCP
+          - name: smtp-auth
+            containerPort: 10025
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 2Gi
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds:  10 
+          failureThreshold: 30 
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: Recreate
