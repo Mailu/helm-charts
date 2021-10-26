@@ -1,0 +1,92 @@
+---
+# Source: mailu/templates/redis.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-redis
+  labels:
+    app: mailu
+    component: redis
+spec:
+  selector:
+    app: mailu
+    component: redis
+  ports:
+  - name: redis
+    port: 6379
+    protocol: TCP
+---
+# Source: mailu/templates/redis.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-redis
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis:5-alpine
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: redis
+            mountPath: /data
+        ports:
+          - containerPort: 6379
+            name: redis
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        startupProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds:  10 
+          failureThreshold: 30 
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - /usr/local/bin/redis-cli
+              - info
+              - status
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
