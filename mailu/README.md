@@ -250,3 +250,13 @@ By default, no timezone is set to the PODS, so logs and mail timestamps are all 
 Note that this requires timezone data installed on the host filesystem that will be mounted into pods as localtime. When https://github.com/Mailu/Mailu/issues/1154 is solved, the chart will be modified to use this solution instead of host files.
 
 
+## Exposing mail ports to the public
+
+There are several ways to expose mail ports to the public. If you do so, make sure you read and understand the warning above about open relays.
+
+### Running on a single node with a public IP
+
+This is the most straightforward way to run mailu. It can be used when the node where mailu (or at least the "front" POD) runs on a specific node that has a public ip address which is used for mail. All mail ports of the "front" POD will be simply exposed via the "hostPort" function.
+
+To use this mode, set `front.hostPort.enabled` to `true` (which is the default). If your cluster has multiple nodes, you should use `front.nodeSelector` to bind the front container on the node where your public mail IP is located on.
+
