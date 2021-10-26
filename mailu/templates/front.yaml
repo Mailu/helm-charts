@@ -244,3 +244,71 @@ spec:
     port: 443
     protocol: TCP
 {{end}}
+
+---
+{{- with .Values.front.externalService }}
+{{- if .enabled }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" $ }}-front-ext
+  labels:
+    app: {{ include "mailu.fullname" $ }}
+    component: front
+  {{- with .annotations }}
+  annotations:
+{{ . | toYaml | indent 4 }}
+  {{- end }}
+spec:
+  type: {{ .type | default "ClusterIP" }}
+  selector:
+    app: {{ include "mailu.fullname" $ }}
+    component: front
+  ports:
+{{- with .pop3 }}
+  {{- if .pop3 }}
+  - name: pop3
+    port: 110
+    protocol: TCP
+  {{- end }}
+  {{- if .pop3s }}
+  - name: pop3s
+    port: 995
+    protocol: TCP
+  {{- end }}
+{{- end }}
+
+{{- with .imap }}
+  {{- if .imap }}
+  - name: imap
+    port: 143
+    protocol: TCP
+  {{- end }}
+  {{- if .imaps }}
+  - name: imaps
+    port: 993
+    protocol: TCP
+  {{- end }}
+{{- end }}
+
+{{- with .smtp }}
+  {{- if .smtp }}
+  - name: smtp
+    port: 25
+    protocol: TCP
+  {{- end }}
+  {{- if .smtps }}
+  - name: smtps
+    port: 465
+    protocol: TCP
+  {{- end }}
+  {{- if .submission }}
+  - name: smtpd
+    port: 587
+    protocol: TCP
+  {{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}
