@@ -140,7 +140,24 @@ front:
   # Deployment or DaemonSet
   controller:
     kind: Deployment
-
+  nodeSelector: {}
+  
+  # Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  externalService:
+    enabled: false
+    type: ClusterIP
+    annotations: {}
+    pop3:
+      pop3: false
+      pop3s: true
+    imap:
+      imap: false
+      imaps: true
+    smtp:
+      smtp: true
+      smtps: true
+      submission: true
+    
 admin:
   # logLevel: WARNING
   image:
