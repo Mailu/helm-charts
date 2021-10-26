@@ -28,7 +28,7 @@ spec:
         app: {{ include "mailu.fullname" . }}
         component: front
     spec:
-      {{- with .Values.nodeSelector }}
+      {{- with (.Values.front.nodeSelector | default .Values.nodeSelector) }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
