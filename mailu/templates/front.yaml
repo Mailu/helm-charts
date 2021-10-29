@@ -276,6 +276,7 @@ metadata:
   {{- end }}
 spec:
   type: {{ .type | default "ClusterIP" }}
+  externalTrafficPolicy: {{ .trafficPolicy | default "Cluster" }}
   selector:
     app: {{ include "mailu.fullname" $ }}
     component: front
