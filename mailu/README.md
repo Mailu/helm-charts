@@ -260,3 +260,14 @@ This is the most straightforward way to run mailu. It can be used when the node 
 
 To use this mode, set `front.hostPort.enabled` to `true` (which is the default). If your cluster has multiple nodes, you should use `front.nodeSelector` to bind the front container on the node where your public mail IP is located on.
 
+### Running on bare metal with k3s and klipper-lb
+
+If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose mailu via loadBalancer, set:
+* `front.hostPort.enabled`: `false`
+* `externalService.enabled`: `true`
+* `externalService.type`: `LoadBalancer`
+* `externalService.externalTrafficPolicy`: `Local`
+
+The [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip)  is important to preserve the client's source IP and avoid an open relay.
+
+Please perform open relay tests after setup as described above!
