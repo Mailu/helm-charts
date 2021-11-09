@@ -55,6 +55,8 @@ spec:
             value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
+          - name: ADMIN_ADDRESS
+            value: {{ include "mailu.fullname" . }}-admin
           - name: REDIS_ADDRESS
             value: {{ include "mailu.fullname" . }}-redis
           {{- if .Values.clamav.enabled }}
