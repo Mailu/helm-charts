@@ -169,27 +169,27 @@ spec:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  {{ default 10 .Values.front.startupProbe.periodSeconds }} 
-          failureThreshold: {{ default 30 .Values.front.startupProbe.failureThreshold }} 
-          timeoutSeconds: {{ default 5 .Values.front.startupProbe.timeoutSeconds }} 
+          periodSeconds:  {{ default 10 .Values.front.startupProbe.periodSeconds }}
+          failureThreshold: {{ default 30 .Values.front.startupProbe.failureThreshold }}
+          timeoutSeconds: {{ default 5 .Values.front.startupProbe.timeoutSeconds }}
         {{- end }}
         {{- if .Values.front.livenessProbe}}
         livenessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  {{ default 10 .Values.front.livenessProbe.periodSeconds }} 
-          failureThreshold: {{ default 3 .Values.front.livenessProbe.failureThreshold }} 
-          timeoutSeconds: {{ default 5 .Values.front.livenessProbe.timeoutSeconds }} 
+          periodSeconds:  {{ default 10 .Values.front.livenessProbe.periodSeconds }}
+          failureThreshold: {{ default 3 .Values.front.livenessProbe.failureThreshold }}
+          timeoutSeconds: {{ default 5 .Values.front.livenessProbe.timeoutSeconds }}
         {{- end }}
         {{- if .Values.front.readinessProbe}}
         readinessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  {{ default 10 .Values.front.readinessProbe.periodSeconds }} 
-          failureThreshold: {{ default 1 .Values.front.readinessProbe.failureThreshold }} 
-          timeoutSeconds: {{ default 5 .Values.front.readinessProbe.timeoutSeconds }} 
+          periodSeconds:  {{ default 10 .Values.front.readinessProbe.periodSeconds }}
+          failureThreshold: {{ default 1 .Values.front.readinessProbe.failureThreshold }}
+          timeoutSeconds: {{ default 5 .Values.front.readinessProbe.timeoutSeconds }}
         {{- end }}
       volumes:
         - name: certs
@@ -277,6 +277,9 @@ metadata:
 spec:
   type: {{ .type | default "ClusterIP" }}
   externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
+  {{- if .loadBalancerIP }}
+  loadBalancerIP: {{ .loadBalancerIP }}
+  {{- end }}
   selector:
     app: {{ include "mailu.fullname" $ }}
     component: front
