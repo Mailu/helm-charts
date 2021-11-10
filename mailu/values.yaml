@@ -141,7 +141,7 @@ front:
   controller:
     kind: Deployment
   nodeSelector: {}
-  
+
   # Expose front mail ports via hostPort
   hostPort:
     enabled: true
@@ -150,6 +150,9 @@ front:
   externalService:
     enabled: false
     type: ClusterIP
+    # LoadBalancer
+    # type: LoadBalancer
+    # loadBalancerIP:
     externalTrafficPolicy: Local
     annotations: {}
     pop3:
@@ -162,7 +165,7 @@ front:
       smtp: true
       smtps: true
       submission: true
-    
+
 admin:
   # logLevel: WARNING
   image:
