@@ -157,22 +157,22 @@ spec:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  10 
-          failureThreshold: 30 
+          periodSeconds:  10
+          failureThreshold: 30
           timeoutSeconds: 5
         livenessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  10 
-          failureThreshold: 3 
+          periodSeconds:  10
+          failureThreshold: 3
           timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /health
             port: http
-          periodSeconds:  10 
-          failureThreshold: 1 
+          periodSeconds:  10
+          failureThreshold: 1
           timeoutSeconds: 5
       volumes:
         - name: certs
