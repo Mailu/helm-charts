@@ -75,6 +75,9 @@ external_relay: {}
 #    password: SECRET
 
 persistence:
+  # Setings for a single volume for all apps
+  # set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
+  single_pvc: true
   size: 100Gi
   accessMode: ReadWriteOnce
   #annotations:
@@ -168,6 +171,14 @@ admin:
     repository: mailu/admin
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
+
   resources:
     requests:
       memory: 500Mi
@@ -194,6 +205,13 @@ redis:
   image:
     repository: redis
     tag: 5-alpine
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 200Mi
@@ -220,6 +238,13 @@ postfix:
     repository: mailu/postfix
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 2Gi
@@ -247,6 +272,13 @@ dovecot:
     repository: mailu/dovecot
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 500Mi
@@ -276,6 +308,16 @@ dovecot:
   #     mmap_disable = yes
   #     mail_max_userip_connections=100
 
+# rspamd and clamav must share their volume
+# use affinity to schedule both pods on the same node so RWO volumes keep working
+rspamd_clamav_persistence:
+  size: 20Gi
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  claimNameOverride: ""
+  #annotations:
+  #  "helm.sh/resource-policy": keep
+
 rspamd:
   # logLevel: WARNING
   image:
@@ -301,6 +343,16 @@ rspamd:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: component
+                operator: In
+                values:
+                  - clamav
+          topologyKey: kubernetes.io/hostname
 
 clamav:
   enabled: true
@@ -328,6 +380,16 @@ clamav:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: component
+                operator: In
+                values:
+                  - rspamd
+          topologyKey: kubernetes.io/hostname
 
 roundcube:
   enabled: true
@@ -336,6 +398,13 @@ roundcube:
     repository: mailu/roundcube
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 100Mi
@@ -364,6 +433,13 @@ webdav:
     repository: mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -381,6 +457,13 @@ mysql:
   image:
     repository: library/mariadb
     tag: 10.4.10
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 256Mi
@@ -408,6 +491,13 @@ fetchmail:
     repository: mailu/fetchmail
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 100Mi

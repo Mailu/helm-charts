@@ -1,5 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/redis.yaml
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.redis.persistence.claimNameOverride | default (printf "%s-redis" (include "mailu.fullname" .)) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -89,7 +92,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -101,6 +104,29 @@ spec:
     rollingUpdate:
       maxUnavailable: 0
       maxSurge: 1
+
+
+{{- if not .Values.persistence.single_pvc }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.redis.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.redis.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.redis.persistence.size }}
+  {{- if .Values.redis.persistence.storageClass }}
+  storageClassName: {{ .Values.redis.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 ---
 

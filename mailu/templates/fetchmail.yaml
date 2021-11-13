@@ -2,6 +2,9 @@
 
 {{- if .Values.fetchmail.enabled }}
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.fetchmail.persistence.claimNameOverride | default (printf "%s-fetchmail" (include "mailu.fullname" .)) }}
+
 {{ if .Capabilities.APIVersions.Has "apps/v1/Deployment" }}
 apiVersion: apps/v1
 {{ else }}
@@ -76,7 +79,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -88,5 +91,28 @@ spec:
     rollingUpdate:
       maxUnavailable: 0
       maxSurge: 1
+
+
+{{- if not .Values.persistence.single_pvc }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.fetchmail.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.fetchmail.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.fetchmail.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.fetchmail.persistence.size }}
+  {{- if .Values.fetchmail.persistence.storageClass }}
+  storageClassName: {{ .Values.fetchmail.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 {{- end }}
