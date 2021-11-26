@@ -224,6 +224,11 @@ postfix:
     repository: mailu/postfix
     # tag defaults to mailuVersion
     # tag: master
+  containerSecurityContext: {}
+  #    CRI-O users will need to add the following:
+  #    capabilities:
+  #      add:
+  #        - SYS_CHROOT
   resources:
     requests:
       memory: 2Gi
@@ -251,6 +256,11 @@ dovecot:
     repository: mailu/dovecot
     # tag defaults to mailuVersion
     # tag: master
+  containerSecurityContext: {}
+#    CRI-O users will need to add the following:
+#    capabilities:
+#      add:
+#        - SYS_CHROOT
   resources:
     requests:
       memory: 500Mi
