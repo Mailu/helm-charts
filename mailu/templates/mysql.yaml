@@ -1,5 +1,8 @@
 {{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcubeType "mysql")) (not .Values.database.mysql.host) }}
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.mysql.persistence.claimNameOverride | default (printf "%s-mysql" (include "mailu.fullname" .)) }}
+
 {{ if (eq .Values.database.roundcubeType "mysql") }}
 apiVersion: v1
 kind: ConfigMap
@@ -127,7 +130,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         - name: initscripts
           configMap:
             name: {{ include "mailu.fullname" . }}-mysql-init
@@ -143,6 +146,29 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 0
+
+
+{{- if not .Values.persistence.single_pvc }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.mysql.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.mysql.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.mysql.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.mysql.persistence.size }}
+  {{- if .Values.mysql.persistence.storageClass }}
+  storageClassName: {{ .Values.mysql.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 ---
 

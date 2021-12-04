@@ -1,5 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.postfix.persistence.claimNameOverride | default (printf "%s-postfix" (include "mailu.fullname" .)) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -131,7 +134,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -140,6 +143,29 @@ spec:
         {{- end }}
   strategy:
     type: Recreate
+
+
+{{- if not .Values.persistence.single_pvc }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.postfix.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.postfix.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.postfix.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.postfix.persistence.size }}
+  {{- if .Values.postfix.persistence.storageClass }}
+  storageClassName: {{ .Values.postfix.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 ---
 
