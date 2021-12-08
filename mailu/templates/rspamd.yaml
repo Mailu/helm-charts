@@ -38,9 +38,6 @@ spec:
           - name: data
             subPath: rspamd
             mountPath: /var/lib/rspamd
-          - name: data
-            subPath: dkim
-            mountPath: /dkim
           {{- if .Values.timezone }}
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
