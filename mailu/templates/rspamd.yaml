@@ -38,6 +38,9 @@ spec:
           - name: data
             subPath: rspamd
             mountPath: /var/lib/rspamd
+          - name: data
+            subPath: rspamd-local.d-maps.d
+            mountPath: /etc/rspamd/local.d/maps.d
           {{- if .Values.timezone }}
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
