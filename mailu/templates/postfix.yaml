@@ -35,6 +35,10 @@ spec:
       - name: postfix
         image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.postfix.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - mountPath: /queue
             name: data

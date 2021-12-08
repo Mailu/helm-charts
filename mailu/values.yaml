@@ -242,6 +242,11 @@ postfix:
     repository: mailu/postfix
     # tag defaults to mailuVersion
     # tag: master
+  containerSecurityContext: {}
+  #    CRI-O users will need to add the following:
+  #    capabilities:
+  #      add:
+  #        - SYS_CHROOT
   persistence:
     size: 20Gi
     storageClass: ""
@@ -276,6 +281,11 @@ dovecot:
     repository: mailu/dovecot
     # tag defaults to mailuVersion
     # tag: master
+  containerSecurityContext: {}
+#    CRI-O users will need to add the following:
+#    capabilities:
+#      add:
+#        - SYS_CHROOT
   persistence:
     size: 20Gi
     storageClass: ""

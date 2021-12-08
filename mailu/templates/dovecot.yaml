@@ -37,6 +37,10 @@ spec:
       - name: admin
         image: {{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.dovecot.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: data
             subPath: dovecotdata
