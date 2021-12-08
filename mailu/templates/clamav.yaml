@@ -23,7 +23,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.clamav.afffinity | default .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -89,7 +89,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ include "mailu.rspamdClamavClaimName" . }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:

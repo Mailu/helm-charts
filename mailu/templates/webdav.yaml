@@ -2,6 +2,9 @@
 
 {{- if .Values.webdav.enabled }}
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.webdav.persistence.claimNameOverride | default (printf "%s-webdav" (include "mailu.fullname" .)) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -84,7 +87,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -97,7 +100,30 @@ spec:
       maxUnavailable: 0
       maxSurge: 1
 
+
+{{- if not .Values.persistence.single_pvc }}
 ---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.webdav.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.webdav.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.webdav.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.webdav.persistence.size }}
+  {{- if .Values.webdav.persistence.storageClass }}
+  storageClassName: {{ .Values.webdav.persistence.storageClass }}
+  {{- end }}
+{{- end }}
+---
+
 apiVersion: v1
 kind: Service
 metadata:

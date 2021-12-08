@@ -2,6 +2,9 @@
 
 {{- if .Values.dovecot.enabled }}
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.dovecot.persistence.claimNameOverride | default (printf "%s-dovecot" (include "mailu.fullname" .)) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -140,7 +143,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "mailu.claimName" . }}
+            claimName: {{ $claimName }}
         {{- if .Values.dovecot.overrides }}
         - name: overrides
           configMap:
@@ -157,6 +160,29 @@ spec:
     rollingUpdate:
       maxUnavailable: 0
       maxSurge: 1
+
+
+{{- if not .Values.persistence.single_pvc }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.dovecot.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.dovecot.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.dovecot.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.dovecot.persistence.size }}
+  {{- if .Values.dovecot.persistence.storageClass }}
+  storageClassName: {{ .Values.dovecot.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 ---
 
