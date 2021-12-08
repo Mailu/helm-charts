@@ -51,7 +51,7 @@ spec:
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
             readOnly: true
-          - name: zoneinfo
+          - name: zoneinfo7
             subPath: {{ .Values.timezone }}
             mountPath: /etc/localtime
             readOnly: true
@@ -69,6 +69,12 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: ANTISPAM_WEBUI_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
+          {{- if .Values.ingress.realIpHeader }}
+          - name: REAL_IP_HEADER
+            value: {{ .Values.ingress.realIpHeader }}
+          - name: REAL_IP_FROM
+            value: {{ default "0.0.0.0/0" .Values.ingress.realIpFrom }}
+          {{- end }}
           {{- if .Values.roundcube.enabled }}
           - name: WEBMAIL
             value: roundcube

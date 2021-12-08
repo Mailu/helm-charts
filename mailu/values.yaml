@@ -114,6 +114,8 @@ ingress:
   className: ""
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  realIpHeader: X-Forwarded-For
+  realIpFrom: 0.0.0.0/0
 
 # Frontend load balancer for non-HTTP(s) services
 front:

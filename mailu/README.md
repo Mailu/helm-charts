@@ -111,6 +111,8 @@ Check that the deployed pods are all running.
 | `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
 | `ingress.tlsFlavor`               | Do not change unless you have a custom way of generating the certificates. [Allowed options](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert` (uses certificates provided by cert-manager)                                   |
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
+| `ingress.realIpHeader`            | Header from http(s) ingress that contains the real client IP | `X-Forwarded-For` |
+| `ingress.realIpFrom`              | IP/Network from where `realIpHeader` is accepted | `0.0.0.0/0` |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 | `dovecot.overrides`               | enable dovecot overrides             | not set                                   |
