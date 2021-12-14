@@ -111,6 +111,7 @@ certmanager:
 ingress:
   externalIngress: true
   tlsFlavor: cert
+  className: ""
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
