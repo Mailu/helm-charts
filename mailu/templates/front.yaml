@@ -80,16 +80,22 @@ spec:
             value: roundcube
           - name: WEBMAIL_ADDRESS
             value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - name: WEB_WEBMAIL
+            value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+          - name: WEBROOT_REDIRECT
+            value: {{ required "roundcube.uri" .Values.roundcube.uri }}
           {{- else }}
           - name: WEBMAIL
             value: none
           - name: WEBMAIL_ADDRESS
             value: localhost
+          - name: WEB_WEBMAIL
+            value: ""
+          - name: WEBROOT_REDIRECT
+            value: /admin/
           {{- end }}
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
-          - name: WEB_WEBMAIL
-            value: "/"
           - name: WEBDAV
             value: none
           - name: WEBDAV_ADDRESS

@@ -422,6 +422,7 @@ roundcube:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
+  uri: /roundcube
   resources:
     requests:
       memory: 100Mi
