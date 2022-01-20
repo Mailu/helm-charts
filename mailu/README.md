@@ -1,5 +1,14 @@
 # This chart installs the Mailu mail system on kubernetes
 
+## Compatibility
+
+| Chart Version                     | Mailu Version  |
+| --------------------------------- | -------------- |
+| 0.0.x, 0.1.x, 0.2.x               | 1.8            |
+| 0.3.x                             | 1.9.x          |
+
+Active development of this chart is only for the latest supported Mailu version (currently 1.9.x).
+
 ## Prerequisites
 
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
@@ -80,7 +89,7 @@ Check that the deployed pods are all running.
 ## Configuration
 | Parameter                         | Description                          | Default                                   |
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
-| `mailuVersion`                    | Version/tag of mailu images - must be master or a version >=1.8 | `master`                                  |
+| `mailuVersion`                    | Version/tag of mailu images - must be master or a version >=1.9 | `master`                                  |
 | `logLevel`                        | Level of logging                     | `WARNING`                                 |
 | `nameOverride`                    | Override the resource name prefix    | `mailu`                                   |
 | `clusterDomain`                   | Change the cluster DNS root          | `cluster.local`                           |
@@ -111,6 +120,8 @@ Check that the deployed pods are all running.
 | `ingress.externalIngress`         | Use externally provided nginx        | `true`                                    |
 | `ingress.tlsFlavor`               | Do not change unless you have a custom way of generating the certificates. [Allowed options](https://mailu.io/1.7/compose/setup.html#tls-certificates)  | `cert` (uses certificates provided by cert-manager)                                   |
 | `ingress.annotations`               | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
+| `ingress.realIpHeader`            | Header from http(s) ingress that contains the real client IP | `X-Forwarded-For` |
+| `ingress.realIpFrom`              | IP/Network from where `realIpHeader` is accepted | `0.0.0.0/0` |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 | `dovecot.overrides`               | enable dovecot overrides             | not set                                   |

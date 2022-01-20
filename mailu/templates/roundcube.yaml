@@ -61,6 +61,10 @@ spec:
             value: "{{ required "secretKey" .Values.secretKey }}"
           - name: SUBNET
             value: {{ .Values.subnet }}
+          - name: ADMIN
+            value: "true"
+          - name: WEB_ADMIN
+            value: "/admin/"
           {{- if eq .Values.database.roundcubeType "sqlite" }}
           - name: ROUNDCUBE_DB_FLAVOR
             value: sqlite
@@ -104,27 +108,24 @@ spec:
         {{- end }}
         {{- if .Values.roundcube.startupProbe}}
         startupProbe:
-          httpGet:
-            path: /
-            port: http
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
           periodSeconds:  {{ default 10 .Values.roundcube.startupProbe.periodSeconds }} 
           failureThreshold: {{ default 30 .Values.roundcube.startupProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.roundcube.startupProbe.timeoutSeconds }} 
         {{- end }}
         {{- if .Values.roundcube.livenessProbe}}
         livenessProbe:
-          httpGet:
-            path: /
-            port: http
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
           periodSeconds:  {{ default 10 .Values.roundcube.livenessProbe.periodSeconds }} 
           failureThreshold: {{ default 3 .Values.roundcube.livenessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.roundcube.livenessProbe.timeoutSeconds }} 
         {{- end }}
         {{- if .Values.roundcube.readinessProbe}}
         readinessProbe:
-          httpGet:
-            path: /
-            port: http
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
           periodSeconds:  {{ default 10 .Values.roundcube.readinessProbe.periodSeconds }} 
           failureThreshold: {{ default 1 .Values.roundcube.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.roundcube.readinessProbe.timeoutSeconds }} 

@@ -1,5 +1,6 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
 
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
 {{- /* Define persistantVolume claimName */}}
 {{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.admin.persistence.claimNameOverride | default (printf "%s-admin" (include "mailu.fullname" .)) }}
 
@@ -76,10 +77,21 @@ spec:
             value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}
           - name: REDIS_ADDRESS
             value: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}
+          {{- if .Values.roundcube.enabled }}
+          - name: WEBMAIL
+            value: roundcube
+          - name: WEB_WEBMAIL
+            value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+          - name: WEBMAIL_ADDRESS
+            value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          {{- else }}
           - name: WEBMAIL
             value: none
           - name: WEBMAIL_ADDRESS
             value: localhost
+          - name: WEB_WEBMAIL
+            value: /
+          {{- end }}
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}
           - name: RECIPIENT_DELIMITER
@@ -145,7 +157,7 @@ spec:
         {{- if .Values.admin.startupProbe}}
         startupProbe:
           httpGet:
-            path: /ui/login
+            path: /sso/login
             port: http
           periodSeconds:  {{ default 10 .Values.admin.startupProbe.periodSeconds }} 
           failureThreshold: {{ default 30 .Values.admin.startupProbe.failureThreshold }} 
@@ -154,7 +166,7 @@ spec:
         {{ if .Values.admin.livenessProbe -}}
         livenessProbe:
           httpGet:
-            path: /ui/login
+            path: /sso/login
             port: http
           periodSeconds: {{ default 10 .Values.admin.livenessProbe.periodSeconds }}
           failureThreshold: {{ default 3 .Values.admin.livenessProbe.failureThreshold }}
@@ -163,7 +175,7 @@ spec:
         {{ if .Values.admin.readinessProbe -}}
         readinessProbe:
           httpGet:
-            path: /ui/login
+            path: /sso/login
             port: http
           periodSeconds: {{ default 10 .Values.admin.readinessProbe.periodSeconds }}
           failureThreshold: {{ default 1 .Values.admin.readinessProbe.failureThreshold }}

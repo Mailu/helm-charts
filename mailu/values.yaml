@@ -91,7 +91,7 @@ persistence:
 subnet: 10.42.0.0/16
 
 # Version of mailu docker images to use when not specified otherwise
-mailuVersion: 1.8
+mailuVersion: 1.9.10
 
 # default log level. can be overridden globally or per service
 logLevel: WARNING
@@ -114,6 +114,8 @@ ingress:
   className: ""
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  realIpHeader: X-Forwarded-For
+  realIpFrom: 0.0.0.0/0
 
 # Frontend load balancer for non-HTTP(s) services
 front:
@@ -420,6 +422,7 @@ roundcube:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
+  uri: /roundcube
   resources:
     requests:
       memory: 100Mi

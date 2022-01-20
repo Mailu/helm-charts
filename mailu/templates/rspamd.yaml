@@ -1,6 +1,8 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
 # (file is split into rspamd.yaml and clamav.yaml)
 
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -39,8 +41,8 @@ spec:
             subPath: rspamd
             mountPath: /var/lib/rspamd
           - name: data
-            subPath: dkim
-            mountPath: /dkim
+            subPath: rspamd-local.d-maps.d
+            mountPath: /etc/rspamd/local.d/maps.d
           {{- if .Values.timezone }}
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
@@ -54,9 +56,11 @@ spec:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
           - name: FRONT_ADDRESS
-            value: {{ include "mailu.fullname" . }}-front
+            value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - name: ADMIN_ADDRESS
+            value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: REDIS_ADDRESS
-            value: {{ include "mailu.fullname" . }}-redis
+            value: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           {{- if .Values.clamav.enabled }}
           - name: ANTIVIRUS
             value: clamav
