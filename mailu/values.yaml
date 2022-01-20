@@ -73,6 +73,10 @@ external_relay: {}
 #    host: "[domain.tld]:port"
 #    username: username
 #    password: SECRET
+#    # username and password can also be stored as secret:
+#    secretName: external-relay-secret
+#    usernameKey: username
+#    passwordKey: password
 
 persistence:
   # Setings for a single volume for all apps
