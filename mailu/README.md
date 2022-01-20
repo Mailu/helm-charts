@@ -8,6 +8,7 @@
 | 0.3.x                             | 1.9.x          |
 
 Active development of this chart is only for the latest supported Mailu version (currently 1.9.x).
+Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ## Prerequisites
 
