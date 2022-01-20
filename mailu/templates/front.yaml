@@ -69,6 +69,10 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: ANTISPAM_WEBUI_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}:11334
+          - name: POSTMASTER
+            value: {{ default "postmaster" .Values.postmaster }}
+          - name: DOMAIN
+            value: "{{ required "domain" .Values.domain }}"
           {{- if .Values.ingress.realIpHeader }}
           - name: REAL_IP_HEADER
             value: {{ .Values.ingress.realIpHeader }}

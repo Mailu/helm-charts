@@ -96,6 +96,9 @@ mailuVersion: 1.9.10
 # default log level. can be overridden globally or per service
 logLevel: WARNING
 
+# local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
+postmaster: postmaster
+
 mail:
   messageSizeLimitInMegabytes: 50
   authRatelimit: 10/minute;1000/hour

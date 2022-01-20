@@ -71,7 +71,7 @@ spec:
           - name: ANTISPAM_WEBUI_ADDRESS
             value: {{ include "mailu.fullname" . }}-rspamd:11334
           - name: POSTMASTER
-            value: postmaster
+            value: {{ default "postmaster" .Values.postmaster }}
           - name: DOMAIN
             value: "{{ required "domain" .Values.domain }}"
           - name: HOSTNAMES

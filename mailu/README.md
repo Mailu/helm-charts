@@ -98,6 +98,7 @@ Check that the deployed pods are all running.
 | `fullnameOverride`                | Override the full resource names     | `mailu-{release-name}` (or `mailu` if release-name is `mailu`) |
 | `hostnames`                       | List of hostnames to generate certificates and ingresses for | not set           |
 | `domain`                          | Mail domain name, see https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames | not set |
+| `postmaster`                      | Local part of the postmaster address | `postmaster`                              |
 | `passwordScheme`                  | Scheme used to hash passwords        | `PBKDF2`                                  |
 | `secretKey`                       | Session encryption key for admin and webmail | not set                           |
 | `subnet`                          | Subnet of PODs, used to configure from which IPs internal requests are allowed | `10.42.0.0/16` |
