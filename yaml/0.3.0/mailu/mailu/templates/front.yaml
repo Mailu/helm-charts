@@ -86,6 +86,10 @@ spec:
             value: mailu-admin.mailu.svc.cluster.local
           - name: ANTISPAM_WEBUI_ADDRESS
             value: mailu-rspamd.mailu.svc.cluster.local:11334
+          - name: POSTMASTER
+            value: postmaster
+          - name: DOMAIN
+            value: "example.com"
           - name: REAL_IP_HEADER
             value: X-Forwarded-For
           - name: REAL_IP_FROM

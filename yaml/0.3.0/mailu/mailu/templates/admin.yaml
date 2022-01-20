@@ -53,6 +53,8 @@ spec:
             value: redis://mailu-redis/1
           - name: RATELIMIT_STORAGE_URL
             value: redis://mailu-redis/2
+          - name: POSTMASTER
+            value: postmaster
           - name: DOMAIN
             value: "example.com"
           - name: HOSTNAMES
