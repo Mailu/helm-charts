@@ -1,0 +1,117 @@
+---
+# Source: mailu/templates/rspamd.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-rspamd
+  labels:
+    app: mailu
+    component: rspamd
+spec:
+  selector:
+    app: mailu
+    component: rspamd
+  ports:
+  - name: rspamd
+    port: 11332
+    protocol: TCP
+  - name: rspamd-http
+    protocol: TCP
+    port: 11334
+---
+# Source: mailu/templates/rspamd.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
+# (file is split into rspamd.yaml and clamav.yaml)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-rspamd
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: rspamd
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: rspamd
+    spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - clamav
+            topologyKey: kubernetes.io/hostname
+      hostname: rspamd # https://github.com/Mailu/helm-charts/issues/95
+      containers:
+      - name: rspamd
+        image: mailu/rspamd:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: rspamd
+            mountPath: /var/lib/rspamd
+          - name: data
+            subPath: rspamd-local.d-maps.d
+            mountPath: /etc/rspamd/local.d/maps.d
+        env:
+          - name: LOG_LEVEL
+            value: INFO
+          - name: FRONT_ADDRESS
+            value: mailu-front.mailu.svc.cluster.local
+          - name: ADMIN_ADDRESS
+            value: mailu-admin.mailu.svc.cluster.local
+          - name: REDIS_ADDRESS
+            value: mailu-redis.mailu.svc.cluster.local
+          - name: ANTIVIRUS
+            value: clamav
+          - name: ANTIVIRUS_ADDRESS
+            value: mailu-clamav:3310
+          - name: SUBNET
+            value: "10.42.0.0/16"
+        ports:
+          - name: rspamd
+            containerPort: 11332
+            protocol: TCP
+          - name: rspamd-http
+            containerPort: 11334
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        startupProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds:  10 
+          failureThreshold: 90 
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: rspamd-http
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
