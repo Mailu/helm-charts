@@ -2,18 +2,11 @@
 
 set -e
 
-# 1st detect the helm variants downloaded by travis-ci
-
-if [ -x "helm2" ]; then
-  HELM2="$(pwd)/helm2"
-  HELM=${HELM2}
-  echo "Found helm v2 at ${HELM2}"
-fi
+# 1st detect helm downloaded by ci
 
 if [ -x "helm3" ]; then
-  HELM3="$(pwd)/helm3"
-  HELM=${HELM3}
-  echo "Found helm v3 at ${HELM3}"
+  HELM3"$(pwd)/helm3"
+  echo "Found helm v3 at ${HELM}"
 fi
 
 if [ -z "${HELM}" ]; then
@@ -23,10 +16,7 @@ if [ -z "${HELM}" ]; then
     echo "Command helm not found!"
     exit 1
   fi
-  if ${HELM} version -c | grep -e 'Version:"v2.' > /dev/null; then
-    HELM2="${HELM}"
-    echo "Found helm v2 at ${HELM2}"
-  elif ${HELM} version -c | grep -e 'Version:"v3.' > /dev/null; then
+  if ${HELM} version -c | grep -e 'Version:"v3.' > /dev/null; then
     HELM3="${HELM}"
     echo "Found helm v3 at ${HELM3}"
   else
@@ -36,33 +26,8 @@ if [ -z "${HELM}" ]; then
   set -e
 fi
 
-if [ -z "${HELM2}" ]; then
-  set +e
-  HELM2=$( which helm2 )
-  if [ ! -z "${HELM2}" ]; then
-    echo "Found helm v2 at ${HELM2}"
-  fi
-  set -e
-fi
-
-if [ -z "${HELM3}" ]; then
-  set +e
-  HELM2=$( which helm3 )
-  if [ ! -z "${HELM3}" ]; then
-    echo "Found helm v3 at ${HELM3}"
-  fi
-  set -e
-fi
-
-if [ ! -z "${HELM2}" ]; then
-  echo "Running lint with helm v2"
-  ${HELM2} lint --strict --values mailu/helm-lint-values.yaml mailu
-fi
-
-if [ ! -z "${HELM3}" ]; then
-  echo "Running lint with helm v3"
-  ${HELM3} lint --strict --values mailu/helm-lint-values.yaml mailu
-fi
+echo "Running helm lint"
+${HELM} lint --strict --values mailu/helm-lint-values.yaml mailu
 
 echo "Cloning gh-pages"
 rm -rf gh-pages
