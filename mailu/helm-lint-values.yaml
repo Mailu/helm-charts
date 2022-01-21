@@ -14,6 +14,7 @@ initialAccount:
   password: chang3m3!
 
 secretKey: chang3m3!
+existingSecret: ""
 
 passwordScheme: PBKDF2
 

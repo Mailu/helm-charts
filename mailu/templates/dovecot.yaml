@@ -73,7 +73,7 @@ spec:
           - name: POSTMASTER
             value: {{ default "postmaster" .Values.postmaster }}
           - name: DOMAIN
-            value: "{{ required "domain" .Values.domain }}"
+            value: "{{ required "'domain' needs to be set" .Values.domain }}"
           - name: HOSTNAMES
             value: "{{ join "," .Values.hostnames }}"
           - name: RECIPIENT_DELIMITER
@@ -85,16 +85,11 @@ spec:
             value: {{ include "mailu.fullname" . }}-redis
           - name: WEBMAIL
             value: none
-          {{ if hasKey .Values "secretKeyRef" }}
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ .Values.secretKeyRef.name }}
-                key: {{ .Values.secretKeyRef.key}}
-          {{ else }}
-          - name: SECRET_KEY
-            value: "{{ required "secretKey" .Values.secretKey }}"
-          {{- end}}
+                name: {{ template "mailu.secretName" . }}
+                key: secret-key
         ports:
           - name: auth
             containerPort: 2102

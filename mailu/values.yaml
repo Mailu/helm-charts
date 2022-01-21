@@ -1,22 +1,34 @@
 # Default values for mailu.
 
 # A list of mail hostnames is required. The first will be used as primary mail hostname
-#hostnames:
-#  - mail.example.com
-#  - imap.example.com
+# e.g.:
+# hostnames:
+#   - mail.example.com
+#   - imap.example.com
+hostnames: []
 
 # The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
-#domain: example.com
+# e.g.:
+# domain: example.com
+domain: ""
 
 # The secret key is required for protecting authentication cookies and must be set individually for each deployment
+# If empty, a random secret key will be generated and saved in a secret
+# e.g.:
 # secretKey: chang3m3!
+secretKey: ""
+
+# @param existingSecret Name of the existing secret to retrieve the secretKey.
+# The secret has to contain the secretKey value under the 'secret-key' key.
+# e.g.:
+# existingSecret: mailu-secret
+existingSecret: ""
 
 # An initial account can automatically be created:
 #initialAccount:
 #  username: mailadmin
 #  domain: mydomain.com
 #  password: chang3m3!
-
 
 nameOverride: ""
 fullnameOverride: ""
@@ -43,10 +55,10 @@ database:
   # for mysql, see settings below
   roundcubeType: sqlite
 
-# For mysql/mariadb use the following config:
-# Set the host to use an external database.
-# If not host is set, a database instance is created by this chart.
-#   type: mysql
+  # For mysql/mariadb use the following config:
+  # Set the host to use an external database.
+  # If not host is set, a database instance is created by this chart.
+  #   type: mysql
   mysql: {}
     # host: external-db-hostname
     # root password for mysql database
@@ -303,10 +315,10 @@ dovecot:
     # tag defaults to mailuVersion
     # tag: master
   containerSecurityContext: {}
-#    CRI-O users will need to add the following:
-#    capabilities:
-#      add:
-#        - SYS_CHROOT
+  #    CRI-O users will need to add the following:
+  #    capabilities:
+  #      add:
+  #        - SYS_CHROOT
   persistence:
     size: 20Gi
     storageClass: ""

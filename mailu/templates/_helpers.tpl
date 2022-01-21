@@ -25,6 +25,13 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Store the namespace
+*/}}
+{{- define "mailu.namespace" -}}
+    {{- .Release.Namespace -}}
+{{- end -}}
+
+{{/*
 Create the claimName: existingClaim if provided, otherwise claimNameOverride if provided, otherwise mailu-storage (or other fullname if overriden)
 */}}
 {{- define "mailu.claimName" -}}
@@ -60,3 +67,86 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ define "mailu.rspamdClamavClaimName"}}
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
 {{- end }}
+
+{{/*
+Returns dovecot internal hostname.
+*/}}
+{{- define "mailu.hosts.dovecot" -}}
+{{- printf "%s-dovecot.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
+{{- end -}}
+
+{{/*
+Returns postfix internal hostname.
+*/}}
+{{- define "mailu.hosts.postfix" -}}
+{{- printf "%s-postfix.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
+{{- end -}}
+
+{{/*
+Returns redis internal hostname.
+*/}}
+{{- define "mailu.hosts.redis" -}}
+{{- printf "%s-redis.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
+{{- end -}}
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+{{- $len := (default 16 .Length) | int -}}
+{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+{{- if $obj }}
+{{- index $obj .Key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum $len -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Return mailu secretKey
+*/}}
+{{- define "mailu.secretKey" -}}
+{{- if .Values.secretKey }}
+    {{- .Values.secretKey -}}
+{{- else -}}
+    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "mailu.fullname" .) "Length" 10 "Key" "secret-key")  -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the mailu secret name.
+*/}}
+{{- define "mailu.secretName" -}}
+{{- if .Values.existingSecret }}
+    {{- printf "%s" (tpl .Values.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "mailu.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+# {{/*
+# Compile all warnings into a single message, and call fail.
+# */}}
+# {{- define "mailu.validateValues" -}}
+# {{- $messages := list -}}
+# {{- $messages := append $messages (include "mailu.validateValues.domain" .) -}}
+# # {{- $messages := append $messages (include "postgresql.validateValues.psp" .) -}}
+# # {{- $messages := append $messages (include "postgresql.validateValues.tls" .) -}}
+# {{- $messages := without $messages "" -}}
+# {{- $message := join "\n" $messages -}}
+
+# {{- if $message -}}
+# {{- printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
+# {{- end -}}
+# {{- end -}}
+
+# {{/*
+# Validate values - 'domain' needs to be set
+# */}}
+# {{- define "mailu.validateValues.domain" -}}
+# {{- if not .Values.domain }}
+# mailu: domain
+#     You need to set the domain to be used
+# {{- end -}}
+# {{- end -}}
