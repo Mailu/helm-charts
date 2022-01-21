@@ -64,31 +64,45 @@ database:
   # for mysql, see settings below
   roundcubeType: sqlite
 
-  # For mysql/mariadb use the following config:
-  # Set the host to use an external database.
-  # If not host is set, a database instance is created by this chart.
-  #   type: mysql
+  # For 'mysql' type (or mariadb) use the following config:
+  # You can set the 'host' value to use an external database.
+  # If the 'host' value is not set, a database instance is created by this chart.
+  # e.g.:
+  # mysql:
+  #   host: external-db-hostname
+  #   # root password for mysql database, only used for embedded mysql
+  #   rootPassword: chang3m3!
+  #
+  #   # Settings for mailu database 
+  #   database: mailu
+  #   user: mailu
+  #   password: chang3m3!
+  #
+  #   # Settings for roundcube database
+  #   roundcubeDatabase: roundcube
+  #   roundcubeUser: roundcube
+  #   roundcubePassword: chang3m3!
+  #
+  #   existingSecret: mail-mysql
   mysql: {}
-    # host: external-db-hostname
-    # root password for mysql database
-    # rootPassword: chang3m3! # can only be set for embedded mysql
-
-    # settings for mailu (required if mailu database type is "mysql")
-    # database: mailu
-    # user: mailu
-    # password: chang3m3!
 
   # For an external PostgreSQL database, use the following config:
-  postgresql: {}
-    # host: external-db-hostname
-    # database: mailu
-    # user: mailu
-    # password: chang3m3!
+  # e.g.:
+  # postgresql:
+  #   host: external-db-hostname
+  #   # Settings for mailu database 
+  #   database: mailu
+  #   user: mailu
+  #   password: chang3m3!
+  #   
+  #   # Settings for roundcube database
+  #   roundcubeDatabase: roundcube
+  #   roundcubeUser: roundcube
+  #   roundcubePassword: chang3m3!
+  #
+  #   existingSecret: mail-postgresql
 
-    # settings for roundcube (required if roundcube database type is "mysql" or "postgresql")
-    # roundcubeDatabase: roundcube
-    # roundcubeUser: roundcube
-    # roundcubePassword: chang3m3!
+  postgresql: {}
 
 external_relay: {}
 #    host: "[domain.tld]:port"
