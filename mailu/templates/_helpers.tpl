@@ -110,7 +110,7 @@ Return mailu secretKey
 {{- if .Values.secretKey }}
     {{- .Values.secretKey -}}
 {{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "mailu.fullname" .) "Length" 10 "Key" "secret-key")  -}}
+    {{- include "getValueFromSecret" (dict "Namespace" (include "mailu.namespace" .) "Name" (include "mailu.secretName" .) "Length" 10 "Key" "secret-key")  -}}
 {{- end -}}
 {{- end -}}
 
@@ -121,7 +121,29 @@ Get the mailu secret name.
 {{- if .Values.existingSecret }}
     {{- printf "%s" (tpl .Values.existingSecret $) -}}
 {{- else -}}
-    {{- printf "%s" (include "mailu.fullname" .) -}}
+    {{- printf "%s-secret" (include "mailu.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return mailu initialAccount.password
+*/}}
+{{- define "mailu.initialAccount.password" -}}
+{{- if .Values.initialAccount.password }}
+    {{- .Values.initialAccount.password -}}
+{{- else -}}
+    {{- include "getValueFromSecret" (dict "Namespace" (include "mailu.namespace" .) "Name" (include "mailu.initialAccount.secretName" .) "Length" 10 "Key" "initial-account-password")  -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return mailu initialAccount secret name
+*/}}
+{{- define "mailu.initialAccount.secretName" -}}
+{{- if .Values.initialAccount.existingSecret }}
+    {{- printf "%s" (tpl .Values.initialAccount.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s-initial-account" (include "mailu.fullname" .) -}}
 {{- end -}}
 {{- end -}}
 

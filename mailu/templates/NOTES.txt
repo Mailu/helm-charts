@@ -19,7 +19,11 @@ You can login to the admin panel using the following initial credentials (if not
         https://{{ .Values.hostnames|first }}/admin
 
         Username: {{ .Values.initialAccount.username }}@{{ .Values.initialAccount.domain }}
-        Password: {{ .Values.initialAccount.password }}
+
+        The password can be retrieved in the '{{ .Values.initialAccount.secretName }}' secret.
+        To retrieve the password, run:
+
+          kubectl --namespace={{ .Release.Namespace }} get secrets get secrets {{ .Values.initialAccount.secretName }} -o jsonpath='{.data.initial-account-password}' | base64 --decode
 
         !!! Please change the password after 1st login !!!
 

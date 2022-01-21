@@ -125,11 +125,14 @@ spec:
             value: "{{ default "" .Values.mail.authRatelimitExemtion }}"
           {{- if .Values.initialAccount }}
           - name: INITIAL_ADMIN_ACCOUNT
-            value: {{ required "initialAccount.username" .Values.initialAccount.username }}
+            value: {{ required "'initialAccount.username' needs to be set if 'initialAccount' is used." .Values.initialAccount.username }}
           - name: INITIAL_ADMIN_DOMAIN
-            value: {{ required "initialAccount.domain" .Values.initialAccount.domain }}
+            value: {{ required "'initialAccount.domain' needs to be set if 'initialAccount' is used." .Values.initialAccount.domain }}
           - name: INITIAL_ADMIN_PW
-            value: {{ required "initialAccount.password" .Values.initialAccount.password }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mailu.initialAccount.secretName" . }}
+                key: initial-account-password
           {{- end }}
           {{- if eq .Values.database.type "sqlite" }}
           - name: DB_FLAVOR

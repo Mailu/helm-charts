@@ -25,10 +25,19 @@ secretKey: ""
 existingSecret: ""
 
 # An initial account can automatically be created:
-#initialAccount:
-#  username: mailadmin
-#  domain: mydomain.com
-#  password: chang3m3!
+# e.g.:
+# initialAccount:
+#   username: mailadmin
+#   domain: mydomain.com
+#   password: chang3m3!
+#
+# An existing secret can be used to retrieve the initial account's password. For that, set the secret name in 'initialAccount.existingSecret'.
+# The secret needs to contain the password under the 'initial-account-password' key.
+# If the a value is also set under 'initialAccount.password', that password will be taken.
+# e.g.:
+# initialAccount:
+#   existingSecret: mailu-secret
+initialAccount: {}
 
 nameOverride: ""
 fullnameOverride: ""
