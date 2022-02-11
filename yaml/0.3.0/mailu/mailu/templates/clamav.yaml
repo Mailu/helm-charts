@@ -36,6 +36,16 @@ spec:
         app: mailu
         component: clamav
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: component
+                operator: In
+                values:
+                - rspamd
+            topologyKey: kubernetes.io/hostname
       containers:
       - name: clamav
         image: mailu/clamav:master
