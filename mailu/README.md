@@ -12,6 +12,7 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ## Prerequisites
 
+* ⚠️Starting with version 1.9, you need a validating DNSSEC compatible resolver in order to run Mailu.
 * a working HTTP/HTTPS ingress controller such as nginx or traefik
 * cert-manager v0.12 or higher installed and configured (including a working cert issuer). Otherwise you will need to handle it by yourself and provide the secret to Mailu.
 * A node which has a public reachable IP, static address because mail service binds directly to the node's IP
