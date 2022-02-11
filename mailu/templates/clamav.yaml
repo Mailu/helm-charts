@@ -23,7 +23,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.clamav.afffinity | default .Values.affinity }}
+      {{- with .Values.clamav.affinity | default .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
