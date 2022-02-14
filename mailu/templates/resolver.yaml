@@ -1,0 +1,68 @@
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mailu.fullname" . }}-resolver
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "mailu.fullname" . }}
+      component: resolver
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      labels:
+        app: {{ include "mailu.fullname" . }}
+        component: resolver
+    spec:
+      containers:
+      - name: resolver
+        image: {{ .Values.resolver.image.repository }}:{{ default .Values.mailuVersion .Values.resolver.image.tag }}
+        imagePullPolicy: Always
+        env:
+          - name: LOG_LEVEL
+            value: "DEBUG"
+          - name: SUBNET
+            value: {{ .Values.subnet }}
+          - name: FORWARD_DNS_SERVER
+            value: {{ .Values.kubeDnsSvcIp }}
+          - name: FORWARD_DOMAIN
+            value: {{ $clusterDomain }}
+        ports:
+          - name: dns-udp
+            protocol: UDP
+            containerPort: 53
+          - name: dns-tcp
+            protocol: TCP
+            containerPort: 53
+      volumes:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mailu.fullname" . }}-resolver
+  labels:
+    app: {{ include "mailu.fullname" . }}
+    component: resolver
+spec:
+  clusterIP: {{ .Values.resolverIp }}
+  selector:
+    app: {{ include "mailu.fullname" . }}
+    component: resolver
+  ports:
+  - name: dns-udp
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+

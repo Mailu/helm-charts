@@ -70,15 +70,15 @@ spec:
           - name: HOSTNAMES
             value: "{{ join "," .Values.hostnames }}"
           - name: IMAP_ADDRESS
-            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: POP3_ADDRESS
-            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-dovecot.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: SMTP_ADDRESS
-            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: AUTHSMTP_ADDRESS
-            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-postfix.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: REDIS_ADDRESS
-            value: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-redis.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           {{- if .Values.roundcube.enabled }}
           - name: WEBMAIL
             value: roundcube
@@ -95,7 +95,7 @@ spec:
             value: /
           {{- end }}
           - name: FRONT_ADDRESS
-            value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}
+            value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}.svc.{{ $clusterDomain }}
           - name: RECIPIENT_DELIMITER
             value: +
           - name: SUBNET
@@ -193,6 +193,16 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+      {{- if .Values.resolverIp }}
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - {{ .Values.resolverIp }}
+        searches:
+          - {{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - svc.{{ $clusterDomain }}
+          - {{ $clusterDomain }}
+      {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

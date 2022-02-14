@@ -122,7 +122,16 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
-
+      {{- if .Values.resolverIp }}
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - {{ .Values.resolverIp }}
+        searches:
+          - {{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - svc.{{ $clusterDomain }}
+          - {{ $clusterDomain }}
+      {{- end }}
 ---
 
 apiVersion: v1

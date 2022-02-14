@@ -124,6 +124,21 @@ ingress:
   realIpHeader: X-Forwarded-For
   realIpFrom: 0.0.0.0/0
 
+# kubeDnsSvcIP - set it to your coreDNS dns svc ip (output of 'kubectl -n kube-system get svc kube-dns')
+kubeDnsSvcIp: "x.x.x.x"
+
+# resolverIP - which ip to use for unbound dns svc.
+# you may choose a free IP yourself, or wait for
+# helm to automatically select one and read the choosen
+# ip with 'kubectl -n <mailu-namespace> get svc mailu-resolver'
+#
+# resolverIp: "y.y.y.y"
+
+resolver:
+  image:
+    repository: mailu/unbound
+    # tag: master
+
 # Frontend load balancer for non-HTTP(s) services
 front:
   # logLevel: WARNING

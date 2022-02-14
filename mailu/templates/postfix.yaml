@@ -2,6 +2,7 @@
 
 {{- /* Define persistantVolume claimName */}}
 {{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.postfix.persistence.claimNameOverride | default (printf "%s-postfix" (include "mailu.fullname" .)) }}
+{{- $clusterDomain := default "cluster.local" .Values.clusterDomain}}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -156,6 +157,16 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+      {{- if .Values.resolverIp }}
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+          - {{ .Values.resolverIp }}
+        searches:
+          - {{ .Release.Namespace }}.svc.{{ $clusterDomain }}
+          - svc.{{ $clusterDomain }}
+          - {{ $clusterDomain }}
+      {{- end }}
   strategy:
     type: Recreate
 
