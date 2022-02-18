@@ -1,0 +1,145 @@
+---
+# Source: mailu/templates/dovecot.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-dovecot
+  labels:
+    app: mailu
+    component: dovecot
+spec:
+  selector:
+    app: mailu
+    component: dovecot
+  ports:
+  - name: imap-auth
+    port: 2102
+    protocol: TCP
+  - name: imap-transport
+    port: 2525
+    protocol: TCP
+  - name: imap-default
+    port: 143
+    protocol: TCP
+  - name: pop3
+    port: 110
+    protocol: TCP
+  - name: sieve
+    port: 4190
+    protocol: TCP
+---
+# Source: mailu/templates/dovecot.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/imap.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-dovecot
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: dovecot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: dovecot
+    spec:
+      containers:
+      - name: admin
+        image: mailu/dovecot:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: dovecotdata
+            mountPath: /data
+          - name: data
+            mountPath: /mail
+            subPath: dovecotmail
+        env:
+          - name: LOG_LEVEL
+            value: WARNING
+          - name: FRONT_ADDRESS
+            value: mailu-front
+          - name: ADMIN_ADDRESS
+            value: mailu-admin
+          - name: ANTISPAM_WEBUI_ADDRESS
+            value: mailu-rspamd:11334
+          - name: POSTMASTER
+            value: postmaster
+          - name: DOMAIN
+            value: "example.com"
+          - name: HOSTNAMES
+            value: "mail.example.com,imap.example.com"
+          - name: RECIPIENT_DELIMITER
+            value: +
+          # TODO: COMPRESSION / COMPRESS_LEVEL -> documentation?
+
+          # TODO: next entries should be removed when https://github.com/Mailu/Mailu/issues/1112 is fixed
+          - name: REDIS_ADDRESS
+            value: mailu-redis
+          - name: WEBMAIL
+            value: none
+          - name: SECRET_KEY
+            value: "chang3m3!"
+        ports:
+          - name: auth
+            containerPort: 2102
+            protocol: TCP
+          - name: lmtp
+            containerPort: 2525
+            protocol: TCP
+          - name: imap
+            containerPort: 143
+            protocol: TCP
+          - name: pop3
+            containerPort: 110
+            protocol: TCP
+          - name: sieve
+            containerPort: 4190
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        startupProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  10 
+          failureThreshold: 30 
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - 'echo QUIT|nc localhost 110|grep "Dovecot ready."'
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1

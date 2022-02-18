@@ -1,0 +1,138 @@
+---
+# Source: mailu/templates/admin.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-admin
+  labels:
+    app: mailu
+    component: admin
+spec:
+  selector:
+    app: mailu
+    component: admin
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+---
+# Source: mailu/templates/admin.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-admin
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: admin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: admin
+    spec:
+      containers:
+      - name: admin
+        image: mailu/admin:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: admin
+            mountPath: /data
+          - name: data
+            mountPath: /dkim
+            subPath: dkim
+        env:
+          - name: LOG_LEVEL
+            value: WARNING
+          - name: QUOTA_STORAGE_URL
+            value: redis://mailu-redis/1
+          - name: RATELIMIT_STORAGE_URL
+            value: redis://mailu-redis/2
+          - name: POSTMASTER
+            value: postmaster
+          - name: DOMAIN
+            value: "example.com"
+          - name: HOSTNAMES
+            value: "mail.example.com,imap.example.com"
+          - name: IMAP_ADDRESS
+            value: mailu-dovecot.mailu
+          - name: POP3_ADDRESS
+            value: mailu-dovecot.mailu
+          - name: SMTP_ADDRESS
+            value: mailu-postfix.mailu
+          - name: AUTHSMTP_ADDRESS
+            value: mailu-postfix.mailu
+          - name: REDIS_ADDRESS
+            value: mailu-redis.mailu
+          - name: WEBMAIL
+            value: roundcube
+          - name: WEB_WEBMAIL
+            value: /roundcube
+          - name: WEBMAIL_ADDRESS
+            value: mailu-roundcube.mailu.svc.cluster.local
+          - name: FRONT_ADDRESS
+            value: mailu-front.mailu
+          - name: RECIPIENT_DELIMITER
+            value: +
+          - name: SUBNET
+            value: 10.42.0.0/16
+          - name: PASSWORD_SCHEME
+            value: "PBKDF2"
+          - name: SECRET_KEY
+            value: "chang3m3!"
+          - name: AUTH_RATELIMIT
+            value: "10/minute;1000/hour"
+          - name: INITIAL_ADMIN_ACCOUNT
+            value: mailadmin
+          - name: INITIAL_ADMIN_DOMAIN
+            value: mydomain.com
+          - name: INITIAL_ADMIN_PW
+            value: chang3m3!
+          - name: DB_FLAVOR
+            value: sqlite
+        ports:
+          - name: http
+            containerPort: 80
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 500m
+            memory: 500Mi
+        startupProbe:
+          httpGet:
+            path: /sso/login
+            port: http
+          periodSeconds:  10 
+          failureThreshold: 30 
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /sso/login
+            port: http
+          periodSeconds: 10
+          failureThreshold: 3
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /sso/login
+            port: http
+          periodSeconds: 10
+          failureThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1

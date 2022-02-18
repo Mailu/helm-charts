@@ -1,0 +1,21 @@
+---
+# Source: mailu/templates/certificate.yaml
+# This is the definition of the required ssl certificate for the mail system
+# It will be issued by cert-manager
+
+
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: mailu-certificates
+spec:
+  secretName: mailu-certificates
+  # re-new certificate when it expires in less than 60 days
+  renewBefore: 1440h0m0s
+  commonName: "mail.example.com"
+  dnsNames:
+  - "mail.example.com"
+  - "imap.example.com"
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt
