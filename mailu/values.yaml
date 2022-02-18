@@ -367,16 +367,6 @@ rspamd:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-              - key: component
-                operator: In
-                values:
-                  - clamav
-          topologyKey: kubernetes.io/hostname
 
 clamav:
   enabled: true
@@ -404,16 +394,18 @@ clamav:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-              - key: component
-                operator: In
-                values:
-                  - rspamd
-          topologyKey: kubernetes.io/hostname
+  # clamav must share a volume with rspamd. This is usually enforced by the volume itself (RWO). If you use RWM volumes and want to
+  # have clamav running on the same node, add the following affinity rule:
+#  affinity:
+#    podAffinity:
+#      requiredDuringSchedulingIgnoredDuringExecution:
+#        - labelSelector:
+#            matchExpressions:
+#              - key: component
+#                operator: In
+#                values:
+#                  - rspamd
+#          topologyKey: kubernetes.io/hostname
 
 roundcube:
   enabled: true
