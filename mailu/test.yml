@@ -186,6 +186,9 @@ spec:
   - name: imap-auth
     port: 10143
     protocol: TCP
+  - name: sieve
+    port: 4190
+    protocol: TCP
   - name: http
     port: 80
     protocol: TCP
@@ -668,6 +671,9 @@ spec:
             hostPort: 587
           - name: auth
             containerPort: 8000
+            protocol: TCP
+          - name: sieve
+            containerPort: 4190
             protocol: TCP
           - name: http
             containerPort: 80

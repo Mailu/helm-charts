@@ -165,6 +165,12 @@ spec:
             {{- if .Values.front.hostPort.enabled }}
             hostPort: 587
             {{- end}}
+          - name: sieve
+            protocol: TCP
+            containerPort: 4190
+            {{- if .Values.front.hostPort.enabled }}
+            hostPort: 4190
+            {{- end}}
           - name: auth
             containerPort: 8000
             protocol: TCP
@@ -266,6 +272,9 @@ spec:
   - name: imap-auth
     port: 10143
     protocol: TCP
+  - name: sieve
+    port: 4190
+    protocol: TCP
   - name: http
     port: 80
     protocol: TCP
@@ -340,6 +349,14 @@ spec:
   {{- if .submission }}
   - name: smtpd
     port: 587
+    protocol: TCP
+  {{- end }}
+{{- end }}
+
+{{- with .sieve }}
+  {{- if .sieve }}
+  - name: sieve
+    port: 4190
     protocol: TCP
   {{- end }}
 {{- end }}

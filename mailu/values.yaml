@@ -178,6 +178,8 @@ front:
       smtp: true
       smtps: true
       submission: true
+    sieve:
+      sieve: false
 
 admin:
   # logLevel: WARNING
