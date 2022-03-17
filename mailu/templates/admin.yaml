@@ -104,8 +104,18 @@ spec:
             value: "{{ default "PBKDF2" .Values.passwordScheme }}"
           - name: SECRET_KEY
             value: "{{ required "secretKey" .Values.secretKey }}"
-          - name: AUTH_RATELIMIT
-            value: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
+          - name: AUTH_RATELIMIT_IP
+            value: "{{ required "mail.authRatelimitIP" .Values.mail.authRatelimitIP }}"
+          - name: AUTH_RATELIMIT_IP_V4_MASK
+            value: "{{ required "mail.authRatelimitIPv4Mask" .Values.mail.authRatelimitIPv4Mask }}"
+          - name: AUTH_RATELIMIT_IP_V6_MASK
+            value: "{{ required "mail.authRatelimitIPv6Mask" .Values.mail.authRatelimitIPv6Mask }}"
+          - name: AUTH_RATELIMIT_USER
+            value: "{{ required "mail.authRatelimitUser" .Values.mail.authRatelimitUser }}"
+          - name: AUTH_RATELIMIT_EXEMPTION_LENGTH
+            value: "{{ required "mail.authRatelimitExemtionLength" .Values.mail.authRatelimitExemtionLength }}"
+          - name: AUTH_RATELIMIT_EXEMPTION
+            value: "{{ default "" .Values.mail.authRatelimitExemtion }}"
           {{- if .Values.initialAccount }}
           - name: INITIAL_ADMIN_ACCOUNT
             value: {{ required "initialAccount.username" .Values.initialAccount.username }}

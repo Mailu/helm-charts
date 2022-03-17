@@ -105,7 +105,14 @@ postmaster: postmaster
 
 mail:
   messageSizeLimitInMegabytes: 50
-  authRatelimit: 10/minute;1000/hour
+
+  # Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
+  authRatelimitIP: 60/hour
+  authRatelimitIPv4Mask: 24
+  authRatelimitIPv6Mask: 56
+  authRatelimitUser: 100/day
+  authRatelimitExemtionLength: 86400
+  # authRatelimitExemtion:
 
 # certmanager settings
 certmanager:
