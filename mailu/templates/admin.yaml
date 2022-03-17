@@ -106,6 +106,10 @@ spec:
             value: "{{ required "secretKey" .Values.secretKey }}"
           - name: AUTH_RATELIMIT
             value: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
+          - name: MESSAGE_RATELIMIT
+            value: "{{ required "mail.messageRatelimit" .Values.mail.messageRatelimit }}"
+          - name: MESSAGE_RATELIMIT_EXEMPTION
+            value: "{{ default "" .Values.mail.messageRatelimitExemption }}"
           {{- if .Values.initialAccount }}
           - name: INITIAL_ADMIN_ACCOUNT
             value: {{ required "initialAccount.username" .Values.initialAccount.username }}
