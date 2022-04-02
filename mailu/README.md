@@ -21,7 +21,7 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ### Warning about open relays
 
-One of the biggest mistakes when running a mail server is a so called "Open Relay". This this kind of misconfiguration is in most cases caused by a badly configured
+One of the biggest mistakes when running a mail server is a so called "Open Relay". This kind of misconfiguration is in most cases caused by a badly configured
 load balancer which hides the originating IP address of an email which makes Mailu think, the email comes from an internal address and ommits authentification and other checks. In the result, your mail server can be abused to spread spam and will get blacklisted within hours.
 
 It is very important that you check your setup for open relay at least:
