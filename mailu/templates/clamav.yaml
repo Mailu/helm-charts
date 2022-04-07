@@ -3,6 +3,9 @@
 
 {{- if .Values.clamav.enabled }}
 
+{{- /* Define persistantVolume claimName */}}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd.persistence.claimNameOverride | default (printf "%s-clamav" (include "mailu.fullname" .)) }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -89,7 +92,11 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
+            {{- if not .Values.rspamd_clamav_persistence.single_pvc }}
+            claimName: {{ $claimName }}
+            {{- else }}
             claimName: {{ include "mailu.rspamdClamavClaimName" . }}
+            {{- end }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -101,6 +108,28 @@ spec:
     rollingUpdate:
       maxUnavailable: 0
       maxSurge: 1
+
+{{- if and (not .Values.persistence.single_pvc) (not .Values.rspamd_clamav_persistence.single_pvc) }}
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name:  {{ $claimName }}
+{{- if .Values.clamav.persistence.annotations }}
+  annotations:
+{{ toYaml .Values.clamav.persistence.annotations | indent 4 }}
+{{- end }}
+spec:
+  accessModes:
+    - {{ .Values.clamav.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.clamav.persistence.size }}
+  {{- if .Values.clamav.persistence.storageClass }}
+  storageClassName: {{ .Values.clamav.persistence.storageClass }}
+  {{- end }}
+{{- end }}
 
 ---
 

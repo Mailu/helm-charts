@@ -332,13 +332,22 @@ dovecot:
   #     mmap_disable = yes
   #     mail_max_userip_connections=100
 
-# rspamd and clamav must share their volume
-# use affinity to schedule both pods on the same node so RWO volumes keep working
+# historically rspamd and clamav shared their volumes in this chart
+# this isn't needed anymore. to maintain backward compatibility and give users
+# some time to migrate we keep this here.
+#
+# if you want a "shared" volume keep in mind you have to use affinity rules on
+# rspamd and clamav pods so that both pods are scheduled on the same node
+# to keep RWO volumes working
+#
+# otherwise set rspamd_clamav_persistence.single_pvc to true and review
+# rspamd.persistence and clamav.persistence
 rspamd_clamav_persistence:
   size: 20Gi
   storageClass: ""
   accessMode: ReadWriteOnce
   claimNameOverride: ""
+  single_pvc: false
   #annotations:
   #  "helm.sh/resource-policy": keep
 
@@ -348,6 +357,13 @@ rspamd:
     repository: mailu/rspamd
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 1Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 100Mi
@@ -375,6 +391,13 @@ clamav:
     repository: mailu/clamav
     # tag defaults to mailuVersion
     # tag: master
+  persistence:
+    size: 2Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    claimNameOverride: ""
+    #annotations:
+    #  "helm.sh/resource-policy": keep
   resources:
     requests:
       memory: 1Gi
