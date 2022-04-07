@@ -4,7 +4,7 @@
 # It will be issued by cert-manager
 
 
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: mailu-certificates
