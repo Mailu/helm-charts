@@ -85,8 +85,16 @@ spec:
             value: {{ include "mailu.fullname" . }}-redis
           - name: WEBMAIL
             value: none
+          {{ if hasKey .Values "secretKeyRef" }}
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secretKeyRef.name }}
+                key: {{ .Values.secretKeyRef.key}}
+          {{ else }}
           - name: SECRET_KEY
             value: "{{ required "secretKey" .Values.secretKey }}"
+          {{- end}}
         ports:
           - name: auth
             containerPort: 2102

@@ -102,6 +102,8 @@ Check that the deployed pods are all running.
 | `postmaster`                      | Local part of the postmaster address | `postmaster`                              |
 | `passwordScheme`                  | Scheme used to hash passwords        | `PBKDF2`                                  |
 | `secretKey`                       | Session encryption key for admin and webmail | not set                           |
+| `secretKeyRef.name`               | Name of the Secret to fetch the secret key from | not set                        |
+| `secretKeyRef.key`                | The name of the key storing the secret key   | not set                           |
 | `subnet`                          | Subnet of PODs, used to configure from which IPs internal requests are allowed | `10.42.0.0/16` |
 | `mail.messageSizeLimitInMegabytes`| Message size limit in Megabytes      | `50`                                      |
 | `mail.authRatelimit`              | Rate limit for authentication requests | `10/minute;1000/hour`                   |
