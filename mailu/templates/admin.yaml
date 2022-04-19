@@ -107,10 +107,10 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.secretKeyRef.name }}
-                key: {{ .Values.secretKeyRef.key}}
+                key: {{ .Values.secretKeyRef.key }}
           {{ else }}
-           - name: SECRET_KEY
-             value: "{{ required "secretKey" .Values.secretKey }}"
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
           {{- end}}
           - name: AUTH_RATELIMIT
             value: "{{ required "mail.authRatelimit" .Values.mail.authRatelimit }}"
