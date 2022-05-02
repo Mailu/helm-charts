@@ -37,6 +37,10 @@ spec:
       - name: roundcube
         image: {{ .Values.roundcube.image.repository }}:{{ default .Values.mailuVersion .Values.roundcube.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.roundcube.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - mountPath: /data
             name: data
