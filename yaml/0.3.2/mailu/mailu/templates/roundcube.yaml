@@ -1,0 +1,99 @@
+---
+# Source: mailu/templates/roundcube.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-roundcube
+  labels:
+    app: mailu
+    component: roundcube
+spec:
+  selector:
+    app: mailu
+    component: roundcube
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+---
+# Source: mailu/templates/roundcube.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/webmail.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-roundcube
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: roundcube
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: roundcube
+    spec:
+      containers:
+      - name: roundcube
+        image: mailu/roundcube:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - mountPath: /data
+            name: data
+            subPath: roundcube
+        env:
+          - name: MESSAGE_SIZE_LIMIT
+            value: "52428800"
+          - name: IMAP_ADDRESS
+            value: mailu-dovecot
+          - name: FRONT_ADDRESS
+            value: mailu-front
+          - name: SECRET_KEY
+            value: "chang3m3!"
+          - name: SUBNET
+            value: 10.42.0.0/16
+          - name: ADMIN
+            value: "true"
+          - name: WEB_ADMIN
+            value: "/admin/"
+          - name: ROUNDCUBE_DB_FLAVOR
+            value: sqlite
+        ports:
+          - name: http
+            containerPort: 80
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        startupProbe:
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
+          periodSeconds:  10 
+          failureThreshold: 30 
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/" ]
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1

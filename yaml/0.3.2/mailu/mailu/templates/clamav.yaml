@@ -1,0 +1,90 @@
+---
+# Source: mailu/templates/clamav.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-clamav
+  labels:
+    app: mailu
+    component: clamav
+spec:
+  selector:
+    app: mailu
+    component: clamav
+  ports:
+  - name: clamav
+    port: 3310
+    protocol: TCP
+---
+# Source: mailu/templates/clamav.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/security.yaml
+# (file is split into rspamd.yaml and clamav.yaml)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-clamav
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: clamav
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: clamav
+    spec:
+      containers:
+      - name: clamav
+        image: mailu/clamav:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: data
+            subPath: clamav
+            mountPath: /data
+        env:
+          - name: LOG_LEVEL
+            value: WARNING
+        ports:
+          - name: clamav
+            containerPort: 3310
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+          requests:
+            cpu: 1000m
+            memory: 1Gi
+        startupProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds:  10 
+          failureThreshold: 60 
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds:  10 
+          failureThreshold: 3 
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+              - /health.sh
+          periodSeconds:  10 
+          failureThreshold: 1 
+          timeoutSeconds: 5
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mailu-storage
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
