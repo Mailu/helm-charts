@@ -57,15 +57,15 @@ spec:
             value: {{ include "mailu.fullname" . }}-dovecot
           - name: FRONT_ADDRESS
             value: {{ include "mailu.fullname" . }}-front
-          {{ if hasKey .Values "secretKeyRef" }}
+          {{- if hasKey .Values "secretKeyRef" }}
           - name: SECRET_KEY
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.secretKeyRef.name }}
                 key: {{ .Values.secretKeyRef.key}}
-          {{ else }}
-           - name: SECRET_KEY
-             value: "{{ required "secretKey" .Values.secretKey }}"
+          {{- else }}
+          - name: SECRET_KEY
+            value: "{{ required "secretKey" .Values.secretKey }}"
           {{- end}}
           - name: SUBNET
             value: {{ .Values.subnet }}
