@@ -94,6 +94,8 @@ spec:
             value: "{{ .Values.external_relay.username }}"
           - name: RELAYPASSWORD
             value: "{{ .Values.external_relay.password }}"
+          - name: TZ
+            value: "{{ default "UTC" .Values.timezone }}"
           {{- end}}
           {{- end}}
         ports:
