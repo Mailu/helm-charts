@@ -94,6 +94,7 @@ Check that the deployed pods are all running.
 | --------------------------------- | ------------------------------------ | ----------------------------------------- |
 | `mailuVersion`                    | Version/tag of mailu images - must be master or a version >=1.9 | `master`       |
 | `logLevel`                        | Level of logging                     | `WARNING`                                 |
+| `timezone`                        | Timezone Mailu will use              | `UTC`                                     |
 | `nameOverride`                    | Override the resource name prefix    | `mailu`                                   |
 | `clusterDomain`                   | Change the cluster DNS root          | `cluster.local`                           |
 | `fullnameOverride`                | Override the full resource names     | `mailu-{release-name}` (or `mailu` if release-name is `mailu`) |
