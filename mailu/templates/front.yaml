@@ -292,7 +292,7 @@ metadata:
   {{- end }}
 spec:
   type: {{ .type | default "ClusterIP" }}
-  externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
+  externalTrafficPolicy: {{ include "mailu.externalTrafficPolicyDefault" $ }}
   {{- if .loadBalancerIP }}
   loadBalancerIP: {{ .loadBalancerIP }}
   {{- end }}

@@ -60,3 +60,13 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ define "mailu.rspamdClamavClaimName"}}
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
 {{- end }}
+
+{{ define "mailu.externalTrafficPolicyDefault" }}
+{{- if .Values.front.externalService.externalTrafficPolicy }}
+{{- .Values.front.externalService.externalTrafficPolicy }}
+{{- else }}
+{{- if ne .Values.front.externalService.type "ClusterIP" }}
+Local
+{{- end }}
+{{- end }}
+{{- end }}

@@ -161,7 +161,7 @@ front:
     # LoadBalancer
     # type: LoadBalancer
     # loadBalancerIP:
-    externalTrafficPolicy: Local
+    # externalTrafficPolicy: Local
     annotations: {}
     pop3:
       pop3: false
