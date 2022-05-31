@@ -80,11 +80,11 @@ spec:
           - name: ROUNDCUBE_DB_FLAVOR
             value: mysql
           - name: ROUNDCUBE_DB_USER
-            value: {{ required "database.mysql.roundcubeUser" .Values.database.mysql.roundcubeUser }}
+            value: {{ required "database.mysql.user" .Values.database.mysql.user }}
           - name: ROUNDCUBE_DB_PW
-            value: {{ required "database.mysql.roundcubePassword" .Values.database.mysql.roundcubePassword }}
+            value: {{ required "database.mysql.password" .Values.database.mysql.password }}
           - name: ROUNDCUBE_DB_NAME
-            value: {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }}
+            value: {{ required "database.mysql.database" .Values.database.mysql.database }}
           - name: ROUNDCUBE_DB_HOST
             {{- if .Values.database.mysql.host }}
             value: {{ .Values.database.mysql.host }}
@@ -95,11 +95,11 @@ spec:
           - name: ROUNDCUBE_DB_FLAVOR
             value: postgresql
           - name: ROUNDCUBE_DB_USER
-            value: {{ required "database.postgresql.roundcubeUser" .Values.database.postgresql.roundcubeUser }}
+            value: {{ required "database.postgresql.user" .Values.database.postgresql.user }}
           - name: ROUNDCUBE_DB_PW
-            value: {{ required "database.postgresql.roundcubePassword" .Values.database.postgresql.roundcubePassword }}
+            value: {{ required "database.postgresql.password" .Values.database.postgresql.password }}
           - name: ROUNDCUBE_DB_NAME
-            value: {{ required "database.postgresql.roundcubeDatabase" .Values.database.postgresql.roundcubeDatabase }}
+            value: {{ required "database.postgresql.database" .Values.database.postgresql.database }}
           - name: ROUNDCUBE_DB_HOST
             {{- if .Values.database.postgresql.host }}
             value: {{ .Values.database.postgresql.host }}

@@ -10,10 +10,10 @@ metadata:
   name: {{ include "mailu.fullname" . }}-mysql-init
 data:
   extra.sql: >
-    CREATE DATABASE IF NOT EXISTS {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }};
-    GRANT ALL ON {{ required "database.mysql.roundcubeDatabase" .Values.database.mysql.roundcubeDatabase }}.* TO
-      '{{ required "database.mysql.roundcubeUser" .Values.database.mysql.roundcubeUser }}'@'%'
-      IDENTIFIED BY '{{ required "database.mysql.roundcubePassword" .Values.database.mysql.roundcubePassword }}';
+    CREATE DATABASE IF NOT EXISTS {{ required "database.mysql.database" .Values.database.mysql.database }};
+    GRANT ALL ON {{ required "database.mysql.database" .Values.database.mysql.database }}.* TO
+      '{{ required "database.mysql.user" .Values.database.mysql.user }}'@'%'
+      IDENTIFIED BY '{{ required "database.mysql.password" .Values.database.mysql.password }}';
 {{ end }}
 ---
 

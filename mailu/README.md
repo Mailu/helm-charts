@@ -228,7 +228,7 @@ The ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.p
 
 Set ``database.roundcubeType`` to ``mysql``.
  
-The ``database.mysql.roundcubeDatabase``, ``database.mysql.roundcubeUser``, and ``database.mysql.roundcubePassword`` variables must also be set.
+The ``database.mysql.database``, ``database.mysql.user``, and ``database.mysql.password`` variables must also be set.
 
 ### Using the internal MySQL database
 
@@ -258,7 +258,7 @@ The ``database.postgresql.database``, ``database.postgresql.user``, and ``databa
 
 Set ``database.roundcubeType`` to ``postgresql``.
  
-The``database.postgresql.roundcubeDatabase``, ``database.postgresql.roundcubeUser``, and ``database.postgresql.roundcubePassword`` must also be set.
+The``database.postgresql.database``, ``database.postgresql.user``, and ``database.postgresql.password`` must also be set.
 
 ## Timezone
 

@@ -64,11 +64,6 @@ database:
     # user: mailu
     # password: chang3m3!
 
-    # settings for roundcube (required if roundcube database type is "mysql" or "postgresql")
-    # roundcubeDatabase: roundcube
-    # roundcubeUser: roundcube
-    # roundcubePassword: chang3m3!
-
 external_relay: {}
 #    host: "[domain.tld]:port"
 #    username: username
