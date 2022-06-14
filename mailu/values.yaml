@@ -224,11 +224,6 @@ redis:
     requests:
       memory: 200Mi
       cpu: 100m
-    
-    
-    :
-      memory: 300Mi
-      cpu: 200m
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
