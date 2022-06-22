@@ -164,7 +164,15 @@ front:
 
   # Expose front mail ports via hostPort
   hostPort:
+    ## deprecated, please unset if you want to disable specific ports
     enabled: true
+    pop3: 110
+    pop3s: 995
+    imap: 143
+    imaps: 993
+    smtp: 25
+    smtps: 465
+    smtpd: 587
 
   # Expose front mail ports via external service (ClusterIP or LoadBalancer)
   externalService:

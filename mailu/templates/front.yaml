@@ -125,37 +125,37 @@ spec:
             protocol: TCP
             containerPort: 110
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 110
+            hostPort: {{ .Values.front.hostPort.pop3 }}
             {{- end}}
           - name: pop3s
             protocol: TCP
             containerPort: 995
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 995
+            hostPort: {{ .Values.front.hostPort.pop3s }}
             {{- end}}
           - name: imap
             protocol: TCP
             containerPort: 143
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 143
+            hostPort: {{ .Values.front.hostPort.imap }}
             {{- end}}
           - name: imaps
             protocol: TCP
             containerPort: 993
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 993
+            hostPort: {{ .Values.front.hostPort.imaps }}
             {{- end}}
           - name: smtp
             protocol: TCP
             containerPort: 25
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 25
+            hostPort: {{ .Values.front.hostPort.smtp }}
             {{- end}}
           - name: smtps
             protocol: TCP
             containerPort: 465
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 465
+            hostPort: {{ .Values.front.hostPort.smtps }}
             {{- end}}
           - name: smtp-auth
             protocol: TCP
@@ -167,7 +167,7 @@ spec:
             protocol: TCP
             containerPort: 587
             {{- if .Values.front.hostPort.enabled }}
-            hostPort: 587
+            hostPort: {{ .Values.front.hostPort.smtpd }}
             {{- end}}
           - name: auth
             containerPort: 8000
