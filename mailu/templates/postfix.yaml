@@ -146,6 +146,10 @@ spec:
           failureThreshold: {{ default 1 .Values.postfix.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.postfix.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.postfix.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

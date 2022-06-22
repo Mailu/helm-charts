@@ -157,6 +157,11 @@ front:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
+  #  postStart:
+  #    exec:
+  #      command: ["/bin/sh", "-c", "echo Hello world"]
+
   # Deployment or DaemonSet
   controller:
     kind: Deployment
@@ -225,6 +230,7 @@ admin:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 
 redis:
@@ -254,6 +260,7 @@ redis:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 postfix:
   # logLevel: WARNING
@@ -289,6 +296,7 @@ postfix:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 dovecot:
   enabled: true
@@ -325,6 +333,7 @@ dovecot:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
   # enable dovecot overrides
   # overrides:
   #   dovecot.conf: |
@@ -383,6 +392,7 @@ rspamd:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 clamav:
   enabled: true
@@ -414,6 +424,7 @@ clamav:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
   # clamav must share a volume with rspamd. This is usually enforced by the volume itself (RWO). If you use RWM volumes and want to
   # have clamav running on the same node, add the following affinity rule:
 #  affinity:
@@ -458,6 +469,7 @@ roundcube:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 
 webdav:
@@ -486,6 +498,7 @@ webdav:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 mysql:
   image:
@@ -514,6 +527,7 @@ mysql:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
+  #lifecycle:
 
 fetchmail:
   enabled: false
@@ -533,4 +547,5 @@ fetchmail:
     requests:
       memory: 100Mi
       cpu: 100m
+  #lifecycle:
   delay: 600

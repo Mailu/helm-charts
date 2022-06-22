@@ -80,6 +80,10 @@ spec:
         resources:
         {{- .|toYaml|nindent 10}}
         {{- end }}
+        {{- with .Values.fetchmail.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

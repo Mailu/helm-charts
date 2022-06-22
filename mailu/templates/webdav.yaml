@@ -88,6 +88,10 @@ spec:
           failureThreshold: {{ default 1 .Values.webdav.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.webdav.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.webdav.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

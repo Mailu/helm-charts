@@ -211,6 +211,10 @@ spec:
           failureThreshold: {{ default 1 .Values.front.readinessProbe.failureThreshold }}
           timeoutSeconds: {{ default 5 .Values.front.readinessProbe.timeoutSeconds }}
         {{- end }}
+        {{- with .Values.front.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: certs
           secret:

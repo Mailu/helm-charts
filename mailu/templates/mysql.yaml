@@ -127,6 +127,10 @@ spec:
           failureThreshold: {{ default 30 .Values.mysql.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.mysql.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.mysql.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

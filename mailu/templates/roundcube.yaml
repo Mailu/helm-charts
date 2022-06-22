@@ -142,6 +142,10 @@ spec:
           failureThreshold: {{ default 1 .Values.roundcube.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.roundcube.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.roundcube.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

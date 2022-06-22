@@ -93,6 +93,10 @@ spec:
           failureThreshold: {{ default 1 .Values.clamav.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.clamav.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.clamav.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

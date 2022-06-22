@@ -205,6 +205,10 @@ spec:
           failureThreshold: {{ default 1 .Values.admin.readinessProbe.failureThreshold }}
           timeoutSeconds: {{ default 5 .Values.admin.readinessProbe.timeoutSeconds }}
         {{- end }}
+        {{- with .Values.admin.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

@@ -119,6 +119,10 @@ spec:
           failureThreshold: {{ default 90 .Values.rspamd.readinessProbe.failureThreshold }} 
           timeoutSeconds: {{ default 5 .Values.rspamd.readinessProbe.timeoutSeconds }} 
         {{- end }}
+        {{- with .Values.rspamd.lifecycle }}
+        lifecycle:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
