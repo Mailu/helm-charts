@@ -135,9 +135,6 @@ front:
     requests:
       memory: 100Mi
       cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -197,9 +194,6 @@ admin:
     requests:
       memory: 500Mi
       cpu: 500m
-    limits:
-      memory: 500Mi
-      cpu: 500m
   podAnnotations: {}
   startupProbe:
     periodSeconds: 10
@@ -230,9 +224,6 @@ redis:
     requests:
       memory: 200Mi
       cpu: 100m
-    limits:
-      memory: 300Mi
-      cpu: 200m
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -266,9 +257,6 @@ postfix:
     #  "helm.sh/resource-policy": keep
   resources:
     requests:
-      memory: 2Gi
-      cpu: 500m
-    limits:
       memory: 2Gi
       cpu: 500m
   startupProbe:
@@ -305,9 +293,6 @@ dovecot:
     #  "helm.sh/resource-policy": keep
   resources:
     requests:
-      memory: 500Mi
-      cpu: 500m
-    limits:
       memory: 500Mi
       cpu: 500m
   startupProbe:
@@ -368,9 +353,6 @@ rspamd:
     requests:
       memory: 100Mi
       cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
   startupProbe: # give it 15 minutes for initial rule compilation
     periodSeconds: 10
     failureThreshold: 90
@@ -401,9 +383,6 @@ clamav:
   resources:
     requests:
       memory: 1Gi
-      cpu: 1000m
-    limits:
-      memory: 2Gi
       cpu: 1000m
   startupProbe: # give it 10 minutes for initial freshclam update
     periodSeconds: 10
@@ -449,9 +428,6 @@ roundcube:
     requests:
       memory: 100Mi
       cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -508,9 +484,6 @@ mysql:
     requests:
       memory: 256Mi
       cpu: 100m
-    limits:
-      memory: 512Mi
-      cpu: 200m
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -542,7 +515,4 @@ fetchmail:
     requests:
       memory: 100Mi
       cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
   delay: 600
