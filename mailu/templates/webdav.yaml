@@ -37,6 +37,10 @@ spec:
       - name: webdav
         image: {{ .Values.webdav.image.repository }}:{{ default .Values.mailuVersion .Values.webdav.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.webdav.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - mountPath: /data
             name: data

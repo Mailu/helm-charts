@@ -41,7 +41,11 @@ spec:
       - name: admin
         image: {{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
         imagePullPolicy: Always
-        volumeMounts:
+        {{- with .Values.fetchmail.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
+        volumeMounts:      
           - name: data
             subPath: dovecotdata
             mountPath: /data

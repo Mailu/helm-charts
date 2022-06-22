@@ -39,6 +39,10 @@ spec:
       - name: rspamd
         image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.rspamd.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: data
             subPath: rspamd

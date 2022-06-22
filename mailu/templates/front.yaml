@@ -44,6 +44,10 @@ spec:
       - name: front
         image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.front.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: certs
             mountPath: /certs
