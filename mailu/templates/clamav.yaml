@@ -4,7 +4,7 @@
 {{- if .Values.clamav.enabled }}
 
 {{- /* Define persistantVolume claimName */}}
-{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd.persistence.claimNameOverride | default (printf "%s-clamav" (include "mailu.fullname" .)) }}
+{{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.clamav.persistence.claimNameOverride | default (printf "%s-clamav" (include "mailu.fullname" .)) }}
 
 apiVersion: apps/v1
 kind: Deployment
