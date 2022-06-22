@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [ master, production ]
   #pull_request:
   #  branches: [ master ]
 
@@ -39,7 +39,7 @@ jobs:
       - name: Pack chart
         run: |
           ./helm3 package mailu -d gh-pages
-          ./helm3 repo index --url https://mailu.github.io/helm-charts/ gh-pages
+          ./helm3 repo index --url https://xmac94x.github.io/mailu-helm-charts/ gh-pages
           ( cd gh-pages && ./index.html.sh > index.html )
       - name: Render chart to yamls
         run: |
