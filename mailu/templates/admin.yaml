@@ -219,11 +219,10 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+  {{- with .Values.admin.updateStrategy }}
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 
 {{- if not .Values.persistence.single_pvc }}

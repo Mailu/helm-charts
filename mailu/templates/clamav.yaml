@@ -111,11 +111,10 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+  {{- with .Values.clamav.updateStrategy }}
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 {{- if and (not .Values.persistence.single_pvc) (not .Values.rspamd_clamav_persistence.single_pvc) }}
 ---

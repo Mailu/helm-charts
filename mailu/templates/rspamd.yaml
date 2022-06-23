@@ -137,6 +137,10 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+  {{- with .Values.rspamd.updateStrategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 {{- if and (not .Values.persistence.single_pvc) (not .Values.rspamd_clamav_persistence.single_pvc) }}
 ---

@@ -144,12 +144,10 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+  {{- with .Values.mysql.updateStrategy }}
   strategy:
-    # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 
 {{- if not .Values.persistence.single_pvc }}

@@ -160,8 +160,10 @@ spec:
             path: /usr/share/zoneinfo
             type: Directory
         {{- end }}
+  {{- with .Values.postfix.updateStrategy }}
   strategy:
-    type: Recreate
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 
 
 {{- if not .Values.persistence.single_pvc }}

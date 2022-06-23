@@ -12,16 +12,18 @@ spec:
       component: front
   {{- if eq .Values.front.controller.kind "Deployment" }}
   replicas: 1
+  {{- end }}
+  {{- if eq .Values.front.controller.kind "Deployment" }}
   strategy:
+  {{- with .Values.front.updateStrategy }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- else if eq .Values.front.controller.kind "DaemonSet" }}
   updateStrategy:
+  {{- with .Values.front.updateStrategy }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      {{- if eq .Values.front.controller.kind "Deployment" }}
-      maxSurge: 0
-      {{- end }}
+  {{- end }}
   template:
     metadata:
       labels:
