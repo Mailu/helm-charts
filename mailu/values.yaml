@@ -165,12 +165,12 @@ front:
   # Deployment or DaemonSet
   controller:
     kind: Deployment
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      # Note: remove maxSurge when choosing DaemonSet
-      maxSurge: 0
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 1
+  #    # Note: remove maxSurge when choosing DaemonSet
+  #    maxSurge: 0
   nodeSelector: {}
 
   # Expose front mail ports via hostPort
@@ -219,11 +219,11 @@ admin:
     #annotations:
     #  "helm.sh/resource-policy": keep
 
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   resources:
     requests:
       memory: 500Mi
@@ -255,11 +255,11 @@ redis:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   resources:
     requests:
       memory: 200Mi
@@ -335,11 +335,11 @@ dovecot:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   resources:
     requests:
       memory: 500Mi
@@ -436,11 +436,11 @@ clamav:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   resources:
     requests:
       memory: 1Gi
@@ -485,11 +485,11 @@ roundcube:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   uri: /roundcube
   resources:
     requests:
@@ -524,11 +524,11 @@ webdav:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   startupProbe:
     periodSeconds: 10
     failureThreshold: 30
@@ -556,10 +556,7 @@ mysql:
     #  "helm.sh/resource-policy": keep
   updateStrategy:
     # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+    type: Recreate
   resources:
     requests:
       memory: 256Mi
@@ -592,11 +589,11 @@ fetchmail:
     claimNameOverride: ""
     #annotations:
     #  "helm.sh/resource-policy": keep
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
+  #updateStrategy:
+  #  type: RollingUpdate
+  #  rollingUpdate:
+  #    maxUnavailable: 0
+  #    maxSurge: 1
   resources:
     requests:
       memory: 100Mi
