@@ -87,6 +87,10 @@ spec:
             value: "chang3m3!"
           - name: AUTH_RATELIMIT
             value: "10/minute;1000/hour"
+          - name: MESSAGE_RATELIMIT
+            value: "200/day"
+          - name: MESSAGE_RATELIMIT_EXEMPTION
+            value: ""
           - name: INITIAL_ADMIN_ACCOUNT
             value: mailadmin
           - name: INITIAL_ADMIN_DOMAIN
