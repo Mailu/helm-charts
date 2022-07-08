@@ -85,11 +85,21 @@ spec:
             value: "PBKDF2"
           - name: SECRET_KEY
             value: "chang3m3!"
-          - name: AUTH_RATELIMIT
-            value: "10/minute;1000/hour"
           - name: MESSAGE_RATELIMIT
             value: "200/day"
           - name: MESSAGE_RATELIMIT_EXEMPTION
+            value: ""
+          - name: AUTH_RATELIMIT_IP
+            value: "60/hour"
+          - name: AUTH_RATELIMIT_IP_V4_MASK
+            value: "24"
+          - name: AUTH_RATELIMIT_IP_V6_MASK
+            value: "56"
+          - name: AUTH_RATELIMIT_USER
+            value: "100/day"
+          - name: AUTH_RATELIMIT_EXEMPTION_LENGTH
+            value: "86400"
+          - name: AUTH_RATELIMIT_EXEMPTION
             value: ""
           - name: INITIAL_ADMIN_ACCOUNT
             value: mailadmin
