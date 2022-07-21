@@ -43,6 +43,10 @@ spec:
           - mountPath: /queue
             name: data
             subPath: mailqueue
+          {{- if .Values.postfix.overrides }}
+          - name: overrides
+            mountPath: /overrides
+          {{- end }}
           {{- if .Values.timezone }}
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
@@ -150,6 +154,11 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ $claimName }}
+        {{- if .Values.postfix.overrides }}
+        - name: overrides
+          configMap:
+            name: {{ include "mailu.fullname" . }}-postfix-override
+        {{- end }}
         {{- if .Values.timezone }}
         - name: zoneinfo
           hostPath:
@@ -208,3 +217,18 @@ spec:
   - name: smtp-auth
     port: 10025
     protocol: TCP
+
+---
+
+{{- if .Values.postfix.overrides }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mailu.fullname" . }}-postfix-override
+{{- with .Values.postfix.overrides }}
+data:
+{{- .|toYaml|nindent 2 }}
+{{ end }}
+{{ end }}
+
+{{ end }}

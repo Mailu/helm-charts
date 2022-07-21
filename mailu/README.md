@@ -130,6 +130,7 @@ Check that the deployed pods are all running.
 | `ingress.realIpFrom`              | IP/Network from where `realIpHeader` is accepted | `0.0.0.0/0`                   |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
+| `postfix.overrides`               | enable postfix overrides             | not set                                   |
 | `dovecot.overrides`               | enable dovecot overrides             | not set                                   |
 | `fetchmail.enabled`               | enable fetchmail                     | `false`                                   |
 | `fetchmail.delay`                 | delay between fetch attempts         | `600`                                     |
