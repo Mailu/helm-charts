@@ -1,0 +1,19 @@
+---
+# Source: mailu/templates/single-pvc.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/pvc.yaml
+########################################
+###
+### Variant: normal volume claim
+###
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mailu-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: default

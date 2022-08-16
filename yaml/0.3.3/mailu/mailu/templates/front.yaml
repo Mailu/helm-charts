@@ -1,0 +1,197 @@
+---
+# Source: mailu/templates/front.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailu-front
+  labels:
+    app: mailu
+    component: front
+spec:
+  selector:
+    app: mailu
+    component: front
+  ports:
+  - name: pop3
+    port: 110
+    protocol: TCP
+  - name: pop3s
+    port: 995
+    protocol: TCP
+  - name: imap
+    port: 143
+    protocol: TCP
+  - name: imaps
+    port: 993
+    protocol: TCP
+  - name: smtp
+    port: 25
+    protocol: TCP
+  - name: smtps
+    port: 465
+    protocol: TCP
+  - name: smtpd
+    port: 587
+    protocol: TCP
+  - name: smtp-auth
+    port: 10025
+    protocol: TCP
+  - name: imap-auth
+    port: 10143
+    protocol: TCP
+  - name: http
+    port: 80
+    protocol: TCP
+---
+# Source: mailu/templates/front.yaml
+# This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/front.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailu-front
+spec:
+  selector:
+    matchLabels:
+      app: mailu
+      component: front
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      labels:
+        app: mailu
+        component: front
+    spec:
+      containers:
+      - name: front
+        image: mailu/nginx:master
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: certs
+            mountPath: /certs
+        env:
+          - name: LOG_LEVEL
+            value: WARNING
+          - name: KUBERNETES_INGRESS
+            value: "true"
+          - name: TLS_FLAVOR
+            value: cert
+          - name: HOSTNAMES
+            value: "mail.example.com,imap.example.com"
+          - name: ADMIN_ADDRESS
+            value: mailu-admin.mailu.svc.cluster.local
+          - name: ANTISPAM_WEBUI_ADDRESS
+            value: mailu-rspamd.mailu.svc.cluster.local:11334
+          - name: POSTMASTER
+            value: postmaster
+          - name: DOMAIN
+            value: "example.com"
+          - name: REAL_IP_HEADER
+            value: X-Forwarded-For
+          - name: REAL_IP_FROM
+            value: 0.0.0.0/0
+          - name: WEBMAIL
+            value: roundcube
+          - name: WEBMAIL_ADDRESS
+            value: mailu-roundcube.mailu.svc.cluster.local
+          - name: WEB_WEBMAIL
+            value: /roundcube
+          - name: WEBROOT_REDIRECT
+            value: /roundcube
+          - name: MESSAGE_SIZE_LIMIT
+            value: "52428800"
+          - name: WEBDAV
+            value: none
+          - name: WEBDAV_ADDRESS
+            value: localhost
+          - name: ADMIN
+            value: "true"
+          - name: WEB_ADMIN
+            value: "/admin"
+          - name: SUBNET
+            value: 10.42.0.0/16
+        ports:
+          - name: pop3
+            protocol: TCP
+            containerPort: 110
+            hostPort: 110
+          - name: pop3s
+            protocol: TCP
+            containerPort: 995
+            hostPort: 995
+          - name: imap
+            protocol: TCP
+            containerPort: 143
+            hostPort: 143
+          - name: imaps
+            protocol: TCP
+            containerPort: 993
+            hostPort: 993
+          - name: smtp
+            protocol: TCP
+            containerPort: 25
+            hostPort: 25
+          - name: smtps
+            protocol: TCP
+            containerPort: 465
+            hostPort: 465
+          - name: smtp-auth
+            protocol: TCP
+            containerPort: 10025
+          - name: imap-auth
+            protocol: TCP
+            containerPort: 10143
+          - name: smtpd
+            protocol: TCP
+            containerPort: 587
+            hostPort: 587
+          - name: auth
+            containerPort: 8000
+            protocol: TCP
+          - name: http
+            containerPort: 80
+            protocol: TCP
+          
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  10
+          failureThreshold: 30
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  10
+          failureThreshold: 3
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          periodSeconds:  10
+          failureThreshold: 1
+          timeoutSeconds: 5
+      volumes:
+        - name: certs
+          secret:
+            items:
+              - key: tls.crt
+                path: cert.pem
+              - key: tls.key
+                path: key.pem
+            secretName: mailu-certificates
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 60
