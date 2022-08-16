@@ -55,7 +55,7 @@ spec:
           - name: zoneinfo
             mountPath: /usr/share/zoneinfo
             readOnly: true
-          - name: zoneinfo7
+          - name: zoneinfo
             subPath: {{ .Values.timezone }}
             mountPath: /etc/localtime
             readOnly: true

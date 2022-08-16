@@ -4,3 +4,5 @@
 
 
 Releases can be found at https://mailu.github.io/helm-charts/
+
+A comprehensive guide how to set up mailu on a manages k8s cluster (oracle cloud) can be found at https://just-4.fun/blog/howto/oc-k8s-mailu/ (external resource).
