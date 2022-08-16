@@ -137,7 +137,7 @@ Check that the deployed pods are all running.
 | `database.roundcubeType`          | type of database used for roundcube  | `sqlite`                                  |
 | `database.mysql.*`                | mysql specific settings, see below   | not set                                   |
 | `timezone`                        | time zone for PODs, see below        | not set                                   |
-| `{app}.containerSecurityContext`  | enables SecurityContext for $app     | `false`                                   |
+| `{app}.containerSecurityContext`  | Uses the given SecurityContext for $app (e.g. postfix, dovecot, clamav, ...)     | not set                                   |
 
 ### Example values.yaml to get started
 
