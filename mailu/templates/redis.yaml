@@ -35,6 +35,10 @@ spec:
       - name: redis
         image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
         imagePullPolicy: Always
+        {{- with .Values.redis.containerSecurityContext }}
+        securityContext:
+        {{- . | toYaml | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: data
             subPath: redis
