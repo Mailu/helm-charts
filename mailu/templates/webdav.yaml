@@ -45,14 +45,10 @@ spec:
           - mountPath: /data
             name: data
             subPath: webdav
+        env:
           {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
+          - name: TZ
+            value: {{ .Values.timezone }}
           {{- end }}
         ports:
           - name: http
@@ -92,12 +88,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ $claimName }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

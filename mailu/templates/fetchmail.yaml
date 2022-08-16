@@ -49,15 +49,6 @@ spec:
           - name: data
             subPath: dovecotdata
             mountPath: /data
-          {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
-          {{- end }}
         env:
           # LOG_LEVEL is called DEBUG in https://github.com/Mailu/Mailu/blob/master/optional/fetchmail/fetchmail.py#L98
           # and will only give debug output if value is True
@@ -73,6 +64,10 @@ spec:
             value: {{ include "mailu.fullname" . }}-admin
           - name: FETCHMAIL_DELAY
             value: "{{ .Values.fetchmail.delay }}"
+          {{- if .Values.timezone }}
+          - name: TZ
+            value: {{ .Values.timezone }}
+          {{- end }}
         ports:
           - containerPort: 5232
           - containerPort: 80
@@ -84,12 +79,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ $claimName }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

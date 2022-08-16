@@ -46,18 +46,13 @@ spec:
           - name: data
             subPath: clamav
             mountPath: /data
-          {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
-          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.clamav.logLevel }}
+          {{- if .Values.timezone }}
+          - name: TZ
+            value: {{ .Values.timezone }}
+          {{- end }}
         ports:
           - name: clamav
             containerPort: 3310
@@ -101,12 +96,6 @@ spec:
             {{- else }}
             claimName: {{ include "mailu.rspamdClamavClaimName" . }}
             {{- end }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

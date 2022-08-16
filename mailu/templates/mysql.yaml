@@ -57,18 +57,9 @@ spec:
           - name: data
             subPath: mysql
             mountPath: /var/lib/mysql
-{{- if (eq .Values.database.roundcubeType "mysql") }}
+          {{- if (eq .Values.database.roundcubeType "mysql") }}
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
-{{- end }}
-          {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
           {{- end }}
         env:
           {{ if .Values.database.mysql.rootPassword }}
@@ -78,14 +69,18 @@ spec:
           - name: MYSQL_RANDOM_ROOT_PASSWORD
             value: "yes"
           {{ end }}
-{{- if (eq .Values.database.type "mysql") }}
+          {{- if (eq .Values.database.type "mysql") }}
           - name: MYSQL_DATABASE
             value: {{ required "database.mysql.database" .Values.database.mysql.database }}
           - name: MYSQL_USER
             value: {{ required "database.mysql.user" .Values.database.mysql.user }}
           - name: MYSQL_PASSWORD
             value: {{ required "database.mysql.password" .Values.database.mysql.password }}
-{{- end }}
+          {{- end }}
+          {{- if .Values.timezone }}
+          - name: TZ
+            value: {{ .Values.timezone }}
+          {{- end }}
         ports:
           - name: mysql
             containerPort: 3306
@@ -134,12 +129,6 @@ spec:
         - name: initscripts
           configMap:
             name: {{ include "mailu.fullname" . }}-mysql-init
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     # This is a single-node mysql instance, so we need to shut down the old instance before starting a new
     type: RollingUpdate

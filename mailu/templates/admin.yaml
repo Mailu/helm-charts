@@ -47,15 +47,6 @@ spec:
           - name: data
             mountPath: /dkim
             subPath: dkim
-          {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
-          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.admin.logLevel }}
@@ -170,6 +161,10 @@ spec:
           {{- else }}
           value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
           {{- end }}
+          {{- if .Values.timezone }}
+          - name: TZ
+            value: {{ .Values.timezone }}
+          {{- end }}
         ports:
           - name: http
             containerPort: 80
@@ -209,12 +204,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ $claimName }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

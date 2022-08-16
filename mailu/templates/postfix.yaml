@@ -43,15 +43,6 @@ spec:
           - mountPath: /queue
             name: data
             subPath: mailqueue
-          {{- if .Values.timezone }}
-          - name: zoneinfo
-            mountPath: /usr/share/zoneinfo
-            readOnly: true
-          - name: zoneinfo
-            subPath: {{ .Values.timezone }}
-            mountPath: /etc/localtime
-            readOnly: true
-          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.postfix.logLevel }}
@@ -96,6 +87,10 @@ spec:
             value: "{{ .Values.external_relay.password }}"
           {{- end}}
           {{- end}}
+          {{- if .Values.timezone }}
+          - name: TZ
+            value: {{ .Values.timezone }}
+          {{- end }}
         ports:
           - name: smtp
             containerPort: 25
@@ -150,12 +145,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ $claimName }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
   strategy:
     type: Recreate
 
