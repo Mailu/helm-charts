@@ -170,6 +170,27 @@ spec:
           {{- else }}
           value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
           {{- end }}
+          {{- if hasKey .Values.admin "credentialRounds" }}
+          - name: CREDENTIAL_ROUNDS
+            value: {{ .Values.admin.credentialRounds }}
+          {{- end }}
+          {{- if hasKey .Values.admin "sessionCookieSecure" }}
+          - name: SESSION_COOKIE_SECURE
+            value: {{ .Values.admin.sessionCookieSecure }}
+          {{- end }}
+          {{- if hasKey .Values.admin "sessionTimeout" }}
+          - name: SESSION_TIMEOUT
+            value: {{ .Values.admin.sessionTimeout }}
+          {{- end }}
+          {{- if hasKey .Values.admin "permanentSessionLifetime" }}
+          - name: PERMANENT_SESSION_LIFETIME
+            value: {{ .Values.admin.permanentSessionLifetime }}
+          {{- end }}
+          {{- if hasKey .Values.admin "letsencryptShortchain" }}
+          - name: LETSENCRYPT_SHORTCHAIN
+            value: {{ .Values.admin.letsencryptShortchain }}
+          {{- end }}
+
         ports:
           - name: http
             containerPort: 80

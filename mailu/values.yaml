@@ -204,6 +204,13 @@ admin:
     #annotations:
     #  "helm.sh/resource-policy": keep
 
+#  credentialRounds: 12
+#  sessionCookieSecure: true
+#  sessionTimeout: 3600
+#  permanentSessionLifetime: 108000
+#  letsencryptShortchain: false
+
+
   resources:
     requests:
       memory: 500Mi
