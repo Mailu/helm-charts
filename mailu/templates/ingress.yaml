@@ -1,7 +1,7 @@
 # This file is derived from https://github.com/Mailu/Mailu/blob/master/docs/kubernetes/mailu/admin-ingress.yaml
 
 {{- $fullname := (include "mailu.fullname" .) }}
-{{ if .Values.ingress.externalIngress }}
+{{ if and .Values.ingress.externalIngress (not .Values.ingress.traefikCRD.enabled) }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

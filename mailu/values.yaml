@@ -128,6 +128,9 @@ certmanager:
 # Set ingress and loadbalancer config
 ingress:
   externalIngress: true
+  traefikCRD:
+    enabled: false
+    entryPoints: []
   tlsFlavor: cert
   className: ""
   annotations:

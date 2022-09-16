@@ -1,0 +1,33 @@
+{{- $fullname := (include "mailu.fullname" .) }}
+{{ if and .Values.ingress.externalIngress .Values.ingress.traefikCRD.enabled }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $fullname }}
+{{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: {{ $fullname }}
+    component: admin
+spec:
+  entryPoints:
+{{- range .Values.ingress.traefikCRD.entryPoints }}
+  - "{{.}}"
+{{- end }}
+  tls:
+    secretName: {{ $fullname }}-certificates
+  routes:
+  - kind: Rule
+    match: >-
+{{- range $index, $hostname := .Values.hostnames }}
+      {{ if $index }}|| {{ end }}Host(`{{ $hostname }}`)
+{{- end }}
+{{- if .Values.ingress.traefikCRD.priority -}}
+    priority: {{ .Values.ingress.traefikCRD.priority }}
+{{- end }}
+    services:
+    - name: {{ $fullname }}-front
+      port: 80
+{{ end }}
