@@ -128,6 +128,9 @@ Check that the deployed pods are all running.
 | `ingress.annotations`             | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.  | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`                                   |
 | `ingress.realIpHeader`            | Header from http(s) ingress that contains the real client IP | `X-Forwarded-For` |
 | `ingress.realIpFrom`              | IP/Network from where `realIpHeader` is accepted | `0.0.0.0/0`                   |
+| `ingress.traefikCRD.enabled`      | Enable the traefik for the proxy     | `false`                                   |
+| `ingress.traefikCRD.entryPoints`  | Entrypoints configuration in the ingress route | `[]`                            |
+| `ingress.traefikCRD.priority`     | Override default calcul for the ingress route priority | not set                 |
 | `roundcube.enabled`               | enable roundcube webmail             | `true`                                    |
 | `clamav.enabled`                  | enable clamav antivirus              | `true`                                    |
 | `dovecot.overrides`               | enable dovecot overrides             | not set                                   |
