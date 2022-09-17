@@ -24,7 +24,7 @@ spec:
 {{- range $index, $hostname := .Values.hostnames }}
       {{ if $index }}|| {{ end }}Host(`{{ $hostname }}`)
 {{- end }}
-{{- if .Values.ingress.traefikCRD.priority -}}
+{{- if .Values.ingress.traefikCRD.priority }}
     priority: {{ .Values.ingress.traefikCRD.priority }}
 {{- end }}
     services:
