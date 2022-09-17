@@ -228,7 +228,6 @@ metadata:
 {{- with .Values.postfix.overrides }}
 data:
 {{- .|toYaml|nindent 2 }}
-{{ end }}
-{{ end }}
+{{- end }}
+{{- end }}
 
-{{ end }}
