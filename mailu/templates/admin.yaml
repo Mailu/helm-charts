@@ -137,6 +137,34 @@ spec:
           {{- if eq .Values.database.type "sqlite" }}
           - name: DB_FLAVOR
             value: sqlite
+          {{- else if .Values.mariadb.enabled }}
+          - name: DB_FLAVOR
+            value: mysql
+          - name: DB_USER
+            value: {{ required "mariadb.auth.username is required when mariadb.enabled is true" .Values.mariadb.auth.username }}
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
+                key: mariadb-password
+          - name: DB_HOST
+            value: {{ template "mariadb.primary.fullname" .Subcharts.mariadb }}
+          - name: DB_NAME
+            value: {{ .Values.mariadb.auth.database | quote }}
+          {{- else if .Values.postgres.enabled }}
+          - name: DB_FLAVOR
+            value: postgres
+          - name: DB_USER
+            value: {{ required "postgresql.auth.username is required when postgresql.enabled is true" .Values.postgresql.auth.username | quote }}
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "postgresql.secretName" .Subcharts.postgresql }}
+                key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
+          - name: DB_HOST
+            value: {{ template "mariadb.primary.fullname" .Subcharts.mariadb }}
+          - name: DB_NAME
+            value: {{ include "postgresql.database" .Subcharts.postgresql }}
           {{- else if eq .Values.database.type "mysql" }}
           - name: DB_FLAVOR
             value: mysql

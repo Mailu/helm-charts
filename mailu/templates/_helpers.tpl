@@ -130,7 +130,6 @@ Return mailu initialAccount.password
 */}}
 {{- define "mailu.initialAccount.password" -}}
 {{- if .Values.initialAccount.password }}
-    {{- .Values.initialAccount.password -}}
 {{- else -}}
     {{- include "getValueFromSecret" (dict "Namespace" (include "mailu.namespace" .) "Name" (include "mailu.initialAccount.secretName" .) "Length" 10 "Key" "initial-account-password")  -}}
 {{- end -}}

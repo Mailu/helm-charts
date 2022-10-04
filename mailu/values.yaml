@@ -54,15 +54,19 @@ tolerations: {}
 affinity: {}
 
 database:
-  # type of the database for mailu (sqlite or mysql)
+  # type of the database for mailu (sqlite/mysql/postgresql)
   # default database is an embedded sqlite
   # for mysql, see settings below
   type: sqlite
 
-  # type of the database for roundcube (sqlite or mysql)
+  # type of the database for roundcube (sqlite/mysql/postgresql)
   # default database is an embedded sqlite
   # for mysql, see settings below
-  roundcubeType: sqlite
+  roundcube:
+    type: sqlite
+    database: roundcube
+    username: roundcube
+    password: changeme
 
   # For 'mysql' type (or mariadb) use the following config:
   # You can set the 'host' value to use an external database.
@@ -103,6 +107,89 @@ database:
   #   existingSecret: mail-postgresql
 
   postgresql: {}
+
+##
+## MariaDB chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/mariadb
+##
+mariadb:
+  enabled: false
+
+  architecture: standalone
+
+  auth:
+    ## @param auth.rootPassword Password for the `root` user. Ignored if existing secret is provided.
+    ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-the-root-password-on-first-run
+    ##
+    rootPassword: changeme
+    ## @param auth.database Name for a custom database to create
+    ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+    ##
+    database: mailu
+    ## @param auth.username Name for a custom user to create
+    ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
+    ##
+    username: mailu
+    ## @param auth.password Password for the new user. Ignored if existing secret is provided
+    ##
+    password: changeme
+
+    ## @param auth.existingSecret Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword`
+    ## will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password`
+    ## and `mariadb-password`
+    ##
+    existingSecret: ""
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+##
+## PostgreSQL chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+##
+postgresql:
+  enabled: false
+
+  architecture: standalone
+
+  auth:
+    ## @param auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
+    ##
+    enablePostgresUser: true
+    ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
+    ##
+    postgresPassword: changeme
+    ## @param auth.username Name for a custom user to create
+    ##
+    username: mailu
+    ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
+    ##
+    password: changeme
+    ## @param auth.database Name for a custom database to create
+    ##
+    database: mailu
+
+    existingSecret: ""
+    ## @param auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ##
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+      replicationPasswordKey: replication-password
+
+  primary:
+    persistence:
+      enabled: false
+      # storageClass: ""
 
 external_relay: {}
 #    host: "[domain.tld]:port"

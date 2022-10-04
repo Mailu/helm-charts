@@ -72,10 +72,10 @@ spec:
             value: "true"
           - name: WEB_ADMIN
             value: "/admin/"
-          {{- if eq .Values.database.roundcubeType "sqlite" }}
+          {{- if eq .Values.database.roundcube.type "sqlite" }}
           - name: ROUNDCUBE_DB_FLAVOR
             value: sqlite
-          {{- else if eq .Values.database.roundcubeType "mysql" }}
+          {{- else if eq .Values.database.roundcube.type "mysql" }}
           - name: ROUNDCUBE_DB_FLAVOR
             value: mysql
           - name: ROUNDCUBE_DB_USER
@@ -90,7 +90,7 @@ spec:
             {{- else }}
             value: {{ include "mailu.fullname" . }}-mysql
             {{- end }}
-          {{- else if eq .Values.database.roundcubeType "postgresql" }}
+          {{- else if eq .Values.database.roundcube.type "postgresql" }}
           - name: ROUNDCUBE_DB_FLAVOR
             value: postgresql
           - name: ROUNDCUBE_DB_USER

@@ -1,9 +1,9 @@
-{{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcubeType "mysql")) (not .Values.database.mysql.host) }}
+{{ if and (or (eq .Values.database.type "mysql") (eq .Values.database.roundcube.type "mysql")) (not .Values.database.mysql.host) }}
 
 {{- /* Define persistantVolume claimName */}}
 {{- $claimName := .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.mysql.persistence.claimNameOverride | default (printf "%s-mysql" (include "mailu.fullname" .)) }}
 
-{{ if (eq .Values.database.roundcubeType "mysql") }}
+{{ if (eq .Values.database.roundcube.type "mysql") }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -57,7 +57,7 @@ spec:
           - name: data
             subPath: mysql
             mountPath: /var/lib/mysql
-{{- if (eq .Values.database.roundcubeType "mysql") }}
+{{- if (eq .Values.database.roundcube.type "mysql") }}
           - name: initscripts
             mountPath: /docker-entrypoint-initdb.d/
 {{- end }}

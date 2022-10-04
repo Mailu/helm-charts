@@ -73,7 +73,7 @@ spec:
           - name: POSTMASTER
             value: {{ default "postmaster" .Values.postmaster }}
           - name: DOMAIN
-            value: "{{ required "'domain' needs to be set" .Values.domain }}"
+            value: {{ required "'domain' needs to be set" .Values.domain | quote}}
           - name: HOSTNAMES
             value: "{{ join "," .Values.hostnames }}"
           - name: RECIPIENT_DELIMITER
