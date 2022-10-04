@@ -77,7 +77,7 @@ database:
   #   # root password for mysql database, only used for embedded mysql
   #   rootPassword: chang3m3!
   #
-  #   # Settings for mailu database 
+  #   # Settings for mailu database
   #   database: mailu
   #   user: mailu
   #   password: chang3m3!
@@ -94,11 +94,11 @@ database:
   # e.g.:
   # postgresql:
   #   host: external-db-hostname
-  #   # Settings for mailu database 
+  #   # Settings for mailu database
   #   database: mailu
   #   user: mailu
   #   password: chang3m3!
-  #   
+  #
   #   # Settings for roundcube database
   #   roundcubeDatabase: roundcube
   #   roundcubeUser: roundcube
@@ -318,6 +318,7 @@ admin:
     repository: mailu/admin
     # tag defaults to mailuVersion
     # tag: master
+    pullPolicy: IfNotPresent
   persistence:
     size: 20Gi
     storageClass: ""
@@ -333,21 +334,109 @@ admin:
     limits:
       memory: 500Mi
       cpu: 500m
-  podAnnotations: {}
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
+
+  ## @param admin.extraEnvVars Extra environment variable to pass to the running container.
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  ##
+  extraEnvVars: []
+  ## @param admin.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for Mailu admin pod(s)
+  ##
+  extraEnvVarsCM: ""
+  ## @param admin.extraEnvVarsSecret Name of existing Secret containing extra env vars for Mailu admin pod(s)
+  ##
+  extraEnvVarsSecret: ""
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.livenessProbe.enabled Enable livenessProbe
+  ## @param admin.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param admin.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param admin.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param admin.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param admin.livenessProbe.successThreshold Success threshold for livenessProbe
+  ##
   livenessProbe:
-    periodSeconds: 10
+    enabled: true
     failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
+    initialDelaySeconds: 10
     periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 1
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.readinessProbe.enabled Enable readinessProbe
+  ## @param admin.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param admin.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param admin.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param admin.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param admin.readinessProbe.successThreshold Success threshold for readinessProbe
+  ##
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.startupProbe.enabled Enable startupProbe
+  ## @param admin.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param admin.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param admin.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param admin.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param admin.startupProbe.successThreshold Success threshold for startupProbe
+  ##
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
 
+  ## @param admin.podLabels Admin Pod labels
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  ##
+  podLabels: {}
+  ## @param admin.podAnnotations Admin Pod annotations
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+  ## @param admin.nodeSelector Node labels for admin pod assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+  ## @param admin.initContainers Add additional init containers to the Mailu Admin pod(s)
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  ##
+  initContainers: []
+  ## @param admin.priorityClassName Mailu admin pods' priorityClassName
+  ##
+  priorityClassName: ""
+  ## @param admin.affinity Affinity for admin pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ##
+  affinity: {}
+  ## @param admin.tolerations Tolerations for admin pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
 
+  ## Service parameters
+  ##
+  service:
+    ## @param admin.service.annotations Admin service annotations
+    ##
+    annotations: {}
 redis:
   image:
     repository: redis
@@ -597,7 +686,6 @@ roundcube:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
-
 
 webdav:
   enabled: false

@@ -1,0 +1,23 @@
+---
+{{- if not .Values.persistence.single_pvc }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{- include "mailu.admin.claimName" . }}
+  namespace: {{ include "mailu.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: admin
+  {{- if .Values.admin.persistence.annotations }}
+  annotations:
+  {{- include "mailu.tplvalues.render" ( dict "value" .Values.admin.persistence.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.admin.persistence.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.admin.persistence.size | quote }}
+  {{- if .Values.admin.persistence.storageClass }}
+  storageClassName: {{ .Values.admin.persistence.storageClass }}
+  {{- end }}
+{{- end }}

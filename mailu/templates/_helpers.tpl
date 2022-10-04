@@ -52,17 +52,39 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common labels
+Get the cluster domain name or default to cluster.local
 */}}
-{{- define "mailu.labels" -}}
+{{- define "mailu.clusterDomain" -}}
+{{- if .Values.clusterDomain -}}
+{{- .Values.clusterDomain -}}
+{{- else -}}
+cluster.local
+{{- end -}}
+{{- end -}}
+
+{{/*
+
+{{/*
+Kubernetes standard labels
+*/}}
+{{- define "mailu.labels.standard" -}}
 app.kubernetes.io/name: {{ include "mailu.name" . }}
 helm.sh/chart: {{ include "mailu.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
+*/}}
+{{- define "mailu.labels.matchLabels" -}}
+app.kubernetes.io/name: {{ include "mailu.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
+
 
 {{ define "mailu.rspamdClamavClaimName"}}
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
