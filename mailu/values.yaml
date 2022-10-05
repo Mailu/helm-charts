@@ -350,7 +350,7 @@ admin:
   # -- Name of existing Secret containing extra env vars for Mailu admin pod(s)
   extraEnvVarsSecret: ""
   # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  # Liveness probe values
+  # -- Liveness probe values
   livenessProbe:
     # -- Enable livenessProbe
     enabled: true
