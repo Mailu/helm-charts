@@ -307,16 +307,13 @@ front:
     # loadBalancerIP:
     externalTrafficPolicy: Local
     annotations: {}
-    pop3:
-      pop3: false
-      pop3s: true
-    imap:
-      imap: false
-      imaps: true
-    smtp:
-      smtp: true
-      smtps: true
-      submission: true
+    pop3: false
+    pop3s: true
+    imap: false
+    imaps: true
+    smtp: true
+    smtps: true
+    submission: true
 
 admin:
   # logLevel: WARNING

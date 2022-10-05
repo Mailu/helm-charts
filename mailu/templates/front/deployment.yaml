@@ -1,0 +1,238 @@
+---
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-front" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: front
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.front.updateStrategy }}
+  strategy: {{- toYaml .Values.front.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.front.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: front
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: front
+        {{- if .Values.front.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.front.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.front.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.front.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.front.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.front.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.front.hostAliases "context" $) | nindent 8 }}
+      {{- end }}    
+      {{- if .Values.front.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.front.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.front.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.front.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.front.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.front.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.front.priorityClassName }}
+      priorityClassName: {{ .Values.front.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.front.schedulerName }}
+      schedulerName: {{ .Values.front.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.front.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.front.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.front.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.front.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.front.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.front.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: front
+          image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
+          imagePullPolicy: {{ .Values.front.image.pullPolicy }}
+          volumeMounts:
+            - name: certs
+              mountPath: /certs
+            {{- if .Values.front.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ default .Values.logLevel .Values.front.logLevel }}
+            - name: KUBERNETES_INGRESS
+              value: "{{ .Values.ingress.externalIngress }}"
+            - name: TLS_FLAVOR
+              value: {{ default "cert" .Values.ingress.tlsFlavor }}
+            - name: HOSTNAMES
+              value: "{{ join "," .Values.hostnames }}"
+            - name: ADMIN_ADDRESS
+              value: {{ include "mailu.hosts.admin" . }}
+            - name: ANTISPAM_WEBUI_ADDRESS
+              value: {{ include "mailu.hosts.rspamd" . }}:11334
+            - name: POSTMASTER
+              value: {{ default "postmaster" .Values.postmaster }}
+            - name: DOMAIN
+              value: "{{ required "domain" .Values.domain }}"
+            {{- if .Values.ingress.realIpHeader }}
+            - name: REAL_IP_HEADER
+              value: {{ .Values.ingress.realIpHeader }}
+            - name: REAL_IP_FROM
+              value: {{ default "0.0.0.0/0" .Values.ingress.realIpFrom }}
+            {{- end }}
+            {{- if .Values.roundcube.enabled }}
+            - name: WEBMAIL
+              value: roundcube
+            - name: WEBMAIL_ADDRESS
+              value: {{ include "mailu.hosts.webmail" . }}
+            - name: WEB_WEBMAIL
+              value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+            - name: WEBROOT_REDIRECT
+              value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+            {{- else }}
+            - name: WEBMAIL
+              value: none
+            - name: WEBMAIL_ADDRESS
+              value: localhost
+            - name: WEB_WEBMAIL
+              value: ""
+            - name: WEBROOT_REDIRECT
+              value: /admin/
+            {{- end }}
+            - name: MESSAGE_SIZE_LIMIT
+              value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+            - name: WEBDAV
+              value: none
+            - name: WEBDAV_ADDRESS
+              value: localhost
+            - name: ADMIN
+              value: "true"
+            - name: WEB_ADMIN
+              value: "/admin"
+            {{- if .Values.webdav.enabled }}
+            - name: WEBDAV
+              value: radicale
+            - name: WEBDAV_ADDRESS
+              value: {{ include "mailu.hosts.webdav" . }}:5232
+            {{- end }}
+            - name: SUBNET
+              value: {{ .Values.subnet }}
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.front.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.front.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.front.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: pop3
+              protocol: TCP
+              containerPort: 110
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 110
+              {{- end}}
+            - name: pop3s
+              protocol: TCP
+              containerPort: 995
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 995
+              {{- end}}
+            - name: imap
+              protocol: TCP
+              containerPort: 143
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 143
+              {{- end}}
+            - name: imaps
+              protocol: TCP
+              containerPort: 993
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 993
+              {{- end}}
+            - name: smtp
+              protocol: TCP
+              containerPort: 25
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 25
+              {{- end}}
+            - name: smtps
+              protocol: TCP
+              containerPort: 465
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 465
+              {{- end}}
+            - name: smtp-auth
+              protocol: TCP
+              containerPort: 10025
+            - name: imap-auth
+              protocol: TCP
+              containerPort: 10143
+            - name: smtpd
+              protocol: TCP
+              containerPort: 587
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 587
+              {{- end}}
+            - name: auth
+              containerPort: 8000
+              protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            {{ if not .Values.ingress.externalIngress }}
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            {{end}}
+          {{- if .Values.front.resources }}
+          resources: {{- toYaml .Values.front.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.front.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.startupProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /health
+              port: http
+          {{- end }}
+          {{- if .Values.front.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /health
+              port: http
+          {{- end }}
+          {{- if .Values.front.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /health
+              port: http
+          {{- end }}
+      volumes:
+        - name: certs
+          secret:
+            items:
+              - key: tls.crt
+                path: cert.pem
+              - key: tls.key
+                path: key.pem
+            secretName: {{ include "mailu.certificatesSecretName" . }}

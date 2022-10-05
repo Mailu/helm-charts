@@ -5,9 +5,9 @@
 apiVersion: {{ .Values.certmanager.apiVersion }}
 kind: Certificate
 metadata:
-  name: {{ include "mailu.fullname" . }}-certificates
+  name: {{ include "mailu.certificatesSecretName" . }}
 spec:
-  secretName: {{ include "mailu.fullname" . }}-certificates
+  secretName: {{ include "mailu.certificatesSecretName" . }}
   # re-new certificate when it expires in less than 60 days
   renewBefore: 1440h0m0s
   commonName: "{{ first (required "hostnames" .Values.hostnames) }}"

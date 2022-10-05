@@ -219,13 +219,13 @@ Check that the deployed pods are all running.
 | front.externalService.annotations | object | `{}` |  |
 | front.externalService.enabled | bool | `false` |  |
 | front.externalService.externalTrafficPolicy | string | `"Local"` |  |
-| front.externalService.imap.imap | bool | `false` |  |
-| front.externalService.imap.imaps | bool | `true` |  |
-| front.externalService.pop3.pop3 | bool | `false` |  |
-| front.externalService.pop3.pop3s | bool | `true` |  |
-| front.externalService.smtp.smtp | bool | `true` |  |
-| front.externalService.smtp.smtps | bool | `true` |  |
-| front.externalService.smtp.submission | bool | `true` |  |
+| front.externalService.imap | bool | `false` |  |
+| front.externalService.imaps | bool | `true` |  |
+| front.externalService.pop3 | bool | `false` |  |
+| front.externalService.pop3s | bool | `true` |  |
+| front.externalService.smtp | bool | `true` |  |
+| front.externalService.smtps | bool | `true` |  |
+| front.externalService.submission | bool | `true` |  |
 | front.externalService.type | string | `"ClusterIP"` |  |
 | front.hostPort | object | `{"enabled":true}` | Expose front mail ports via hostPort |
 | front.image.repository | string | `"mailu/nginx"` |  |

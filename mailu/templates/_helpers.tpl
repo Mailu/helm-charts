@@ -52,6 +52,15 @@ cluster.local
 
 
 {{/*
+Get the certificates secret name
+*/}}
+{{- define "mailu.certificatesSecretName" -}}
+{{ printf "%s-certificates" (include "mailu.fullname" . ) }}
+{{- end -}}
+
+{{/*
+
+{{/*
 Returns the available value for certain key in an existing secret (if it exists),
 otherwise it generates a random value.
 */}}
