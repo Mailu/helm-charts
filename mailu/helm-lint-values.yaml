@@ -3,8 +3,8 @@
 # so we need to set defaults for everything. See https://github.com/helm/helm/issues/7483
 
 hostnames:
- - mail.example.com
- - imap.example.com
+  - mail.example.com
+  - imap.example.com
 
 domain: example.com
 

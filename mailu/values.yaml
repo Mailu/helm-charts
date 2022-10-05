@@ -255,7 +255,7 @@ certmanager:
 ingress:
   externalIngress: true
   tlsFlavor: cert
-  className: ""
+  ingressClassName: ""
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   realIpHeader: X-Forwarded-For
@@ -314,6 +314,9 @@ front:
     smtp: true
     smtps: true
     submission: true
+
+  service:
+    annotations: {}
 
 admin:
   # logLevel: WARNING

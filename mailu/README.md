@@ -241,14 +241,15 @@ Check that the deployed pods are all running.
 | front.resources.limits.memory | string | `"200Mi"` |  |
 | front.resources.requests.cpu | string | `"100m"` |  |
 | front.resources.requests.memory | string | `"100Mi"` |  |
+| front.service.annotations | object | `{}` |  |
 | front.startupProbe.failureThreshold | int | `30` |  |
 | front.startupProbe.periodSeconds | int | `10` |  |
 | front.startupProbe.timeoutSeconds | int | `5` |  |
 | fullnameOverride | string | `""` |  |
 | hostnames | list | `[]` | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname |
 | ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"0"` |  |
-| ingress.className | string | `""` |  |
 | ingress.externalIngress | bool | `true` |  |
+| ingress.ingressClassName | string | `""` |  |
 | ingress.realIpFrom | string | `"0.0.0.0/0"` |  |
 | ingress.realIpHeader | string | `"X-Forwarded-For"` |  |
 | ingress.tlsFlavor | string | `"cert"` |  |

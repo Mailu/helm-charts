@@ -1,7 +1,6 @@
 # This is the definition of the required ssl certificate for the mail system
 # It will be issued by cert-manager
 {{ if .Values.certmanager.enabled }}
-
 apiVersion: {{ .Values.certmanager.apiVersion }}
 kind: Certificate
 metadata:
@@ -12,11 +11,10 @@ spec:
   renewBefore: 1440h0m0s
   commonName: "{{ first (required "hostnames" .Values.hostnames) }}"
   dnsNames:
-{{- range .Values.hostnames }}
-  - "{{ . }}"
-{{- end }}
+    {{- range .Values.hostnames }}
+    - "{{ . }}"
+    {{- end }}
   issuerRef:
     kind: {{ .Values.certmanager.issuerType }}
     name: {{ .Values.certmanager.issuerName }}
-    
 {{- end }}   
