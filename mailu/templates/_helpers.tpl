@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mailu.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- include "common.names.name" . -}}
 {{- end -}}
 
 {{/*
@@ -12,23 +12,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "mailu.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Store the namespace
-*/}}
-{{- define "mailu.namespace" -}}
-    {{- .Release.Namespace -}}
+{{- include "common.names.fullname" . -}}
 {{- end -}}
 
 {{/*
@@ -62,54 +46,10 @@ cluster.local
 {{- end -}}
 {{- end -}}
 
-{{/*
-
-{{/*
-Kubernetes standard labels
-*/}}
-{{- define "mailu.labels.standard" -}}
-app.kubernetes.io/name: {{ include "mailu.name" . }}
-helm.sh/chart: {{ include "mailu.chart" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-{{- end -}}
-
-{{/*
-Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
-*/}}
-{{- define "mailu.labels.matchLabels" -}}
-app.kubernetes.io/name: {{ include "mailu.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-
 {{ define "mailu.rspamdClamavClaimName"}}
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
 {{- end }}
 
-{{/*
-Returns dovecot internal hostname.
-*/}}
-{{- define "mailu.hosts.dovecot" -}}
-{{- printf "%s-dovecot.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
-{{- end -}}
-
-{{/*
-Returns postfix internal hostname.
-*/}}
-{{- define "mailu.hosts.postfix" -}}
-{{- printf "%s-postfix.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
-{{- end -}}
-
-{{/*
-Returns redis internal hostname.
-*/}}
-{{- define "mailu.hosts.redis" -}}
-{{- printf "%s-redis.%s" (include "mailu.fullname" .) (include "mailu.namespace" .) -}}
-{{- end -}}
 
 {{/*
 Returns the available value for certain key in an existing secret (if it exists),
@@ -132,7 +72,7 @@ Return mailu secretKey
 {{- if .Values.secretKey }}
     {{- .Values.secretKey -}}
 {{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" (include "mailu.namespace" .) "Name" (include "mailu.secretName" .) "Length" 10 "Key" "secret-key")  -}}
+    {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "mailu.secretName" .) "Length" 10 "Key" "secret-key")  -}}
 {{- end -}}
 {{- end -}}
 
@@ -153,7 +93,7 @@ Return mailu initialAccount.password
 {{- define "mailu.initialAccount.password" -}}
 {{- if .Values.initialAccount.password }}
 {{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" (include "mailu.namespace" .) "Name" (include "mailu.initialAccount.secretName" .) "Length" 10 "Key" "initial-account-password")  -}}
+    {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "mailu.initialAccount.secretName" .) "Length" 10 "Key" "initial-account-password")  -}}
 {{- end -}}
 {{- end -}}
 

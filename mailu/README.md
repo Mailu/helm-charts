@@ -27,6 +27,7 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://charts.bitnami.com/bitnami | common | 2.0.3 |
 | https://charts.bitnami.com/bitnami | mariadb | 11.3.* |
 | https://charts.bitnami.com/bitnami | postgresql | 11.9.* |
 

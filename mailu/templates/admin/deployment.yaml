@@ -1,40 +1,64 @@
 ---
-apiVersion: apps/v1
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   name: {{ printf "%s-admin" (include "mailu.fullname" .) }}
-  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: admin
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
 spec:
-  selector:
-    matchLabels: {{- include "mailu.labels.matchLabels" . | nindent 6 }}
-      app.kubernetes.io/component: admin
   replicas: 1
+  {{- if .Values.admin.updateStrategy }}
+  strategy: {{- toYaml .Values.admin.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.admin.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: admin
   template:
     metadata:
-      labels: {{- include "mailu.labels.matchLabels" . | nindent 8 }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: admin
         {{- if .Values.admin.podLabels }}
-        {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.podLabels "context" $) | nindent 8 }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.admin.podLabels "context" $) | nindent 8 }}
         {{- end }}
       {{- if .Values.admin.podAnnotations }}
-      annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.admin.podAnnotations "context" $) | nindent 8 }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.admin.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.admin.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.admin.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.admin.hostAliases "context" $) | nindent 8 }}
+      {{- end }}    
       {{- if .Values.admin.nodeSelector }}
-      nodeSelector: {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.admin.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.admin.affinity }}
-      affinity: {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.admin.affinity "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.admin.tolerations }}
-      tolerations: {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.admin.tolerations "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.admin.priorityClassName }}
       priorityClassName: {{ .Values.admin.priorityClassName | quote }}
       {{- end }}
+      {{- if .Values.admin.schedulerName }}
+      schedulerName: {{ .Values.admin.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.admin.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.admin.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.admin.terminationGracePeriodSeconds }}
+      {{- end }}
       {{- if .Values.admin.initContainers }}
-      initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
       {{- end }}
       containers:
         - name: admin
@@ -47,14 +71,8 @@ spec:
             - name: data
               mountPath: /dkim
               subPath: dkim
-            {{- if .Values.timezone }}
-            - name: zoneinfo
-              mountPath: /usr/share/zoneinfo
-              readOnly: true
-            - name: zoneinfo
-              subPath: {{ .Values.timezone }}
-              mountPath: /etc/localtime
-              readOnly: true
+            {{- if .Values.admin.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
           env:
             - name: LOG_LEVEL
@@ -196,18 +214,22 @@ spec:
             {{- else }}
             value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
             {{- end }}
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
             {{- if .Values.admin.extraEnvVars }}
-            {{- include "mailu.tplvalues.render" (dict "value" .Values.admin.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
-              {{- if .Values.admin.extraEnvVarsCM }}
-              - configMapRef:
-                  name: {{ include "mailu.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsCM "context" $) }}
-              {{- end }}
-              {{- if .Values.admin.extraEnvVarsSecret }}
-              - secretRef:
-                  name: {{ include "mailu.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsSecret "context" $) }}
-              {{- end }}
+            {{- if .Values.admin.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.admin.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsSecret "context" $) }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 80
@@ -216,19 +238,19 @@ spec:
           resources: {{- toYaml .Values.admin.resources | nindent 12 }}
           {{- end }}
           {{- if .Values.admin.startupProbe.enabled }}
-          startupProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.admin.startupProbe "enabled") "context" $) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.startupProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /sso/login
               port: http
           {{- end }}
           {{- if .Values.admin.livenessProbe.enabled }}
-          livenessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.admin.livenessProbe "enabled") "context" $) | nindent 12 }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.livenessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /sso/login
               port: http
           {{- end }}
           {{- if .Values.admin.readinessProbe }}
-          readinessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.admin.readinessProbe "enabled") "context" $) | nindent 12 }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.readinessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /sso/login
               port: http
@@ -237,19 +259,5 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{- include "mailu.admin.claimName" . }}
-        {{- if .Values.timezone }}
-        - name: zoneinfo
-          hostPath:
-            path: /usr/share/zoneinfo
-            type: Directory
-        {{- end }}
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 0
-      maxSurge: 1
-
-
-
 
 

@@ -4,14 +4,30 @@ version: 0.3.3
 name: mailu
 description: This chart installs the Mailu mail system on kubernetes
 home: https://mailu.io
-sources: ["https://github.com/Mailu/helm-charts/"]
+sources:
+  - https://github.com/Mailu/helm-charts/
 icon: https://mailu.io/master/_images/logo.png
+keywords:
+  - mailu
+  - mail
+  - email
+  - smtp
+  - imap
+  - pop3
+  - webmail
+  - postfix
+  - dovecot
 dependencies:
-  - name: postgresql
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 2.0.3
+  - condition: postgresql.enabled
+    name: postgresql
     version: 11.9.*
     repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
-  - name: mariadb
+  - condition: mariadb.enabled
+    name: mariadb
     version: 11.3.*
     repository: https://charts.bitnami.com/bitnami
-    condition: mariadb.enabled
