@@ -751,6 +751,9 @@ Check that the deployed pods are all running.
 | `fetchmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 
+## Example values.yaml to get started
+
+```yaml
 domain: mail.mydomain.com
 hostnames:
   - mail.mydomain.com
