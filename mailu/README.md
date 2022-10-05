@@ -108,351 +108,4120 @@ Check that the deployed pods are all running.
 
 ## Values
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| admin.affinity | object | `{}` | Affinity for admin pod assignment |
-| admin.extraEnvVars | list | `[]` | Extra environment variable to pass to the running container. |
-| admin.extraEnvVarsCM | string | `""` | Name of existing ConfigMap containing extra env vars for Mailu admin pod(s) |
-| admin.extraEnvVarsSecret | string | `""` | Name of existing Secret containing extra env vars for Mailu admin pod(s) |
-| admin.image.pullPolicy | string | `"IfNotPresent"` |  |
-| admin.image.repository | string | `"mailu/admin"` |  |
-| admin.image.tag | string | `""` | tag defaults to mailuVersion |
-| admin.initContainers | list | `[]` | Add additional init containers to the Mailu Admin pod(s) |
-| admin.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| admin.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
-| admin.livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
-| admin.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| admin.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| admin.livenessProbe.timeoutSeconds | int | `1` | Timeout seconds for livenessProbe |
-| admin.nodeSelector | object | `{}` | Node labels for admin pod assignment |
-| admin.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| admin.persistence.claimNameOverride | string | `""` |  |
-| admin.persistence.size | string | `"20Gi"` |  |
-| admin.persistence.storageClass | string | `""` |  |
-| admin.podAnnotations | object | `{}` | Admin Pod annotations |
-| admin.podLabels | object | `{}` | Admin Pod labels |
-| admin.priorityClassName | string | `""` | Mailu admin pods' priorityClassName |
-| admin.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| admin.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
-| admin.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
-| admin.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| admin.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| admin.readinessProbe.timeoutSeconds | int | `1` | Timeout seconds for readinessProbe |
-| admin.resources.limits.cpu | string | `"500m"` |  |
-| admin.resources.limits.memory | string | `"500Mi"` |  |
-| admin.resources.requests.cpu | string | `"500m"` |  |
-| admin.resources.requests.memory | string | `"500Mi"` |  |
-| admin.service.annotations | object | `{}` | Admin service annotations |
-| admin.startupProbe.enabled | bool | `false` | Enable startupProbe |
-| admin.startupProbe.failureThreshold | int | `3` | Failure threshold for startupProbe |
-| admin.startupProbe.initialDelaySeconds | int | `10` | Initial delay seconds for startupProbe |
-| admin.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
-| admin.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
-| admin.startupProbe.timeoutSeconds | int | `1` | Timeout seconds for startupProbe |
-| admin.tolerations | list | `[]` | admin.tolerations Tolerations for admin pod assignment |
-| affinity | object | `{}` | Affinity for pod assignment |
-| certmanager | object | `{"apiVersion":"cert-manager.io/v1","enabled":true,"issuerName":"letsencrypt","issuerType":"ClusterIssuer"}` | certmanager settings |
-| clamav.enabled | bool | `true` |  |
-| clamav.image.repository | string | `"mailu/clamav"` |  |
-| clamav.livenessProbe.failureThreshold | int | `3` |  |
-| clamav.livenessProbe.periodSeconds | int | `10` |  |
-| clamav.livenessProbe.timeoutSeconds | int | `5` |  |
-| clamav.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| clamav.persistence.claimNameOverride | string | `""` |  |
-| clamav.persistence.size | string | `"2Gi"` |  |
-| clamav.persistence.storageClass | string | `""` |  |
-| clamav.readinessProbe.failureThreshold | int | `1` |  |
-| clamav.readinessProbe.periodSeconds | int | `10` |  |
-| clamav.readinessProbe.timeoutSeconds | int | `5` |  |
-| clamav.resources.limits.cpu | string | `"1000m"` |  |
-| clamav.resources.limits.memory | string | `"2Gi"` |  |
-| clamav.resources.requests.cpu | string | `"1000m"` |  |
-| clamav.resources.requests.memory | string | `"1Gi"` |  |
-| clamav.startupProbe.failureThreshold | int | `60` |  |
-| clamav.startupProbe.periodSeconds | int | `10` |  |
-| clamav.startupProbe.timeoutSeconds | int | `5` |  |
-| clusterDomain | string | `"cluster.local"` |  |
-| database.mysql | object | `{}` |  |
-| database.postgresql | object | `{}` |  |
-| database.roundcube.database | string | `"roundcube"` |  |
-| database.roundcube.password | string | `"changeme"` |  |
-| database.roundcube.type | string | `"sqlite"` |  |
-| database.roundcube.username | string | `"roundcube"` |  |
-| database.type | string | `"sqlite"` |  |
-| domain | string | `""` | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames |
-| dovecot.containerSecurityContext | object | `{}` |  |
-| dovecot.enabled | bool | `true` |  |
-| dovecot.image.repository | string | `"mailu/dovecot"` |  |
-| dovecot.livenessProbe.failureThreshold | int | `3` |  |
-| dovecot.livenessProbe.periodSeconds | int | `10` |  |
-| dovecot.livenessProbe.timeoutSeconds | int | `5` |  |
-| dovecot.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| dovecot.persistence.claimNameOverride | string | `""` |  |
-| dovecot.persistence.size | string | `"20Gi"` |  |
-| dovecot.persistence.storageClass | string | `""` |  |
-| dovecot.readinessProbe.failureThreshold | int | `1` |  |
-| dovecot.readinessProbe.periodSeconds | int | `10` |  |
-| dovecot.readinessProbe.timeoutSeconds | int | `5` |  |
-| dovecot.resources.limits.cpu | string | `"500m"` |  |
-| dovecot.resources.limits.memory | string | `"500Mi"` |  |
-| dovecot.resources.requests.cpu | string | `"500m"` |  |
-| dovecot.resources.requests.memory | string | `"500Mi"` |  |
-| dovecot.startupProbe.failureThreshold | int | `30` |  |
-| dovecot.startupProbe.periodSeconds | int | `10` |  |
-| dovecot.startupProbe.timeoutSeconds | int | `5` |  |
-| existingSecret | string | `""` | existingSecret Name of the existing secret to retrieve the secretKey. The secret has to contain the secretKey value under the `secret-key` key. |
-| external_relay | object | `{}` |  |
-| fetchmail.delay | int | `600` |  |
-| fetchmail.enabled | bool | `false` | Enable deployment of fetchmail |
-| fetchmail.image.repository | string | `"mailu/fetchmail"` |  |
-| fetchmail.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| fetchmail.persistence.claimNameOverride | string | `""` |  |
-| fetchmail.persistence.size | string | `"20Gi"` |  |
-| fetchmail.persistence.storageClass | string | `""` |  |
-| fetchmail.resources.limits.cpu | string | `"200m"` |  |
-| fetchmail.resources.limits.memory | string | `"200Mi"` |  |
-| fetchmail.resources.requests.cpu | string | `"100m"` |  |
-| fetchmail.resources.requests.memory | string | `"100Mi"` |  |
-| front.controller.kind | string | `"Deployment"` | Deployment or DaemonSet |
-| front.externalService.annotations | object | `{}` |  |
-| front.externalService.enabled | bool | `false` |  |
-| front.externalService.externalTrafficPolicy | string | `"Local"` |  |
-| front.externalService.imap.imap | bool | `false` |  |
-| front.externalService.imap.imaps | bool | `true` |  |
-| front.externalService.pop3.pop3 | bool | `false` |  |
-| front.externalService.pop3.pop3s | bool | `true` |  |
-| front.externalService.smtp.smtp | bool | `true` |  |
-| front.externalService.smtp.smtps | bool | `true` |  |
-| front.externalService.smtp.submission | bool | `true` |  |
-| front.externalService.type | string | `"ClusterIP"` |  |
-| front.hostPort | object | `{"enabled":true}` | Expose front mail ports via hostPort |
-| front.image.repository | string | `"mailu/nginx"` |  |
-| front.image.tag | string | defaults to mailuVersion | Fron pod image tag |
-| front.livenessProbe.failureThreshold | int | `3` |  |
-| front.livenessProbe.periodSeconds | int | `10` |  |
-| front.livenessProbe.timeoutSeconds | int | `5` |  |
-| front.nodeSelector | object | `{}` |  |
-| front.readinessProbe.failureThreshold | int | `1` |  |
-| front.readinessProbe.periodSeconds | int | `10` |  |
-| front.readinessProbe.timeoutSeconds | int | `5` |  |
-| front.resources.limits.cpu | string | `"200m"` |  |
-| front.resources.limits.memory | string | `"200Mi"` |  |
-| front.resources.requests.cpu | string | `"100m"` |  |
-| front.resources.requests.memory | string | `"100Mi"` |  |
-| front.startupProbe.failureThreshold | int | `30` |  |
-| front.startupProbe.periodSeconds | int | `10` |  |
-| front.startupProbe.timeoutSeconds | int | `5` |  |
-| fullnameOverride | string | `""` |  |
-| hostnames | list | `[]` | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname |
-| ingress | object | `{"annotations":{"nginx.ingress.kubernetes.io/proxy-body-size":"0"},"className":"","externalIngress":true,"realIpFrom":"0.0.0.0/0","realIpHeader":"X-Forwarded-For","tlsFlavor":"cert"}` | Set ingress and loadbalancer config |
-| initialAccount | object | `{}` | An initial account can automatically be created: |
-| logLevel | string | `"WARNING"` | default log level. can be overridden globally or per service |
-| mail.authRatelimitExemtionLength | int | `86400` |  |
-| mail.authRatelimitIP | string | `"60/hour"` | Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html |
-| mail.authRatelimitIPv4Mask | int | `24` |  |
-| mail.authRatelimitIPv6Mask | int | `56` |  |
-| mail.authRatelimitUser | string | `"100/day"` |  |
-| mail.messageRatelimit | string | `"200/day"` | Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT |
-| mail.messageSizeLimitInMegabytes | int | `50` |  |
-| mailuVersion | string | `"1.9.26"` | Version/tag of mailu images - must be master or a version >= 1.9 |
-| mariadb.architecture | string | `"standalone"` |  |
-| mariadb.auth.database | string | `"mailu"` |  |
-| mariadb.auth.existingSecret | string | `""` |  |
-| mariadb.auth.password | string | `"changeme"` |  |
-| mariadb.auth.rootPassword | string | `"changeme"` |  |
-| mariadb.auth.username | string | `"mailu"` |  |
-| mariadb.enabled | bool | `false` |  |
-| mariadb.primary.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| mariadb.primary.persistence.enabled | bool | `false` |  |
-| mariadb.primary.persistence.size | string | `"8Gi"` |  |
-| mysql.image.repository | string | `"library/mariadb"` |  |
-| mysql.image.tag | string | `"10.4.10"` |  |
-| mysql.livenessProbe.failureThreshold | int | `3` |  |
-| mysql.livenessProbe.periodSeconds | int | `10` |  |
-| mysql.livenessProbe.timeoutSeconds | int | `5` |  |
-| mysql.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| mysql.persistence.claimNameOverride | string | `""` |  |
-| mysql.persistence.size | string | `"20Gi"` |  |
-| mysql.persistence.storageClass | string | `""` |  |
-| mysql.readinessProbe.failureThreshold | int | `1` |  |
-| mysql.readinessProbe.periodSeconds | int | `10` |  |
-| mysql.readinessProbe.timeoutSeconds | int | `5` |  |
-| mysql.resources.limits.cpu | string | `"200m"` |  |
-| mysql.resources.limits.memory | string | `"512Mi"` |  |
-| mysql.resources.requests.cpu | string | `"100m"` |  |
-| mysql.resources.requests.memory | string | `"256Mi"` |  |
-| mysql.startupProbe.failureThreshold | int | `30` |  |
-| mysql.startupProbe.periodSeconds | int | `10` |  |
-| mysql.startupProbe.timeoutSeconds | int | `5` |  |
-| nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
-| persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| persistence.single_pvc | bool | `true` | Setings for a single volume for all apps. Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence) |
-| persistence.size | string | `"100Gi"` |  |
-| postfix.containerSecurityContext | object | `{}` |  |
-| postfix.image.repository | string | `"mailu/postfix"` |  |
-| postfix.livenessProbe.failureThreshold | int | `3` |  |
-| postfix.livenessProbe.periodSeconds | int | `10` |  |
-| postfix.livenessProbe.timeoutSeconds | int | `5` |  |
-| postfix.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| postfix.persistence.claimNameOverride | string | `""` |  |
-| postfix.persistence.size | string | `"20Gi"` |  |
-| postfix.persistence.storageClass | string | `""` |  |
-| postfix.readinessProbe.failureThreshold | int | `1` |  |
-| postfix.readinessProbe.periodSeconds | int | `10` |  |
-| postfix.readinessProbe.timeoutSeconds | int | `5` |  |
-| postfix.resources.limits.cpu | string | `"500m"` |  |
-| postfix.resources.limits.memory | string | `"2Gi"` |  |
-| postfix.resources.requests.cpu | string | `"500m"` |  |
-| postfix.resources.requests.memory | string | `"2Gi"` |  |
-| postfix.startupProbe.failureThreshold | int | `30` |  |
-| postfix.startupProbe.periodSeconds | int | `10` |  |
-| postfix.startupProbe.timeoutSeconds | int | `5` |  |
-| postgresql.architecture | string | `"standalone"` |  |
-| postgresql.auth.database | string | `"mailu"` |  |
-| postgresql.auth.enablePostgresUser | bool | `true` |  |
-| postgresql.auth.existingSecret | string | `""` |  |
-| postgresql.auth.password | string | `"changeme"` |  |
-| postgresql.auth.postgresPassword | string | `"changeme"` |  |
-| postgresql.auth.secretKeys.adminPasswordKey | string | `"postgres-password"` |  |
-| postgresql.auth.secretKeys.replicationPasswordKey | string | `"replication-password"` |  |
-| postgresql.auth.secretKeys.userPasswordKey | string | `"password"` |  |
-| postgresql.auth.username | string | `"mailu"` |  |
-| postgresql.enabled | bool | `false` |  |
-| postgresql.primary.persistence.enabled | bool | `false` |  |
-| postmaster | string | `"postmaster"` | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part) |
-| redis.image.repository | string | `"redis"` |  |
-| redis.image.tag | string | `"5-alpine"` |  |
-| redis.livenessProbe.failureThreshold | int | `3` |  |
-| redis.livenessProbe.periodSeconds | int | `10` |  |
-| redis.livenessProbe.timeoutSeconds | int | `5` |  |
-| redis.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| redis.persistence.claimNameOverride | string | `""` |  |
-| redis.persistence.size | string | `"20Gi"` |  |
-| redis.persistence.storageClass | string | `""` |  |
-| redis.readinessProbe.failureThreshold | int | `1` |  |
-| redis.readinessProbe.periodSeconds | int | `10` |  |
-| redis.readinessProbe.timeoutSeconds | int | `5` |  |
-| redis.resources.limits.cpu | string | `"200m"` |  |
-| redis.resources.limits.memory | string | `"300Mi"` |  |
-| redis.resources.requests.cpu | string | `"100m"` |  |
-| redis.resources.requests.memory | string | `"200Mi"` |  |
-| redis.startupProbe.failureThreshold | int | `30` |  |
-| redis.startupProbe.periodSeconds | int | `10` |  |
-| redis.startupProbe.timeoutSeconds | int | `5` |  |
-| roundcube.enabled | bool | `true` | Enable deployment of Roundcube webmail |
-| roundcube.image.repository | string | `"mailu/roundcube"` |  |
-| roundcube.livenessProbe.failureThreshold | int | `3` |  |
-| roundcube.livenessProbe.periodSeconds | int | `10` |  |
-| roundcube.livenessProbe.timeoutSeconds | int | `5` |  |
-| roundcube.logLevel | string | `""` | Set the log level for Roundcube |
-| roundcube.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| roundcube.persistence.claimNameOverride | string | `""` |  |
-| roundcube.persistence.size | string | `"20Gi"` |  |
-| roundcube.persistence.storageClass | string | `""` |  |
-| roundcube.readinessProbe.failureThreshold | int | `1` |  |
-| roundcube.readinessProbe.periodSeconds | int | `10` |  |
-| roundcube.readinessProbe.timeoutSeconds | int | `5` |  |
-| roundcube.resources.limits.cpu | string | `"200m"` |  |
-| roundcube.resources.limits.memory | string | `"200Mi"` |  |
-| roundcube.resources.requests.cpu | string | `"100m"` |  |
-| roundcube.resources.requests.memory | string | `"100Mi"` |  |
-| roundcube.startupProbe.failureThreshold | int | `30` |  |
-| roundcube.startupProbe.periodSeconds | int | `10` |  |
-| roundcube.startupProbe.timeoutSeconds | int | `5` |  |
-| roundcube.uri | string | `"/roundcube"` |  |
-| rspamd.image.repository | string | `"mailu/rspamd"` |  |
-| rspamd.livenessProbe.failureThreshold | int | `3` |  |
-| rspamd.livenessProbe.periodSeconds | int | `10` |  |
-| rspamd.livenessProbe.timeoutSeconds | int | `5` |  |
-| rspamd.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| rspamd.persistence.claimNameOverride | string | `""` |  |
-| rspamd.persistence.size | string | `"1Gi"` |  |
-| rspamd.persistence.storageClass | string | `""` |  |
-| rspamd.readinessProbe.failureThreshold | int | `1` |  |
-| rspamd.readinessProbe.periodSeconds | int | `10` |  |
-| rspamd.readinessProbe.timeoutSeconds | int | `5` |  |
-| rspamd.resources.limits.cpu | string | `"200m"` |  |
-| rspamd.resources.limits.memory | string | `"200Mi"` |  |
-| rspamd.resources.requests.cpu | string | `"100m"` |  |
-| rspamd.resources.requests.memory | string | `"100Mi"` |  |
-| rspamd.startupProbe.failureThreshold | int | `90` |  |
-| rspamd.startupProbe.periodSeconds | int | `10` |  |
-| rspamd.startupProbe.timeoutSeconds | int | `5` |  |
-| rspamd_clamav_persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| rspamd_clamav_persistence.claimNameOverride | string | `""` |  |
-| rspamd_clamav_persistence.single_pvc | bool | `false` |  |
-| rspamd_clamav_persistence.size | string | `"20Gi"` |  |
-| rspamd_clamav_persistence.storageClass | string | `""` |  |
-| secretKey | string | `""` | The secret key is required for protecting authentication cookies and must be set individually for each deployment If empty, a random secret key will be generated and saved in a secret |
-| subnet | string | `"10.42.0.0/16"` | Change this if you're using different address ranges for pods |
-| tolerations | object | `{}` | Tolerations for pod assignment |
-| webdav.enabled | bool | `false` | Enable deployment of WebDAV server (using Radicale) |
-| webdav.image.repository | string | `"mailu/radicale"` |  |
-| webdav.livenessProbe.failureThreshold | int | `3` |  |
-| webdav.livenessProbe.periodSeconds | int | `10` |  |
-| webdav.livenessProbe.timeoutSeconds | int | `5` |  |
-| webdav.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| webdav.persistence.claimNameOverride | string | `""` |  |
-| webdav.persistence.size | string | `"20Gi"` |  |
-| webdav.persistence.storageClass | string | `""` |  |
-| webdav.readinessProbe.failureThreshold | int | `1` |  |
-| webdav.readinessProbe.periodSeconds | int | `10` |  |
-| webdav.readinessProbe.timeoutSeconds | int | `5` |  |
-| webdav.startupProbe.failureThreshold | int | `30` |  |
-| webdav.startupProbe.periodSeconds | int | `10` |  |
-| webdav.startupProbe.timeoutSeconds | int | `5` |  |
-
-## Configuration
-
-| Parameter                          | Description                                                                                                                                            | Default                                                        |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- |
-| `mailuVersion`                     | Version/tag of mailu images - must be master or a version >=1.9                                                                                        | `master`                                                       |
-| `logLevel`                         | Level of logging                                                                                                                                       | `WARNING`                                                      |
-| `nameOverride`                     | Override the resource name prefix                                                                                                                      | `mailu`                                                        |
-| `clusterDomain`                    | Change the cluster DNS root                                                                                                                            | `cluster.local`                                                |
-| `fullnameOverride`                 | Override the full resource names                                                                                                                       | `mailu-{release-name}` (or `mailu` if release-name is `mailu`) |
-| `hostnames`                        | List of hostnames to generate certificates and ingresses for                                                                                           | not set                                                        |
-| `domain`                           | Mail domain name, see <https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames>                    | not set                                                        |
-| `postmaster`                       | Local part of the postmaster address                                                                                                                   | `postmaster`                                                   |
-| `passwordScheme`                   | Scheme used to hash passwords                                                                                                                          | `PBKDF2`                                                       |
-| `secretKey`                        | Session encryption key for admin and webmail                                                                                                           | not set                                                        |
-| `existingSecret`                   | The name of the existing secret containing the secret key (under the `secret-key` key).                                                                | not set                                                        |
-| `subnet`                           | Subnet of PODs, used to configure from which IPs internal requests are allowed                                                                         | `10.42.0.0/16`                                                 |
-| `mail.messageSizeLimitInMegabytes` | Message size limit in Megabytes                                                                                                                        | `50`                                                           |
-| `mail.authRatelimit`               | Rate limit for authentication requests                                                                                                                 | `10/minute;1000/hour`                                          |
-| `initialAccount.username`          | Local part (part before @) for initial admin account                                                                                                   | not set                                                        |
-| `initialAccount.domain`            | Domain part (part after @) for initial admin account                                                                                                   | not set                                                        |
-| `initialAccount.password`          | Password for initial admin account                                                                                                                     | not set                                                        |
-| `initialAccount.existingSecret`    | The name of the existing secret containing the password for the initial account (under `initial-account-password` key).                                | not set                                                        |
-| `front.controller.kind`            | Use Deployment or DaemonSet for `front` pod(s)                                                                                                         | `Deployment`                                                   |
-| `certmanager.enabled`              | Enable the use of CertManager to generate secrets                                                                                                      | `ClusterIssuer`                                                |
-| `certmanager.issuerType`           | Issuer type for cert manager                                                                                                                           | `ClusterIssuer`                                                |
-| `certmanager.issuerName`           | Name of a preconfigured cert issuer                                                                                                                    | `letsencrypt`                                                  |
-| `certmanager.apiVersion`           | API-Version for certmanager CRDs                                                                                                                       | `cert-manager.io/v1`                                           |
-| `persistence.size`                 | requested PVC size                                                                                                                                     | `100Gi`                                                        |
-| `persistence.storageClass`         | storageClass to use for persistence                                                                                                                    | not set                                                        |
-| `persistence.accessMode`           | accessMode to use for persistence                                                                                                                      | `ReadWriteOnce`                                                |
-| `persistence.annotations`          | Annotations to use in the PVC.                                                                                                                         | `{}`                                                           |
-| `persistence.hostPath`             | path of the hostPath persistence                                                                                                                       | not set                                                        |
-| `persistence.existingClaim`        | existing PVC                                                                                                                                           | not set                                                        |
-| `persistence.claimNameOverride`    | override the generated claim name                                                                                                                      | not set                                                        |
-| `webdav.enabled`                   | enable webdav server                                                                                                                                   | `false`                                                        |
-| `ingress.externalIngress`          | Use externally provided nginx                                                                                                                          | `true`                                                         |
-| `ingress.tlsFlavor`                | Do not change unless you have a custom way of generating the certificates. [Allowed options](https://mailu.io/1.7/compose/setup.html#tls-certificates) | `cert` (uses certificates provided by cert-manager)            |
-| `ingress.annotations`              | Annotations for the ingress resource, if enabled. Useful e.g. for configuring the NGINX controller configuration.                                      | `nginx.ingress.kubernetes.io/proxy-body-size: "0"`             |
-| `ingress.realIpHeader`             | Header from http(s) ingress that contains the real client IP                                                                                           | `X-Forwarded-For`                                              |
-| `ingress.realIpFrom`               | IP/Network from where `realIpHeader` is accepted                                                                                                       | `0.0.0.0/0`                                                    |
-| `roundcube.enabled`                | enable roundcube webmail                                                                                                                               | `true`                                                         |
-| `clamav.enabled`                   | enable clamav antivirus                                                                                                                                | `true`                                                         |
-| `dovecot.overrides`                | enable dovecot overrides                                                                                                                               | not set                                                        |
-| `fetchmail.enabled`                | enable fetchmail                                                                                                                                       | `false`                                                        |
-| `fetchmail.delay`                  | delay between fetch attempts                                                                                                                           | `600`                                                          |
-| `database.type`                    | type of database used for mailu                                                                                                                        | `sqlite`                                                       |
-| `database.roundcubeType`           | type of database used for roundcube                                                                                                                    | `sqlite`                                                       |
-| `database.mysql.*`                 | mysql specific settings, see below                                                                                                                     | not set                                                        |
-| `timezone`                         | time zone for PODs, see below                                                                                                                          | not set                                                        |
-| `{app}.containerSecurityContext`   | Uses the given SecurityContext for $app (e.g. postfix, dovecot, clamav, ...)                                                                           | not set                                                        |
+<table height="400px" >
+	<thead>
+		<th>Key</th>
+		<th>Type</th>
+		<th>Default</th>
+		<th>Description</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td id="admin--affinity"><a href="./values.yaml#L427">admin.affinity</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Affinity for admin pod assignment</td>
+		</tr>
+		<tr>
+			<td id="admin--extraEnvVars"><a href="./values.yaml#L345">admin.extraEnvVars</a></td>
+			<td>
+list
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+[]
+</pre>
+</div>
+			</td>
+			<td>Extra environment variable to pass to the running container.</td>
+		</tr>
+		<tr>
+			<td id="admin--extraEnvVarsCM"><a href="./values.yaml#L348">admin.extraEnvVarsCM</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>Name of existing ConfigMap containing extra env vars for Mailu admin pod(s)</td>
+		</tr>
+		<tr>
+			<td id="admin--extraEnvVarsSecret"><a href="./values.yaml#L351">admin.extraEnvVarsSecret</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>Name of existing Secret containing extra env vars for Mailu admin pod(s)</td>
+		</tr>
+		<tr>
+			<td id="admin--image--pullPolicy"><a href="./values.yaml#L323">admin.image.pullPolicy</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"IfNotPresent"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--image--repository"><a href="./values.yaml#L320">admin.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/admin"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--image--tag"><a href="./values.yaml#L322">admin.image.tag</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>tag defaults to mailuVersion</td>
+		</tr>
+		<tr>
+			<td id="admin--initContainers"><a href="./values.yaml#L420">admin.initContainers</a></td>
+			<td>
+list
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+[]
+</pre>
+</div>
+			</td>
+			<td>Add additional init containers to the Mailu Admin pod(s)</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--enabled"><a href="./values.yaml#L356">admin.livenessProbe.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td>Enable livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--failureThreshold"><a href="./values.yaml#L358">admin.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td>Failure threshold for livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--initialDelaySeconds"><a href="./values.yaml#L360">admin.livenessProbe.initialDelaySeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Initial delay seconds for livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--periodSeconds"><a href="./values.yaml#L362">admin.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Period seconds for livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--successThreshold"><a href="./values.yaml#L364">admin.livenessProbe.successThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Success threshold for livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--livenessProbe--timeoutSeconds"><a href="./values.yaml#L366">admin.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Timeout seconds for livenessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--nodeSelector"><a href="./values.yaml#L410">admin.nodeSelector</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Node labels for admin pod assignment</td>
+		</tr>
+		<tr>
+			<td id="admin--persistence--accessMode"><a href="./values.yaml#L327">admin.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--persistence--claimNameOverride"><a href="./values.yaml#L328">admin.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--persistence--size"><a href="./values.yaml#L325">admin.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--persistence--storageClass"><a href="./values.yaml#L326">admin.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--podAnnotations"><a href="./values.yaml#L406">admin.podAnnotations</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Admin Pod annotations</td>
+		</tr>
+		<tr>
+			<td id="admin--podLabels"><a href="./values.yaml#L402">admin.podLabels</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Admin Pod labels</td>
+		</tr>
+		<tr>
+			<td id="admin--priorityClassName"><a href="./values.yaml#L423">admin.priorityClassName</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>Mailu admin pods' priorityClassName</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--enabled"><a href="./values.yaml#L372">admin.readinessProbe.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td>Enable readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--failureThreshold"><a href="./values.yaml#L374">admin.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td>Failure threshold for readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--initialDelaySeconds"><a href="./values.yaml#L376">admin.readinessProbe.initialDelaySeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Initial delay seconds for readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--periodSeconds"><a href="./values.yaml#L378">admin.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Period seconds for readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--successThreshold"><a href="./values.yaml#L380">admin.readinessProbe.successThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Success threshold for readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--readinessProbe--timeoutSeconds"><a href="./values.yaml#L382">admin.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Timeout seconds for readinessProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--resources--limits--cpu"><a href="./values.yaml#L338">admin.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--resources--limits--memory"><a href="./values.yaml#L337">admin.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--resources--requests--cpu"><a href="./values.yaml#L335">admin.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--resources--requests--memory"><a href="./values.yaml#L334">admin.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="admin--service--annotations"><a href="./values.yaml#L436">admin.service.annotations</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Admin service annotations</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--enabled"><a href="./values.yaml#L388">admin.startupProbe.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td>Enable startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--failureThreshold"><a href="./values.yaml#L390">admin.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td>Failure threshold for startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--initialDelaySeconds"><a href="./values.yaml#L392">admin.startupProbe.initialDelaySeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Initial delay seconds for startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--periodSeconds"><a href="./values.yaml#L394">admin.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td>Period seconds for startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--successThreshold"><a href="./values.yaml#L396">admin.startupProbe.successThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Success threshold for startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--startupProbe--timeoutSeconds"><a href="./values.yaml#L398">admin.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td>Timeout seconds for startupProbe</td>
+		</tr>
+		<tr>
+			<td id="admin--tolerations"><a href="./values.yaml#L431">admin.tolerations</a></td>
+			<td>
+list
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+[]
+</pre>
+</div>
+			</td>
+			<td>admin.tolerations Tolerations for admin pod assignment</td>
+		</tr>
+		<tr>
+			<td id="affinity"><a href="./values.yaml#L54">affinity</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Affinity for pod assignment</td>
+		</tr>
+		<tr>
+			<td id="certmanager"><a href="./values.yaml#L244">certmanager</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{
+  "apiVersion": "cert-manager.io/v1",
+  "enabled": true,
+  "issuerName": "letsencrypt",
+  "issuerType": "ClusterIssuer"
+}
+</pre>
+</div>
+			</td>
+			<td>certmanager settings</td>
+		</tr>
+		<tr>
+			<td id="clamav--enabled"><a href="./values.yaml#L607">clamav.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--image--repository"><a href="./values.yaml#L610">clamav.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/clamav"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--livenessProbe--failureThreshold"><a href="./values.yaml#L633">clamav.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--livenessProbe--periodSeconds"><a href="./values.yaml#L632">clamav.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--livenessProbe--timeoutSeconds"><a href="./values.yaml#L634">clamav.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--persistence--accessMode"><a href="./values.yaml#L616">clamav.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--persistence--claimNameOverride"><a href="./values.yaml#L617">clamav.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--persistence--size"><a href="./values.yaml#L614">clamav.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"2Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--persistence--storageClass"><a href="./values.yaml#L615">clamav.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--readinessProbe--failureThreshold"><a href="./values.yaml#L637">clamav.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--readinessProbe--periodSeconds"><a href="./values.yaml#L636">clamav.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--readinessProbe--timeoutSeconds"><a href="./values.yaml#L638">clamav.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--resources--limits--cpu"><a href="./values.yaml#L626">clamav.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"1000m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--resources--limits--memory"><a href="./values.yaml#L625">clamav.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"2Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--resources--requests--cpu"><a href="./values.yaml#L623">clamav.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"1000m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--resources--requests--memory"><a href="./values.yaml#L622">clamav.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"1Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--startupProbe--failureThreshold"><a href="./values.yaml#L629">clamav.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+60
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--startupProbe--periodSeconds"><a href="./values.yaml#L628">clamav.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clamav--startupProbe--timeoutSeconds"><a href="./values.yaml#L630">clamav.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="clusterDomain"><a href="./values.yaml#L44">clusterDomain</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"cluster.local"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--mysql"><a href="./values.yaml#L91">database.mysql</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--postgresql"><a href="./values.yaml#L109">database.postgresql</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--roundcube--database"><a href="./values.yaml#L67">database.roundcube.database</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"roundcube"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--roundcube--password"><a href="./values.yaml#L69">database.roundcube.password</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"changeme"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--roundcube--type"><a href="./values.yaml#L66">database.roundcube.type</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"sqlite"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--roundcube--username"><a href="./values.yaml#L68">database.roundcube.username</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"roundcube"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="database--type"><a href="./values.yaml#L60">database.type</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"sqlite"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="domain"><a href="./values.yaml#L13">domain</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames</td>
+		</tr>
+		<tr>
+			<td id="dovecot--containerSecurityContext"><a href="./values.yaml#L513">dovecot.containerSecurityContext</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--enabled"><a href="./values.yaml#L507">dovecot.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--image--repository"><a href="./values.yaml#L510">dovecot.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/dovecot"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--livenessProbe--failureThreshold"><a href="./values.yaml#L538">dovecot.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--livenessProbe--periodSeconds"><a href="./values.yaml#L537">dovecot.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--livenessProbe--timeoutSeconds"><a href="./values.yaml#L539">dovecot.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--persistence--accessMode"><a href="./values.yaml#L521">dovecot.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--persistence--claimNameOverride"><a href="./values.yaml#L522">dovecot.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--persistence--size"><a href="./values.yaml#L519">dovecot.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--persistence--storageClass"><a href="./values.yaml#L520">dovecot.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--readinessProbe--failureThreshold"><a href="./values.yaml#L542">dovecot.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--readinessProbe--periodSeconds"><a href="./values.yaml#L541">dovecot.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--readinessProbe--timeoutSeconds"><a href="./values.yaml#L543">dovecot.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--resources--limits--cpu"><a href="./values.yaml#L531">dovecot.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--resources--limits--memory"><a href="./values.yaml#L530">dovecot.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--resources--requests--cpu"><a href="./values.yaml#L528">dovecot.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--resources--requests--memory"><a href="./values.yaml#L527">dovecot.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--startupProbe--failureThreshold"><a href="./values.yaml#L534">dovecot.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--startupProbe--periodSeconds"><a href="./values.yaml#L533">dovecot.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="dovecot--startupProbe--timeoutSeconds"><a href="./values.yaml#L535">dovecot.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="existingSecret"><a href="./values.yaml#L25">existingSecret</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>existingSecret Name of the existing secret to retrieve the secretKey. The secret has to contain the secretKey value under the `secret-key` key.</td>
+		</tr>
+		<tr>
+			<td id="external_relay"><a href="./values.yaml#L194">external_relay</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--delay"><a href="./values.yaml#L770">fetchmail.delay</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+600
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--enabled"><a href="./values.yaml#L750">fetchmail.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td>Enable deployment of fetchmail</td>
+		</tr>
+		<tr>
+			<td id="fetchmail--image--repository"><a href="./values.yaml#L753">fetchmail.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/fetchmail"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--persistence--accessMode"><a href="./values.yaml#L759">fetchmail.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--persistence--claimNameOverride"><a href="./values.yaml#L760">fetchmail.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--persistence--size"><a href="./values.yaml#L757">fetchmail.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--persistence--storageClass"><a href="./values.yaml#L758">fetchmail.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--resources--limits--cpu"><a href="./values.yaml#L769">fetchmail.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--resources--limits--memory"><a href="./values.yaml#L768">fetchmail.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--resources--requests--cpu"><a href="./values.yaml#L766">fetchmail.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fetchmail--resources--requests--memory"><a href="./values.yaml#L765">fetchmail.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--controller--kind"><a href="./values.yaml#L290">front.controller.kind</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"Deployment"
+</pre>
+</div>
+			</td>
+			<td>Deployment or DaemonSet</td>
+		</tr>
+		<tr>
+			<td id="front--externalService--annotations"><a href="./values.yaml#L305">front.externalService.annotations</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--enabled"><a href="./values.yaml#L299">front.externalService.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--externalTrafficPolicy"><a href="./values.yaml#L304">front.externalService.externalTrafficPolicy</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"Local"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--imap--imap"><a href="./values.yaml#L310">front.externalService.imap.imap</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--imap--imaps"><a href="./values.yaml#L311">front.externalService.imap.imaps</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--pop3--pop3"><a href="./values.yaml#L307">front.externalService.pop3.pop3</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--pop3--pop3s"><a href="./values.yaml#L308">front.externalService.pop3.pop3s</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--smtp--smtp"><a href="./values.yaml#L313">front.externalService.smtp.smtp</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--smtp--smtps"><a href="./values.yaml#L314">front.externalService.smtp.smtps</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--smtp--submission"><a href="./values.yaml#L315">front.externalService.smtp.submission</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--externalService--type"><a href="./values.yaml#L300">front.externalService.type</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ClusterIP"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--hostPort"><a href="./values.yaml#L294">front.hostPort</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{
+  "enabled": true
+}
+</pre>
+</div>
+			</td>
+			<td>Expose front mail ports via hostPort</td>
+		</tr>
+		<tr>
+			<td id="front--image--repository"><a href="./values.yaml#L264">front.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/nginx"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--image--tag"><a href="./values.yaml#L267">front.image.tag</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="">
+defaults to mailuVersion
+</pre>
+</div>
+			</td>
+			<td>Fron pod image tag</td>
+		</tr>
+		<tr>
+			<td id="front--livenessProbe--failureThreshold"><a href="./values.yaml#L281">front.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--livenessProbe--periodSeconds"><a href="./values.yaml#L280">front.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--livenessProbe--timeoutSeconds"><a href="./values.yaml#L282">front.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--nodeSelector"><a href="./values.yaml#L291">front.nodeSelector</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--readinessProbe--failureThreshold"><a href="./values.yaml#L285">front.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--readinessProbe--periodSeconds"><a href="./values.yaml#L284">front.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--readinessProbe--timeoutSeconds"><a href="./values.yaml#L286">front.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--resources--limits--cpu"><a href="./values.yaml#L274">front.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--resources--limits--memory"><a href="./values.yaml#L273">front.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--resources--requests--cpu"><a href="./values.yaml#L271">front.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--resources--requests--memory"><a href="./values.yaml#L270">front.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--startupProbe--failureThreshold"><a href="./values.yaml#L277">front.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--startupProbe--periodSeconds"><a href="./values.yaml#L276">front.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="front--startupProbe--timeoutSeconds"><a href="./values.yaml#L278">front.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="fullnameOverride"><a href="./values.yaml#L43">fullnameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="hostnames"><a href="./values.yaml#L8">hostnames</a></td>
+			<td>
+list
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+[]
+</pre>
+</div>
+			</td>
+			<td>List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname</td>
+		</tr>
+		<tr>
+			<td id="ingress"><a href="./values.yaml#L251">ingress</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{
+  "annotations": {
+    "nginx.ingress.kubernetes.io/proxy-body-size": "0"
+  },
+  "className": "",
+  "externalIngress": true,
+  "realIpFrom": "0.0.0.0/0",
+  "realIpHeader": "X-Forwarded-For",
+  "tlsFlavor": "cert"
+}
+</pre>
+</div>
+			</td>
+			<td>Set ingress and loadbalancer config</td>
+		</tr>
+		<tr>
+			<td id="initialAccount"><a href="./values.yaml#L40">initialAccount</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>An initial account can automatically be created:</td>
+		</tr>
+		<tr>
+			<td id="logLevel"><a href="./values.yaml#L223">logLevel</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"WARNING"
+</pre>
+</div>
+			</td>
+			<td>default log level. can be overridden globally or per service</td>
+		</tr>
+		<tr>
+			<td id="mail--authRatelimitExemtionLength"><a href="./values.yaml#L236">mail.authRatelimitExemtionLength</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+86400
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mail--authRatelimitIP"><a href="./values.yaml#L232">mail.authRatelimitIP</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"60/hour"
+</pre>
+</div>
+			</td>
+			<td>Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html</td>
+		</tr>
+		<tr>
+			<td id="mail--authRatelimitIPv4Mask"><a href="./values.yaml#L233">mail.authRatelimitIPv4Mask</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+24
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mail--authRatelimitIPv6Mask"><a href="./values.yaml#L234">mail.authRatelimitIPv6Mask</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+56
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mail--authRatelimitUser"><a href="./values.yaml#L235">mail.authRatelimitUser</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100/day"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mail--messageRatelimit"><a href="./values.yaml#L240">mail.messageRatelimit</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200/day"
+</pre>
+</div>
+			</td>
+			<td>Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT</td>
+		</tr>
+		<tr>
+			<td id="mail--messageSizeLimitInMegabytes"><a href="./values.yaml#L229">mail.messageSizeLimitInMegabytes</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+50
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mailuVersion"><a href="./values.yaml#L220">mailuVersion</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"1.9.26"
+</pre>
+</div>
+			</td>
+			<td>Version/tag of mailu images - must be master or a version >= 1.9</td>
+		</tr>
+		<tr>
+			<td id="mariadb--architecture"><a href="./values.yaml#L118">mariadb.architecture</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"standalone"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--auth--database"><a href="./values.yaml#L128">mariadb.auth.database</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--auth--existingSecret"><a href="./values.yaml#L141">mariadb.auth.existingSecret</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--auth--password"><a href="./values.yaml#L135">mariadb.auth.password</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"changeme"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--auth--rootPassword"><a href="./values.yaml#L124">mariadb.auth.rootPassword</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"changeme"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--auth--username"><a href="./values.yaml#L132">mariadb.auth.username</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--enabled"><a href="./values.yaml#L116">mariadb.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--primary--persistence--accessMode"><a href="./values.yaml#L150">mariadb.primary.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--primary--persistence--enabled"><a href="./values.yaml#L148">mariadb.primary.persistence.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mariadb--primary--persistence--size"><a href="./values.yaml#L151">mariadb.primary.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"8Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--image--repository"><a href="./values.yaml#L719">mysql.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"library/mariadb"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--image--tag"><a href="./values.yaml#L720">mysql.image.tag</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"10.4.10"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--livenessProbe--failureThreshold"><a href="./values.yaml#L741">mysql.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--livenessProbe--periodSeconds"><a href="./values.yaml#L740">mysql.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--livenessProbe--timeoutSeconds"><a href="./values.yaml#L742">mysql.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--persistence--accessMode"><a href="./values.yaml#L724">mysql.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--persistence--claimNameOverride"><a href="./values.yaml#L725">mysql.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--persistence--size"><a href="./values.yaml#L722">mysql.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--persistence--storageClass"><a href="./values.yaml#L723">mysql.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--readinessProbe--failureThreshold"><a href="./values.yaml#L745">mysql.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--readinessProbe--periodSeconds"><a href="./values.yaml#L744">mysql.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--readinessProbe--timeoutSeconds"><a href="./values.yaml#L746">mysql.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--resources--limits--cpu"><a href="./values.yaml#L734">mysql.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--resources--limits--memory"><a href="./values.yaml#L733">mysql.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"512Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--resources--requests--cpu"><a href="./values.yaml#L731">mysql.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--resources--requests--memory"><a href="./values.yaml#L730">mysql.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"256Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--startupProbe--failureThreshold"><a href="./values.yaml#L737">mysql.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--startupProbe--periodSeconds"><a href="./values.yaml#L736">mysql.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="mysql--startupProbe--timeoutSeconds"><a href="./values.yaml#L738">mysql.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="nameOverride"><a href="./values.yaml#L42">nameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="nodeSelector"><a href="./values.yaml#L46">nodeSelector</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="persistence--accessMode"><a href="./values.yaml#L208">persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="persistence--single_pvc"><a href="./values.yaml#L206">persistence.single_pvc</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td>Setings for a single volume for all apps. Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)</td>
+		</tr>
+		<tr>
+			<td id="persistence--size"><a href="./values.yaml#L207">persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--containerSecurityContext"><a href="./values.yaml#L474">postfix.containerSecurityContext</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--image--repository"><a href="./values.yaml#L471">postfix.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/postfix"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--livenessProbe--failureThreshold"><a href="./values.yaml#L499">postfix.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--livenessProbe--periodSeconds"><a href="./values.yaml#L498">postfix.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--livenessProbe--timeoutSeconds"><a href="./values.yaml#L500">postfix.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--persistence--accessMode"><a href="./values.yaml#L482">postfix.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--persistence--claimNameOverride"><a href="./values.yaml#L483">postfix.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--persistence--size"><a href="./values.yaml#L480">postfix.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--persistence--storageClass"><a href="./values.yaml#L481">postfix.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--readinessProbe--failureThreshold"><a href="./values.yaml#L503">postfix.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--readinessProbe--periodSeconds"><a href="./values.yaml#L502">postfix.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--readinessProbe--timeoutSeconds"><a href="./values.yaml#L504">postfix.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--resources--limits--cpu"><a href="./values.yaml#L492">postfix.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--resources--limits--memory"><a href="./values.yaml#L491">postfix.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"2Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--resources--requests--cpu"><a href="./values.yaml#L489">postfix.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"500m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--resources--requests--memory"><a href="./values.yaml#L488">postfix.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"2Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--startupProbe--failureThreshold"><a href="./values.yaml#L495">postfix.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--startupProbe--periodSeconds"><a href="./values.yaml#L494">postfix.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postfix--startupProbe--timeoutSeconds"><a href="./values.yaml#L496">postfix.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--architecture"><a href="./values.yaml#L160">postgresql.architecture</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"standalone"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--database"><a href="./values.yaml#L177">postgresql.auth.database</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--enablePostgresUser"><a href="./values.yaml#L165">postgresql.auth.enablePostgresUser</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--existingSecret"><a href="./values.yaml#L179">postgresql.auth.existingSecret</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--password"><a href="./values.yaml#L174">postgresql.auth.password</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"changeme"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--postgresPassword"><a href="./values.yaml#L168">postgresql.auth.postgresPassword</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"changeme"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--secretKeys--adminPasswordKey"><a href="./values.yaml#L185">postgresql.auth.secretKeys.adminPasswordKey</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"postgres-password"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--secretKeys--replicationPasswordKey"><a href="./values.yaml#L187">postgresql.auth.secretKeys.replicationPasswordKey</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"replication-password"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--secretKeys--userPasswordKey"><a href="./values.yaml#L186">postgresql.auth.secretKeys.userPasswordKey</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"password"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--auth--username"><a href="./values.yaml#L171">postgresql.auth.username</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--enabled"><a href="./values.yaml#L158">postgresql.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postgresql--primary--persistence--enabled"><a href="./values.yaml#L191">postgresql.primary.persistence.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="postmaster"><a href="./values.yaml#L226">postmaster</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"postmaster"
+</pre>
+</div>
+			</td>
+			<td>local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)</td>
+		</tr>
+		<tr>
+			<td id="redis--image--repository"><a href="./values.yaml#L439">redis.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"redis"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--image--tag"><a href="./values.yaml#L440">redis.image.tag</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"5-alpine"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--livenessProbe--failureThreshold"><a href="./values.yaml#L461">redis.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--livenessProbe--periodSeconds"><a href="./values.yaml#L460">redis.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--livenessProbe--timeoutSeconds"><a href="./values.yaml#L462">redis.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--persistence--accessMode"><a href="./values.yaml#L444">redis.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--persistence--claimNameOverride"><a href="./values.yaml#L445">redis.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--persistence--size"><a href="./values.yaml#L442">redis.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--persistence--storageClass"><a href="./values.yaml#L443">redis.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--readinessProbe--failureThreshold"><a href="./values.yaml#L465">redis.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--readinessProbe--periodSeconds"><a href="./values.yaml#L464">redis.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--readinessProbe--timeoutSeconds"><a href="./values.yaml#L466">redis.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--resources--limits--cpu"><a href="./values.yaml#L454">redis.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--resources--limits--memory"><a href="./values.yaml#L453">redis.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"300Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--resources--requests--cpu"><a href="./values.yaml#L451">redis.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--resources--requests--memory"><a href="./values.yaml#L450">redis.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--startupProbe--failureThreshold"><a href="./values.yaml#L457">redis.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--startupProbe--periodSeconds"><a href="./values.yaml#L456">redis.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="redis--startupProbe--timeoutSeconds"><a href="./values.yaml#L458">redis.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--enabled"><a href="./values.yaml#L654">roundcube.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+true
+</pre>
+</div>
+			</td>
+			<td>Enable deployment of Roundcube webmail</td>
+		</tr>
+		<tr>
+			<td id="roundcube--image--repository"><a href="./values.yaml#L658">roundcube.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/roundcube"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--livenessProbe--failureThreshold"><a href="./values.yaml#L682">roundcube.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--livenessProbe--periodSeconds"><a href="./values.yaml#L681">roundcube.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--livenessProbe--timeoutSeconds"><a href="./values.yaml#L683">roundcube.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--logLevel"><a href="./values.yaml#L656">roundcube.logLevel</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>Set the log level for Roundcube</td>
+		</tr>
+		<tr>
+			<td id="roundcube--persistence--accessMode"><a href="./values.yaml#L664">roundcube.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--persistence--claimNameOverride"><a href="./values.yaml#L665">roundcube.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--persistence--size"><a href="./values.yaml#L662">roundcube.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--persistence--storageClass"><a href="./values.yaml#L663">roundcube.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--readinessProbe--failureThreshold"><a href="./values.yaml#L686">roundcube.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--readinessProbe--periodSeconds"><a href="./values.yaml#L685">roundcube.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--readinessProbe--timeoutSeconds"><a href="./values.yaml#L687">roundcube.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--resources--limits--cpu"><a href="./values.yaml#L675">roundcube.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--resources--limits--memory"><a href="./values.yaml#L674">roundcube.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--resources--requests--cpu"><a href="./values.yaml#L672">roundcube.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--resources--requests--memory"><a href="./values.yaml#L671">roundcube.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--startupProbe--failureThreshold"><a href="./values.yaml#L678">roundcube.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--startupProbe--periodSeconds"><a href="./values.yaml#L677">roundcube.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--startupProbe--timeoutSeconds"><a href="./values.yaml#L679">roundcube.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="roundcube--uri"><a href="./values.yaml#L668">roundcube.uri</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"/roundcube"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--image--repository"><a href="./values.yaml#L576">rspamd.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/rspamd"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--livenessProbe--failureThreshold"><a href="./values.yaml#L599">rspamd.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--livenessProbe--periodSeconds"><a href="./values.yaml#L598">rspamd.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--livenessProbe--timeoutSeconds"><a href="./values.yaml#L600">rspamd.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--persistence--accessMode"><a href="./values.yaml#L582">rspamd.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--persistence--claimNameOverride"><a href="./values.yaml#L583">rspamd.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--persistence--size"><a href="./values.yaml#L580">rspamd.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"1Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--persistence--storageClass"><a href="./values.yaml#L581">rspamd.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--readinessProbe--failureThreshold"><a href="./values.yaml#L603">rspamd.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--readinessProbe--periodSeconds"><a href="./values.yaml#L602">rspamd.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--readinessProbe--timeoutSeconds"><a href="./values.yaml#L604">rspamd.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--resources--limits--cpu"><a href="./values.yaml#L592">rspamd.resources.limits.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--resources--limits--memory"><a href="./values.yaml#L591">rspamd.resources.limits.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"200Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--resources--requests--cpu"><a href="./values.yaml#L589">rspamd.resources.requests.cpu</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100m"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--resources--requests--memory"><a href="./values.yaml#L588">rspamd.resources.requests.memory</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"100Mi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--startupProbe--failureThreshold"><a href="./values.yaml#L595">rspamd.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+90
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--startupProbe--periodSeconds"><a href="./values.yaml#L594">rspamd.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd--startupProbe--timeoutSeconds"><a href="./values.yaml#L596">rspamd.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd_clamav_persistence--accessMode"><a href="./values.yaml#L567">rspamd_clamav_persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd_clamav_persistence--claimNameOverride"><a href="./values.yaml#L568">rspamd_clamav_persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd_clamav_persistence--single_pvc"><a href="./values.yaml#L569">rspamd_clamav_persistence.single_pvc</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd_clamav_persistence--size"><a href="./values.yaml#L565">rspamd_clamav_persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="rspamd_clamav_persistence--storageClass"><a href="./values.yaml#L566">rspamd_clamav_persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="secretKey"><a href="./values.yaml#L19">secretKey</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td>The secret key is required for protecting authentication cookies and must be set individually for each deployment If empty, a random secret key will be generated and saved in a secret</td>
+		</tr>
+		<tr>
+			<td id="subnet"><a href="./values.yaml#L217">subnet</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"10.42.0.0/16"
+</pre>
+</div>
+			</td>
+			<td>Change this if you're using different address ranges for pods</td>
+		</tr>
+		<tr>
+			<td id="tolerations"><a href="./values.yaml#L50">tolerations</a></td>
+			<td>
+object
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+{}
+</pre>
+</div>
+			</td>
+			<td>Tolerations for pod assignment</td>
+		</tr>
+		<tr>
+			<td id="webdav--enabled"><a href="./values.yaml#L691">webdav.enabled</a></td>
+			<td>
+bool
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+false
+</pre>
+</div>
+			</td>
+			<td>Enable deployment of WebDAV server (using Radicale)</td>
+		</tr>
+		<tr>
+			<td id="webdav--image--repository"><a href="./values.yaml#L694">webdav.image.repository</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"mailu/radicale"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--livenessProbe--failureThreshold"><a href="./values.yaml#L710">webdav.livenessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+3
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--livenessProbe--periodSeconds"><a href="./values.yaml#L709">webdav.livenessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--livenessProbe--timeoutSeconds"><a href="./values.yaml#L711">webdav.livenessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--persistence--accessMode"><a href="./values.yaml#L700">webdav.persistence.accessMode</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"ReadWriteOnce"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--persistence--claimNameOverride"><a href="./values.yaml#L701">webdav.persistence.claimNameOverride</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--persistence--size"><a href="./values.yaml#L698">webdav.persistence.size</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+"20Gi"
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--persistence--storageClass"><a href="./values.yaml#L699">webdav.persistence.storageClass</a></td>
+			<td>
+string
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+""
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--readinessProbe--failureThreshold"><a href="./values.yaml#L714">webdav.readinessProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+1
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--readinessProbe--periodSeconds"><a href="./values.yaml#L713">webdav.readinessProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--readinessProbe--timeoutSeconds"><a href="./values.yaml#L715">webdav.readinessProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--startupProbe--failureThreshold"><a href="./values.yaml#L706">webdav.startupProbe.failureThreshold</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+30
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--startupProbe--periodSeconds"><a href="./values.yaml#L705">webdav.startupProbe.periodSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+10
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td id="webdav--startupProbe--timeoutSeconds"><a href="./values.yaml#L707">webdav.startupProbe.timeoutSeconds</a></td>
+			<td>
+int
+</td>
+			<td>
+				<div style="max-width: 300px;">
+<pre lang="json">
+5
+</pre>
+</div>
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
 
 ### Example values.yaml to get started
 
