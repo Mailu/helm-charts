@@ -110,37 +110,41 @@ Check that the deployed pods are all running.
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | admin.affinity | object | `{}` | Affinity for admin pod assignment |
-| admin.extraEnvVars | list | `[]` | Extra environment variable to pass to the running container. |
-| admin.extraEnvVarsCM | string | `""` | Name of existing ConfigMap containing extra env vars for Mailu admin pod(s) |
-| admin.extraEnvVarsSecret | string | `""` | Name of existing Secret containing extra env vars for Mailu admin pod(s) |
-| admin.image.pullPolicy | string | `"IfNotPresent"` |  |
-| admin.image.repository | string | `"mailu/admin"` |  |
-| admin.image.tag | string | `""` | tag defaults to mailuVersion |
-| admin.initContainers | list | `[]` | Add additional init containers to the Mailu Admin pod(s) |
+| admin.extraEnvVars | list | `[]` | Extra environment variable to pass to the running container |
+| admin.extraEnvVarsCM | string | `""` | Name of existing ConfigMap containing extra environment variables to mount in the pod |
+| admin.extraEnvVarsSecret | string | `""` | Name of existing Secret containing extra environment variables to mount in the pod |
+| admin.extraVolumeMounts | list | `[]` | Optionally specify extra list of additional volumeMounts for the pod |
+| admin.hostAliases | list | `[]` | Pod pod host aliases |
+| admin.image.pullPolicy | string | `"IfNotPresent"` | Pod image pull policy |
+| admin.image.repository | string | `"mailu/admin"` | Pod image repository |
+| admin.image.tag | string | Defaults to mailuVersion | Pod image tag |
+| admin.initContainers | list | `[]` | Add additional init containers to the pod |
 | admin.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | admin.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | admin.livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
 | admin.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
 | admin.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
 | admin.livenessProbe.timeoutSeconds | int | `1` | Timeout seconds for livenessProbe |
-| admin.nodeSelector | object | `{}` | Node labels for admin pod assignment |
-| admin.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| admin.persistence.claimNameOverride | string | `""` |  |
-| admin.persistence.size | string | `"20Gi"` |  |
-| admin.persistence.storageClass | string | `""` |  |
-| admin.podAnnotations | object | `{}` | Admin Pod annotations |
-| admin.podLabels | object | `{}` | Admin Pod labels |
-| admin.priorityClassName | string | `""` | Mailu admin pods' priorityClassName |
+| admin.logLevel | string | `""` | Override default log level |
+| admin.nodeSelector | object | `{}` | Node labels selector for pod assignment |
+| admin.persistence.accessModes | list | `["ReadWriteOnce"]` | Pod pvc access modes |
+| admin.persistence.annotations | object | `{}` | Pod pvc annotations |
+| admin.persistence.claimNameOverride | string | `""` | Pod pvc name override |
+| admin.persistence.size | string | `"20Gi"` | Pod pvc size |
+| admin.persistence.storageClass | string | `""` | Pod pvc storage class |
+| admin.podAnnotations | object | `{}` | Add extra annotations to the pod |
+| admin.podLabels | object | `{}` | Add extra labels to pod |
+| admin.priorityClassName | string | `""` | Pods' priorityClassName |
 | admin.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
 | admin.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
 | admin.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
 | admin.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
 | admin.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
 | admin.readinessProbe.timeoutSeconds | int | `1` | Timeout seconds for readinessProbe |
-| admin.resources.limits.cpu | string | `"500m"` |  |
-| admin.resources.limits.memory | string | `"500Mi"` |  |
-| admin.resources.requests.cpu | string | `"500m"` |  |
-| admin.resources.requests.memory | string | `"500Mi"` |  |
+| admin.resources.limits | object | No limits by default | Pod resources limits |
+| admin.resources.requests | object | `{"cpu":"500m","memory":"500Mi"}` | Pod requests |
+| admin.revisionHistoryLimit | int | `3` | Configure the revisionHistoryLimit of the deployment |
+| admin.schedulerName | string | `""` | Name of the k8s scheduler (other than default) |
 | admin.service.annotations | object | `{}` | Admin service annotations |
 | admin.startupProbe.enabled | bool | `false` | Enable startupProbe |
 | admin.startupProbe.failureThreshold | int | `3` | Failure threshold for startupProbe |
@@ -148,8 +152,10 @@ Check that the deployed pods are all running.
 | admin.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
 | admin.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
 | admin.startupProbe.timeoutSeconds | int | `1` | Timeout seconds for startupProbe |
-| admin.tolerations | list | `[]` | admin.tolerations Tolerations for admin pod assignment |
-| affinity | object | `{}` | Affinity for pod assignment |
+| admin.terminationGracePeriodSeconds | int | `2` | In seconds, time given to the pod to terminate gracefully |
+| admin.tolerations | list | `[]` | Tolerations for pod assignment |
+| admin.topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
+| admin.updateStrategy.type | string | `"RollingUpdate"` | Can be set to RollingUpdate or OnDelete |
 | certmanager.apiVersion | string | `"cert-manager.io/v1"` | Name of the secret to use for certificates |
 | certmanager.enabled | bool | `true` | Enable certmanager (create certificates for all domains) |
 | certmanager.issuerName | string | `"letsencrypt"` | Name of the issuer to use |
@@ -170,10 +176,13 @@ Check that the deployed pods are all running.
 | clamav.resources.limits.memory | string | `"2Gi"` |  |
 | clamav.resources.requests.cpu | string | `"1000m"` |  |
 | clamav.resources.requests.memory | string | `"1Gi"` |  |
+| clamav.service.annotations | object | `{}` |  |
 | clamav.startupProbe.failureThreshold | int | `60` |  |
 | clamav.startupProbe.periodSeconds | int | `10` |  |
 | clamav.startupProbe.timeoutSeconds | int | `5` |  |
 | clusterDomain | string | `"cluster.local"` |  |
+| commonAnnotations | object | `{}` | Add annotations to all the deployed resources |
+| commonLabels | object | `{}` | Add labels to all the deployed resources |
 | database.mysql | object | `{}` |  |
 | database.postgresql | object | `{}` |  |
 | database.roundcube.database | string | `"roundcube"` |  |
@@ -245,22 +254,28 @@ Check that the deployed pods are all running.
 | front.startupProbe.failureThreshold | int | `30` |  |
 | front.startupProbe.periodSeconds | int | `10` |  |
 | front.startupProbe.timeoutSeconds | int | `5` |  |
-| fullnameOverride | string | `""` |  |
+| fullnameOverride | string | `""` | String to fully override mailu.fullname template |
+| global.imagePullSecrets | list | `[]` | Global container image pull secret |
+| global.imageRegistry | string | `""` | Global container image registry |
+| global.storageClass | string | `""` | Global storageClass to use for persistent volumes |
 | hostnames | list | `[]` | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname |
-| ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"0"` |  |
-| ingress.externalIngress | bool | `true` |  |
-| ingress.ingressClassName | string | `""` |  |
-| ingress.realIpFrom | string | `"0.0.0.0/0"` |  |
-| ingress.realIpHeader | string | `"X-Forwarded-For"` |  |
-| ingress.tlsFlavor | string | `"cert"` |  |
+| ingress.annotations | object | `{"nginx.ingress.kubernetes.io/proxy-body-size":"0"}` | Annotations to add to the external ingress |
+| ingress.externalIngress | bool | `true` | Enable external ingress |
+| ingress.ingressClassName | string | `""` | Set the ingress class name for external ingress |
+| ingress.realIpFrom | string | `"0.0.0.0/0"` | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod |
+| ingress.realIpHeader | string | `"X-Forwarded-For"` | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod |
+| ingress.tlsFlavor | string | `"cert"` | Sets the value of `TLS_FLAVOR` environment variable in the `front` pod |
 | initialAccount | object | `{}` | An initial account can automatically be created: |
+| kubeVersion | string | `""` | Force target Kubernetes version (using Helm capabilities if not set) |
 | logLevel | string | `"WARNING"` | default log level. can be overridden globally or per service |
-| mail.authRatelimitExemtionLength | int | `86400` |  |
-| mail.authRatelimitIP | string | `"60/hour"` | Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html |
-| mail.authRatelimitIPv4Mask | int | `24` |  |
-| mail.authRatelimitIPv6Mask | int | `56` |  |
-| mail.authRatelimitUser | string | `"100/day"` |  |
-| mail.messageRatelimit | string | `"200/day"` | Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT |
+| mail.authRatelimit.exemption | string | `""` | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod |
+| mail.authRatelimit.exemptionLength | int | `86400` | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod |
+| mail.authRatelimit.ip | string | `"60/hour"` | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod |
+| mail.authRatelimit.ipv4Mask | int | `24` | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod |
+| mail.authRatelimit.ipv6Mask | int | `56` | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod |
+| mail.authRatelimit.user | string | `"100/day"` | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod |
+| mail.messageRatelimit.exemption | string | `""` | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod |
+| mail.messageRatelimit.value | string | `"200/day"` | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod |
 | mail.messageSizeLimitInMegabytes | int | `50` |  |
 | mailuVersion | string | `"1.9.26"` | Version/tag of mailu images - must be master or a version >= 1.9 |
 | mariadb.architecture | string | `"standalone"` |  |
@@ -292,8 +307,7 @@ Check that the deployed pods are all running.
 | mysql.startupProbe.failureThreshold | int | `30` |  |
 | mysql.startupProbe.periodSeconds | int | `10` |  |
 | mysql.startupProbe.timeoutSeconds | int | `5` |  |
-| nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
+| nameOverride | string | `""` | String to partially override mailu.fullname include (will maintain the release name) |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.single_pvc | bool | `true` | Setings for a single volume for all apps. Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence) |
 | persistence.size | string | `"100Gi"` |  |
@@ -394,7 +408,6 @@ Check that the deployed pods are all running.
 | rspamd_clamav_persistence.storageClass | string | `""` |  |
 | secretKey | string | `""` | The secret key is required for protecting authentication cookies and must be set individually for each deployment If empty, a random secret key will be generated and saved in a secret |
 | subnet | string | `"10.42.0.0/16"` | Change this if you're using different address ranges for pods |
-| tolerations | object | `{}` | Tolerations for pod assignment |
 | webdav.enabled | bool | `false` | Enable deployment of WebDAV server (using Radicale) |
 | webdav.image.repository | string | `"mailu/radicale"` |  |
 | webdav.livenessProbe.failureThreshold | int | `3` |  |

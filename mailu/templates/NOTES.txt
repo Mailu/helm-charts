@@ -1,13 +1,3 @@
-{{- if .Values.authRatelimit }}
-
-++++ mail.authRatelimit is not supported anymore. ++++
-++++ Please remove it from your values.yaml and   ++++
-++++ adjust the new mail.authRatelimit* params    ++++
-
-{{- fail "mail.authRatelimit is not supported anymore" }}
-
-{{- end }}
-
 After all services are running, your mail system is reachable under
 
         https://{{ .Values.hostnames|first }}

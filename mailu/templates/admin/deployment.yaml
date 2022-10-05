@@ -126,21 +126,21 @@ spec:
                   name: {{ template "mailu.secretName" . }}
                   key: secret-key
             - name: MESSAGE_RATELIMIT
-              value: "{{ required "mail.messageRatelimit" .Values.mail.messageRatelimit }}"
+              value: "{{ required "mail.messageRatelimit.value" .Values.mail.messageRatelimit.value }}"
             - name: MESSAGE_RATELIMIT_EXEMPTION
-              value: "{{ default "" .Values.mail.messageRatelimitExemption }}"
+              value: "{{ default "" .Values.mail.messageRatelimit.exemption }}"
             - name: AUTH_RATELIMIT_IP
-              value: "{{ required "mail.authRatelimitIP" .Values.mail.authRatelimitIP }}"
+              value: "{{ required "mail.authRatelimit.ip" .Values.mail.authRatelimit.ip }}"
             - name: AUTH_RATELIMIT_IP_V4_MASK
-              value: "{{ required "mail.authRatelimitIPv4Mask" .Values.mail.authRatelimitIPv4Mask }}"
+              value: "{{ required "mail.authRatelimit.ipv4Mask" .Values.mail.authRatelimit.ipv4Mask }}"
             - name: AUTH_RATELIMIT_IP_V6_MASK
-              value: "{{ required "mail.authRatelimitIPv6Mask" .Values.mail.authRatelimitIPv6Mask }}"
+              value: "{{ required "mail.authRatelimit.ipv6Mask" .Values.mail.authRatelimit.ipv6Mask }}"
             - name: AUTH_RATELIMIT_USER
-              value: "{{ required "mail.authRatelimitUser" .Values.mail.authRatelimitUser }}"
+              value: "{{ required "mail.authRatelimit.user" .Values.mail.authRatelimit.user }}"
             - name: AUTH_RATELIMIT_EXEMPTION_LENGTH
-              value: "{{ required "mail.authRatelimitExemtionLength" .Values.mail.authRatelimitExemtionLength }}"
+              value: "{{ required "mail.authRatelimit.exemptionLength" .Values.mail.authRatelimit.exemptionLength }}"
             - name: AUTH_RATELIMIT_EXEMPTION
-              value: "{{ default "" .Values.mail.authRatelimitExemtion }}"
+              value: "{{ default "" .Values.mail.authRatelimit.exemption }}"
             {{- if .Values.initialAccount }}
             - name: INITIAL_ADMIN_ACCOUNT
               value: {{ required "'initialAccount.username' needs to be set if 'initialAccount' is used." .Values.initialAccount.username }}
@@ -258,6 +258,6 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{- include "mailu.admin.claimName" . }}
+            claimName: {{ include "mailu.admin.claimName" . }}
 
 

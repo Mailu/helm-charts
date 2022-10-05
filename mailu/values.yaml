@@ -1,5 +1,25 @@
 # Default values for mailu.
 
+# Global common parameters (see Bitnamis common chart)
+global:
+  # -- Global container image registry
+  imageRegistry: ""
+  # -- Global container image pull secret
+  imagePullSecrets: []
+  # -- Global storageClass to use for persistent volumes
+  storageClass: ""
+
+# -- Force target Kubernetes version (using Helm capabilities if not set)
+kubeVersion: ""
+# -- String to partially override mailu.fullname include (will maintain the release name)
+nameOverride: ""
+# -- String to fully override mailu.fullname template
+fullnameOverride: ""
+# -- Add labels to all the deployed resources
+commonLabels: {}
+# --Add annotations to all the deployed resources
+commonAnnotations: {}
+
 # e.g.:
 # hostnames:
 #   - mail.example.com
@@ -39,19 +59,17 @@ existingSecret: ""
 # -- An initial account can automatically be created:
 initialAccount: {}
 
-nameOverride: ""
-fullnameOverride: ""
 clusterDomain: cluster.local
 
-nodeSelector: {}
+# nodeSelector: {}
 
-# Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-# -- Tolerations for pod assignment
-tolerations: {}
+# # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# # -- Tolerations for pod assignment
+# tolerations: []
 
-# Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-# -- Affinity for pod assignment
-affinity: {}
+# # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+# # -- Affinity for pod assignment
+# affinity: {}
 
 database:
   # type of the database for mailu (sqlite/mysql/postgresql)
@@ -228,17 +246,27 @@ postmaster: postmaster
 mail:
   messageSizeLimitInMegabytes: 50
 
-  # -- Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
-  authRatelimitIP: 60/hour
-  authRatelimitIPv4Mask: 24
-  authRatelimitIPv6Mask: 56
-  authRatelimitUser: 100/day
-  authRatelimitExemtionLength: 86400
-  # authRatelimitExemtion:
+  # Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
+  authRatelimit:
+    # -- Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
+    ip: 60/hour
+    # -- Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
+    ipv4Mask: 24
+    # -- Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
+    ipv6Mask: 56
+    # -- Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
+    user: 100/day
+    # -- Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
+    exemptionLength: 86400
+    # -- Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+    exemption: ""
 
-  # -- Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
-  messageRatelimit: 200/day
-  # messageRatelimitExemption:
+  # Configuration to reduce outgoing spam in case of a compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
+  messageRatelimit:
+    # -- Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
+    value: 200/day
+    # -- Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+    exemption: ""
 
 # Certmanager settings
 certmanager:
@@ -253,13 +281,19 @@ certmanager:
 
 # Set ingress and loadbalancer config
 ingress:
+  # -- Enable external ingress
   externalIngress: true
-  tlsFlavor: cert
+  # -- Set the ingress class name for external ingress
   ingressClassName: ""
+  # -- Annotations to add to the external ingress
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
+  # -- Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
   realIpHeader: X-Forwarded-For
+  # -- Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
   realIpFrom: 0.0.0.0/0
+  # -- Sets the value of `TLS_FLAVOR` environment variable in the `front` pod
+  tlsFlavor: cert
 
 # Frontend load balancer for non-HTTP(s) services
 front:
@@ -319,40 +353,43 @@ front:
     annotations: {}
 
 admin:
-  # logLevel: WARNING
-  image:
-    repository: mailu/admin
-    # -- tag defaults to mailuVersion
-    tag: ""
-    pullPolicy: IfNotPresent
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
+  # -- Override default log level
+  logLevel: ""
 
+  # Pod image
+  image:
+    # -- Pod image repository
+    repository: mailu/admin
+    # -- Pod image tag
+    # @default -- Defaults to mailuVersion
+    tag: ""
+    # -- Pod image pull policy
+    pullPolicy: IfNotPresent
+
+  # Pod persistence (if not using single_pvc)
+  persistence:
+    # -- Pod pvc size
+    size: 20Gi
+    # -- Pod pvc storage class
+    storageClass: ""
+    # -- Pod pvc access modes
+    accessModes:
+      - ReadWriteOnce
+    # -- Pod pvc name override
+    claimNameOverride: ""
+    # -- Pod pvc annotations
+    annotations: {}
+
+  # Pod resources
   resources:
+    # -- Pod requests
     requests:
       memory: 500Mi
       cpu: 500m
-    limits:
-      memory: 500Mi
-      cpu: 500m
+    # -- Pod resources limits
+    # @default -- No limits by default
+    limits: {}
 
-  # For example:
-  # extraEnvVars:
-  #  - name: MY_ENV_VAR
-  #    value: env_var_value
-  # -- Extra environment variable to pass to the running container.
-  extraEnvVars: []
-
-  # -- Name of existing ConfigMap containing extra env vars for Mailu admin pod(s)
-  extraEnvVarsCM: ""
-
-  # -- Name of existing Secret containing extra env vars for Mailu admin pod(s)
-  extraEnvVarsSecret: ""
   # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
   # Liveness probe values
   livenessProbe:
@@ -402,15 +439,15 @@ admin:
     timeoutSeconds: 1
 
   # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  # -- Admin Pod labels
+  # -- Add extra labels to pod
   podLabels: {}
 
   # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  # -- Admin Pod annotations
+  # -- Add extra annotations to the pod
   podAnnotations: {}
 
   # ref: https://kubernetes.io/docs/user-guide/node-selection/
-  # -- Node labels for admin pod assignment
+  # -- Node labels selector for pod assignment
   nodeSelector: {}
 
   # ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
@@ -420,24 +457,66 @@ admin:
   #    image: your-image
   #    imagePullPolicy: Always
   #    command: ['sh', '-c', 'echo "hello world"']
-  # -- Add additional init containers to the Mailu Admin pod(s)
+  # -- Add additional init containers to the pod
   initContainers: []
 
-  # -- Mailu admin pods' priorityClassName
+  # -- Pods' priorityClassName
   priorityClassName: ""
+
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  # -- In seconds, time given to the pod to terminate gracefully
+  terminationGracePeriodSeconds: 2
 
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   # -- Affinity for admin pod assignment
   affinity: {}
 
   # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  # -- admin.tolerations Tolerations for admin pod assignment
+  # -- Tolerations for pod assignment
   tolerations: []
+
+  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  # -- Configure the revisionHistoryLimit of the deployment
+  revisionHistoryLimit: 3
+
+  # ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  # -- Pod pod host aliases
+  hostAliases: []
+
+  # ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  # -- Name of the k8s scheduler (other than default)
+  schedulerName: ""
 
   # Service parameters
   service:
     # -- Admin service annotations
     annotations: {}
+
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  # -- Topology Spread Constraints for pod assignment
+  topologySpreadConstraints: []
+
+  # Strategy to use to update Pods
+  updateStrategy:
+    # -- Can be set to RollingUpdate or OnDelete
+    type: RollingUpdate
+
+  # For example:
+  # extraEnvVars:
+  #  - name: MY_ENV_VAR
+  #    value: env_var_value
+  # -- Extra environment variable to pass to the running container
+  extraEnvVars: []
+
+  # -- Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  # -- Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  # -- Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
 redis:
   image:
     repository: redis
@@ -628,6 +707,8 @@ clamav:
     limits:
       memory: 2Gi
       cpu: 1000m
+  service:
+    annotations: {}
   startupProbe: # give it 10 minutes for initial freshclam update
     periodSeconds: 10
     failureThreshold: 60
