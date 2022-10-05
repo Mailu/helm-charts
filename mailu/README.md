@@ -105,328 +105,222 @@ helm uninstall mailu --namespace=mailu-mailserver
 
 Check that the deployed pods are all running.
 
-## Values
+## Parameters
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| admin.affinity | object | `{}` | Affinity for admin pod assignment |
-| admin.extraEnvVars | list | `[]` | Extra environment variable to pass to the running container |
-| admin.extraEnvVarsCM | string | `""` | Name of existing ConfigMap containing extra environment variables to mount in the pod |
-| admin.extraEnvVarsSecret | string | `""` | Name of existing Secret containing extra environment variables to mount in the pod |
-| admin.extraVolumeMounts | list | `[]` | Optionally specify extra list of additional volumeMounts for the pod |
-| admin.hostAliases | list | `[]` | Pod pod host aliases |
-| admin.image.pullPolicy | string | `"IfNotPresent"` | Pod image pull policy |
-| admin.image.repository | string | `"mailu/admin"` | Pod image repository |
-| admin.image.tag | string | Defaults to mailuVersion | Pod image tag |
-| admin.initContainers | list | `[]` | Add additional init containers to the pod |
-| admin.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
-| admin.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
-| admin.livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
-| admin.livenessProbe.periodSeconds | int | `10` | Period seconds for livenessProbe |
-| admin.livenessProbe.successThreshold | int | `1` | Success threshold for livenessProbe |
-| admin.livenessProbe.timeoutSeconds | int | `1` | Timeout seconds for livenessProbe |
-| admin.logLevel | string | `""` | Override default log level |
-| admin.nodeSelector | object | `{}` | Node labels selector for pod assignment |
-| admin.persistence.accessModes | list | `["ReadWriteOnce"]` | Pod pvc access modes |
-| admin.persistence.annotations | object | `{}` | Pod pvc annotations |
-| admin.persistence.claimNameOverride | string | `""` | Pod pvc name override |
-| admin.persistence.size | string | `"20Gi"` | Pod pvc size |
-| admin.persistence.storageClass | string | `""` | Pod pvc storage class |
-| admin.podAnnotations | object | `{}` | Add extra annotations to the pod |
-| admin.podLabels | object | `{}` | Add extra labels to pod |
-| admin.priorityClassName | string | `""` | Pods' priorityClassName |
-| admin.readinessProbe.enabled | bool | `true` | Enable readinessProbe |
-| admin.readinessProbe.failureThreshold | int | `3` | Failure threshold for readinessProbe |
-| admin.readinessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for readinessProbe |
-| admin.readinessProbe.periodSeconds | int | `10` | Period seconds for readinessProbe |
-| admin.readinessProbe.successThreshold | int | `1` | Success threshold for readinessProbe |
-| admin.readinessProbe.timeoutSeconds | int | `1` | Timeout seconds for readinessProbe |
-| admin.resources.limits | object | No limits by default | Pod resources limits |
-| admin.resources.requests | object | `{"cpu":"500m","memory":"500Mi"}` | Pod requests |
-| admin.revisionHistoryLimit | int | `3` | Configure the revisionHistoryLimit of the deployment |
-| admin.schedulerName | string | `""` | Name of the k8s scheduler (other than default) |
-| admin.service.annotations | object | `{}` | Admin service annotations |
-| admin.startupProbe.enabled | bool | `false` | Enable startupProbe |
-| admin.startupProbe.failureThreshold | int | `3` | Failure threshold for startupProbe |
-| admin.startupProbe.initialDelaySeconds | int | `10` | Initial delay seconds for startupProbe |
-| admin.startupProbe.periodSeconds | int | `10` | Period seconds for startupProbe |
-| admin.startupProbe.successThreshold | int | `1` | Success threshold for startupProbe |
-| admin.startupProbe.timeoutSeconds | int | `1` | Timeout seconds for startupProbe |
-| admin.terminationGracePeriodSeconds | int | `2` | In seconds, time given to the pod to terminate gracefully |
-| admin.tolerations | list | `[]` | Tolerations for pod assignment |
-| admin.topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
-| admin.updateStrategy.type | string | `"RollingUpdate"` | Can be set to RollingUpdate or OnDelete |
-| certmanager.apiVersion | string | `"cert-manager.io/v1"` | Name of the secret to use for certificates |
-| certmanager.enabled | bool | `true` | Enable certmanager (create certificates for all domains) |
-| certmanager.issuerName | string | `"letsencrypt"` | Name of the issuer to use |
-| certmanager.issuerType | string | `"ClusterIssuer"` | Issuer to use for certificates |
-| clamav.enabled | bool | `true` |  |
-| clamav.image.repository | string | `"mailu/clamav"` |  |
-| clamav.livenessProbe.failureThreshold | int | `3` |  |
-| clamav.livenessProbe.periodSeconds | int | `10` |  |
-| clamav.livenessProbe.timeoutSeconds | int | `5` |  |
-| clamav.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| clamav.persistence.claimNameOverride | string | `""` |  |
-| clamav.persistence.size | string | `"2Gi"` |  |
-| clamav.persistence.storageClass | string | `""` |  |
-| clamav.readinessProbe.failureThreshold | int | `1` |  |
-| clamav.readinessProbe.periodSeconds | int | `10` |  |
-| clamav.readinessProbe.timeoutSeconds | int | `5` |  |
-| clamav.resources.limits.cpu | string | `"1000m"` |  |
-| clamav.resources.limits.memory | string | `"2Gi"` |  |
-| clamav.resources.requests.cpu | string | `"1000m"` |  |
-| clamav.resources.requests.memory | string | `"1Gi"` |  |
-| clamav.service.annotations | object | `{}` |  |
-| clamav.startupProbe.failureThreshold | int | `60` |  |
-| clamav.startupProbe.periodSeconds | int | `10` |  |
-| clamav.startupProbe.timeoutSeconds | int | `5` |  |
-| clusterDomain | string | `"cluster.local"` |  |
-| commonAnnotations | object | `{}` | Add annotations to all the deployed resources |
-| commonLabels | object | `{}` | Add labels to all the deployed resources |
-| database.mysql | object | `{}` |  |
-| database.postgresql | object | `{}` |  |
-| database.roundcube.database | string | `"roundcube"` |  |
-| database.roundcube.password | string | `"changeme"` |  |
-| database.roundcube.type | string | `"sqlite"` |  |
-| database.roundcube.username | string | `"roundcube"` |  |
-| database.type | string | `"sqlite"` |  |
-| domain | string | `""` | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames |
-| dovecot.containerSecurityContext | object | `{}` |  |
-| dovecot.enabled | bool | `true` |  |
-| dovecot.image.repository | string | `"mailu/dovecot"` |  |
-| dovecot.livenessProbe.failureThreshold | int | `3` |  |
-| dovecot.livenessProbe.periodSeconds | int | `10` |  |
-| dovecot.livenessProbe.timeoutSeconds | int | `5` |  |
-| dovecot.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| dovecot.persistence.claimNameOverride | string | `""` |  |
-| dovecot.persistence.size | string | `"20Gi"` |  |
-| dovecot.persistence.storageClass | string | `""` |  |
-| dovecot.readinessProbe.failureThreshold | int | `1` |  |
-| dovecot.readinessProbe.periodSeconds | int | `10` |  |
-| dovecot.readinessProbe.timeoutSeconds | int | `5` |  |
-| dovecot.resources.limits.cpu | string | `"500m"` |  |
-| dovecot.resources.limits.memory | string | `"500Mi"` |  |
-| dovecot.resources.requests.cpu | string | `"500m"` |  |
-| dovecot.resources.requests.memory | string | `"500Mi"` |  |
-| dovecot.startupProbe.failureThreshold | int | `30` |  |
-| dovecot.startupProbe.periodSeconds | int | `10` |  |
-| dovecot.startupProbe.timeoutSeconds | int | `5` |  |
-| existingSecret | string | `""` | existingSecret Name of the existing secret to retrieve the secretKey. The secret has to contain the secretKey value under the `secret-key` key. |
-| external_relay | object | `{}` |  |
-| fetchmail.delay | int | `600` |  |
-| fetchmail.enabled | bool | `false` | Enable deployment of fetchmail |
-| fetchmail.image.repository | string | `"mailu/fetchmail"` |  |
-| fetchmail.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| fetchmail.persistence.claimNameOverride | string | `""` |  |
-| fetchmail.persistence.size | string | `"20Gi"` |  |
-| fetchmail.persistence.storageClass | string | `""` |  |
-| fetchmail.resources.limits.cpu | string | `"200m"` |  |
-| fetchmail.resources.limits.memory | string | `"200Mi"` |  |
-| fetchmail.resources.requests.cpu | string | `"100m"` |  |
-| fetchmail.resources.requests.memory | string | `"100Mi"` |  |
-| front.controller.kind | string | `"Deployment"` | Deployment or DaemonSet |
-| front.externalService.annotations | object | `{}` |  |
-| front.externalService.enabled | bool | `false` |  |
-| front.externalService.externalTrafficPolicy | string | `"Local"` |  |
-| front.externalService.imap | bool | `false` |  |
-| front.externalService.imaps | bool | `true` |  |
-| front.externalService.pop3 | bool | `false` |  |
-| front.externalService.pop3s | bool | `true` |  |
-| front.externalService.smtp | bool | `true` |  |
-| front.externalService.smtps | bool | `true` |  |
-| front.externalService.submission | bool | `true` |  |
-| front.externalService.type | string | `"ClusterIP"` |  |
-| front.hostPort | object | `{"enabled":true}` | Expose front mail ports via hostPort |
-| front.image.repository | string | `"mailu/nginx"` |  |
-| front.image.tag | string | defaults to mailuVersion | Fron pod image tag |
-| front.livenessProbe.failureThreshold | int | `3` |  |
-| front.livenessProbe.periodSeconds | int | `10` |  |
-| front.livenessProbe.timeoutSeconds | int | `5` |  |
-| front.nodeSelector | object | `{}` |  |
-| front.readinessProbe.failureThreshold | int | `1` |  |
-| front.readinessProbe.periodSeconds | int | `10` |  |
-| front.readinessProbe.timeoutSeconds | int | `5` |  |
-| front.resources.limits.cpu | string | `"200m"` |  |
-| front.resources.limits.memory | string | `"200Mi"` |  |
-| front.resources.requests.cpu | string | `"100m"` |  |
-| front.resources.requests.memory | string | `"100Mi"` |  |
-| front.service.annotations | object | `{}` |  |
-| front.startupProbe.failureThreshold | int | `30` |  |
-| front.startupProbe.periodSeconds | int | `10` |  |
-| front.startupProbe.timeoutSeconds | int | `5` |  |
-| fullnameOverride | string | `""` | String to fully override mailu.fullname template |
-| global.imagePullSecrets | list | `[]` | Global container image pull secret |
-| global.imageRegistry | string | `""` | Global container image registry |
-| global.storageClass | string | `""` | Global storageClass to use for persistent volumes |
-| hostnames | list | `[]` | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname |
-| ingress.annotations | object | `{"nginx.ingress.kubernetes.io/proxy-body-size":"0"}` | Annotations to add to the external ingress |
-| ingress.externalIngress | bool | `true` | Enable external ingress |
-| ingress.ingressClassName | string | `""` | Set the ingress class name for external ingress |
-| ingress.realIpFrom | string | `"0.0.0.0/0"` | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod |
-| ingress.realIpHeader | string | `"X-Forwarded-For"` | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod |
-| ingress.tlsFlavor | string | `"cert"` | Sets the value of `TLS_FLAVOR` environment variable in the `front` pod |
-| initialAccount | object | `{}` | An initial account can automatically be created: |
-| kubeVersion | string | `""` | Force target Kubernetes version (using Helm capabilities if not set) |
-| logLevel | string | `"WARNING"` | default log level. can be overridden globally or per service |
-| mail.authRatelimit.exemption | string | `""` | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod |
-| mail.authRatelimit.exemptionLength | int | `86400` | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod |
-| mail.authRatelimit.ip | string | `"60/hour"` | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod |
-| mail.authRatelimit.ipv4Mask | int | `24` | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod |
-| mail.authRatelimit.ipv6Mask | int | `56` | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod |
-| mail.authRatelimit.user | string | `"100/day"` | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod |
-| mail.messageRatelimit.exemption | string | `""` | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod |
-| mail.messageRatelimit.value | string | `"200/day"` | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod |
-| mail.messageSizeLimitInMegabytes | int | `50` |  |
-| mailuVersion | string | `"1.9.26"` | Version/tag of mailu images - must be master or a version >= 1.9 |
-| mariadb.architecture | string | `"standalone"` |  |
-| mariadb.auth.database | string | `"mailu"` |  |
-| mariadb.auth.existingSecret | string | `""` |  |
-| mariadb.auth.password | string | `"changeme"` |  |
-| mariadb.auth.rootPassword | string | `"changeme"` |  |
-| mariadb.auth.username | string | `"mailu"` |  |
-| mariadb.enabled | bool | `false` |  |
-| mariadb.primary.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| mariadb.primary.persistence.enabled | bool | `false` |  |
-| mariadb.primary.persistence.size | string | `"8Gi"` |  |
-| mysql.image.repository | string | `"library/mariadb"` |  |
-| mysql.image.tag | string | `"10.4.10"` |  |
-| mysql.livenessProbe.failureThreshold | int | `3` |  |
-| mysql.livenessProbe.periodSeconds | int | `10` |  |
-| mysql.livenessProbe.timeoutSeconds | int | `5` |  |
-| mysql.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| mysql.persistence.claimNameOverride | string | `""` |  |
-| mysql.persistence.size | string | `"20Gi"` |  |
-| mysql.persistence.storageClass | string | `""` |  |
-| mysql.readinessProbe.failureThreshold | int | `1` |  |
-| mysql.readinessProbe.periodSeconds | int | `10` |  |
-| mysql.readinessProbe.timeoutSeconds | int | `5` |  |
-| mysql.resources.limits.cpu | string | `"200m"` |  |
-| mysql.resources.limits.memory | string | `"512Mi"` |  |
-| mysql.resources.requests.cpu | string | `"100m"` |  |
-| mysql.resources.requests.memory | string | `"256Mi"` |  |
-| mysql.startupProbe.failureThreshold | int | `30` |  |
-| mysql.startupProbe.periodSeconds | int | `10` |  |
-| mysql.startupProbe.timeoutSeconds | int | `5` |  |
-| nameOverride | string | `""` | String to partially override mailu.fullname include (will maintain the release name) |
-| persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| persistence.single_pvc | bool | `true` | Setings for a single volume for all apps. Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence) |
-| persistence.size | string | `"100Gi"` |  |
-| postfix.containerSecurityContext | object | `{}` |  |
-| postfix.image.repository | string | `"mailu/postfix"` |  |
-| postfix.livenessProbe.failureThreshold | int | `3` |  |
-| postfix.livenessProbe.periodSeconds | int | `10` |  |
-| postfix.livenessProbe.timeoutSeconds | int | `5` |  |
-| postfix.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| postfix.persistence.claimNameOverride | string | `""` |  |
-| postfix.persistence.size | string | `"20Gi"` |  |
-| postfix.persistence.storageClass | string | `""` |  |
-| postfix.readinessProbe.failureThreshold | int | `1` |  |
-| postfix.readinessProbe.periodSeconds | int | `10` |  |
-| postfix.readinessProbe.timeoutSeconds | int | `5` |  |
-| postfix.resources.limits.cpu | string | `"500m"` |  |
-| postfix.resources.limits.memory | string | `"2Gi"` |  |
-| postfix.resources.requests.cpu | string | `"500m"` |  |
-| postfix.resources.requests.memory | string | `"2Gi"` |  |
-| postfix.startupProbe.failureThreshold | int | `30` |  |
-| postfix.startupProbe.periodSeconds | int | `10` |  |
-| postfix.startupProbe.timeoutSeconds | int | `5` |  |
-| postgresql.architecture | string | `"standalone"` |  |
-| postgresql.auth.database | string | `"mailu"` |  |
-| postgresql.auth.enablePostgresUser | bool | `true` |  |
-| postgresql.auth.existingSecret | string | `""` |  |
-| postgresql.auth.password | string | `"changeme"` |  |
-| postgresql.auth.postgresPassword | string | `"changeme"` |  |
-| postgresql.auth.secretKeys.adminPasswordKey | string | `"postgres-password"` |  |
-| postgresql.auth.secretKeys.replicationPasswordKey | string | `"replication-password"` |  |
-| postgresql.auth.secretKeys.userPasswordKey | string | `"password"` |  |
-| postgresql.auth.username | string | `"mailu"` |  |
-| postgresql.enabled | bool | `false` |  |
-| postgresql.primary.persistence.enabled | bool | `false` |  |
-| postmaster | string | `"postmaster"` | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part) |
-| redis.image.repository | string | `"redis"` |  |
-| redis.image.tag | string | `"5-alpine"` |  |
-| redis.livenessProbe.failureThreshold | int | `3` |  |
-| redis.livenessProbe.periodSeconds | int | `10` |  |
-| redis.livenessProbe.timeoutSeconds | int | `5` |  |
-| redis.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| redis.persistence.claimNameOverride | string | `""` |  |
-| redis.persistence.size | string | `"20Gi"` |  |
-| redis.persistence.storageClass | string | `""` |  |
-| redis.readinessProbe.failureThreshold | int | `1` |  |
-| redis.readinessProbe.periodSeconds | int | `10` |  |
-| redis.readinessProbe.timeoutSeconds | int | `5` |  |
-| redis.resources.limits.cpu | string | `"200m"` |  |
-| redis.resources.limits.memory | string | `"300Mi"` |  |
-| redis.resources.requests.cpu | string | `"100m"` |  |
-| redis.resources.requests.memory | string | `"200Mi"` |  |
-| redis.startupProbe.failureThreshold | int | `30` |  |
-| redis.startupProbe.periodSeconds | int | `10` |  |
-| redis.startupProbe.timeoutSeconds | int | `5` |  |
-| roundcube.enabled | bool | `true` | Enable deployment of Roundcube webmail |
-| roundcube.image.repository | string | `"mailu/roundcube"` |  |
-| roundcube.livenessProbe.failureThreshold | int | `3` |  |
-| roundcube.livenessProbe.periodSeconds | int | `10` |  |
-| roundcube.livenessProbe.timeoutSeconds | int | `5` |  |
-| roundcube.logLevel | string | `""` | Set the log level for Roundcube |
-| roundcube.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| roundcube.persistence.claimNameOverride | string | `""` |  |
-| roundcube.persistence.size | string | `"20Gi"` |  |
-| roundcube.persistence.storageClass | string | `""` |  |
-| roundcube.readinessProbe.failureThreshold | int | `1` |  |
-| roundcube.readinessProbe.periodSeconds | int | `10` |  |
-| roundcube.readinessProbe.timeoutSeconds | int | `5` |  |
-| roundcube.resources.limits.cpu | string | `"200m"` |  |
-| roundcube.resources.limits.memory | string | `"200Mi"` |  |
-| roundcube.resources.requests.cpu | string | `"100m"` |  |
-| roundcube.resources.requests.memory | string | `"100Mi"` |  |
-| roundcube.startupProbe.failureThreshold | int | `30` |  |
-| roundcube.startupProbe.periodSeconds | int | `10` |  |
-| roundcube.startupProbe.timeoutSeconds | int | `5` |  |
-| roundcube.uri | string | `"/roundcube"` |  |
-| rspamd.image.repository | string | `"mailu/rspamd"` |  |
-| rspamd.livenessProbe.failureThreshold | int | `3` |  |
-| rspamd.livenessProbe.periodSeconds | int | `10` |  |
-| rspamd.livenessProbe.timeoutSeconds | int | `5` |  |
-| rspamd.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| rspamd.persistence.claimNameOverride | string | `""` |  |
-| rspamd.persistence.size | string | `"1Gi"` |  |
-| rspamd.persistence.storageClass | string | `""` |  |
-| rspamd.readinessProbe.failureThreshold | int | `1` |  |
-| rspamd.readinessProbe.periodSeconds | int | `10` |  |
-| rspamd.readinessProbe.timeoutSeconds | int | `5` |  |
-| rspamd.resources.limits.cpu | string | `"200m"` |  |
-| rspamd.resources.limits.memory | string | `"200Mi"` |  |
-| rspamd.resources.requests.cpu | string | `"100m"` |  |
-| rspamd.resources.requests.memory | string | `"100Mi"` |  |
-| rspamd.startupProbe.failureThreshold | int | `90` |  |
-| rspamd.startupProbe.periodSeconds | int | `10` |  |
-| rspamd.startupProbe.timeoutSeconds | int | `5` |  |
-| rspamd_clamav_persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| rspamd_clamav_persistence.claimNameOverride | string | `""` |  |
-| rspamd_clamav_persistence.single_pvc | bool | `false` |  |
-| rspamd_clamav_persistence.size | string | `"20Gi"` |  |
-| rspamd_clamav_persistence.storageClass | string | `""` |  |
-| secretKey | string | `""` | The secret key is required for protecting authentication cookies and must be set individually for each deployment If empty, a random secret key will be generated and saved in a secret |
-| subnet | string | `"10.42.0.0/16"` | Change this if you're using different address ranges for pods |
-| webdav.enabled | bool | `false` | Enable deployment of WebDAV server (using Radicale) |
-| webdav.image.repository | string | `"mailu/radicale"` |  |
-| webdav.livenessProbe.failureThreshold | int | `3` |  |
-| webdav.livenessProbe.periodSeconds | int | `10` |  |
-| webdav.livenessProbe.timeoutSeconds | int | `5` |  |
-| webdav.persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| webdav.persistence.claimNameOverride | string | `""` |  |
-| webdav.persistence.size | string | `"20Gi"` |  |
-| webdav.persistence.storageClass | string | `""` |  |
-| webdav.readinessProbe.failureThreshold | int | `1` |  |
-| webdav.readinessProbe.periodSeconds | int | `10` |  |
-| webdav.readinessProbe.timeoutSeconds | int | `5` |  |
-| webdav.startupProbe.failureThreshold | int | `30` |  |
-| webdav.startupProbe.periodSeconds | int | `10` |  |
-| webdav.startupProbe.timeoutSeconds | int | `5` |  |
+### Global parameters
 
-### Example values.yaml to get started
+| Name                      | Description                                       | Value |
+| ------------------------- | ------------------------------------------------- | ----- |
+| `global.imageRegistry`    | Global container image registry                   | `""`  |
+| `global.imagePullSecrets` | Global container image pull secret                | `[]`  |
+| `global.storageClass`     | Global storageClass to use for persistent volumes | `""`  |
 
-```yaml
+### Common parameters
+
+| Name                | Description                                                                          | Value |
+| ------------------- | ------------------------------------------------------------------------------------ | ----- |
+| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                 | `""`  |
+| `nameOverride`      | String to partially override mailu.fullname include (will maintain the release name) | `""`  |
+| `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`  |
+| `commonLabels`      | Add labels to all the deployed resources                                             | `{}`  |
+| `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`  |
+
+### Mailu parameters
+
+| Name                                 | Description                                                                                                                       | Value           |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `hostnames`                          | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname                     | `[]`            |
+| `domain`                             | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames | `""`            |
+| `secretKey`                          | The secret key is required for protecting authentication cookies and must be set individually for each deployment                 | `""`            |
+| `existingSecret`                     | Name of the existing secret to retrieve the secretKey.                                                                            | `""`            |
+| `initialAccount`                     | An initial account can automatically be created:                                                                                  | `{}`            |
+| `subnet`                             | Change this if you're using different address ranges for pods                                                                     | `10.42.0.0/16`  |
+| `mailuVersion`                       | Version/tag of mailu images - must be master or a version >= 1.9                                                                  | `1.9.26`        |
+| `logLevel`                           | default log level. can be overridden globally or per service                                                                      | `WARNING`       |
+| `postmaster`                         | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                               | `postmaster`    |
+| `mail.messageSizeLimitInMegabytes`   | Maximum size of an email in megabytes                                                                                             | `50`            |
+| `mail.authRatelimit.ip`              | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                              | `60/hour`       |
+| `mail.authRatelimit.ipv4Mask`        | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                      | `24`            |
+| `mail.authRatelimit.ipv6Mask`        | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                      | `56`            |
+| `mail.authRatelimit.user`            | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                            | `100/day`       |
+| `mail.authRatelimit.exemptionLength` | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                | `86400`         |
+| `mail.authRatelimit.exemption`       | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                       | `""`            |
+| `mail.messageRatelimit.value`        | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                              | `200/day`       |
+| `mail.messageRatelimit.exemption`    | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                    | `""`            |
+| `external_relay`                     | Mailu external relay configuration                                                                                                | `{}`            |
+| `clusterDomain`                      | Kubernetes cluster domain name                                                                                                    | `cluster.local` |
+| `tolerations`                        | Tolerations for pod assignment                                                                                                    | `[]`            |
+| `affinity`                           | Affinity for pod assignment                                                                                                       | `{}`            |
+
+### Storage parameters
+
+| Name                                                | Description                                                                                                                                                                                               | Value                  |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `database.type`                                     | type of the database for mailu (sqlite/mysql/postgresql)                                                                                                                                                  | `sqlite`               |
+| `database.roundcube.type`                           | type of the database for roundcube (sqlite/mysql/postgresql)                                                                                                                                              | `sqlite`               |
+| `database.roundcube.database`                       | Name of the roundcube database                                                                                                                                                                            | `roundcube`            |
+| `database.roundcube.username`                       | Username to use for the roundcube database                                                                                                                                                                | `roundcube`            |
+| `database.roundcube.password`                       | Password to use for the roundcube database                                                                                                                                                                | `changeme`             |
+| `database.mysql`                                    | For 'mysql' type (or mariadb) use the following config:                                                                                                                                                   | `{}`                   |
+| `database.postgresql`                               | For an external PostgreSQL database, use the following config:                                                                                                                                            | `{}`                   |
+| `mariadb.enabled`                                   | Enable MariaDB deployment                                                                                                                                                                                 | `false`                |
+| `mariadb.architecture`                              | MariaDB architecture. Allowed values: standalone or replication                                                                                                                                           | `standalone`           |
+| `mariadb.auth.rootPassword`                         | Password for the `root` user. Ignored if existing secret is provided.                                                                                                                                     | `changeme`             |
+| `mariadb.auth.database`                             | Name for a custom database to create                                                                                                                                                                      | `mailu`                |
+| `mariadb.auth.username`                             | Name for a custom user to create                                                                                                                                                                          | `mailu`                |
+| `mariadb.auth.password`                             | Password for the new user. Ignored if existing secret is provided                                                                                                                                         | `changeme`             |
+| `mariadb.auth.existingSecret`                       | Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword`                                                                                                | `""`                   |
+| `mariadb.primary.persistence.enabled`               | Enable persistence using PVC                                                                                                                                                                              | `false`                |
+| `mariadb.primary.persistence.storageClass`          | PVC Storage Class for MariaDB volume                                                                                                                                                                      | `""`                   |
+| `mariadb.primary.persistence.accessMode`            | PVC Access Mode for MariaDB volume                                                                                                                                                                        | `ReadWriteOnce`        |
+| `mariadb.primary.persistence.size`                  | PVC Storage Request for MariaDB volume                                                                                                                                                                    | `8Gi`                  |
+| `postgresql.enabled`                                | Enable PostgreSQL deployment                                                                                                                                                                              | `false`                |
+| `postgresql.architecture`                           | PostgreSQL architecture. Allowed values: standalone or replication                                                                                                                                        | `standalone`           |
+| `postgresql.auth.enablePostgresUser`                | Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user                                                                                                    | `true`                 |
+| `postgresql.auth.postgresPassword`                  | Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided                                                                                         | `changeme`             |
+| `postgresql.auth.username`                          | Name for a custom user to create                                                                                                                                                                          | `mailu`                |
+| `postgresql.auth.password`                          | Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided                                                                                                  | `changeme`             |
+| `postgresql.auth.database`                          | Name for a custom database to create                                                                                                                                                                      | `mailu`                |
+| `postgresql.auth.existingSecret`                    | Use existing secret for password details (`auth.postgresPassword`, `auth.password` will be ignored and picked up from this secret). The secret has to contain the keys `postgres-password` and `password` | `""`                   |
+| `postgresql.auth.secretKeys.adminPasswordKey`       | Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.                                                                                            | `postgres-password`    |
+| `postgresql.auth.secretKeys.userPasswordKey`        | Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.                                                                                            | `password`             |
+| `postgresql.auth.secretKeys.replicationPasswordKey` | Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.                                                                                            | `replication-password` |
+| `postgresql.primary.persistence.enabled`            | Enable persistence using PVC                                                                                                                                                                              | `false`                |
+| `postgresql.primary.persistence.storageClass`       | PVC Storage Class for PostgreSQL volume                                                                                                                                                                   | `""`                   |
+| `postgresql.primary.persistence.accessMode`         | PVC Access Mode for PostgreSQL volume                                                                                                                                                                     | `ReadWriteOnce`        |
+| `postgresql.primary.persistence.size`               | PVC Storage Request for PostgreSQL volume                                                                                                                                                                 | `8Gi`                  |
+| `persistence.single_pvc`                            | Setings for a single volume for all apps.                                                                                                                                                                 | `true`                 |
+| `persistence.size`                                  | Size of the persistent volume claim (for single PVC)                                                                                                                                                      | `100Gi`                |
+| `persistence.storageClass`                          | Storage class of backing PVC (for single PVC)                                                                                                                                                             | `""`                   |
+| `persistence.accessMode`                            | Access mode of backing PVC (for single PVC)                                                                                                                                                               | `ReadWriteOnce`        |
+
+### Ingress settings
+
+| Name                       | Description                                                                | Value                |
+| -------------------------- | -------------------------------------------------------------------------- | -------------------- |
+| `certmanager.enabled`      | Enable certmanager (create certificates for all domains)                   | `true`               |
+| `certmanager.issuerType`   | Issuer to use for certificates                                             | `ClusterIssuer`      |
+| `certmanager.issuerName`   | Name of the issuer to use                                                  | `letsencrypt`        |
+| `certmanager.apiVersion`   | Name of the secret to use for certificates                                 | `cert-manager.io/v1` |
+| `ingress.externalIngress`  | Enable external ingress                                                    | `true`               |
+| `ingress.ingressClassName` | Set the ingress class name for external ingress                            | `""`                 |
+| `ingress.annotations`      | Annotations to add to the external ingress                                 | `nil`                |
+| `ingress.realIpHeader`     | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod | `X-Forwarded-For`    |
+| `ingress.realIpFrom`       | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod   | `0.0.0.0/0`          |
+| `ingress.tlsFlavor`        | Sets the value of `TLS_FLAVOR` environment variable in the `front` pod     | `cert`               |
+
+### Frontend load balancer for non-HTTP(s) services
+
+| Name                                          | Description                                                                           | Value           |
+| --------------------------------------------- | ------------------------------------------------------------------------------------- | --------------- |
+| `front.logLevel`                              | Override default log level                                                            | `""`            |
+| `front.image.repository`                      | Pod image repository                                                                  | `mailu/nginx`   |
+| `front.image.tag`                             | Pod image tag (defaults to mailuVersion)                                              | `""`            |
+| `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
+| `front.controller.kind`                       | Deployment or DaemonSet                                                               | `Deployment`    |
+| `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
+| `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
+| `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
+| `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
+| `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
+| `front.externalService.pop3`                  | Expose POP3 port                                                                      | `false`         |
+| `front.externalService.pop3s`                 | Expose POP3 port (TLS)                                                                | `true`          |
+| `front.externalService.imap`                  | Expose IMAP port                                                                      | `false`         |
+| `front.externalService.imaps`                 | Expose IMAP port (TLS)                                                                | `true`          |
+| `front.externalService.smtp`                  | Expose SMTP port                                                                      | `true`          |
+| `front.externalService.smtps`                 | Expose SMTP port (TLS)                                                                | `true`          |
+| `front.externalService.submission`            | Expose Submission port                                                                | `true`          |
+| `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |
+| `front.resources.requests`                    | The requested resources for the container                                             | `{}`            |
+| `front.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`          |
+| `front.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`             |
+| `front.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`            |
+| `front.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`            |
+| `front.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`             |
+| `front.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `5`             |
+| `front.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`          |
+| `front.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`            |
+| `front.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`            |
+| `front.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `5`             |
+| `front.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `1`             |
+| `front.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`             |
+| `front.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`         |
+| `front.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`            |
+| `front.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`            |
+| `front.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`             |
+| `front.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `30`            |
+| `front.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`             |
+| `front.podLabels`                             | Add extra labels to pod                                                               | `{}`            |
+| `front.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`            |
+| `front.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`            |
+| `front.initContainers`                        | Add additional init containers to the pod                                             | `[]`            |
+| `front.priorityClassName`                     | Pods' priorityClassName                                                               | `""`            |
+| `front.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`             |
+| `front.affinity`                              | Affinity for front pod assignment                                                     | `{}`            |
+| `front.tolerations`                           | Tolerations for pod assignment                                                        | `[]`            |
+| `front.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`             |
+| `front.hostAliases`                           | Pod pod host aliases                                                                  | `[]`            |
+| `front.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`            |
+| `front.service.annotations`                   | Admin service annotations                                                             | `{}`            |
+| `front.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`            |
+| `front.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate` |
+| `front.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`            |
+| `front.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`            |
+| `front.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
+| `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
+
+### Admin settings
+
+| Name                                       | Description                                                                           | Value               |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------- |
+| `admin.logLevel`                           | Override default log level                                                            | `""`                |
+| `admin.image.repository`                   | Pod image repository                                                                  | `mailu/admin`       |
+| `admin.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `admin.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `admin.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
+| `admin.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
+| `admin.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `admin.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
+| `admin.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
+| `admin.resources.limits`                   | The resources limits for the container                                                | `{}`                |
+| `admin.resources.requests`                 | The requested resources for the container                                             | `{}`                |
+| `admin.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
+| `admin.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
+| `admin.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
+| `admin.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
+| `admin.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
+| `admin.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `admin.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
+| `admin.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
+| `admin.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
+| `admin.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `admin.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
+| `admin.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
+| `admin.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
+| `admin.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
+| `admin.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
+| `admin.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
+| `admin.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
+| `admin.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
+| `admin.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
+| `admin.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
+| `admin.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
+| `admin.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
+| `admin.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
+| `admin.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `admin.affinity`                           | Affinity for admin pod assignment                                                     | `{}`                |
+| `admin.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
+| `admin.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `admin.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
+| `admin.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `admin.service.annotations`                | Admin service annotations                                                             | `{}`                |
+| `admin.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `admin.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `admin.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
+| `admin.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `admin.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+
 domain: mail.mydomain.com
 hostnames:
   - mail.mydomain.com

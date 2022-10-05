@@ -1,344 +1,369 @@
-# Default values for mailu.
+## Default values for mailu.
 
-# Global common parameters (see Bitnamis common chart)
+## @section Global parameters
+## Global common parameters (see Bitnamis common chart)
+## @param global.imageRegistry Global container image registry
+## @param global.imagePullSecrets Global container image pull secret
+## @param global.storageClass Global storageClass to use for persistent volumes
 global:
-  # -- Global container image registry
   imageRegistry: ""
-  # -- Global container image pull secret
   imagePullSecrets: []
-  # -- Global storageClass to use for persistent volumes
   storageClass: ""
 
-# -- Force target Kubernetes version (using Helm capabilities if not set)
+## @section Common parameters
+
+## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
 kubeVersion: ""
-# -- String to partially override mailu.fullname include (will maintain the release name)
+## @param nameOverride String to partially override mailu.fullname include (will maintain the release name)
 nameOverride: ""
-# -- String to fully override mailu.fullname template
+## @param fullnameOverride String to fully override mailu.fullname template
 fullnameOverride: ""
-# -- Add labels to all the deployed resources
+## @param commonLabels Add labels to all the deployed resources
 commonLabels: {}
-# --Add annotations to all the deployed resources
+## @param commonAnnotations Add annotations to all the deployed resources
 commonAnnotations: {}
 
-# e.g.:
-# hostnames:
-#   - mail.example.com
-#   - imap.example.com
-# -- List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname
+## @section Mailu parameters
+
+## e.g.:
+## hostnames:
+##   - mail.example.com
+##   - imap.example.com
+## @param hostnames List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname
 hostnames: []
 
-# e.g.:
-# domain: example.com
-# -- Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
+## e.g.:
+## domain: example.com
+## @param domain Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
 domain: ""
 
-# e.g.:
-# secretKey: chang3m3!
-# -- The secret key is required for protecting authentication cookies and must be set individually for each deployment
-# If empty, a random secret key will be generated and saved in a secret
+## e.g.:
+## secretKey: chang3m3!
+## @param secretKey The secret key is required for protecting authentication cookies and must be set individually for each deployment
+## If empty, a random secret key will be generated and saved in a secret
 secretKey: ""
 
-# e.g.:
-# existingSecret: mailu-secret
-# -- existingSecret Name of the existing secret to retrieve the secretKey.
-# The secret has to contain the secretKey value under the `secret-key` key.
+## e.g.:
+## existingSecret: mailu-secret
+## @param existingSecret Name of the existing secret to retrieve the secretKey.
+## The secret has to contain the secretKey value under the `secret-key` key.
 existingSecret: ""
 
-# e.g.:
-# initialAccount:
-#   username: mailadmin
-#   domain: mydomain.com
-#   password: chang3m3!
+## e.g.:
+## initialAccount:
+##   username: mailadmin
+##   domain: mydomain.com
+##   password: chang3m3!
 #
-# An existing secret can be used to retrieve the initial account's password. For that, set the secret name in 'initialAccount.existingSecret'.
-# The secret needs to contain the password under the 'initial-account-password' key.
-# If the a value is also set under 'initialAccount.password', that password will be taken.
-# e.g.:
-# initialAccount:
-#   existingSecret: mailu-secret
-# -- An initial account can automatically be created:
+## An existing secret can be used to retrieve the initial account's password. For that, set the secret name in 'initialAccount.existingSecret'.
+## The secret needs to contain the password under the 'initial-account-password' key.
+## If the a value is also set under 'initialAccount.password', that password will be taken.
+## e.g.:
+## initialAccount:
+##   existingSecret: mailu-secret
+## @param initialAccount An initial account can automatically be created:
 initialAccount: {}
 
+## @param subnet Change this if you're using different address ranges for pods
+subnet: 10.42.0.0/16
+
+## @param mailuVersion Version/tag of mailu images - must be master or a version >= 1.9
+mailuVersion: 1.9.26
+
+## @param logLevel default log level. can be overridden globally or per service
+logLevel: WARNING
+
+## @param postmaster local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
+postmaster: postmaster
+
+mail:
+  ## @param mail.messageSizeLimitInMegabytes Maximum size of an email in megabytes
+  messageSizeLimitInMegabytes: 50
+
+  ## Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
+  ## @param mail.authRatelimit.ip Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
+  ## @param mail.authRatelimit.ipv4Mask Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
+  ## @param mail.authRatelimit.ipv6Mask Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
+  ## @param mail.authRatelimit.user Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
+  ## @param mail.authRatelimit.exemptionLength Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
+  ## @param mail.authRatelimit.exemption Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  authRatelimit:
+    ip: 60/hour
+    ipv4Mask: 24
+    ipv6Mask: 56
+    user: 100/day
+    exemptionLength: 86400
+    exemption: ""
+
+  # Configuration to reduce outgoing spam in case of a compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
+  ## @param mail.messageRatelimit.value Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
+  ## @param mail.messageRatelimit.exemption Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  messageRatelimit:
+    value: 200/day
+    exemption: ""
+
+## @param external_relay Mailu external relay configuration
+## Example:
+##  external_relay:
+##    host: "[domain.tld]:port"
+##    username: username
+##    password: SECRET
+##    # username and password can also be stored as secret:
+##    secretName: external-relay-secret
+##    usernameKey: username
+##    passwordKey: password
+external_relay: {}
+
+## @param clusterDomain Kubernetes cluster domain name
 clusterDomain: cluster.local
 
-# nodeSelector: {}
+## nodeSelector: {}
 
-# # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-# # -- Tolerations for pod assignment
-# tolerations: []
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+## @param tolerations Tolerations for pod assignment
+tolerations: []
 
-# # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-# # -- Affinity for pod assignment
-# affinity: {}
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## @param affinity Affinity for pod assignment
+affinity: {}
+
+## @section Storage parameters
 
 database:
-  # type of the database for mailu (sqlite/mysql/postgresql)
-  # default database is an embedded sqlite
-  # for mysql, see settings below
+  ## @param database.type type of the database for mailu (sqlite/mysql/postgresql)
+  ## default database is an embedded sqlite
+  ## for mysql, see settings below
   type: sqlite
 
-  # type of the database for roundcube (sqlite/mysql/postgresql)
-  # default database is an embedded sqlite
-  # for mysql, see settings below
+  ## @param database.roundcube.type type of the database for roundcube (sqlite/mysql/postgresql)
+  ## default database is an embedded sqlite
+  ## for mysql, see settings below
+  ## @param database.roundcube.database Name of the roundcube database
+  ## @param database.roundcube.username Username to use for the roundcube database
+  ## @param database.roundcube.password Password to use for the roundcube database
   roundcube:
     type: sqlite
     database: roundcube
     username: roundcube
     password: changeme
 
-  # For 'mysql' type (or mariadb) use the following config:
-  # You can set the 'host' value to use an external database.
-  # If the 'host' value is not set, a database instance is created by this chart.
-  # e.g.:
-  # mysql:
-  #   host: external-db-hostname
-  #   # root password for mysql database, only used for embedded mysql
-  #   rootPassword: chang3m3!
-  #
-  #   # Settings for mailu database
-  #   database: mailu
-  #   user: mailu
-  #   password: chang3m3!
-  #
-  #   # Settings for roundcube database
-  #   roundcubeDatabase: roundcube
-  #   roundcubeUser: roundcube
-  #   roundcubePassword: chang3m3!
-  #
-  #   existingSecret: mail-mysql
+  ## @param database.mysql For 'mysql' type (or mariadb) use the following config:
+  ## You can set the 'host' value to use an external database.
+  ## If the 'host' value is not set, a database instance is created by this chart.
+  ## e.g.:
+  ## mysql:
+  ##   host: external-db-hostname
+  ##   # root password for mysql database, only used for embedded mysql
+  ##   rootPassword: chang3m3!
+  ##
+  ##   # Settings for mailu database
+  ##   database: mailu
+  ##   user: mailu
+  ##   password: chang3m3!
+  ##
+  ##   # Settings for roundcube database
+  ##   roundcubeDatabase: roundcube
+  ##   roundcubeUser: roundcube
+  ##   roundcubePassword: chang3m3!
+  ##
+  ##   existingSecret: mail-mysql
   mysql: {}
 
-  # For an external PostgreSQL database, use the following config:
-  # e.g.:
-  # postgresql:
-  #   host: external-db-hostname
-  #   # Settings for mailu database
-  #   database: mailu
-  #   user: mailu
-  #   password: chang3m3!
-  #
-  #   # Settings for roundcube database
-  #   roundcubeDatabase: roundcube
-  #   roundcubeUser: roundcube
-  #   roundcubePassword: chang3m3!
-  #
-  #   existingSecret: mail-postgresql
-
+  ## @param database.postgresql For an external PostgreSQL database, use the following config:
+  ## e.g.:
+  ## postgresql:
+  ##   host: external-db-hostname
+  ##   # Settings for mailu database
+  ##   database: mailu
+  ##   user: mailu
+  ##   password: chang3m3!
+  ##
+  ##   # Settings for roundcube database
+  ##   roundcubeDatabase: roundcube
+  ##   roundcubeUser: roundcube
+  ##   roundcubePassword: chang3m3!
+  ##
+  ##   existingSecret: mail-postgresql
   postgresql: {}
 
-##
 ## MariaDB chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/mariadb
-##
 mariadb:
+  ## @param mariadb.enabled Enable MariaDB deployment
   enabled: false
 
+  ## @param mariadb.architecture MariaDB architecture. Allowed values: standalone or replication
   architecture: standalone
 
+  ## @param mariadb.auth.rootPassword Password for the `root` user. Ignored if existing secret is provided.
+  ## @param mariadb.auth.database Name for a custom database to create
+  ## @param mariadb.auth.username Name for a custom user to create
+  ## @param mariadb.auth.password Password for the new user. Ignored if existing secret is provided
+  ## @param mariadb.auth.existingSecret Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword`
+  ## will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password`
+  ## and `mariadb-password`
   auth:
-    ## @param auth.rootPassword Password for the `root` user. Ignored if existing secret is provided.
-    ## ref: https://github.com/bitnami/bitnami-docker-mariadb#setting-the-root-password-on-first-run
-    ##
     rootPassword: changeme
-    ## @param auth.database Name for a custom database to create
-    ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
-    ##
     database: mailu
-    ## @param auth.username Name for a custom user to create
-    ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-user-on-first-run
-    ##
     username: mailu
-    ## @param auth.password Password for the new user. Ignored if existing secret is provided
-    ##
     password: changeme
-
-    ## @param auth.existingSecret Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword`
-    ## will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password`
-    ## and `mariadb-password`
-    ##
     existingSecret: ""
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
+  ## @param mariadb.primary.persistence.enabled Enable persistence using PVC
+  ## @param mariadb.primary.persistence.storageClass PVC Storage Class for MariaDB volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ## @param mariadb.primary.persistence.accessMode PVC Access Mode for MariaDB volume
+  ## @param mariadb.primary.persistence.size PVC Storage Request for MariaDB volume
   primary:
     persistence:
       enabled: false
-      # storageClass: ""
+      storageClass: ""
       accessMode: ReadWriteOnce
       size: 8Gi
 
-##
 ## PostgreSQL chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
-##
 postgresql:
+  ## @param postgresql.enabled Enable PostgreSQL deployment
   enabled: false
 
+  ## @param postgresql.architecture PostgreSQL architecture. Allowed values: standalone or replication
   architecture: standalone
 
+  ## @param postgresql.auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
+  ## @param postgresql.auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
+  ## @param postgresql.auth.username Name for a custom user to create
+  ## @param postgresql.auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
+  ## @param postgresql.auth.database Name for a custom database to create
+  ## @param postgresql.auth.existingSecret Use existing secret for password details (`auth.postgresPassword`, `auth.password` will be ignored and picked up from this secret). The secret has to contain the keys `postgres-password` and `password`
   auth:
-    ## @param auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
-    ##
     enablePostgresUser: true
-    ## @param auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
-    ##
     postgresPassword: changeme
-    ## @param auth.username Name for a custom user to create
-    ##
     username: mailu
-    ## @param auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
-    ##
     password: changeme
-    ## @param auth.database Name for a custom database to create
-    ##
     database: mailu
-
     existingSecret: ""
-    ## @param auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-    ## @param auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-    ## @param auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
-    ##
+
+    ## @param postgresql.auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param postgresql.auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param postgresql.auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
     secretKeys:
       adminPasswordKey: postgres-password
       userPasswordKey: password
       replicationPasswordKey: replication-password
 
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  ## @param postgresql.primary.persistence.enabled Enable persistence using PVC
+  ## @param postgresql.primary.persistence.storageClass PVC Storage Class for PostgreSQL volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ## @param postgresql.primary.persistence.accessMode PVC Access Mode for PostgreSQL volume
+  ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
   primary:
     persistence:
       enabled: false
-      # storageClass: ""
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 8Gi
 
-external_relay: {}
-#    host: "[domain.tld]:port"
-#    username: username
-#    password: SECRET
-#    # username and password can also be stored as secret:
-#    secretName: external-relay-secret
-#    usernameKey: username
-#    passwordKey: password
-
+## @param persistence.single_pvc Setings for a single volume for all apps.
+## Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
+## @param persistence.size Size of the persistent volume claim (for single PVC)
+## @param persistence.storageClass Storage class of backing PVC (for single PVC)
+## @param persistence.accessMode Access mode of backing PVC (for single PVC)
 persistence:
-  # -- Setings for a single volume for all apps.
-  # Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
   single_pvc: true
   size: 100Gi
   accessMode: ReadWriteOnce
-  #annotations:
-  #  "helm.sh/resource-policy": keep
-  #hostPath: /path/on/the/host
-  #existingClaim: name-of-existing.claim
-  #storageClass: "-"
-  #claimNameOverride: my-claim-name
+  # annotations:
+  #   "helm.sh/resource-policy": keep
+  # hostPath: /path/on/the/host
+  # existingClaim: name-of-existing.claim
+  storageClass: ""
+  # claimNameOverride: my-claim-name
 
-# -- Change this if you're using different address ranges for pods
-subnet: 10.42.0.0/16
+## @section Ingress settings
 
-# -- Version/tag of mailu images - must be master or a version >= 1.9
-mailuVersion: 1.9.26
-
-# -- default log level. can be overridden globally or per service
-logLevel: WARNING
-
-# -- local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
-postmaster: postmaster
-
-mail:
-  messageSizeLimitInMegabytes: 50
-
-  # Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
-  authRatelimit:
-    # -- Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
-    ip: 60/hour
-    # -- Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
-    ipv4Mask: 24
-    # -- Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
-    ipv6Mask: 56
-    # -- Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
-    user: 100/day
-    # -- Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
-    exemptionLength: 86400
-    # -- Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
-    exemption: ""
-
-  # Configuration to reduce outgoing spam in case of a compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
-  messageRatelimit:
-    # -- Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
-    value: 200/day
-    # -- Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
-    exemption: ""
-
-# Certmanager settings
+## Certmanager settings
+## @param certmanager.enabled Enable certmanager (create certificates for all domains)
+## @param certmanager.issuerType Issuer to use for certificates
+## @param certmanager.issuerName Name of the issuer to use
+## @param certmanager.apiVersion Name of the secret to use for certificates
 certmanager:
-  # -- Enable certmanager (create certificates for all domains)
   enabled: true
-  # -- Issuer to use for certificates
   issuerType: ClusterIssuer
-  # -- Name of the issuer to use
   issuerName: letsencrypt
-  # -- Name of the secret to use for certificates
   apiVersion: cert-manager.io/v1
 
-# Set ingress and loadbalancer config
+## Set ingress and loadbalancer config
+## @param ingress.externalIngress Enable external ingress
+## @param ingress.ingressClassName Set the ingress class name for external ingress
+## @param ingress.annotations Annotations to add to the external ingress
+## @param ingress.realIpHeader Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
+## @param ingress.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
+## @param ingress.tlsFlavor Sets the value of `TLS_FLAVOR` environment variable in the `front` pod
 ingress:
-  # -- Enable external ingress
   externalIngress: true
-  # -- Set the ingress class name for external ingress
   ingressClassName: ""
-  # -- Annotations to add to the external ingress
   annotations:
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-  # -- Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
+    # nginx.ingress.kubernetes.io/proxy-body-size: "0"
   realIpHeader: X-Forwarded-For
-  # -- Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
   realIpFrom: 0.0.0.0/0
-  # -- Sets the value of `TLS_FLAVOR` environment variable in the `front` pod
   tlsFlavor: cert
 
-# Frontend load balancer for non-HTTP(s) services
+## @section Frontend load balancer for non-HTTP(s) services
 front:
-  # logLevel: WARNING
+  ## @param front.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param front.image.repository Pod image repository
+  ## @param front.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param front.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/nginx
-    # -- Fron pod image tag
-    # @default -- defaults to mailuVersion
     tag: ""
-  resources:
-    requests:
-      memory: 100Mi
-      cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
+    pullPolicy: IfNotPresent
 
+  ## @param front.controller.kind Deployment or DaemonSet
   controller:
-    # -- Deployment or DaemonSet
     kind: Deployment
-  nodeSelector: {}
 
-  # -- Expose front mail ports via hostPort
+  ## @param front.hostPort.enabled Expose front mail ports via hostPort
   hostPort:
     enabled: true
 
-  # Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  ## Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  ## @param front.externalService.enabled Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  ## @param front.externalService.type Service type (ClusterIP or LoadBalancer)
+  ## @param front.externalService.externalTrafficPolicy Service externalTrafficPolicy (Cluster or Local)
+  ## @param front.externalService.annotations Service annotations
+  ## @param front.externalService.pop3 Expose POP3 port
+  ## @param front.externalService.pop3s Expose POP3 port (TLS)
+  ## @param front.externalService.imap Expose IMAP port
+  ## @param front.externalService.imaps Expose IMAP port (TLS)
+  ## @param front.externalService.smtp Expose SMTP port
+  ## @param front.externalService.smtps Expose SMTP port (TLS)
+  ## @param front.externalService.submission Expose Submission port
+
   externalService:
     enabled: false
     type: ClusterIP
-    # LoadBalancer
-    # type: LoadBalancer
-    # loadBalancerIP:
+    ## Example for LoadBalancer:
+    ## type: LoadBalancer
+    ## loadBalancerIP:
     externalTrafficPolicy: Local
     annotations: {}
     pop3: false
@@ -349,507 +374,667 @@ front:
     smtps: true
     submission: true
 
-  service:
-    annotations: {}
-
-admin:
-  # -- Override default log level
-  logLevel: ""
-
-  # Pod image
-  image:
-    # -- Pod image repository
-    repository: mailu/admin
-    # -- Pod image tag
-    # @default -- Defaults to mailuVersion
-    tag: ""
-    # -- Pod image pull policy
-    pullPolicy: IfNotPresent
-
-  # Pod persistence (if not using single_pvc)
-  persistence:
-    # -- Pod pvc size
-    size: 20Gi
-    # -- Pod pvc storage class
-    storageClass: ""
-    # -- Pod pvc access modes
-    accessModes:
-      - ReadWriteOnce
-    # -- Pod pvc name override
-    claimNameOverride: ""
-    # -- Pod pvc annotations
-    annotations: {}
-
-  # Pod resources
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param front.resources.limits The resources limits for the container
+  ## @param front.resources.requests The requested resources for the container
+  ##
   resources:
-    # -- Pod requests
-    requests:
-      memory: 500Mi
-      cpu: 500m
-    # -- Pod resources limits
-    # @default -- No limits by default
+    ## Example:
+    ## limits:
+    ##    cpu: 200m
+    ##    memory: 200Mi
     limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 100Mi
+    requests: {}
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  # Liveness probe values
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.livenessProbe.enabled Enable livenessProbe
+  ## @param front.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param front.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param front.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param front.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param front.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
   livenessProbe:
-    # -- Enable livenessProbe
     enabled: true
-    # -- Failure threshold for livenessProbe
     failureThreshold: 3
-    # -- Initial delay seconds for livenessProbe
     initialDelaySeconds: 10
-    # -- Period seconds for livenessProbe
     periodSeconds: 10
-    # -- Success threshold for livenessProbe
     successThreshold: 1
-    # -- Timeout seconds for livenessProbe
-    timeoutSeconds: 1
+    timeoutSeconds: 5
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  # Readiness probe values
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.readinessProbe.enabled Enable readinessProbe
+  ## @param front.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param front.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param front.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param front.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param front.readinessProbe.successThreshold Success threshold for readinessProbe
   readinessProbe:
-    # -- Enable readinessProbe
     enabled: true
-    # -- Failure threshold for readinessProbe
-    failureThreshold: 3
-    # -- Initial delay seconds for readinessProbe
+    failureThreshold: 1
     initialDelaySeconds: 10
-    # -- Period seconds for readinessProbe
     periodSeconds: 10
-    # -- Success threshold for readinessProbe
     successThreshold: 1
-    # -- Timeout seconds for readinessProbe
-    timeoutSeconds: 1
+    timeoutSeconds: 5
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  # Startup probe values
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.startupProbe.enabled Enable startupProbe
+  ## @param front.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param front.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param front.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param front.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param front.startupProbe.successThreshold Success threshold for startupProbe
   startupProbe:
-    # -- Enable startupProbe
     enabled: false
-    # -- Failure threshold for startupProbe
-    failureThreshold: 3
-    # -- Initial delay seconds for startupProbe
+    failureThreshold: 30
     initialDelaySeconds: 10
-    # -- Period seconds for startupProbe
     periodSeconds: 10
-    # -- Success threshold for startupProbe
     successThreshold: 1
-    # -- Timeout seconds for startupProbe
-    timeoutSeconds: 1
+    timeoutSeconds: 5
 
-  # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  # -- Add extra labels to pod
+  ## @param front.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   podLabels: {}
 
-  # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  # -- Add extra annotations to the pod
+  ## @param front.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   podAnnotations: {}
 
-  # ref: https://kubernetes.io/docs/user-guide/node-selection/
-  # -- Node labels selector for pod assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param front.nodeSelector Node labels selector for pod assignment
   nodeSelector: {}
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  # e.g:
-  # initContainers:
-  #  - name: your-image-name
-  #    image: your-image
-  #    imagePullPolicy: Always
-  #    command: ['sh', '-c', 'echo "hello world"']
-  # -- Add additional init containers to the pod
+  ## @param front.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
   initContainers: []
 
-  # -- Pods' priorityClassName
+  ## @param front.priorityClassName Pods' priorityClassName
   priorityClassName: ""
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
-  # -- In seconds, time given to the pod to terminate gracefully
+  ## @param front.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
-  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  # -- Affinity for admin pod assignment
+  ## @param front.affinity Affinity for front pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
 
-  # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  # -- Tolerations for pod assignment
+  ## @param front.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   tolerations: []
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
-  # -- Configure the revisionHistoryLimit of the deployment
+  ## @param front.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
   revisionHistoryLimit: 3
 
-  # ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
-  # -- Pod pod host aliases
+  ## @param front.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   hostAliases: []
 
-  # ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  # -- Name of the k8s scheduler (other than default)
+  ## @param front.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   schedulerName: ""
 
   # Service parameters
   service:
-    # -- Admin service annotations
+    ## @param front.service.annotations Admin service annotations
     annotations: {}
 
-  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  # -- Topology Spread Constraints for pod assignment
+  ## @param front.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints: []
 
-  # Strategy to use to update Pods
+  ## Strategy to use to update Pods
+  ## @param front.updateStrategy.type Can be set to RollingUpdate or OnDelete
   updateStrategy:
-    # -- Can be set to RollingUpdate or OnDelete
     type: RollingUpdate
 
-  # For example:
-  # extraEnvVars:
-  #  - name: MY_ENV_VAR
-  #    value: env_var_value
-  # -- Extra environment variable to pass to the running container
+  ## @param front.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
   extraEnvVars: []
 
-  # -- Name of existing ConfigMap containing extra environment variables to mount in the pod
+  ## @param front.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
   extraEnvVarsCM: ""
 
-  # -- Name of existing Secret containing extra environment variables to mount in the pod
+  ## @param front.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
   extraEnvVarsSecret: ""
 
-  # -- Optionally specify extra list of additional volumeMounts for the pod
+  ## @param front.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
-redis:
-  image:
-    repository: redis
-    tag: 5-alpine
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 200Mi
-      cpu: 100m
-    limits:
-      memory: 300Mi
-      cpu: 200m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
-
-postfix:
-  # logLevel: WARNING
-  image:
-    repository: mailu/postfix
-    # tag defaults to mailuVersion
-    # tag: master
-  containerSecurityContext: {}
-  #    CRI-O users will need to add the following:
-  #    capabilities:
-  #      add:
-  #        - SYS_CHROOT
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 2Gi
-      cpu: 500m
-    limits:
-      memory: 2Gi
-      cpu: 500m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
-
-dovecot:
-  enabled: true
-  # logLevel: WARNING
-  image:
-    repository: mailu/dovecot
-    # tag defaults to mailuVersion
-    # tag: master
-  containerSecurityContext: {}
-  #    CRI-O users will need to add the following:
-  #    capabilities:
-  #      add:
-  #        - SYS_CHROOT
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 500Mi
-      cpu: 500m
-    limits:
-      memory: 500Mi
-      cpu: 500m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
-  # enable dovecot overrides
-  # overrides:
-  #   dovecot.conf: |
-  #     # More info here: https://mailu.io/1.8/kubernetes/mailu/index.html#dovecot
-  #     mail_nfs_index = yes
-  #     mail_nfs_storage = yes
-  #     mail_fsync = always
-  #     mmap_disable = yes
-  #     mail_max_userip_connections=100
-
-# historically rspamd and clamav shared their volumes in this chart
-# this isn't needed anymore. to maintain backward compatibility and give users
-# some time to migrate we keep this here.
-#
-# if you want a "shared" volume keep in mind you have to use affinity rules on
-# rspamd and clamav pods so that both pods are scheduled on the same node
-# to keep RWO volumes working
-#
-# otherwise set rspamd_clamav_persistence.single_pvc to true and review
-# rspamd.persistence and clamav.persistence
-rspamd_clamav_persistence:
-  size: 20Gi
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  claimNameOverride: ""
-  single_pvc: false
-  #annotations:
-  #  "helm.sh/resource-policy": keep
-
-rspamd:
-  # logLevel: WARNING
-  image:
-    repository: mailu/rspamd
-    # tag defaults to mailuVersion
-    # tag: master
-  persistence:
-    size: 1Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 100Mi
-      cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
-  startupProbe: # give it 15 minutes for initial rule compilation
-    periodSeconds: 10
-    failureThreshold: 90
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
-
-clamav:
-  enabled: true
-  # logLevel: WARNING
-  image:
-    repository: mailu/clamav
-    # tag defaults to mailuVersion
-    # tag: master
-  persistence:
-    size: 2Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 1Gi
-      cpu: 1000m
-    limits:
-      memory: 2Gi
-      cpu: 1000m
-  service:
-    annotations: {}
-  startupProbe: # give it 10 minutes for initial freshclam update
-    periodSeconds: 10
-    failureThreshold: 60
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
-  # clamav must share a volume with rspamd. This is usually enforced by the volume itself (RWO). If you use RWM volumes and want to
-  # have clamav running on the same node, add the following affinity rule:
-#  affinity:
-#    podAffinity:
-#      requiredDuringSchedulingIgnoredDuringExecution:
-#        - labelSelector:
-#            matchExpressions:
-#              - key: component
-#                operator: In
-#                values:
-#                  - rspamd
-#          topologyKey: kubernetes.io/hostname
-
-roundcube:
-  # -- Enable deployment of Roundcube webmail
-  enabled: true
-  # -- Set the log level for Roundcube
+## @section Admin settings
+admin:
+  ## @param admin.logLevel Override default log level
   logLevel: ""
-  image:
-    repository: mailu/roundcube
-    # tag defaults to mailuVersion
-    # tag: master
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  uri: /roundcube
-  resources:
-    requests:
-      memory: 100Mi
-      cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
 
-webdav:
-  # -- Enable deployment of WebDAV server (using Radicale)
-  enabled: false
-  # logLevel: WARNING
+  ## Pod image
+  ## @param admin.image.repository Pod image repository
+  ## @param admin.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param admin.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/radicale
-    # tag defaults to mailuVersion
-    # tag: master
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
+    repository: mailu/admin
+    tag: ""
+    pullPolicy: IfNotPresent
 
-mysql:
-  image:
-    repository: library/mariadb
-    tag: 10.4.10
+  ## Pod persistence (if not using single_pvc)
+  ## @param admin.persistence.size Pod pvc size
+  ## @param admin.persistence.storageClass Pod pvc storage class
+  ## @param admin.persistence.accessModes Pod pvc access modes
+  ## @param admin.persistence.claimNameOverride Pod pvc name override
+  ## @param admin.persistence.annotations Pod pvc annotations
   persistence:
     size: 20Gi
     storageClass: ""
-    accessMode: ReadWriteOnce
+    accessModes: [ReadWriteOnce]
     claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 100m
-    limits:
-      memory: 512Mi
-      cpu: 200m
-  startupProbe:
-    periodSeconds: 10
-    failureThreshold: 30
-    timeoutSeconds: 5
-  livenessProbe:
-    periodSeconds: 10
-    failureThreshold: 3
-    timeoutSeconds: 5
-  readinessProbe:
-    periodSeconds: 10
-    failureThreshold: 1
-    timeoutSeconds: 5
+    annotations: {}
 
-fetchmail:
-  # -- Enable deployment of fetchmail
-  enabled: false
-  # logLevel: WARNING
-  image:
-    repository: mailu/fetchmail
-    # tag defaults to mailuVersion
-    # tag: master
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    claimNameOverride: ""
-    #annotations:
-    #  "helm.sh/resource-policy": keep
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param admin.resources.limits The resources limits for the container
+  ## @param admin.resources.requests The requested resources for the container
+  ##
   resources:
-    requests:
-      memory: 100Mi
-      cpu: 100m
-    limits:
-      memory: 200Mi
-      cpu: 200m
-  delay: 600
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.livenessProbe.enabled Enable livenessProbe
+  ## @param admin.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param admin.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param admin.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param admin.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param admin.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.readinessProbe.enabled Enable readinessProbe
+  ## @param admin.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param admin.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param admin.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param admin.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param admin.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.startupProbe.enabled Enable startupProbe
+  ## @param admin.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param admin.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param admin.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param admin.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param admin.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param admin.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param admin.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param admin.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param admin.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param admin.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param admin.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param admin.affinity Affinity for admin pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param admin.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param admin.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param admin.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param admin.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param admin.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param admin.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param admin.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param admin.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param admin.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param admin.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param admin.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+# redis:
+#   image:
+#     repository: redis
+#     tag: 5-alpine
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 200Mi
+#       cpu: 100m
+#     limits:
+#       memory: 300Mi
+#       cpu: 200m
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# postfix:
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/postfix
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   containerSecurityContext: {}
+#   #    CRI-O users will need to add the following:
+#   #    capabilities:
+#   #      add:
+#   #        - SYS_CHROOT
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 2Gi
+#       cpu: 500m
+#     limits:
+#       memory: 2Gi
+#       cpu: 500m
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# dovecot:
+#   enabled: true
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/dovecot
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   containerSecurityContext: {}
+#   #    CRI-O users will need to add the following:
+#   #    capabilities:
+#   #      add:
+#   #        - SYS_CHROOT
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 500Mi
+#       cpu: 500m
+#     limits:
+#       memory: 500Mi
+#       cpu: 500m
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+#   # enable dovecot overrides
+#   # overrides:
+#   #   dovecot.conf: |
+#   #     # More info here: https://mailu.io/1.8/kubernetes/mailu/index.html#dovecot
+#   #     mail_nfs_index = yes
+#   #     mail_nfs_storage = yes
+#   #     mail_fsync = always
+#   #     mmap_disable = yes
+#   #     mail_max_userip_connections=100
+
+# ## historically rspamd and clamav shared their volumes in this chart
+# ## this isn't needed anymore. to maintain backward compatibility and give users
+# ## some time to migrate we keep this here.
+# ##
+# ## if you want a "shared" volume keep in mind you have to use affinity rules on
+# ## rspamd and clamav pods so that both pods are scheduled on the same node
+# ## to keep RWO volumes working
+# ##
+# ## otherwise set rspamd_clamav_persistence.single_pvc to true and review
+# ## rspamd.persistence and clamav.persistence
+# ## @param rspamd_clamav_persistence.size Size of the volume
+# ## @param rspamd_clamav_persistence.storageClass Storage class of the volume
+# ## @param rspamd_clamav_persistence.accessMode Access mode of the volume
+# ## @param rspamd_clamav_persistence.claimNameOverride Override the name of the PVC
+# ## @param rspamd_clamav_persistence.single_pvc Use a single PVC for rspamd and clamav
+# ## @param rspamd_clamav_persistence.annotations Annotations for the PVC
+# rspamd_clamav_persistence:
+#   size: 20Gi
+#   storageClass: ""
+#   accessMode: ReadWriteOnce
+#   claimNameOverride: ""
+#   single_pvc: false
+#   annotations: {}
+#   #  "helm.sh/resource-policy": keep
+
+# rspamd:
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/rspamd
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   persistence:
+#     size: 1Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 100Mi
+#       cpu: 100m
+#     limits:
+#       memory: 200Mi
+#       cpu: 200m
+#   startupProbe: # give it 15 minutes for initial rule compilation
+#     periodSeconds: 10
+#     failureThreshold: 90
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# clamav:
+#   enabled: true
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/clamav
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   persistence:
+#     size: 2Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 1Gi
+#       cpu: 1000m
+#     limits:
+#       memory: 2Gi
+#       cpu: 1000m
+#   service:
+#     annotations: {}
+#   startupProbe: # give it 10 minutes for initial freshclam update
+#     periodSeconds: 10
+#     failureThreshold: 60
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+#   # clamav must share a volume with rspamd. This is usually enforced by the volume itself (RWO). If you use RWM volumes and want to
+#   # have clamav running on the same node, add the following affinity rule:
+# ##  affinity:
+# ##    podAffinity:
+# ##      requiredDuringSchedulingIgnoredDuringExecution:
+# ##        - labelSelector:
+# ##            matchExpressions:
+# ##              - key: component
+# ##                operator: In
+# ##                values:
+# ##                  - rspamd
+# ##          topologyKey: kubernetes.io/hostname
+
+# roundcube:
+#   ## @param Enable deployment of Roundcube webmail
+#   enabled: true
+#   ## @param Set the log level for Roundcube
+#   logLevel: ""
+#   image:
+#     repository: mailu/roundcube
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   uri: /roundcube
+#   resources:
+#     requests:
+#       memory: 100Mi
+#       cpu: 100m
+#     limits:
+#       memory: 200Mi
+#       cpu: 200m
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# webdav:
+#   ## @param Enable deployment of WebDAV server (using Radicale)
+#   enabled: false
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/radicale
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# mysql:
+#   image:
+#     repository: library/mariadb
+#     tag: 10.4.10
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 256Mi
+#       cpu: 100m
+#     limits:
+#       memory: 512Mi
+#       cpu: 200m
+#   startupProbe:
+#     periodSeconds: 10
+#     failureThreshold: 30
+#     timeoutSeconds: 5
+#   livenessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 3
+#     timeoutSeconds: 5
+#   readinessProbe:
+#     periodSeconds: 10
+#     failureThreshold: 1
+#     timeoutSeconds: 5
+
+# fetchmail:
+#   ## @param Enable deployment of fetchmail
+#   enabled: false
+#   # logLevel: WARNING
+#   image:
+#     repository: mailu/fetchmail
+#     # tag defaults to mailuVersion
+#     # tag: master
+#   persistence:
+#     size: 20Gi
+#     storageClass: ""
+#     accessMode: ReadWriteOnce
+#     claimNameOverride: ""
+#     #annotations:
+#     #  "helm.sh/resource-policy": keep
+#   resources:
+#     requests:
+#       memory: 100Mi
+#       cpu: 100m
+#     limits:
+#       memory: 200Mi
+#       cpu: 200m
+#   delay: 600
