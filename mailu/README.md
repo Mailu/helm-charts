@@ -6,13 +6,6 @@ This chart installs the Mailu mail system on kubernetes
 
 **Homepage:** <https://mailu.io>
 
-## Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://charts.bitnami.com/bitnami | mariadb | 11.3.* |
-| https://charts.bitnami.com/bitnami | postgresql | 11.9.* |
-
 ## Compatibility
 
 | Chart Version       | Mailu Version |
@@ -31,6 +24,11 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 - A node which has a public reachable IP, static address because mail service binds directly to the node's IP
 - A hosting service that allows inbound and outbound traffic on port 25.
 - Helm 3 (helm 2 support is dropped with release 0.3.0).
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://charts.bitnami.com/bitnami | mariadb | 11.3.* |
+| https://charts.bitnami.com/bitnami | postgresql | 11.9.* |
 
 ### Warning about open relays
 

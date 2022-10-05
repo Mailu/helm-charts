@@ -10,9 +10,6 @@
 
 {{ template "chart.maintainersSection" . }}
 
-{{ template "chart.requirementsHeader" . }}
-
-{{ template "chart.requirementsTable" . }}
 
 ## Compatibility
 
@@ -32,6 +29,8 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 - A node which has a public reachable IP, static address because mail service binds directly to the node's IP
 - A hosting service that allows inbound and outbound traffic on port 25.
 - Helm 3 (helm 2 support is dropped with release 0.3.0).
+
+{{ template "chart.requirementsTable" . }}
 
 ### Warning about open relays
 
