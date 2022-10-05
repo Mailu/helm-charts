@@ -247,7 +247,12 @@ Check that the deployed pods are all running.
 | front.startupProbe.timeoutSeconds | int | `5` |  |
 | fullnameOverride | string | `""` |  |
 | hostnames | list | `[]` | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname |
-| ingress | object | `{"annotations":{"nginx.ingress.kubernetes.io/proxy-body-size":"0"},"className":"","externalIngress":true,"realIpFrom":"0.0.0.0/0","realIpHeader":"X-Forwarded-For","tlsFlavor":"cert"}` | Set ingress and loadbalancer config |
+| ingress.annotations."nginx.ingress.kubernetes.io/proxy-body-size" | string | `"0"` |  |
+| ingress.className | string | `""` |  |
+| ingress.externalIngress | bool | `true` |  |
+| ingress.realIpFrom | string | `"0.0.0.0/0"` |  |
+| ingress.realIpHeader | string | `"X-Forwarded-For"` |  |
+| ingress.tlsFlavor | string | `"cert"` |  |
 | initialAccount | object | `{}` | An initial account can automatically be created: |
 | logLevel | string | `"WARNING"` | default log level. can be overridden globally or per service |
 | mail.authRatelimitExemtionLength | int | `86400` |  |

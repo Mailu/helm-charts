@@ -251,7 +251,7 @@ certmanager:
   # -- Name of the secret to use for certificates
   apiVersion: cert-manager.io/v1
 
-# -- Set ingress and loadbalancer config
+# Set ingress and loadbalancer config
 ingress:
   externalIngress: true
   tlsFlavor: cert
