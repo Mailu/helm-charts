@@ -118,7 +118,6 @@ Check that the deployed pods are all running.
 | admin.image.repository | string | `"mailu/admin"` |  |
 | admin.image.tag | string | `""` | tag defaults to mailuVersion |
 | admin.initContainers | list | `[]` | Add additional init containers to the Mailu Admin pod(s) |
-| admin.livenessProbe | object | `{"enabled":true,"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":1}` | Liveness probe values |
 | admin.livenessProbe.enabled | bool | `true` | Enable livenessProbe |
 | admin.livenessProbe.failureThreshold | int | `3` | Failure threshold for livenessProbe |
 | admin.livenessProbe.initialDelaySeconds | int | `10` | Initial delay seconds for livenessProbe |
@@ -152,7 +151,10 @@ Check that the deployed pods are all running.
 | admin.startupProbe.timeoutSeconds | int | `1` | Timeout seconds for startupProbe |
 | admin.tolerations | list | `[]` | admin.tolerations Tolerations for admin pod assignment |
 | affinity | object | `{}` | Affinity for pod assignment |
-| certmanager | object | `{"apiVersion":"cert-manager.io/v1","enabled":true,"issuerName":"letsencrypt","issuerType":"ClusterIssuer"}` | certmanager settings |
+| certmanager.apiVersion | string | `"cert-manager.io/v1"` | Name of the secret to use for certificates |
+| certmanager.enabled | bool | `true` | Enable certmanager (create certificates for all domains) |
+| certmanager.issuerName | string | `"letsencrypt"` | Name of the issuer to use |
+| certmanager.issuerType | string | `"ClusterIssuer"` | Issuer to use for certificates |
 | clamav.enabled | bool | `true` |  |
 | clamav.image.repository | string | `"mailu/clamav"` |  |
 | clamav.livenessProbe.failureThreshold | int | `3` |  |

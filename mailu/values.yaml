@@ -240,11 +240,15 @@ mail:
   messageRatelimit: 200/day
   # messageRatelimitExemption:
 
-# -- certmanager settings
+# Certmanager settings
 certmanager:
+  # -- Enable certmanager (create certificates for all domains)
   enabled: true
+  # -- Issuer to use for certificates
   issuerType: ClusterIssuer
+  # -- Name of the issuer to use
   issuerName: letsencrypt
+  # -- Name of the secret to use for certificates
   apiVersion: cert-manager.io/v1
 
 # -- Set ingress and loadbalancer config
@@ -350,7 +354,7 @@ admin:
   # -- Name of existing Secret containing extra env vars for Mailu admin pod(s)
   extraEnvVarsSecret: ""
   # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  # -- Liveness probe values
+  # Liveness probe values
   livenessProbe:
     # -- Enable livenessProbe
     enabled: true
