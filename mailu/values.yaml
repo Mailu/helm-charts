@@ -1,30 +1,29 @@
 # Default values for mailu.
 
-# A list of mail hostnames is required. The first will be used as primary mail hostname
 # e.g.:
 # hostnames:
 #   - mail.example.com
 #   - imap.example.com
+# -- List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname
 hostnames: []
 
-# The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
 # e.g.:
 # domain: example.com
+# -- Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
 domain: ""
 
-# The secret key is required for protecting authentication cookies and must be set individually for each deployment
-# If empty, a random secret key will be generated and saved in a secret
 # e.g.:
 # secretKey: chang3m3!
+# -- The secret key is required for protecting authentication cookies and must be set individually for each deployment
+# If empty, a random secret key will be generated and saved in a secret
 secretKey: ""
 
-# @param existingSecret Name of the existing secret to retrieve the secretKey.
-# The secret has to contain the secretKey value under the 'secret-key' key.
 # e.g.:
 # existingSecret: mailu-secret
+# -- existingSecret Name of the existing secret to retrieve the secretKey.
+# The secret has to contain the secretKey value under the `secret-key` key.
 existingSecret: ""
 
-# An initial account can automatically be created:
 # e.g.:
 # initialAccount:
 #   username: mailadmin
@@ -37,6 +36,7 @@ existingSecret: ""
 # e.g.:
 # initialAccount:
 #   existingSecret: mailu-secret
+# -- An initial account can automatically be created:
 initialAccount: {}
 
 nameOverride: ""
@@ -45,12 +45,12 @@ clusterDomain: cluster.local
 
 nodeSelector: {}
 
-# Tolerations for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# -- Tolerations for pod assignment
 tolerations: {}
 
-# Affinity for pod assignment
 # Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+# -- Affinity for pod assignment
 affinity: {}
 
 database:
@@ -201,8 +201,8 @@ external_relay: {}
 #    passwordKey: password
 
 persistence:
-  # Setings for a single volume for all apps
-  # set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
+  # -- Setings for a single volume for all apps.
+  # Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
   single_pvc: true
   size: 100Gi
   accessMode: ReadWriteOnce
@@ -213,22 +213,22 @@ persistence:
   #storageClass: "-"
   #claimNameOverride: my-claim-name
 
-# Change this if you're using different address ranges for pods
+# -- Change this if you're using different address ranges for pods
 subnet: 10.42.0.0/16
 
-# Version of mailu docker images to use when not specified otherwise
+# -- Version/tag of mailu images - must be master or a version >= 1.9
 mailuVersion: 1.9.26
 
-# default log level. can be overridden globally or per service
+# -- default log level. can be overridden globally or per service
 logLevel: WARNING
 
-# local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
+# -- local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
 postmaster: postmaster
 
 mail:
   messageSizeLimitInMegabytes: 50
 
-  # Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
+  # -- Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
   authRatelimitIP: 60/hour
   authRatelimitIPv4Mask: 24
   authRatelimitIPv6Mask: 56
@@ -236,18 +236,18 @@ mail:
   authRatelimitExemtionLength: 86400
   # authRatelimitExemtion:
 
-  # Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
+  # -- Configuration to reduce outgoing spam in case of an compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
   messageRatelimit: 200/day
   # messageRatelimitExemption:
 
-# certmanager settings
+# -- certmanager settings
 certmanager:
   enabled: true
   issuerType: ClusterIssuer
   issuerName: letsencrypt
   apiVersion: cert-manager.io/v1
 
-# Set ingress and loadbalancer config
+# -- Set ingress and loadbalancer config
 ingress:
   externalIngress: true
   tlsFlavor: cert
@@ -262,8 +262,9 @@ front:
   # logLevel: WARNING
   image:
     repository: mailu/nginx
-    # tag defaults to mailuVersion
-    # tag: master
+    # -- Fron pod image tag
+    # @default -- defaults to mailuVersion
+    tag: ""
   resources:
     requests:
       memory: 100Mi
@@ -283,12 +284,13 @@ front:
     periodSeconds: 10
     failureThreshold: 1
     timeoutSeconds: 5
-  # Deployment or DaemonSet
+
   controller:
+    # -- Deployment or DaemonSet
     kind: Deployment
   nodeSelector: {}
 
-  # Expose front mail ports via hostPort
+  # -- Expose front mail ports via hostPort
   hostPort:
     enabled: true
 
@@ -316,8 +318,8 @@ admin:
   # logLevel: WARNING
   image:
     repository: mailu/admin
-    # tag defaults to mailuVersion
-    # tag: master
+    # -- tag defaults to mailuVersion
+    tag: ""
     pullPolicy: IfNotPresent
   persistence:
     size: 20Gi
@@ -335,107 +337,102 @@ admin:
       memory: 500Mi
       cpu: 500m
 
-  ## @param admin.extraEnvVars Extra environment variable to pass to the running container.
-  ## For example:
-  ## extraEnvVars:
-  ##  - name: MY_ENV_VAR
-  ##    value: env_var_value
-  ##
+  # For example:
+  # extraEnvVars:
+  #  - name: MY_ENV_VAR
+  #    value: env_var_value
+  # -- Extra environment variable to pass to the running container.
   extraEnvVars: []
-  ## @param admin.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for Mailu admin pod(s)
-  ##
+
+  # -- Name of existing ConfigMap containing extra env vars for Mailu admin pod(s)
   extraEnvVarsCM: ""
-  ## @param admin.extraEnvVarsSecret Name of existing Secret containing extra env vars for Mailu admin pod(s)
-  ##
+
+  # -- Name of existing Secret containing extra env vars for Mailu admin pod(s)
   extraEnvVarsSecret: ""
-  ## Liveness probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param admin.livenessProbe.enabled Enable livenessProbe
-  ## @param admin.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-  ## @param admin.livenessProbe.periodSeconds Period seconds for livenessProbe
-  ## @param admin.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-  ## @param admin.livenessProbe.failureThreshold Failure threshold for livenessProbe
-  ## @param admin.livenessProbe.successThreshold Success threshold for livenessProbe
-  ##
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  # Liveness probe values
   livenessProbe:
+    # -- Enable livenessProbe
     enabled: true
+    # -- Failure threshold for livenessProbe
     failureThreshold: 3
+    # -- Initial delay seconds for livenessProbe
     initialDelaySeconds: 10
+    # -- Period seconds for livenessProbe
     periodSeconds: 10
+    # -- Success threshold for livenessProbe
     successThreshold: 1
-    timeoutSeconds: 1
-  ## Readiness probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param admin.readinessProbe.enabled Enable readinessProbe
-  ## @param admin.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-  ## @param admin.readinessProbe.periodSeconds Period seconds for readinessProbe
-  ## @param admin.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-  ## @param admin.readinessProbe.failureThreshold Failure threshold for readinessProbe
-  ## @param admin.readinessProbe.successThreshold Success threshold for readinessProbe
-  ##
-  readinessProbe:
-    enabled: true
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
-  ## Startup probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param admin.startupProbe.enabled Enable startupProbe
-  ## @param admin.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-  ## @param admin.startupProbe.periodSeconds Period seconds for startupProbe
-  ## @param admin.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-  ## @param admin.startupProbe.failureThreshold Failure threshold for startupProbe
-  ## @param admin.startupProbe.successThreshold Success threshold for startupProbe
-  ##
-  startupProbe:
-    enabled: false
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
+    # -- Timeout seconds for livenessProbe
     timeoutSeconds: 1
 
-  ## @param admin.podLabels Admin Pod labels
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  ##
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  # Readiness probe values
+  readinessProbe:
+    # -- Enable readinessProbe
+    enabled: true
+    # -- Failure threshold for readinessProbe
+    failureThreshold: 3
+    # -- Initial delay seconds for readinessProbe
+    initialDelaySeconds: 10
+    # -- Period seconds for readinessProbe
+    periodSeconds: 10
+    # -- Success threshold for readinessProbe
+    successThreshold: 1
+    # -- Timeout seconds for readinessProbe
+    timeoutSeconds: 1
+
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  # Startup probe values
+  startupProbe:
+    # -- Enable startupProbe
+    enabled: false
+    # -- Failure threshold for startupProbe
+    failureThreshold: 3
+    # -- Initial delay seconds for startupProbe
+    initialDelaySeconds: 10
+    # -- Period seconds for startupProbe
+    periodSeconds: 10
+    # -- Success threshold for startupProbe
+    successThreshold: 1
+    # -- Timeout seconds for startupProbe
+    timeoutSeconds: 1
+
+  # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  # -- Admin Pod labels
   podLabels: {}
-  ## @param admin.podAnnotations Admin Pod annotations
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  ##
+
+  # ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  # -- Admin Pod annotations
   podAnnotations: {}
-  ## @param admin.nodeSelector Node labels for admin pod assignment
-  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
+
+  # ref: https://kubernetes.io/docs/user-guide/node-selection/
+  # -- Node labels for admin pod assignment
   nodeSelector: {}
-  ## @param admin.initContainers Add additional init containers to the Mailu Admin pod(s)
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  ## e.g:
-  ## initContainers:
-  ##  - name: your-image-name
-  ##    image: your-image
-  ##    imagePullPolicy: Always
-  ##    command: ['sh', '-c', 'echo "hello world"']
-  ##
+
+  # ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  # e.g:
+  # initContainers:
+  #  - name: your-image-name
+  #    image: your-image
+  #    imagePullPolicy: Always
+  #    command: ['sh', '-c', 'echo "hello world"']
+  # -- Add additional init containers to the Mailu Admin pod(s)
   initContainers: []
-  ## @param admin.priorityClassName Mailu admin pods' priorityClassName
-  ##
+
+  # -- Mailu admin pods' priorityClassName
   priorityClassName: ""
-  ## @param admin.affinity Affinity for admin pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ##
+
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  # -- Affinity for admin pod assignment
   affinity: {}
-  ## @param admin.tolerations Tolerations for admin pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  ##
+
+  # ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  # -- admin.tolerations Tolerations for admin pod assignment
   tolerations: []
 
-  ## Service parameters
-  ##
+  # Service parameters
   service:
-    ## @param admin.service.annotations Admin service annotations
-    ##
+    # -- Admin service annotations
     annotations: {}
 redis:
   image:
@@ -653,8 +650,10 @@ clamav:
 #          topologyKey: kubernetes.io/hostname
 
 roundcube:
+  # -- Enable deployment of Roundcube webmail
   enabled: true
-  # logLevel: WARNING
+  # -- Set the log level for Roundcube
+  logLevel: ""
   image:
     repository: mailu/roundcube
     # tag defaults to mailuVersion
@@ -688,6 +687,7 @@ roundcube:
     timeoutSeconds: 5
 
 webdav:
+  # -- Enable deployment of WebDAV server (using Radicale)
   enabled: false
   # logLevel: WARNING
   image:
@@ -746,6 +746,7 @@ mysql:
     timeoutSeconds: 5
 
 fetchmail:
+  # -- Enable deployment of fetchmail
   enabled: false
   # logLevel: WARNING
   image:
