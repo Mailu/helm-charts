@@ -1,0 +1,33 @@
+---
+{{- if not .Values.persistence.single_pvc }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{- include "mailu.postfix.claimName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: postfix
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.postfix.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.postfix.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.postfix.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.postfix.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.postfix.persistence.size | quote }}
+  {{- if .Values.postfix.persistence.storageClass }}
+  storageClassName: {{ .Values.postfix.persistence.storageClass }}
+  {{- end }}
+{{- end }}

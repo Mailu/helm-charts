@@ -17,7 +17,7 @@ spec:
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: clamav
   ports:
-  - name: clamav
-    port: 3310
-    protocol: TCP
+    - name: clamav
+      port: 3310
+      protocol: TCP
 {{- end }}

@@ -1,0 +1,177 @@
+---
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-postfix" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: postfix
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.postfix.updateStrategy }}
+  strategy: {{- toYaml .Values.postfix.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.postfix.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: postfix
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: postfix
+        {{- if .Values.postfix.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.postfix.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.postfix.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.postfix.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.postfix.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.postfix.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.hostAliases "context" $) | nindent 8 }}
+      {{- end }}    
+      {{- if .Values.postfix.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.postfix.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.postfix.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.postfix.priorityClassName }}
+      priorityClassName: {{ .Values.postfix.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.postfix.schedulerName }}
+      schedulerName: {{ .Values.postfix.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.postfix.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.postfix.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.postfix.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.postfix.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: postfix
+          image: {{ .Values.postfix.image.repository }}:{{ default .Values.mailuVersion .Values.postfix.image.tag }}
+          imagePullPolicy: {{ .Values.postfix.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /queue
+              name: data
+              subPath: mailqueue
+            {{- if .Values.postfix.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.postfix.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ default .Values.logLevel .Values.postfix.logLevel }}
+            - name: REJECT_UNLISTED_RECIPIENT
+              value: "yes"
+            - name: DOMAIN
+              value: "{{ required "domain" .Values.domain }}"
+            - name: HOSTNAMES
+              value: "{{ join "," .Values.hostnames }}"
+            - name: MESSAGE_SIZE_LIMIT
+              value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+            - name: SUBNET
+              value: "{{ .Values.subnet }}"
+            - name: RECIPIENT_DELIMITER
+              value: "+"
+            - name: LMTP_ADDRESS
+              value: {{ include "mailu.hosts.dovecot" . }}:2525
+            - name: ANTISPAM_MILTER_ADDRESS
+              value: {{ include "mailu.hosts.rspamd" . }}:11332
+            - name: ADMIN_ADDRESS
+              value: {{ include "mailu.hosts.admin" . }}
+            - name: FRONT_ADDRESS
+              value: {{ include "mailu.hosts.front" . }}
+            {{ if .Values.external_relay.host }}
+            - name: RELAYHOST
+              value: "{{ .Values.external_relay.host }}"
+            {{ if .Values.external_relay.secretName }}
+            - name: RELAYUSER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.external_relay.secretName }}
+                  key: {{ .Values.external_relay.usernameKey}}
+            - name: RELAYPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.external_relay.secretName }}
+                  key: {{ .Values.external_relay.passwordKey }}
+            {{ else if .Values.external_relay.username }}
+            - name: RELAYUSER
+              value: "{{ .Values.external_relay.username }}"
+            - name: RELAYPASSWORD
+              value: "{{ .Values.external_relay.password }}"
+            {{- end}}
+            {{- end}}
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.postfix.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.postfix.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.postfix.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.postfix.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.postfix.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.postfix.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: smtp
+              containerPort: 25
+              protocol: TCP
+            - name: smtp-ssl
+              containerPort: 465
+              protocol: TCP
+            - name: smtp-starttls
+              containerPort: 587
+              protocol: TCP
+            - name: smtp-auth
+              containerPort: 10025
+              protocol: TCP
+          {{- if .Values.postfix.resources }}
+          resources: {{- toYaml .Values.postfix.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.postfix.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.startupProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - sh
+                - -c
+                - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          {{- end }}
+          {{- if .Values.postfix.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - sh
+                - -c
+                - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          {{- end }}
+          {{- if .Values.postfix.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - sh
+                - -c
+                - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
+          {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.postfix.claimName" . }}

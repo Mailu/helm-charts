@@ -112,7 +112,19 @@ mail:
 ##    secretName: external-relay-secret
 ##    usernameKey: username
 ##    passwordKey: password
-external_relay: {}
+## @param external_relay.host Hostname of the external relay
+## @param external_relay.username Username for the external relay
+## @param external_relay.password Password for the external relay
+## @param external_relay.secretName Name of the secret containing the username and password for the external relay; if set, username and password will be ignored
+## @param external_relay.usernameKey Key in the secret containing the username for the external relay
+## @param external_relay.passwordKey Key in the secret containing the password for the external relay
+external_relay:
+  host: ""
+  username: ""
+  password: ""
+  secretName: ""
+  usernameKey: "relay-username"
+  passwordKey: "relay-password"
 
 ## @param clusterDomain Kubernetes cluster domain name
 clusterDomain: cluster.local
