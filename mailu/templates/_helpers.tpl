@@ -46,10 +46,19 @@ cluster.local
 {{- end -}}
 {{- end -}}
 
-{{ define "mailu.rspamdClamavClaimName"}}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
-{{- end }}
+{{/*
+Get MailU domain name or throw an error if not set
+*/}}
+{{- define "mailu.domain" -}}
+{{- if .Values.domain -}}
+{{- .Values.domain -}}
+{{- else -}}
+{{- fail "You must set a domain name for Mailu (`domain:`)" -}}
+{{- end -}}
+{{- end -}}
 
+{{/*
+*/}}
 
 {{/*
 Get the certificates secret name

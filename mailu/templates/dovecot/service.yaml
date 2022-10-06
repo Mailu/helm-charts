@@ -1,0 +1,35 @@
+---
+{{- if .Values.dovecot.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-dovecot" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: dovecot
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.dovecot.service.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.dovecot.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: dovecot
+  ports:
+    - name: imap-auth
+      port: 2102
+      protocol: TCP
+    - name: imap-transport
+      port: 2525
+      protocol: TCP
+    - name: imap-default
+      port: 143
+      protocol: TCP
+    - name: pop3
+      port: 110
+      protocol: TCP
+    - name: sieve
+      port: 4190
+      protocol: TCP
+{{- end }}
