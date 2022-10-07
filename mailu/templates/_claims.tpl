@@ -40,3 +40,9 @@ Roundcube pod persistent volume claim name
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.roundcube.persistence.claimNameOverride | default (printf "%s-roundcube" (include "mailu.fullname" .)) }}
 {{- end }}
 
+{{/*
+Fetchmail pod persistent volume claim name
+*/}}
+{{ define "mailu.fetchmail.claimName" }}
+{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.fetchmail.persistence.claimNameOverride | default (printf "%s-fetchmail" (include "mailu.fullname" .)) }}
+{{- end }}

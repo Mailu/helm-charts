@@ -1,0 +1,134 @@
+---
+{{- if .Values.fetchmail.enabled }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-fetchmail" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: fetchmail
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.fetchmail.updateStrategy }}
+  strategy: {{- toYaml .Values.fetchmail.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.fetchmail.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: fetchmail
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: fetchmail
+        {{- if .Values.fetchmail.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.fetchmail.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.fetchmail.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.fetchmail.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.fetchmail.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.hostAliases "context" $) | nindent 8 }}
+      {{- end }}    
+      {{- if .Values.fetchmail.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.fetchmail.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.fetchmail.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.fetchmail.priorityClassName }}
+      priorityClassName: {{ .Values.fetchmail.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.fetchmail.schedulerName }}
+      schedulerName: {{ .Values.fetchmail.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.fetchmail.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.fetchmail.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.fetchmail.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.fetchmail.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: fetchmail
+          image: {{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
+          imagePullPolicy: {{ .Values.fetchmail.image.pullPolicy }}
+          volumeMounts:
+            - name: data
+              subPath: fetchmail
+              mountPath: /data
+            {{- if .Values.fetchmail.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: DEBUG
+              {{- if (default .Values.logLevel .Values.fetchmail.logLevel) "DEBUG" }}
+              value: "True"
+              {{- else }}
+              value: "False"
+              {{- end }}
+            - name: HOST_SMTP
+              value: {{ include "mailu.hosts.front" . }}
+            - name: HOST_ADMIN
+              value: {{ include "mailu.hosts.admin" . }}
+            - name: FETCHMAIL_DELAY
+              value: "{{ .Values.fetchmail.delay }}"
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.fetchmail.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.fetchmail.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.fetchmail.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: fetchmail
+              containerPort: 5232
+              protocol: TCP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- if .Values.fetchmail.resources }}
+          resources: {{- toYaml .Values.fetchmail.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.fetchmail.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.startupProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              # TODO: Add a proper healthcheck
+              command: [ "true" ]
+          {{- end }}
+          {{- if .Values.fetchmail.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command: [ "true" ]
+          {{- end }}
+          {{- if .Values.fetchmail.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command: [ "true" ]
+          {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.fetchmail.claimName" . }}
+{{- end }}
