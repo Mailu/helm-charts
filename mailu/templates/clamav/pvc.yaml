@@ -31,4 +31,3 @@ spec:
   storageClassName: {{ .Values.clamav.persistence.storageClass }}
   {{- end }}
 {{- end }}
-{{- end }}

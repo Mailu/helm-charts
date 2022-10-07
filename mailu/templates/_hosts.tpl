@@ -53,3 +53,10 @@ Returns webdav internal hostname.
 {{- define "mailu.hosts.webdav" -}}
 {{- printf "%s-webdav.%s" (include "mailu.fullname" . ) (include "common.names.namespace" . ) -}}
 {{- end -}}
+
+{{/*
+Returns clamav internal hostname.
+*/}}
+{{- define "mailu.hosts.clamav" -}}
+{{- printf "%s-clamav.%s" (include "mailu.fullname" . ) (include "common.names.namespace" . ) -}}
+{{- end -}}
