@@ -1249,31 +1249,6 @@ dovecot:
   ##     mail_max_userip_connections=100
   overrides: {}
 
-## historically rspamd and clamav shared their volumes in this chart
-## this isn't needed anymore. to maintain backward compatibility and give users
-## some time to migrate we keep this here.
-##
-## if you want a "shared" volume keep in mind you have to use affinity rules on
-## rspamd and clamav pods so that both pods are scheduled on the same node
-## to keep RWO volumes working
-##
-## otherwise set rspamd_clamav_persistence.single_pvc to true and review
-## rspamd.persistence and clamav.persistence
-## @param rspamd_clamav_persistence.size Size of the volume
-## @param rspamd_clamav_persistence.storageClass Storage class of the volume
-## @param rspamd_clamav_persistence.accessMode Access mode of the volume
-## @param rspamd_clamav_persistence.claimNameOverride Override the name of the PVC
-## @param rspamd_clamav_persistence.single_pvc Use a single PVC for rspamd and clamav
-## @param rspamd_clamav_persistence.annotations Annotations for the PVC
-rspamd_clamav_persistence:
-  size: 20Gi
-  storageClass: ""
-  accessMode: ReadWriteOnce
-  claimNameOverride: ""
-  single_pvc: false
-  annotations: {}
-  #  "helm.sh/resource-policy": keep
-
 ## @section rspamd parameters
 rspamd:
   ## @param rspamd.logLevel Override default log level

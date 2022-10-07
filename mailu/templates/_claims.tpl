@@ -26,6 +26,17 @@ Postfix pod persistent volume claim name
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.postfix.persistence.claimNameOverride | default (printf "%s-postfix" (include "mailu.fullname" .)) }}
 {{- end }}
 
-{{ define "mailu.rspamdClamavClaimName"}}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd_clamav_persistence.claimNameOverride | default (printf "%s-rspamd-clamav" (include "mailu.fullname" .)) }}
+{{/*
+Clamav pod persistent volume claim name
+*/}}
+{{ define "mailu.clamav.claimName" }}
+{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.clamav.persistence.claimNameOverride | default (printf "%s-clamav" (include "mailu.fullname" .)) }}
 {{- end }}
+
+{{/*
+Rspamd pod persistent volume claim name
+*/}}
+{{ define "mailu.rspamd.claimName" }}
+{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd.persistence.claimNameOverride | default (printf "%s-rspamd" (include "mailu.fullname" .)) }}
+{{- end }}
+

@@ -1,0 +1,147 @@
+---
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-rspamd" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: rspamd
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.rspamd.updateStrategy }}
+  strategy: {{- toYaml .Values.rspamd.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.rspamd.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: rspamd
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: rspamd
+        {{- if .Values.rspamd.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.rspamd.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.rspamd.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.rspamd.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.rspamd.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.hostAliases "context" $) | nindent 8 }}
+      {{- end }}    
+      {{- if .Values.rspamd.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rspamd.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rspamd.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rspamd.priorityClassName }}
+      priorityClassName: {{ .Values.rspamd.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.rspamd.schedulerName }}
+      schedulerName: {{ .Values.rspamd.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.rspamd.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.rspamd.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.rspamd.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.rspamd.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      hostname: rspamd # https://github.com/Mailu/helm-charts/issues/95
+      containers:
+        - name: rspamd
+          image: {{ .Values.rspamd.image.repository }}:{{ default .Values.mailuVersion .Values.rspamd.image.tag }}
+          imagePullPolicy: {{ .Values.rspamd.image.pullPolicy }}
+          volumeMounts:
+            - name: data
+              subPath: rspamd
+              mountPath: /var/lib/rspamd
+            - name: data
+              subPath: rspamd-local.d-maps.d
+              mountPath: /etc/rspamd/local.d/maps.d
+            {{- if .Values.rspamd.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
+            - name: FRONT_ADDRESS
+              value: {{ include "mailu.hosts.front" . }}
+            - name: ADMIN_ADDRESS
+              value: {{ include "mailu.hosts.admin" . }}
+            - name: REDIS_ADDRESS
+              value: {{ include "mailu.hosts.redis" . }}
+            {{- if .Values.clamav.enabled }}
+            - name: ANTIVIRUS
+              value: clamav
+            - name: ANTIVIRUS_ADDRESS
+              value: {{ include "mailu.hosts.clamav" . }}:3310
+            {{- else }}
+            - name: ANTIVIRUS
+              value: none
+            - name: ANTIVIRUS_ADDRESS
+              value: localhost
+            {{- end }}
+            - name: SUBNET
+              value: "{{ .Values.subnet }}"
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.rspamd.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.rspamd.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.rspamd.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.rspamd.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.rspamd.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: rspamd
+              containerPort: 11332
+              protocol: TCP
+            - name: rspamd-http
+              containerPort: 11334
+              protocol: TCP
+          {{- if .Values.rspamd.resources }}
+          resources: {{- toYaml .Values.rspamd.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.rspamd.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.startupProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: rspamd-http
+          {{- end }}
+          {{- if .Values.rspamd.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: rspamd-http
+          {{- end }}
+          {{- if .Values.rspamd.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /
+              port: rspamd-http
+          {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.rspamd.claimName" . }}
