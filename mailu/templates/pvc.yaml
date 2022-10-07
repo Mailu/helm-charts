@@ -1,0 +1,35 @@
+---
+{{- if .Values.persistence.single_pvc }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-storage" (include "mailu.fullname" . ) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{- if and (.Values.persistence.storageClass) (not .Values.persistence.hostPath) }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+  {{- if .Values.persistence.hostPath }}
+  volumeName: {{ printf "%s-storage" (include "mailu.fullname" . ) }}
+  {{- end }}
+{{- end }}

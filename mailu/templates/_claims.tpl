@@ -33,3 +33,10 @@ Rspamd pod persistent volume claim name
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd.persistence.claimNameOverride | default (printf "%s-rspamd" (include "mailu.fullname" .)) }}
 {{- end }}
 
+{{/*
+Roundcube pod persistent volume claim name
+*/}}
+{{ define "mailu.roundcube.claimName" }}
+{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.roundcube.persistence.claimNameOverride | default (printf "%s-roundcube" (include "mailu.fullname" .)) }}
+{{- end }}
+

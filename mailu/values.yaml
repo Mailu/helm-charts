@@ -293,18 +293,21 @@ postgresql:
 ## @param persistence.single_pvc Setings for a single volume for all apps.
 ## Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
 ## @param persistence.size Size of the persistent volume claim (for single PVC)
-## @param persistence.storageClass Storage class of backing PVC (for single PVC)
 ## @param persistence.accessMode Access mode of backing PVC (for single PVC)
+## @param persistence.annotations Annotations for the PVC (for single PVC)
+## @param persistence.hostPath Path to mount the volume at on the host
+## @param persistence.existingClaim Name of existing PVC (for single PVC)
+## @param persistence.storageClass Storage class of backing PVC (for single PVC)
+## @param persistence.claimNameOverride Override the name of the PVC (for single PVC)
 persistence:
   single_pvc: true
   size: 100Gi
   accessMode: ReadWriteOnce
-  # annotations:
-  #   "helm.sh/resource-policy": keep
-  # hostPath: /path/on/the/host
-  # existingClaim: name-of-existing.claim
+  annotations: {}
+  hostPath: ""
+  existingClaim: ""
   storageClass: ""
-  # claimNameOverride: my-claim-name
+  claimNameOverride: ""
 
 ## @section Ingress settings
 

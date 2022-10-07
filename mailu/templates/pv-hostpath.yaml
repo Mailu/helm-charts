@@ -1,0 +1,45 @@
+---
+{{- if and .Values.persistence.single_pvc .Values.persistence.hostPath }}
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ printf "%s-storage" (include "mailu.fullname" . ) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  capacity:
+    storage: {{ .Values.persistence.size }}
+  accessModes:
+    {{- range .Values.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  hostPath:
+    path: {{ .Values.persistence.hostPath }}
+    type: DirectoryOrCreate
+  {{ if .Values.nodeSelector }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+          {{- range $k, $v := .Values.nodeSelector }}
+          - key: "{{ $k }}"
+            operator: In
+            values:
+              - "{{ $v }}"
+          {{- end }}
+  {{ end }}
+{{- end }}
