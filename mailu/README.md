@@ -30,6 +30,7 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 | https://charts.bitnami.com/bitnami | common | 2.0.3 |
 | https://charts.bitnami.com/bitnami | mariadb | 11.3.* |
 | https://charts.bitnami.com/bitnami | postgresql | 11.9.* |
+| https://charts.bitnami.com/bitnami | redis | 17.3.* |
 
 ### Warning about open relays
 

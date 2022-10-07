@@ -713,179 +713,43 @@ admin:
   extraVolumeMounts: []
 
 ## @section Redis parameters
+## Redis chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/redis
 redis:
-  ## @param redis.logLevel Override default log level
-  logLevel: ""
+  ## @param redis.architecture Redis architecture. Allowed values: `standalone` or `replication`
+  architecture: standalone
 
-  ## Pod image
-  ## @param redis.image.repository Pod image repository
-  ## @param redis.image.tag Pod image tag
-  ## @param redis.image.pullPolicy Pod image pull policy
-  image:
-    repository: redis
-    tag: 5-alpine
-    pullPolicy: IfNotPresent
-
-  ## Pod persistence (if not using single_pvc)
-  ## @param redis.persistence.size Pod pvc size
-  ## @param redis.persistence.storageClass Pod pvc storage class
-  ## @param redis.persistence.accessModes Pod pvc access modes
-  ## @param redis.persistence.claimNameOverride Pod pvc name override
-  ## @param redis.persistence.annotations Pod pvc annotations
-  persistence:
-    size: 20Gi
-    storageClass: ""
-    accessModes: [ReadWriteOnce]
-    claimNameOverride: ""
-    annotations: {}
-
-  ## Pod resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ## We usually recommend not to specify default resources and to leave this as a conscious
-  ## choice for the user. This also increases chances charts run on environments with little
-  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
-  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  ## @param redis.resources.limits The resources limits for the container
-  ## @param redis.resources.requests The requested resources for the container
-  ##
-  resources:
-    ## Example:
-    ## limits:
-    ##    cpu: 200m
-    ##    memory: 300Mi
-    limits: {}
-    ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 200Mi
-    requests: {}
-
-  ## Liveness probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param redis.livenessProbe.enabled Enable livenessProbe
-  ## @param redis.livenessProbe.failureThreshold Failure threshold for livenessProbe
-  ## @param redis.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-  ## @param redis.livenessProbe.periodSeconds Period seconds for livenessProbe
-  ## @param redis.livenessProbe.successThreshold Success threshold for livenessProbe
-  ## @param redis.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-  livenessProbe:
-    enabled: true
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
-
-  ## Readiness probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param redis.readinessProbe.enabled Enable readinessProbe
-  ## @param redis.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-  ## @param redis.readinessProbe.periodSeconds Period seconds for readinessProbe
-  ## @param redis.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-  ## @param redis.readinessProbe.failureThreshold Failure threshold for readinessProbe
-  ## @param redis.readinessProbe.successThreshold Success threshold for readinessProbe
-  readinessProbe:
-    enabled: true
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
-
-  ## Startup probe values
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param redis.startupProbe.enabled Enable startupProbe
-  ## @param redis.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-  ## @param redis.startupProbe.periodSeconds Period seconds for startupProbe
-  ## @param redis.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-  ## @param redis.startupProbe.failureThreshold Failure threshold for startupProbe
-  ## @param redis.startupProbe.successThreshold Success threshold for startupProbe
-  startupProbe:
+  ## @param redis.auth.enabled DON'T CHANGE THIS VALUE. Mailu doesn't support Redis authentication
+  auth:
     enabled: false
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 1
 
-  ## @param redis.podLabels Add extra labels to pod
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  podLabels: {}
+  master:
+    ## @param redis.master.enabled DON'T CHANGE THIS VALUE. Enable redis master
+    enabled: true
 
-  ## @param redis.podAnnotations Add extra annotations to the pod
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  podAnnotations: {}
+    ## @param redis.master.count Number of redis master replicas
+    count: 1
 
-  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ## @param redis.nodeSelector Node labels selector for pod assignment
-  nodeSelector: {}
+    ## @param redis.master.persistence.enabled Enable persistence using Persistent Volume Claims
+    ## @param redis.master.persistence.size Pod pvc size
+    ## @param redis.master.persistence.storageClass Pod pvc storage class
+    ## @param redis.master.persistence.accessModes Pod pvc access modes
+    ## @param redis.master.persistence.annotations Pod pvc annotations
+    ## @param redis.master.persistence.existingClaim Pod pvc existing claim; necessary if using single_pvc
+    ## @param redis.master.persistence.subPath Subpath in PVC; necessary if using single_pvc (set it to `/redis`)
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+      accessModes: [ReadWriteOnce]
+      existingClaim: ""
+      subPath: ""
+      annotations: {}
 
-  ## @param redis.initContainers Add additional init containers to the pod
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-  ## e.g:
-  ## initContainers:
-  ##  - name: your-image-name
-  ##    image: your-image
-  ##    imagePullPolicy: Always
-  ##    command: ['sh', '-c', 'echo "hello world"']
-  initContainers: []
-
-  ## @param redis.priorityClassName Pods' priorityClassName
-  priorityClassName: ""
-
-  ## @param redis.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
-  terminationGracePeriodSeconds: 2
-
-  ## @param redis.affinity Affinity for redis pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  affinity: {}
-
-  ## @param redis.tolerations Tolerations for pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  tolerations: []
-
-  ## @param redis.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
-  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
-  revisionHistoryLimit: 3
-
-  ## @param redis.hostAliases Pod pod host aliases
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
-  hostAliases: []
-
-  ## @param redis.schedulerName Name of the k8s scheduler (other than default)
-  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  schedulerName: ""
-
-  # Service parameters
-  service:
-    ## @param redis.service.annotations Admin service annotations
-    annotations: {}
-
-  ## @param redis.topologySpreadConstraints Topology Spread Constraints for pod assignment
-  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-  topologySpreadConstraints: []
-
-  ## Strategy to use to update Pods
-  ## @param redis.updateStrategy.type Can be set to RollingUpdate or OnDelete
-  updateStrategy:
-    type: RollingUpdate
-
-  ## @param redis.extraEnvVars Extra environment variable to pass to the running container
-  ## For example:
-  ## extraEnvVars:
-  ##  - name: MY_ENV_VAR
-  ##    value: env_var_value
-  extraEnvVars: []
-
-  ## @param redis.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
-  extraEnvVarsCM: ""
-
-  ## @param redis.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
-  extraEnvVarsSecret: ""
-
-  ## @param redis.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
-  extraVolumeMounts: []
+  ## @param redis.replica.count Number of redis replicas (only if `redis.architecture=replication`)
+  ## Don't forget to configure replicas persistence if changing this value
+  replica:
+    count: 0
 
 ## @section Postfix parameters
 postfix:

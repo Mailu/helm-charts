@@ -1,0 +1,23 @@
+---
+{{- if .Values.webdav.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-webdav" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: webdav
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.webdav.service.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.webdav.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: webdav
+  ports:
+    - name: http
+      port: 5232
+      protocol: TCP
+{{- end }}
