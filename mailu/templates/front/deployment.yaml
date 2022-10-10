@@ -97,7 +97,7 @@ spec:
             - name: WEBMAIL
               value: roundcube
             - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.webmail.serviceFqdn" . }}
+              value: {{ include "mailu.roundcube.serviceFqdn" . }}
             - name: WEB_WEBMAIL
               value: {{ required "roundcube.uri" .Values.roundcube.uri }}
             - name: WEBROOT_REDIRECT

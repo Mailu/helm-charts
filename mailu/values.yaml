@@ -120,7 +120,7 @@ mail:
     value: 200/day
     exemption: ""
 
-## @param external_relay Mailu external relay configuration
+## Mailu external relay configuration
 ## Example:
 ##  external_relay:
 ##    host: "[domain.tld]:port"
@@ -216,10 +216,10 @@ mariadb:
   ## will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password`
   ## and `mariadb-password`
   auth:
-    rootPassword: changeme
+    rootPassword: ""
     database: mailu
     username: mailu
-    password: changeme
+    password: ""
     existingSecret: ""
 
   ## Enable persistence using Persistent Volume Claims
@@ -234,16 +234,14 @@ mariadb:
   ##   GKE, AWS & OpenStack)
   ## @param mariadb.primary.persistence.accessMode PVC Access Mode for MariaDB volume
   ## @param mariadb.primary.persistence.size PVC Storage Request for MariaDB volume
-  ## @param mariadb.primary.extraEnvVars Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
   primary:
     persistence:
       enabled: false
       storageClass: ""
       accessMode: ReadWriteOnce
       size: 8Gi
-    
-    livenessProbe:
-      initialDelaySeconds: 360
+
+    ## @param mariadb.primary.extraEnvVars Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
     extraEnvVars: |
       - name: ROUNDCUBE_DB_PW
         valueFrom:
@@ -322,6 +320,38 @@ postgresql:
   ## @param postgresql.primary.persistence.accessMode PVC Access Mode for PostgreSQL volume
   ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
   primary:
+
+    ## @param postgresql.primary.extraEnvVars Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
+    extraEnvVars: |
+      - name: ROUNDCUBE_DB_PW
+        valueFrom:
+          secretKeyRef:
+            name: {{ include "mailu.database.roundcube.secretName" . }}
+            key: {{ include "mailu.database.roundcube.secretKey" . }}
+      - name: ROUNDCUBE_DB_NAME
+        value: {{ include "mailu.database.roundcube.name" . }}
+      - name: ROUNDCUBE_DB_USER
+        value: {{ include "mailu.database.roundcube.username" . }}
+
+    initdb:
+      ## @param postgresql.initdb.scripts.create_roundcube_database.sh DO NOT EDIT Script to create the roundcube database
+      scripts:
+        create_roundcube_database.sh: |
+          #!/bin/bash
+          # set -o errexit
+          # set -o nounset
+          # set -o pipefail
+          info "Running DB initialisation..."
+          info "Creating database ${ROUNDCUBE_DB_NAME}..."
+          echo "CREATE DATABASE \"$ROUNDCUBE_DB_NAME\"" | postgresql_execute "" "postgres" ""
+          info "Creating user ${ROUNDCUBE_DB_USER}"
+          echo "CREATE ROLE \"${ROUNDCUBE_DB_USER}\" WITH LOGIN CREATEDB PASSWORD '${ROUNDCUBE_DB_PW}';" | postgresql_execute
+          info "Granting access to \"${ROUNDCUBE_DB_USER}\" to the database \"${ROUNDCUBE_DB_NAME}\""
+          echo "GRANT ALL PRIVILEGES ON DATABASE \"${ROUNDCUBE_DB_NAME}\" TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+          echo "ALTER DATABASE \"${ROUNDCUBE_DB_NAME}\" OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRESQL_PASSWORD"
+          info "Setting ownership for the 'public' schema database \"${ROUNDCUBE_DB_NAME}\" to \"${ROUNDCUBE_DB_USER}\""
+          echo "ALTER SCHEMA public OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "$ROUNDCUBE_DB_NAME" "postgres" "$POSTGRESQL_PASSWORD"
+
     persistence:
       enabled: false
       storageClass: ""
