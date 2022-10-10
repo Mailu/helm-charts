@@ -1,0 +1,5 @@
+helm-extra-args: --timeout 600s
+chart-dirs:
+  - .
+chart-repos:
+  - bitnami=https://charts.bitnami.com/bitnami

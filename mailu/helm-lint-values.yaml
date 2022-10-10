@@ -1,7 +1,3 @@
-# Values to be used for "helm lint --strict --values helm-lint-values.yaml"
-# The strict mode has a bug that fails with all missing values, even if "default" is used,
-# so we need to set defaults for everything. See https://github.com/helm/helm/issues/7483
-
 hostnames:
   - mail.example.com
   - imap.example.com
@@ -9,29 +5,25 @@ hostnames:
 domain: example.com
 
 initialAccount:
+  enabled: true
   username: mailadmin
   domain: mydomain.com
   password: chang3m3!
 
 secretKey: chang3m3!
-existingSecret: ""
-
-passwordScheme: PBKDF2
 
 persistence:
-  storageClass: default
-  claimNameOverride: false
-  existingClaim: false
-  hostPath: false
-  annotations: {}
+  single_pvc: false
 
-database:
-  mysql:
-    database: mailu
-    user: mailu
-    password: chang3m3!
-    host: mysql
-    rootPassword: chang3m3!
+postgresql:
+  enabled: true
+  postgresqlUsername: mailu
+  postgresqlPassword: chang3m3!
+  postgresqlDatabase: mailu
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
 
 front:
   logLevel: WARNING
