@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Helm lint
 
 # Controls when the workflow will run
@@ -11,25 +9,24 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   lint:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout chart
+      - name: Checkout
         uses: actions/checkout@v2
-      - name: Install helm 3
-        run: |
-          curl -s -L https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
-          chmod 0700 helm
-          mv helm helm3
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
       - name: Install dependencies
         run: |
-          ./helm3 repo add bitnami https://charts.bitnami.com/bitnami
-          ./helm3 dependency build mailu
-      - name: Running lint with helm v3
-        run: ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+
+      - name: Run helm lint
+        run: helm lint --strict --values mailu/helm-lint-values.yaml mailu
