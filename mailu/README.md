@@ -137,7 +137,7 @@ Check that the deployed pods are all running.
 
 | Name                                       | Description                                                                                                                            | Value            |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `hostnames`                                | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname                          | `[]`             |
+| `hostnames`                                | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname.                         | `[]`             |
 | `domain`                                   | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames      | `""`             |
 | `secretKey`                                | The secret key is required for protecting authentication cookies and must be set individually for each deployment                      | `""`             |
 | `existingSecret`                           | Name of the existing secret to retrieve the secretKey.                                                                                 | `""`             |
@@ -232,7 +232,7 @@ Check that the deployed pods are all running.
 | `certmanager.apiVersion`   | Name of the secret to use for certificates                                 | `cert-manager.io/v1` |
 | `ingress.externalIngress`  | Enable external ingress                                                    | `true`               |
 | `ingress.ingressClassName` | Set the ingress class name for external ingress                            | `""`                 |
-| `ingress.annotations`      | Annotations to add to the external ingress                                 | `nil`                |
+| `ingress.annotations`      | Annotations to add to the external ingress                                 | `{}`                 |
 | `ingress.realIpHeader`     | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod | `X-Forwarded-For`    |
 | `ingress.realIpFrom`       | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod   | `0.0.0.0/0`          |
 | `ingress.tlsFlavor`        | Sets the value of `TLS_FLAVOR` environment variable in the `front` pod     | `cert`               |
