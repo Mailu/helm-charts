@@ -115,6 +115,10 @@ spec:
               value: "{{ .Values.external_relay.password }}"
             {{- end}}
             {{- end}}
+            {{- if .Values.postfix.overrides }}
+            - name: overrides
+              mountPath: /overrides
+            {{- end }}
             {{- if .Values.timezone }}
             - name: TZ
               value: {{ .Values.timezone }}
@@ -175,3 +179,8 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.postfix.claimName" . }}
+        {{- if .Values.postfix.overrides }}
+        - name: overrides
+          configMap:
+            name: {{ printf "%s-postfix-override" (include "mailu.fullname" .) }}
+        {{- end }}

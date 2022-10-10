@@ -998,6 +998,14 @@ postfix:
   ## @param postfix.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
+  ## @param postfix.overrides Enable postfix overrides
+  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
+  ## Example:
+  ## overrides:
+  ##   postfix.cf: |
+  ##     my_variable = my_value
+  overrides: {}
+
 ## @section Dovecot parameters
 dovecot:
   ## @param dovecot.enabled Enable dovecot
