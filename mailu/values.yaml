@@ -42,7 +42,7 @@ commonAnnotations: {}
 ## hostnames:
 ##   - mail.example.com
 ##   - imap.example.com
-## @param hostnames List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname
+## @param hostnames List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname.
 hostnames: []
 
 ## e.g.:
