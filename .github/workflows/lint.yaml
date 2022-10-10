@@ -29,6 +29,7 @@ jobs:
           mv helm helm3
       - name: Install dependencies
         run: |
+          ./helm3 repo add bitnami https://charts.bitnami.com/bitnami
           ./helm3 dependency build mailu
       - name: Running lint with helm v3
         run: ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
