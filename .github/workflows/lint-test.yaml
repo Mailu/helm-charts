@@ -54,11 +54,9 @@ jobs:
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.4.0
-        with:
-          install_local_path_provisioner: true
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --config ct.yaml
+        run: ct install --debug --config ct.yaml
