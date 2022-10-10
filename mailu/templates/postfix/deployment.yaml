@@ -87,13 +87,13 @@ spec:
             - name: RECIPIENT_DELIMITER
               value: "+"
             - name: LMTP_ADDRESS
-              value: {{ include "mailu.hosts.dovecot" . }}:2525
+              value: {{ include "mailu.dovecot.serviceFqdn" . }}:2525
             - name: ANTISPAM_MILTER_ADDRESS
-              value: {{ include "mailu.hosts.rspamd" . }}:11332
+              value: {{ include "mailu.rspamd.serviceFqdn" . }}:11332
             - name: ADMIN_ADDRESS
-              value: {{ include "mailu.hosts.admin" . }}
+              value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: FRONT_ADDRESS
-              value: {{ include "mailu.hosts.front" . }}
+              value: {{ include "mailu.front.serviceFqdn" . }}
             {{ if .Values.external_relay.host }}
             - name: RELAYHOST
               value: "{{ .Values.external_relay.host }}"

@@ -88,22 +88,22 @@ spec:
             - name: HOSTNAMES
               value: "{{ join "," .Values.hostnames }}"
             - name: IMAP_ADDRESS
-              value: {{ include "mailu.hosts.dovecot" . }}
+              value: {{ include "mailu.dovecot.serviceFqdn" . }}
             - name: POP3_ADDRESS
-              value: {{ include "mailu.hosts.dovecot" . }}
+              value: {{ include "mailu.dovecot.serviceFqdn" . }}
             - name: SMTP_ADDRESS
-              value: {{ include "mailu.hosts.postfix" . }}
+              value: {{ include "mailu.postfix.serviceFqdn" . }}
             - name: AUTHSMTP_ADDRESS
-              value: {{ include "mailu.hosts.postfix" . }}
+              value: {{ include "mailu.postfix.serviceFqdn" . }}
             - name: REDIS_ADDRESS
-              value: {{ include "mailu.hosts.redis" . }}
+              value: {{ include "mailu.redis.serviceFqdn" . }}
             {{- if .Values.roundcube.enabled }}
             - name: WEBMAIL
               value: roundcube
             - name: WEB_WEBMAIL
               value: {{ required "roundcube.uri" .Values.roundcube.uri }}
             - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.fullname" . }}-roundcube.{{ .Release.Namespace }}.svc.{{ include "mailu.clusterDomain" . }}
+              value: {{ include "mailu.roundcube.serviceFqdn" . }}
             {{- else }}
             - name: WEBMAIL
               value: none
@@ -113,7 +113,7 @@ spec:
               value: /
             {{- end }}
             - name: FRONT_ADDRESS
-              value: {{ include "mailu.fullname" . }}-front.{{ .Release.Namespace }}
+              value: {{ include "mailu.front.serviceFqdn" . }}
             - name: RECIPIENT_DELIMITER
               value: +
             - name: SUBNET
@@ -141,7 +141,7 @@ spec:
               value: "{{ required "mail.authRatelimit.exemptionLength" .Values.mail.authRatelimit.exemptionLength }}"
             - name: AUTH_RATELIMIT_EXEMPTION
               value: "{{ default "" .Values.mail.authRatelimit.exemption }}"
-            {{- if .Values.initialAccount }}
+            {{- if .Values.initialAccount.enabled }}
             - name: INITIAL_ADMIN_ACCOUNT
               value: {{ required "'initialAccount.username' needs to be set if 'initialAccount' is used." .Values.initialAccount.username }}
             - name: INITIAL_ADMIN_DOMAIN
@@ -149,70 +149,23 @@ spec:
             - name: INITIAL_ADMIN_PW
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mailu.initialAccount.secretName" . }}
-                  key: initial-account-password
+                  name: {{ include "mailu.initialAccount.secretName" . }}
+                  key: {{ include "mailu.initialAccount.secretKey" . }}
             {{- end }}
-            {{- if eq .Values.database.type "sqlite" }}
             - name: DB_FLAVOR
-              value: sqlite
-            {{- else if .Values.mariadb.enabled }}
-            - name: DB_FLAVOR
-              value: mysql
+              value: {{ include "mailu.database.type" .}}
+            {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
             - name: DB_USER
-              value: {{ required "mariadb.auth.username is required when mariadb.enabled is true" .Values.mariadb.auth.username }}
-            - name: DB_PASSWORD
+              value: {{ include "mailu.database.username" . }}
+            - name: DB_PW
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "mariadb.secretName" .Subcharts.mariadb }}
-                  key: mariadb-password
+                  name: {{ include "mailu.database.secretName" . }}
+                  key: {{ include "mailu.database.secretKey" . }}
             - name: DB_HOST
-              value: {{ template "mariadb.primary.fullname" .Subcharts.mariadb }}
+              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) }}
             - name: DB_NAME
-              value: {{ .Values.mariadb.auth.database | quote }}
-            {{- else if .Values.postgres.enabled }}
-            - name: DB_FLAVOR
-              value: postgres
-            - name: DB_USER
-              value: {{ required "postgresql.auth.username is required when postgresql.enabled is true" .Values.postgresql.auth.username | quote }}
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "postgresql.secretName" .Subcharts.postgresql }}
-                  key: {{ include "postgresql.userPasswordKey" .Subcharts.postgresql }}
-            - name: DB_HOST
-              value: {{ template "mariadb.primary.fullname" .Subcharts.mariadb }}
-            - name: DB_NAME
-              value: {{ include "postgresql.database" .Subcharts.postgresql }}
-            {{- else if eq .Values.database.type "mysql" }}
-            - name: DB_FLAVOR
-              value: mysql
-            - name: DB_USER
-              value: {{ required "database.mysql.user" .Values.database.mysql.user }}
-            - name: DB_PW
-              value: {{ required "database.mysql.password" .Values.database.mysql.password }}
-            - name: DB_NAME
-              value: {{ required "database.mysql.database" .Values.database.mysql.database }}
-            - name: DB_HOST
-              {{- if .Values.database.mysql.host }}
-              value: {{ .Values.database.mysql.host }}
-              {{- else }}
-              value: {{ include "mailu.fullname" . }}-mysql
-              {{- end }}
-            {{- else if eq .Values.database.type "postgresql" }}
-            - name: DB_FLAVOR
-              value: postgresql
-            - name: DB_USER
-              value: {{ required "database.postgresql.user" .Values.database.postgresql.user }}
-            - name: DB_PW
-              value: {{ required "database.postgresql.password" .Values.database.postgresql.password }}
-            - name: DB_NAME
-              value: {{ required "database.postgresql.database" .Values.database.postgresql.database }}
-            - name: DB_HOST
-              {{- if .Values.database.postgresql.host }}
-              value: {{ .Values.database.postgresql.host }}
-              {{- end }}
-            {{- else }}
-            value: {{ required "database.type must be one of sqlite/mysql/postgresql" .None }}
+              value: {{ include "mailu.database.name" . }}
             {{- end }}
             {{- if .Values.timezone }}
             - name: TZ

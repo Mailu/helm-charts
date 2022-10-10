@@ -83,11 +83,11 @@ spec:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
             - name: FRONT_ADDRESS
-              value: {{ include "mailu.hosts.front" . }}
+              value: {{ include "mailu.front.serviceFqdn" . }}
             - name: ADMIN_ADDRESS
-              value: {{ include "mailu.hosts.admin" . }}
+              value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: ANTISPAM_WEBUI_ADDRESS
-              value: {{ include "mailu.hosts.rspamd" . }}:11334
+              value: {{ printf "%s:11334" (include "mailu.rspamd.serviceFqdn" .) }}
             - name: POSTMASTER
               value: {{ default "postmaster" .Values.postmaster }}
             - name: DOMAIN

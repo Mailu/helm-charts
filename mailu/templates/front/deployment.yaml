@@ -80,9 +80,9 @@ spec:
             - name: HOSTNAMES
               value: "{{ join "," .Values.hostnames }}"
             - name: ADMIN_ADDRESS
-              value: {{ include "mailu.hosts.admin" . }}
+              value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: ANTISPAM_WEBUI_ADDRESS
-              value: {{ include "mailu.hosts.rspamd" . }}:11334
+              value: {{ include "mailu.rspamd.serviceFqdn" . }}:11334
             - name: POSTMASTER
               value: {{ default "postmaster" .Values.postmaster }}
             - name: DOMAIN
@@ -97,7 +97,7 @@ spec:
             - name: WEBMAIL
               value: roundcube
             - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.hosts.webmail" . }}
+              value: {{ include "mailu.webmail.serviceFqdn" . }}
             - name: WEB_WEBMAIL
               value: {{ required "roundcube.uri" .Values.roundcube.uri }}
             - name: WEBROOT_REDIRECT
@@ -126,7 +126,7 @@ spec:
             - name: WEBDAV
               value: radicale
             - name: WEBDAV_ADDRESS
-              value: {{ include "mailu.hosts.webdav" . }}:5232
+              value: {{ include "mailu.webdav.serviceFqdn" . }}:5232
             {{- end }}
             - name: SUBNET
               value: {{ .Values.subnet }}

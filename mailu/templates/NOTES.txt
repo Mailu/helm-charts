@@ -2,7 +2,7 @@ After all services are running, your mail system is reachable under
 
         https://{{ .Values.hostnames|first }}
 
-{{- if .Values.initialAccount }}
+{{- if .Values.initialAccount.enabled }}
 
 You can login to the admin panel using the following initial credentials (if not changed yet):
 
@@ -10,10 +10,10 @@ You can login to the admin panel using the following initial credentials (if not
 
         Username: {{ .Values.initialAccount.username }}@{{ .Values.initialAccount.domain }}
 
-        The password can be retrieved in the '{{ .Values.initialAccount.secretName }}' secret.
+        The password can be retrieved in the '{{ include "mailu.initialAccount.secretName" . }}' secret.
         To retrieve the password, run:
 
-          kubectl --namespace={{ .Release.Namespace }} get secrets get secrets {{ .Values.initialAccount.secretName }} -o jsonpath='{.data.initial-account-password}' | base64 --decode
+          kubectl --namespace={{ .Release.Namespace }} get secrets get secrets {{ include "mailu.initialAccount.secretName" . }} -o jsonpath='{.data.{{ include "mailu.initialAccount.secretKey" . }}}' | base64 --decode
 
         !!! Please change the password after 1st login !!!
 

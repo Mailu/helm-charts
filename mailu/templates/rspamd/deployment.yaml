@@ -79,16 +79,16 @@ spec:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
             - name: FRONT_ADDRESS
-              value: {{ include "mailu.hosts.front" . }}
+              value: {{ include "mailu.front.serviceFqdn" . }}
             - name: ADMIN_ADDRESS
-              value: {{ include "mailu.hosts.admin" . }}
+              value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: REDIS_ADDRESS
-              value: {{ include "mailu.hosts.redis" . }}
+              value: {{ include "mailu.redis.serviceFqdn" . }}
             {{- if .Values.clamav.enabled }}
             - name: ANTIVIRUS
               value: clamav
             - name: ANTIVIRUS_ADDRESS
-              value: {{ include "mailu.hosts.clamav" . }}:3310
+              value: {{ include "mailu.clamav.serviceFqdn" . }}:3310
             {{- else }}
             - name: ANTIVIRUS
               value: none

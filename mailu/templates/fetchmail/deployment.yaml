@@ -80,9 +80,9 @@ spec:
               value: "False"
               {{- end }}
             - name: HOST_SMTP
-              value: {{ include "mailu.hosts.front" . }}
+              value: {{ include "mailu.front.serviceFqdn" . }}
             - name: HOST_ADMIN
-              value: {{ include "mailu.hosts.admin" . }}
+              value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: FETCHMAIL_DELAY
               value: "{{ .Values.fetchmail.delay }}"
             {{- if .Values.timezone }}

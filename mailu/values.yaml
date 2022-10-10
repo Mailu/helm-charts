@@ -10,6 +10,19 @@ global:
   imagePullSecrets: []
   storageClass: ""
 
+  database:
+    ## @param global.database.roundcube.database Name of the roundcube database
+    ## @param global.database.roundcube.username Username to use for the roundcube database
+    ## @param global.database.roundcube.password Password to use for the roundcube database
+    ## @param global.database.roundcube.existingSecret Name of an existing secret to use for the roundcube database
+    ## @param global.database.roundcube.existingSecretPasswordKey Name of the key in the existing secret to use for the roundcube database password
+    roundcube:
+      database: roundcube
+      username: roundcube
+      password: ""
+      existingSecret: ""
+      existingSecretPasswordKey: ""
+
 ## @section Common parameters
 
 ## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
@@ -53,16 +66,21 @@ existingSecret: ""
 ## initialAccount:
 ##   username: mailadmin
 ##   domain: mydomain.com
-##   password: chang3m3!
-#
-## An existing secret can be used to retrieve the initial account's password. For that, set the secret name in 'initialAccount.existingSecret'.
-## The secret needs to contain the password under the 'initial-account-password' key.
-## If the a value is also set under 'initialAccount.password', that password will be taken.
-## e.g.:
-## initialAccount:
+##   password: ""
 ##   existingSecret: mailu-secret
-## @param initialAccount An initial account can automatically be created:
-initialAccount: {}
+## @param initialAccount.enabled Enable the creation of the initial account
+## @param initialAccount.username Username of the initial account
+## @param initialAccount.domain Domain of the initial account
+## @param initialAccount.password Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret
+## @param initialAccount.existingSecret Name of the existing secret to retrieve the initial account's password
+## @param initialAccount.existingSecretPasswordKey Name of the key in the existing secret to use for the initial account's password
+initialAccount:
+  enabled: false
+  username: ""
+  domain: ""
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
 
 ## @param subnet Change this if you're using different address ranges for pods
 subnet: 10.42.0.0/16
@@ -141,62 +159,45 @@ affinity: {}
 
 ## @section Storage parameters
 
-database:
-  ## @param database.type type of the database for mailu (sqlite/mysql/postgresql)
-  ## default database is an embedded sqlite
-  ## for mysql, see settings below
-  type: sqlite
+## If deploying mariadb or postgresql from this chart (see `mariadb.enabled` and `postgresql.enabled`),
+## the username, password and database name for the `mailu` database needs to be configured in the respective sections.
+## If using an external database, the `mailu` database needs to be created manually and the credentials need to be configured here.
+## The `roundcube` database needs to be configured under the `global.database` section.
+## If using the built-in MariaDB or PostgreSQL, the `roundcube` database will be created automatically.
+externalDatabase:
+  ## @param externalDatabase.enabled Set to true to use an external database
+  enabled: false
 
-  ## @param database.roundcube.type type of the database for roundcube (sqlite/mysql/postgresql)
-  ## default database is an embedded sqlite
-  ## for mysql, see settings below
-  ## @param database.roundcube.database Name of the roundcube database
-  ## @param database.roundcube.username Username to use for the roundcube database
-  ## @param database.roundcube.password Password to use for the roundcube database
-  roundcube:
-    type: sqlite
-    database: roundcube
-    username: roundcube
-    password: changeme
+  ## @param externalDatabase.type Type of the external database for mailu and roundcube (`mysql`/`postgresql`)
+  ## Use `mysql` for MariaDB
+  type: ""
 
-  ## @param database.mysql For 'mysql' type (or mariadb) use the following config:
-  ## You can set the 'host' value to use an external database.
-  ## If the 'host' value is not set, a database instance is created by this chart.
-  ## e.g.:
-  ## mysql:
-  ##   host: external-db-hostname
-  ##   # root password for mysql database, only used for embedded mysql
-  ##   rootPassword: chang3m3!
-  ##
-  ##   # Settings for mailu database
-  ##   database: mailu
-  ##   user: mailu
-  ##   password: chang3m3!
-  ##
-  ##   # Settings for roundcube database
-  ##   roundcubeDatabase: roundcube
-  ##   roundcubeUser: roundcube
-  ##   roundcubePassword: chang3m3!
-  ##
-  ##   existingSecret: mail-mysql
-  mysql: {}
+  ## @param externalDatabase.host Hostname of the database
+  host: ""
 
-  ## @param database.postgresql For an external PostgreSQL database, use the following config:
-  ## e.g.:
-  ## postgresql:
-  ##   host: external-db-hostname
-  ##   # Settings for mailu database
-  ##   database: mailu
-  ##   user: mailu
-  ##   password: chang3m3!
-  ##
-  ##   # Settings for roundcube database
-  ##   roundcubeDatabase: roundcube
-  ##   roundcubeUser: roundcube
-  ##   roundcubePassword: chang3m3!
-  ##
-  ##   existingSecret: mail-postgresql
-  postgresql: {}
+  ## @param externalDatabase.port Port of the database
+  port: 3306
+
+  ## @param externalDatabase.database Name of the database
+  database: mailu
+
+  ## @param externalDatabase.username Username to use for the database
+  username: mailu
+
+  ## @param externalDatabase.password Password to use for the database
+  password: ""
+
+  ## @param externalDatabase.existingSecret Name of the secret containing the database credentials
+  existingSecret: ""
+
+  ## @param externalDatabase.existingSecretDatabaseKey Key in the secret containing the database name
+  existingSecretDatabaseKey: "database"
+
+  ## @param externalDatabase.existingSecretUsernameKey Key in the secret containing the database username
+  existingSecretUsernameKey: "username"
+
+  ## @param externalDatabase.existingSecretPasswordKey Key in the secret containing the database password
+  existingSecretPasswordKey: "password"
 
 ## MariaDB chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/mariadb
@@ -233,12 +234,49 @@ mariadb:
   ##   GKE, AWS & OpenStack)
   ## @param mariadb.primary.persistence.accessMode PVC Access Mode for MariaDB volume
   ## @param mariadb.primary.persistence.size PVC Storage Request for MariaDB volume
+  ## @param mariadb.primary.extraEnvVars Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
   primary:
     persistence:
       enabled: false
       storageClass: ""
       accessMode: ReadWriteOnce
       size: 8Gi
+    
+    livenessProbe:
+      initialDelaySeconds: 360
+    extraEnvVars: |
+      - name: ROUNDCUBE_DB_PW
+        valueFrom:
+          secretKeyRef:
+            name: {{ include "mailu.database.roundcube.secretName" . }}
+            key: {{ include "mailu.database.roundcube.secretKey" . }}
+      - name: ROUNDCUBE_DB_NAME
+        value: {{ include "mailu.database.roundcube.name" . }}
+      - name: ROUNDCUBE_DB_USER
+        value: {{ include "mailu.database.roundcube.username" . }}
+
+  ## @param mariadb.initdbScripts.create_roundcube_database.sh DO NOT EDIT Script to create the roundcube database
+  initdbScripts:
+    create_roundcube_database.sh: |
+      #!/bin/bash
+      # set -o errexit
+      # set -o nounset
+      # set -o pipefail
+      echo "Checking for DB initialisation"
+      if [ -S /opt/bitnami/mariadb/tmp/mysql.sock ]; then
+        echo "Running DB initialisation..."
+        /opt/bitnami/mariadb/bin/mysql --user="root" --password="${MARIADB_ROOT_PASSWORD}" <<SQL
+        --
+        -- Initialisation script for roundcube database
+        --
+        CREATE DATABASE IF NOT EXISTS ${ROUNDCUBE_DB_NAME};
+        GRANT ALL PRIVILEGES ON ${ROUNDCUBE_DB_NAME}.* TO '${ROUNDCUBE_DB_USER}'@'%' IDENTIFIED BY '${ROUNDCUBE_DB_PW}';
+        FLUSH PRIVILEGES;
+      SQL
+        echo "DB initialisation complete"
+      else
+        echo "Not running initialisation, exiting..."
+      fi
 
 ## PostgreSQL chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql

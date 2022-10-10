@@ -36,7 +36,7 @@ spec:
         - path: "/"
           backend:
             service:
-              name: {{ include "mailu.hosts.front" $ }}
+              name: {{ include "mailu.front.serviceName" $ }}
               port: 
                 number: 80
           {{- if eq "true" (include "common.ingress.supportsPathType" $) }}

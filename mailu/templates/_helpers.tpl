@@ -40,9 +40,9 @@ Get the cluster domain name or default to cluster.local
 */}}
 {{- define "mailu.clusterDomain" -}}
 {{- if .Values.clusterDomain -}}
-{{- .Values.clusterDomain -}}
+    {{- .Values.clusterDomain -}}
 {{- else -}}
-cluster.local
+    {{- print "cluster.local" -}}
 {{- end -}}
 {{- end -}}
 
@@ -69,63 +69,6 @@ Get the certificates secret name
 
 {{/*
 
-{{/*
-Returns the available value for certain key in an existing secret (if it exists),
-otherwise it generates a random value.
-*/}}
-{{- define "getValueFromSecret" }}
-{{- $len := (default 16 .Length) | int -}}
-{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
-{{- if $obj }}
-{{- index $obj .Key | b64dec -}}
-{{- else -}}
-{{- randAlphaNum $len -}}
-{{- end -}}
-{{- end }}
-
-{{/*
-Return mailu secretKey
-*/}}
-{{- define "mailu.secretKey" -}}
-{{- if .Values.secretKey }}
-    {{- .Values.secretKey -}}
-{{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "mailu.secretName" .) "Length" 10 "Key" "secret-key")  -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Get the mailu secret name.
-*/}}
-{{- define "mailu.secretName" -}}
-{{- if .Values.existingSecret }}
-    {{- printf "%s" (tpl .Values.existingSecret $) -}}
-{{- else -}}
-    {{- printf "%s-secret" (include "mailu.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return mailu initialAccount.password
-*/}}
-{{- define "mailu.initialAccount.password" -}}
-{{- if .Values.initialAccount.password }}
-{{- else -}}
-    {{- include "getValueFromSecret" (dict "Namespace" (include "common.names.namespace" .) "Name" (include "mailu.initialAccount.secretName" .) "Length" 10 "Key" "initial-account-password")  -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return mailu initialAccount secret name
-*/}}
-{{- define "mailu.initialAccount.secretName" -}}
-{{- if .Values.initialAccount.existingSecret }}
-    {{- printf "%s" (tpl .Values.initialAccount.existingSecret $) -}}
-{{- else -}}
-    {{- printf "%s-initial-account" (include "mailu.fullname" .) -}}
-{{- end -}}
-{{- end -}}
-
 # {{/*
 # Compile all warnings into a single message, and call fail.
 # */}}
@@ -150,4 +93,4 @@ Return mailu initialAccount secret name
 # mailu: domain
 #     You need to set the domain to be used
 # {{- end -}}
-# {{- end -}}
+# {{- end -}}.
