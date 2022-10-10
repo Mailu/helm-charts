@@ -29,11 +29,14 @@ jobs:
         with:
           version: v3.10.0
 
+      - name: Add Helm dependency repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         with:
           charts_dir: ./
-          owner: ${{ github.repository_owner }}
-          fork: true
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
