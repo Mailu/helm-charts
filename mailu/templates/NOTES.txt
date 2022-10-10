@@ -19,11 +19,10 @@ You can login to the admin panel using the following initial credentials (if not
 
 {{- else }}
 
-After you created an initial admin login (see docs), you can login to the admin panel at 
+After you created an initial admin login (see docs), you can login to the admin panel at
 
         https://{{ .Values.hostnames|first }}/admin
 
 {{- end }}
 
 !!! Please make sure you read and understand the warning about open relays in the README.md !!!
-

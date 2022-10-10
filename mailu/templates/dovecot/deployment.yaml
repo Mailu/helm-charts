@@ -36,7 +36,7 @@ spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.dovecot.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.dovecot.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.hostAliases "context" $) | nindent 8 }}
-      {{- end }}    
+      {{- end }}
       {{- if .Values.dovecot.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

@@ -35,7 +35,7 @@ spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.postfix.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.postfix.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.hostAliases "context" $) | nindent 8 }}
-      {{- end }}    
+      {{- end }}
       {{- if .Values.postfix.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

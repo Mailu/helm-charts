@@ -36,7 +36,7 @@ spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.roundcube.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.roundcube.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.roundcube.hostAliases "context" $) | nindent 8 }}
-      {{- end }}    
+      {{- end }}
       {{- if .Values.roundcube.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.roundcube.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

@@ -36,7 +36,7 @@ spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.webdav.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.webdav.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.webdav.hostAliases "context" $) | nindent 8 }}
-      {{- end }}    
+      {{- end }}
       {{- if .Values.webdav.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.webdav.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

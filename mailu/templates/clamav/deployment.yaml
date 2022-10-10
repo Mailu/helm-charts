@@ -36,7 +36,7 @@ spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.clamav.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.clamav.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.clamav.hostAliases "context" $) | nindent 8 }}
-      {{- end }}    
+      {{- end }}
       {{- if .Values.clamav.nodeSelector }}
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.clamav.nodeSelector "context" $) | nindent 8 }}
       {{- end }}

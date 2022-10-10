@@ -145,7 +145,7 @@
 {{- include "mailu.database.roundcube.secretName" -}}
 {{- end -}}
 
-    
+
 {{/* Return the roundcube database password key */}}
 {{- define "mailu.database.roundcube.secretKey" -}}
 {{- if .Values.global.database.roundcube.existingSecret -}}
