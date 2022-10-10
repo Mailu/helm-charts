@@ -29,6 +29,9 @@ jobs:
           curl -s -L https://get.helm.sh/helm-v3.10.0-linux-amd64.tar.gz | tar xfvz - --strip-components=1 linux-amd64/helm
           chmod 0700 helm
           mv helm helm3
+      - name: Install dependencies
+        run: |
+          ./helm3 dependency build mailu
       - name: Running lint with helm v3
         run: ./helm3 lint --strict --values mailu/helm-lint-values.yaml mailu
       - name: Checkout gh pages

@@ -4,12 +4,12 @@ dependencies:
   version: 2.0.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 17.3.2
+  version: 17.3.4
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 11.9.8
 - name: mariadb
   repository: https://charts.bitnami.com/bitnami
   version: 11.3.3
-digest: sha256:020cdfd24c92b879fddcdd750a2b5facce1393a68af81b55c7d138a1c7c3a80a
-generated: "2022-10-07T22:27:57.741867497+02:00"
+digest: sha256:fa0821b02fc95c6e1b95104c508b4b19643b40ee77ac1e10c26443d4c2557506
+generated: "2022-10-10T15:12:38.89782777+02:00"
