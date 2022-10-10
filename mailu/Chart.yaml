@@ -17,6 +17,9 @@ keywords:
   - webmail
   - postfix
   - dovecot
+maintainers:
+  - name: Mailu
+    url: https://mailu.io
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
