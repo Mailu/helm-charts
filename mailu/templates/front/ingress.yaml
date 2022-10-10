@@ -1,4 +1,5 @@
 ---
+{{/* TODO: add support for Traefik */}}
 {{- if .Values.ingress.externalIngress }}
 apiVersion: {{ include "common.capabilities.ingress.apiVersion" . }}
 kind: Ingress
