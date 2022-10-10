@@ -51,6 +51,6 @@ jobs:
         run: |
           # Push all the changes
           cd charts
-          git config user.name "Mailu"
-          git config user.email "mailu@example.com"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "Github actions"
           git add . && git commit -am "Update README.md with readme-generator-for-helm" --signoff && git push
