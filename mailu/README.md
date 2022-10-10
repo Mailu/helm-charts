@@ -1,6 +1,6 @@
 # mailu
 
-![Version: 0.3.3](https://img.shields.io/badge/Version-0.3.3-informational?style=flat-square) ![AppVersion: 1.9](https://img.shields.io/badge/AppVersion-1.9-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: 1.9](https://img.shields.io/badge/AppVersion-1.9-informational?style=flat-square)
 
 This chart installs the Mailu mail system on kubernetes
 
@@ -11,7 +11,7 @@ This chart installs the Mailu mail system on kubernetes
 | Chart Version       | Mailu Version |
 | ------------------- | ------------- |
 | 0.0.x, 0.1.x, 0.2.x | 1.8           |
-| 0.3.x               | 1.9.x         |
+| 0.3.x, 1.0.x        | 1.9.x         |
 
 Active development of this chart is only for the latest supported Mailu version (currently 1.9.x).
 Branches exists for older mailu versions (e.g. old/mailu-1.8).
