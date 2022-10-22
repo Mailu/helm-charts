@@ -489,7 +489,7 @@ ingress:
 
   ## @param ingress.tlsFlavorOverride Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod
   ## This is normally auto-detected, only change it if you know what you are doing.
-  tlsFlavorOverride:
+  tlsFlavorOverride: ""
 
 ## @section Frontend load balancer for non-HTTP(s) services
 front:
