@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lint-and-test-chart:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
