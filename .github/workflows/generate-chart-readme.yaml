@@ -50,6 +50,7 @@ jobs:
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator-for-helm/bin/index.js --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
+
       - name: Push changes
         run: |
           # Push all the changes
