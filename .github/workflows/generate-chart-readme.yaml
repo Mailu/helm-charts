@@ -46,6 +46,7 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           path: charts
           token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Execute readme-generator-for-helm
         run: |
           echo "Updating README.md for mailu chart"
