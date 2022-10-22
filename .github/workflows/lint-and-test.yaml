@@ -6,12 +6,13 @@ on:
   pull_request:
     branches:
       - master
-
+    paths:
+      - mailu/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  lint:
+  lint-and-test-chart:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,7 +45,7 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          changed=$(ct list-changed --config ct.yaml --target-branch ${{ github.event.repository.default_branch }})
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
@@ -54,11 +55,16 @@ jobs:
 
       - name: Create kind cluster
         uses: helm/kind-action@v1.4.0
-        with:
-          install_local_path_provisioner: true
         if: steps.list-changed.outputs.changed == 'true'
+
+      - name: Fix CoreDNS upstream resolver
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          kubectl -n kube-system get configmaps coredns -o yaml | sed 's/forward . \/etc\/resolv.conf/forward . 8.8.8.8:53/g' | kubectl apply -f -
+          kubectl -n kube-system rollout restart deployment coredns
+          kubectl -n kube-system rollout status deployment coredns --timeout=120s
 
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --config ct.yaml
+        run: ct install --debug --config ct.yaml

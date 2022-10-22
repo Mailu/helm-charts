@@ -27,3 +27,8 @@
 {{- print "initial-account-password" -}}
 {{- end -}}
 {{- end -}}
+
+{{/* Get the certificates secret name */}}
+{{- define "mailu.certificatesSecretName" -}}
+{{ printf "%s-certificates" (include "mailu.fullname" . ) }}
+{{- end -}}
