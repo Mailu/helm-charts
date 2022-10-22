@@ -1,6 +1,5 @@
 hostnames:
-  - mail.example.com
-  - imap.example.com
+  - example.com
 
 domain: example.com
 
