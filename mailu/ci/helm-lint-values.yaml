@@ -31,12 +31,12 @@ ingress:
     auth.cluster.arpa/enabled: "false"
 
 front:
-  logLevel: WARNING
+  logLevel: DEBUG
   image:
     tag: master
 
 admin:
-  logLevel: WARNING
+  logLevel: DEBUG
   image:
     tag: master
 
