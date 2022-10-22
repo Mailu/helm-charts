@@ -1,4 +1,4 @@
-helm-extra-args: --timeout 360s
+helm-extra-args: --timeout 720s
 chart-dirs:
   - .
 chart-repos:
