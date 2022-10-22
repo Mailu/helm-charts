@@ -25,6 +25,12 @@ postgresql:
       enabled: true
       size: 10Gi
 
+ingress:
+  enabled: true
+  selfSigned: true
+  annotations:
+    auth.cluster.arpa/enabled: "false"
+
 front:
   logLevel: WARNING
   image:
