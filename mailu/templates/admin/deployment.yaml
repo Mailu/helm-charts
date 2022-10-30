@@ -119,15 +119,15 @@ spec:
             - name: SUBNET
               value: {{ .Values.subnet }}
             - name: CREDENTIAL_ROUNDS
-              value: {{ .Values.credentialRounds }}
+              value: {{ .Values.credentialRounds | quote }}
             - name: SESSION_COOKIE_SECURE
-              value: {{ .Values.sessionCookieSecure }}
+              value: {{ .Values.sessionCookieSecure | quote }}
             - name: SESSION_TIMEOUT
-              value: {{ .Values.sessionTimeout }}
+              value: {{ .Values.sessionTimeout | quote }}
             - name: PERMANENT_SESSION_LIFETIME
-              value: {{ .Values.permanentSessionLifetime }}
+              value: {{ .Values.permanentSessionLifetime | quote }}
             - name: LETSENCRYPT_SHORTCHAIN
-              value: {{ .Values.letsencryptShortchain }}
+              value: {{ .Values.letsencryptShortchain | quote }}
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
