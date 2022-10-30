@@ -147,6 +147,7 @@ Check that the deployed pods are all running.
 | `initialAccount.password`                  | Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret | `""`             |
 | `initialAccount.existingSecret`            | Name of the existing secret to retrieve the initial account's password                                                                 | `""`             |
 | `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`             |
+| `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`         |
 | `subnet`                                   | Change this if you're using different address ranges for pods                                                                          | `10.42.0.0/16`   |
 | `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.26`         |
 | `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`        |
@@ -168,6 +169,10 @@ Check that the deployed pods are all running.
 | `external_relay.passwordKey`               | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
 | `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`  |
 | `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`             |
+| `sessionCookieSecure`                      | Controls the secure flag on the cookies of the administrative interface.                                                               | `true`           |
+| `sessionTimeout`                           | Maximum amount of time in seconds between requests before a session is invalidated                                                     | `3600`           |
+| `permanentSessionLifetime`                 | Maximum amount of time in seconds a session can be kept alive for if it hasn’t timed-out                                               | `108000`         |
+| `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`          |
 | `tolerations`                              | Tolerations for pod assignment                                                                                                         | `[]`             |
 | `affinity`                                 | Affinity for pod assignment                                                                                                            | `{}`             |
 

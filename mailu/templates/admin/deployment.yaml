@@ -119,7 +119,15 @@ spec:
             - name: SUBNET
               value: {{ .Values.subnet }}
             - name: CREDENTIAL_ROUNDS
-              value: "{{ default "12" .Values.credentialRounds }}"
+              value: {{ .Values.credentialRounds }}
+            - name: SESSION_COOKIE_SECURE
+              value: {{ .Values.sessionCookieSecure }}
+            - name: SESSION_TIMEOUT
+              value: {{ .Values.sessionTimeout }}
+            - name: PERMANENT_SESSION_LIFETIME
+              value: {{ .Values.permanentSessionLifetime }}
+            - name: LETSENCRYPT_SHORTCHAIN
+              value: {{ .Values.letsencryptShortchain }}
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -142,6 +150,8 @@ spec:
             - name: AUTH_RATELIMIT_EXEMPTION
               value: "{{ default "" .Values.limits.authRatelimit.exemption }}"
             {{- if .Values.initialAccount.enabled }}
+            - name: INITIAL_ADMIN_MODE
+              value: {{ .Values.initialAccount.mode }}
             - name: INITIAL_ADMIN_ACCOUNT
               value: {{ required "'initialAccount.username' needs to be set if 'initialAccount' is used." .Values.initialAccount.username }}
             - name: INITIAL_ADMIN_DOMAIN
