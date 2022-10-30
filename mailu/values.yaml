@@ -513,7 +513,7 @@ front:
     tag: ""
     pullPolicy: IfNotPresent
 
-  ## @param front.controller.kind Deployment only supported for now
+  ## front.controller.kind Deployment only supported for now
   # controller:
   #   kind: Deployment
 
