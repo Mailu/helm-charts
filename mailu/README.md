@@ -152,14 +152,14 @@ Check that the deployed pods are all running.
 | `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`        |
 | `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`     |
 | `mail.messageSizeLimitInMegabytes`         | Maximum size of an email in megabytes                                                                                                  | `50`             |
-| `mail.authRatelimit.ip`                    | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`        |
-| `mail.authRatelimit.ipv4Mask`              | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`             |
-| `mail.authRatelimit.ipv6Mask`              | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`             |
-| `mail.authRatelimit.user`                  | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`        |
-| `mail.authRatelimit.exemptionLength`       | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`          |
-| `mail.authRatelimit.exemption`             | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
-| `mail.messageRatelimit.value`              | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
-| `mail.messageRatelimit.exemption`          | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
+| `limits.authRatelimit.ip`                  | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`        |
+| `limits.authRatelimit.ipv4Mask`            | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`             |
+| `limits.authRatelimit.ipv6Mask`            | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`             |
+| `limits.authRatelimit.user`                | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`        |
+| `limits.authRatelimit.exemptionLength`     | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`          |
+| `limits.authRatelimit.exemption`           | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
+| `limits.messageRatelimit.value`            | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
+| `limits.messageRatelimit.exemption`        | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
 | `external_relay.host`                      | Hostname of the external relay                                                                                                         | `""`             |
 | `external_relay.username`                  | Username for the external relay                                                                                                        | `""`             |
 | `external_relay.password`                  | Password for the external relay                                                                                                        | `""`             |

@@ -94,17 +94,17 @@ logLevel: WARNING
 ## @param postmaster local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
 postmaster: postmaster
 
-mail:
-  ## @param mail.messageSizeLimitInMegabytes Maximum size of an email in megabytes
+limits:
+  ## @param limits.messageSizeLimitInMegabytes Maximum size of an email in megabytes
   messageSizeLimitInMegabytes: 50
 
   ## Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
-  ## @param mail.authRatelimit.ip Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
-  ## @param mail.authRatelimit.ipv4Mask Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
-  ## @param mail.authRatelimit.ipv6Mask Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
-  ## @param mail.authRatelimit.user Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
-  ## @param mail.authRatelimit.exemptionLength Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
-  ## @param mail.authRatelimit.exemption Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.ip Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.ipv4Mask Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.ipv6Mask Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.user Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.exemptionLength Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.exemption Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
   authRatelimit:
     ip: 60/hour
     ipv4Mask: 24
@@ -114,8 +114,8 @@ mail:
     exemption: ""
 
   # Configuration to reduce outgoing spam in case of a compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
-  ## @param mail.messageRatelimit.value Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
-  ## @param mail.messageRatelimit.exemption Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  ## @param limits.messageRatelimit.value Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
+  ## @param limits.messageRatelimit.exemption Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
   messageRatelimit:
     value: 200/day
     exemption: ""
@@ -198,6 +198,14 @@ externalDatabase:
 
   ## @param externalDatabase.existingSecretPasswordKey Key in the secret containing the database password
   existingSecretPasswordKey: "password"
+
+## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
+## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
+database:
+  mysql:
+    roundcubePassword: ""
+  postgresql:
+    roundcubePassword: ""
 
 ## MariaDB chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/mariadb
@@ -505,9 +513,9 @@ front:
     tag: ""
     pullPolicy: IfNotPresent
 
-  ## @param front.controller.kind Deployment or DaemonSet
-  controller:
-    kind: Deployment
+  ## @param front.controller.kind Deployment only supported for now
+  # controller:
+  #   kind: Deployment
 
   ## @param front.hostPort.enabled Expose front mail ports via hostPort
   hostPort:
@@ -517,30 +525,32 @@ front:
   ## @param front.externalService.enabled Expose front mail ports via external service (ClusterIP or LoadBalancer)
   ## @param front.externalService.type Service type (ClusterIP or LoadBalancer)
   ## @param front.externalService.externalTrafficPolicy Service externalTrafficPolicy (Cluster or Local)
+  ## @param front.externalService.loadBalancerIP Service loadBalancerIP
   ## @param front.externalService.annotations Service annotations
-  ## @param front.externalService.pop3 Expose POP3 port
-  ## @param front.externalService.pop3s Expose POP3 port (TLS)
-  ## @param front.externalService.imap Expose IMAP port
-  ## @param front.externalService.imaps Expose IMAP port (TLS)
-  ## @param front.externalService.smtp Expose SMTP port
-  ## @param front.externalService.smtps Expose SMTP port (TLS)
-  ## @param front.externalService.submission Expose Submission port
+  ## @param front.externalService.ports.pop3 Expose POP3 port
+  ## @param front.externalService.ports.pop3s Expose POP3 port (TLS)
+  ## @param front.externalService.ports.imap Expose IMAP port
+  ## @param front.externalService.ports.imaps Expose IMAP port (TLS)
+  ## @param front.externalService.ports.smtp Expose SMTP port
+  ## @param front.externalService.ports.smtps Expose SMTP port (TLS)
+  ## @param front.externalService.ports.submission Expose Submission port
 
   externalService:
     enabled: false
     type: ClusterIP
     ## Example for LoadBalancer:
     ## type: LoadBalancer
-    ## loadBalancerIP:
+    loadBalancerIP: ""
     externalTrafficPolicy: Local
     annotations: {}
-    pop3: false
-    pop3s: true
-    imap: false
-    imaps: true
-    smtp: true
-    smtps: true
-    submission: true
+    ports:
+      pop3: false
+      pop3s: true
+      imap: false
+      imaps: true
+      smtp: true
+      smtps: true
+      submission: true
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/

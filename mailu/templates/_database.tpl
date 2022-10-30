@@ -129,7 +129,7 @@
 
 {{/* Return the database password for Roundcube */}}
 {{- define "mailu.database.roundcube.password" -}}
-{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.database.roundcube.secretName" .) "key" (include "mailu.database.roundcube.secretKey" .) "providedValues" (list "global.database.roundcube.password") "length" 10 "strong" true "context" .) }}
+{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.database.roundcube.secretName" .) "key" (include "mailu.database.roundcube.secretKey" .) "providedValues" (list "global.database.roundcube.password" "database.mysql.roundcubePassword" "database.postgresql.roundcubePassword") "length" 10 "strong" true "context" .) }}
 {{- end -}}
 
 {{/* Return the name of the roundcube database secret */}}
