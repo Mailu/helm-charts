@@ -73,30 +73,79 @@ Get MailU domain name or throw an error if not set
 {{/*
 
 
-{{/*
+{{/* Check for deprecated values and raise an error if found (upgrade to v1.0.0) */}}
+{{- define "mailu.validateValues.deprecated" -}}
+{{- $oldValues := list -}}
+{{- $test := "" -}}
 
-# {{/*
-# Compile all warnings into a single message, and call fail.
-# */}}
-# {{- define "mailu.validateValues" -}}
-# {{- $messages := list -}}
-# {{- $messages := append $messages (include "mailu.validateValues.domain" .) -}}
-# # {{- $messages := append $messages (include "postgresql.validateValues.psp" .) -}}
-# # {{- $messages := append $messages (include "postgresql.validateValues.tls" .) -}}
-# {{- $messages := without $messages "" -}}
-# {{- $message := join "\n" $messages -}}
+{{- if or .Values.database.type .Values.database.roundcubeType -}}
+{{- $oldValues = append $oldValues "database" -}}
+{{- end -}}
 
-# {{- if $message -}}
-# {{- printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
-# {{- end -}}
-# {{- end -}}
+{{- if kindIs "map" .Values.mail -}}
+{{- $oldValues = append $oldValues "mail" -}}
+{{- end -}}
 
-# {{/*
-# Validate values - 'domain' needs to be set
-# */}}
-# {{- define "mailu.validateValues.domain" -}}
-# {{- if not .Values.domain }}
-# mailu: domain
-#     You need to set the domain to be used
-# {{- end -}}
-# {{- end -}}.
+{{- if kindIs "map" .Values.certmanager -}}
+{{- $oldValues = append $oldValues "certmanager" -}}
+{{- end -}}
+
+{{- if .Values.front.externalService.pop3 -}}
+{{- $oldValues = append $oldValues "front.externalService.pop3" -}}
+{{- end -}}
+
+{{- if .Values.front.externalService.imap -}}
+{{- $oldValues = append $oldValues "front.externalService.imap" -}}
+{{- end -}}
+
+{{- if .Values.front.externalService.smtp -}}
+{{- $oldValues = append $oldValues "front.externalService.smtp" -}}
+{{- end -}}
+
+{{- if .Values.front.controller -}}
+    {{- if .Values.front.controller.kind -}}
+    {{- $oldValues = append $oldValues "front.controller.kind" -}}
+    {{- end -}}
+{{- end -}}
+
+{{- if .Values.ingress.tlsFlavor -}}
+{{- $oldValues = append $oldValues "ingress.tlsFlavor" -}}
+{{- end -}}
+
+{{- if .Values.ingress.externalIngress -}}
+{{- $oldValues = append $oldValues "ingress.externalIngress" -}}
+{{- end -}}
+
+{{- $oldValues := without $oldValues "" -}}
+{{- $oldValue := join "\n" $oldValues -}}
+{{- if $oldValues -}}
+Deprecated configuration keys found in Values:
+    {{- range $oldValues -}}
+    {{- printf "\n    - `%s`" . -}}
+    {{- end }}
+Are you upgrading from a version < 1.0.0?
+Please read the upgrade guide at XXX.
+{{- end -}}
+{{- end -}}
+
+
+{{/* Compile all warnings into a single message, and call fail. */}}
+{{- define "mailu.validateValues" -}}
+{{- $messages := list -}}
+{{- $messages := append $messages (include "mailu.validateValues.deprecated" .) -}}
+{{- $messages := append $messages (include "mailu.validateValues.domain" .) -}}
+{{- $messages := without $messages "" -}}
+{{- $message := join "\n" $messages -}}
+{{- if $message -}}
+{{- printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/* Validate values - 'domain' needs to be set */}}
+{{- define "mailu.validateValues.domain" -}}
+{{- if not .Values.domain }}
+mailu: domain
+    You need to set the domain to be used
+{{- end -}}
+{{- end -}}

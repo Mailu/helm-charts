@@ -147,19 +147,20 @@ Check that the deployed pods are all running.
 | `initialAccount.password`                  | Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret | `""`             |
 | `initialAccount.existingSecret`            | Name of the existing secret to retrieve the initial account's password                                                                 | `""`             |
 | `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`             |
+| `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`         |
 | `subnet`                                   | Change this if you're using different address ranges for pods                                                                          | `10.42.0.0/16`   |
 | `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.26`         |
 | `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`        |
 | `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`     |
-| `mail.messageSizeLimitInMegabytes`         | Maximum size of an email in megabytes                                                                                                  | `50`             |
-| `mail.authRatelimit.ip`                    | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`        |
-| `mail.authRatelimit.ipv4Mask`              | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`             |
-| `mail.authRatelimit.ipv6Mask`              | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`             |
-| `mail.authRatelimit.user`                  | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`        |
-| `mail.authRatelimit.exemptionLength`       | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`          |
-| `mail.authRatelimit.exemption`             | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
-| `mail.messageRatelimit.value`              | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
-| `mail.messageRatelimit.exemption`          | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
+| `limits.messageSizeLimitInMegabytes`       | Maximum size of an email in megabytes                                                                                                  | `50`             |
+| `limits.authRatelimit.ip`                  | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`        |
+| `limits.authRatelimit.ipv4Mask`            | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`             |
+| `limits.authRatelimit.ipv6Mask`            | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`             |
+| `limits.authRatelimit.user`                | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`        |
+| `limits.authRatelimit.exemptionLength`     | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`          |
+| `limits.authRatelimit.exemption`           | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
+| `limits.messageRatelimit.value`            | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
+| `limits.messageRatelimit.exemption`        | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
 | `external_relay.host`                      | Hostname of the external relay                                                                                                         | `""`             |
 | `external_relay.username`                  | Username for the external relay                                                                                                        | `""`             |
 | `external_relay.password`                  | Password for the external relay                                                                                                        | `""`             |
@@ -167,6 +168,11 @@ Check that the deployed pods are all running.
 | `external_relay.usernameKey`               | Key in the secret containing the username for the external relay                                                                       | `relay-username` |
 | `external_relay.passwordKey`               | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
 | `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`  |
+| `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`             |
+| `sessionCookieSecure`                      | Controls the secure flag on the cookies of the administrative interface.                                                               | `true`           |
+| `sessionTimeout`                           | Maximum amount of time in seconds between requests before a session is invalidated                                                     | `3600`           |
+| `permanentSessionLifetime`                 | Maximum amount of time in seconds a session can be kept alive for if it hasn’t timed-out                                               | `108000`         |
+| `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`          |
 | `tolerations`                              | Tolerations for pod assignment                                                                                                         | `[]`             |
 | `affinity`                                 | Affinity for pod assignment                                                                                                            | `{}`             |
 
@@ -186,6 +192,8 @@ Check that the deployed pods are all running.
 | `externalDatabase.existingSecretDatabaseKey`        | Key in the secret containing the database name                                                                                                                                                            | `database`             |
 | `externalDatabase.existingSecretUsernameKey`        | Key in the secret containing the database username                                                                                                                                                        | `username`             |
 | `externalDatabase.existingSecretPasswordKey`        | Key in the secret containing the database password                                                                                                                                                        | `password`             |
+| `database.mysql.roundcubePassword`                  | DEPRECATED - DO NOT USE: Password for the roundcube database                                                                                                                                              | `""`                   |
+| `database.postgresql.roundcubePassword`             | DEPRECATED - DO NOT USE: Password for the roundcube database                                                                                                                                              | `""`                   |
 | `mariadb.enabled`                                   | Enable MariaDB deployment                                                                                                                                                                                 | `false`                |
 | `mariadb.architecture`                              | MariaDB architecture. Allowed values: standalone or replication                                                                                                                                           | `standalone`           |
 | `mariadb.auth.rootPassword`                         | Password for the `root` user. Ignored if existing secret is provided.                                                                                                                                     | `""`                   |
@@ -252,19 +260,19 @@ Check that the deployed pods are all running.
 | `front.image.repository`                      | Pod image repository                                                                  | `mailu/nginx`   |
 | `front.image.tag`                             | Pod image tag (defaults to mailuVersion)                                              | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
-| `front.controller.kind`                       | Deployment or DaemonSet                                                               | `Deployment`    |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
 | `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
+| `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
 | `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
-| `front.externalService.pop3`                  | Expose POP3 port                                                                      | `false`         |
-| `front.externalService.pop3s`                 | Expose POP3 port (TLS)                                                                | `true`          |
-| `front.externalService.imap`                  | Expose IMAP port                                                                      | `false`         |
-| `front.externalService.imaps`                 | Expose IMAP port (TLS)                                                                | `true`          |
-| `front.externalService.smtp`                  | Expose SMTP port                                                                      | `true`          |
-| `front.externalService.smtps`                 | Expose SMTP port (TLS)                                                                | `true`          |
-| `front.externalService.submission`            | Expose Submission port                                                                | `true`          |
+| `front.externalService.ports.pop3`            | Expose POP3 port                                                                      | `false`         |
+| `front.externalService.ports.pop3s`           | Expose POP3 port (TLS)                                                                | `true`          |
+| `front.externalService.ports.imap`            | Expose IMAP port                                                                      | `false`         |
+| `front.externalService.ports.imaps`           | Expose IMAP port (TLS)                                                                | `true`          |
+| `front.externalService.ports.smtp`            | Expose SMTP port                                                                      | `true`          |
+| `front.externalService.ports.smtps`           | Expose SMTP port (TLS)                                                                | `true`          |
+| `front.externalService.ports.submission`      | Expose Submission port                                                                | `true`          |
 | `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |
 | `front.resources.requests`                    | The requested resources for the container                                             | `{}`            |
 | `front.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`          |

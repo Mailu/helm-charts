@@ -76,7 +76,7 @@ spec:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.roundcube.logLevel }}
             - name: MESSAGE_SIZE_LIMIT
-              value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+              value: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
             - name: IMAP_ADDRESS
               value: {{ include "mailu.dovecot.serviceFqdn" . }}
             - name: FRONT_ADDRESS
