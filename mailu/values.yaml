@@ -147,6 +147,9 @@ external_relay:
 ## @param clusterDomain Kubernetes cluster domain name
 clusterDomain: cluster.local
 
+## @param credentialRounds Number of rounds to use for password hashing
+credentialRounds: 12
+
 ## nodeSelector: {}
 
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/

@@ -167,6 +167,7 @@ Check that the deployed pods are all running.
 | `external_relay.usernameKey`               | Key in the secret containing the username for the external relay                                                                       | `relay-username` |
 | `external_relay.passwordKey`               | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
 | `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`  |
+| `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`             |
 | `tolerations`                              | Tolerations for pod assignment                                                                                                         | `[]`             |
 | `affinity`                                 | Affinity for pod assignment                                                                                                            | `{}`             |
 

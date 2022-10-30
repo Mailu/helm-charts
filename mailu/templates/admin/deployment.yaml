@@ -118,8 +118,8 @@ spec:
               value: +
             - name: SUBNET
               value: {{ .Values.subnet }}
-            - name: PASSWORD_SCHEME
-              value: "{{ default "PBKDF2" .Values.passwordScheme }}"
+            - name: CREDENTIAL_ROUNDS
+              value: "{{ default "12" .Values.credentialRounds }}"
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
