@@ -1306,6 +1306,12 @@ dovecot:
   ##     mail_max_userip_connections=100
   overrides: {}
 
+  ## @param dovecot.compression Maildir compression algorithm (gz, bz2, lz4, zstd)
+  compression: ""
+
+  ## @param dovecot.compressionLevel Maildir compression level (1-9)
+  compressionLevel: 6
+
 ## @section rspamd parameters
 rspamd:
   ## @param rspamd.logLevel Override default log level
