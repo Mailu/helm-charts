@@ -401,7 +401,7 @@ postgresql:
 persistence:
   single_pvc: true
   size: 100Gi
-  accessMode: ReadWriteOnce
+  accessModes: [ReadWriteOnce]
   annotations: {}
   hostPath: ""
   existingClaim: ""
