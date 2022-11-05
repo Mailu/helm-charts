@@ -95,9 +95,9 @@
     {{- template "mariadb.secretName" .Subcharts.mariadb -}}
 {{- else if .Values.postgresql.enabled -}}
     {{- template "postgresql.secretName" .Subcharts.postgresql -}}
-{{- else if not eq (include "mailu.database.type" .) "sqlite" -}}
+{{- else if ne (include "mailu.database.type" .) "sqlite" -}}
     {{- if .Values.externalDatabase.enabled -}}
-        {{- include "mailu.database.external.secretName" -}}
+        {{- include "mailu.database.external.secretName" . -}}
     {{- end -}}
 {{- else -}}
     {{- print "" -}}
@@ -112,7 +112,7 @@
     {{- print "password" -}}
 {{- else -}}
     {{- if .Values.externalDatabase.enabled -}}
-        {{- include "mailu.database.external.secretKey" -}}
+        {{- include "mailu.database.external.secretKey" . -}}
     {{- end -}}
 {{- end -}}
 {{- end -}}

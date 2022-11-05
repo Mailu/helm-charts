@@ -173,7 +173,7 @@ spec:
                   name: {{ include "mailu.database.secretName" . }}
                   key: {{ include "mailu.database.secretKey" . }}
             - name: DB_HOST
-              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) }}
+              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
             - name: DB_NAME
               value: {{ include "mailu.database.name" . }}
             {{- end }}

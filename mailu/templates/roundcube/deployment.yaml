@@ -105,7 +105,7 @@ spec:
             - name: ROUNDCUBE_DB_NAME
               value: {{ include "mailu.database.roundcube.name" . }}
             - name: ROUNDCUBE_DB_HOST
-              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) }}
+              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
             {{- end }}
             {{- if .Values.timezone }}
             - name: TZ
