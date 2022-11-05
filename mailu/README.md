@@ -491,6 +491,8 @@ Check that the deployed pods are all running.
 | `dovecot.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `dovecot.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `dovecot.overrides`                          | Enable dovecot overrides                                                              | `{}`                |
+| `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
+| `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
 
 
 ### rspamd parameters

@@ -96,7 +96,10 @@ spec:
               value: "{{ join "," .Values.hostnames }}"
             - name: RECIPIENT_DELIMITER
               value: +
-            # TODO: COMPRESSION / COMPRESS_LEVEL -> documentation?
+            - name: COMPRESSION
+              value: {{ .Values.dovecot.compression | quote }}
+            - name: COMPRESSION_LEVEL
+              value: {{ .Values.dovecot.compressionLevel | quote }}
             - name: WEBMAIL
               value: none
             - name: SECRET_KEY
