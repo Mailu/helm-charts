@@ -18,7 +18,7 @@
 {{- else if .Values.postgresql.enabled -}}
     {{- template "postgresql.primary.fullname" .Subcharts.postgresql -}}
 {{- else if .Values.externalDatabase.enabled -}}
-    {{- .Values.externalDatabase.host | quote -}}
+    {{- .Values.externalDatabase.host -}}
 {{- end -}}
 {{- end -}}
 
