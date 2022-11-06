@@ -48,7 +48,7 @@
         {{- .Values.postgresql.auth.database | quote -}}
     {{- end -}}
 {{- else -}}
-    {{- .Values.externalDatabase.database | quote -}}
+    {{- (include "mailu.database.external.database" .) | quote }}
 {{- end -}}
 {{- end -}}
 
@@ -67,7 +67,7 @@
         {{- .Values.postgresql.auth.username | quote -}}
     {{- end -}}
 {{- else }}
-    {{- .Values.externalDatabase.user | quote }}
+    {{- (include "mailu.database.external.username" .) | quote }}
 {{- end -}}
 {{- end -}}
 
@@ -76,17 +76,19 @@
 {{ include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecret "defaultNameSuffix" "externaldb" "context" .) }}
 {{- end -}}
 
-{{/* Return the name of the secret key that contains the password for the external database */}}
-{{- define "mailu.database.external.secretKey" -}}
-{{- if .Values.externalDatabase.existingSecret -}}
-    {{- if .Values.externalDatabase.existingSecretPasswordKey -}}
-        {{- .Values.externalDatabase.existingSecretPasswordKey }}
-    {{- else -}}
-        {{- print "mailu-db-password" }}
-    {{- end -}}
-{{- else -}}
-    {{- print "mailu-db-password" }}
+{{/* Return the name of the external database */}}
+{{- define "mailu.database.external.database" -}}
+{{ include "common.secrets.lookup" (dict "secret" (include "mailu.database.external.secretName" .) "key" .Values.externalDatabase.existingSecretDatabaseKey "defaultValue" .Values.externalDatabase.database "context" .) }}
 {{- end -}}
+
+{{/* Return the username of the external database */}}
+{{- define "mailu.database.external.username" -}}
+{{ include "common.secrets.lookup" (dict "secret" (include "mailu.database.external.secretName" .) "key" .Values.externalDatabase.existingSecretUsernameKey "defaultValue" .Values.externalDatabase.user "context" .) }}
+{{- end -}}
+
+{{/* Return the password of the external database */}}
+{{- define "mailu.database.external.password" -}}
+{{ include "common.secrets.lookup" (dict "secret" (include "mailu.database.external.secretName" .) "key" .Values.externalDatabase.existingSecretPasswordKey "defaultValue" .Values.externalDatabase.password "context" .) }}
 {{- end -}}
 
 {{/* Return the name of the mailu database secret with its credentials */}}
@@ -112,7 +114,7 @@
     {{- print "password" -}}
 {{- else -}}
     {{- if .Values.externalDatabase.enabled -}}
-        {{- include "mailu.database.external.secretKey" . -}}
+        {{- .Values.externalDatabase.existingSecretPasswordKey -}}
     {{- end -}}
 {{- end -}}
 {{- end -}}
