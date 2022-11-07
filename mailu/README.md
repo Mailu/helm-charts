@@ -560,11 +560,15 @@ Check that the deployed pods are all running.
 | `clamav.image.repository`                   | Pod image repository                                                                  | `mailu/clamav`      |
 | `clamav.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
 | `clamav.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `clamav.persistence.enabled`                | Enable persistence using PVC                                                          | `true`              |
 | `clamav.persistence.size`                   | Pod pvc size                                                                          | `2Gi`               |
 | `clamav.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
 | `clamav.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `clamav.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
 | `clamav.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
+| `clamav.persistence.labels`                 | Pod pvc labels                                                                        | `{}`                |
+| `clamav.persistence.selector`               | Additional labels to match for the PVC                                                | `{}`                |
+| `clamav.persistence.dataSource`             | Custom PVC data source                                                                | `{}`                |
+| `clamav.persistence.existingClaim`          | Use a existing PVC which must be created manually before bound                        | `""`                |
 | `clamav.resources.limits`                   | The resources limits for the container                                                | `{}`                |
 | `clamav.resources.requests`                 | The requested resources for the container                                             | `{}`                |
 | `clamav.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
@@ -593,7 +597,6 @@ Check that the deployed pods are all running.
 | `clamav.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
 | `clamav.affinity`                           | Affinity for clamav pod assignment                                                    | `{}`                |
 | `clamav.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `clamav.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
 | `clamav.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
 | `clamav.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
 | `clamav.service.annotations`                | Admin service annotations                                                             | `{}`                |
@@ -603,6 +606,7 @@ Check that the deployed pods are all running.
 | `clamav.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `clamav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `clamav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
 ### roundcube parameters

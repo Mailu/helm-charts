@@ -19,5 +19,6 @@ spec:
   ports:
     - name: clamav
       port: 3310
+      targetPort: clamav
       protocol: TCP
 {{- end }}
