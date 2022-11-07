@@ -34,36 +34,85 @@ front:
   logLevel: DEBUG
   image:
     tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 200m
 
 admin:
   logLevel: DEBUG
   image:
     tag: master
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 100m
+    limits:
+      memory: 500Mi
+      cpu: 1
 
 postfix:
   logLevel: WARNING
   image:
     tag: master
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1
 
 dovecot:
   logLevel: WARNING
   image:
     tag: master
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 100m
+    limits:
+      memory: 500Mi
+      cpu: 1
 
 rspamd:
   logLevel: INFO
   image:
     tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 1
 
 clamav:
   logLevel: WARNING
   image:
     tag: master
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 100m
+    limits:
+      memory: 2Gi
+      cpu: 1
 
 roundcube:
   logLevel: WARNING
   image:
     tag: master
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 100m
+    limits:
+      memory: 200Mi
+      cpu: 1
 
 webdav:
   logLevel: WARNING
