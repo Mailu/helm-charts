@@ -58,14 +58,14 @@ jobs:
   #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   notify-matrix:
-    # Only run this job if the release-please job created a release
-    if: needs.release-please.outputs.release_created
     needs:
       - release-please
     runs-on: ubuntu-latest
     name: Send message via Matrix
     steps:
     - name: Send message to mailu-helm-chart channel
+      # Only run this job if the release-please job created a release
+      if: needs.release-please.outputs.release_created
       id: matrix-chat-message
       uses: fadenb/matrix-chat-message@v0.0.6
       with:
@@ -73,10 +73,6 @@ jobs:
         token: ${{ secrets.MATRIX_TOKEN }}
         channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
         message: |
-          # New release of mailu-helm-chart
+          # New release of mailu-helm-chart\
           \
-          Version: **${{ github.event.release.tag_name }}**\
-          URL: **${{ github.event.release.html_url }}**\
-          \
-          Description:\
-          ```${{ github.event.release.body }}```
+          [${{ needs.release-please.outputs.tag_name }}](${{ needs.release-please.outputs.html_url }}) has been released.
