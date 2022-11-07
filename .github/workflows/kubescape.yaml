@@ -1,0 +1,45 @@
+---
+name: Kubescape scanning for misconfigurations
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  kubescape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Add Helm dependency repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency build mailu
+
+      - name: Generate k8s manifests
+        run: |
+          helm template mailu ./mailu -f mailu/ci/helm-lint-values.yaml > /tmp/mailu-generated.yaml
+
+      - name: Run Kubescape
+        uses: kubescape/github-action@main
+        continue-on-error: true
+        with:
+          format: sarif
+          outputFile: results.sarif
+          # # Optional: Specify the Kubescape cloud account ID
+          # account: ${{secrets.KUBESCAPE_ACCOUNT}}
+          # # Optional: Scan a specific path. Default will scan the whole repository
+          files: /tmp/mailu-generated.yaml
+      - name: Upload Kubescape scan results to Github Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif

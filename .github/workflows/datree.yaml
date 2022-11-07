@@ -1,0 +1,41 @@
+---
+name: Datree code scanning
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+env:
+  DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
+
+jobs:
+  kubescape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Add Helm dependency repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency build mailu
+
+      - name: Generate k8s manifests
+        run: |
+          helm template mailu ./mailu -f mailu/ci/helm-lint-values.yaml > /tmp/mailu-generated.yaml
+
+      - name: Run Datree Policy Check
+        uses: datreeio/action-datree@main
+        with:
+          path: 'mailu'
+          cliArguments: '--ignore-missing-schemas -s 1.22.0 --verbose -p Mailu'
+          isHelmChart: true
+          helmArguments: '--values mailu/ci/helm-lint-values.yaml --namespace mailu'
