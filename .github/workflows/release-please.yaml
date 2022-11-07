@@ -18,7 +18,7 @@ jobs:
         id: release
         with:
           release-type: helm
-          package-name: mailu
+          # package-name: mailu
 
   # release-chart:
   #   # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
