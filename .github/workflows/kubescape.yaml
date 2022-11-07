@@ -5,7 +5,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - mailu/**
   pull_request:
+    paths:
+      - mailu/**
 
 jobs:
   kubescape:
