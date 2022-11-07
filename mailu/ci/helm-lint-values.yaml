@@ -23,6 +23,13 @@ postgresql:
     persistence:
       enabled: true
       size: 10Gi
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 100m
+      limits:
+        memory: 500Mi
+        cpu: 1
 
 ingress:
   enabled: true
@@ -123,3 +130,13 @@ fetchmail:
   logLevel: WARNING
   image:
     tag: master
+
+redis:
+  master:
+    resources:
+      requests:
+        memory: 500Mi
+        cpu: 100m
+      limits:
+        memory: 500Mi
+        cpu: 1
