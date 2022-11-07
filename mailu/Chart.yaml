@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: "1.9"
-version: 1.0.0-beta.7
+version: 1.0.0-beta.8
 name: mailu
 description: This chart installs the Mailu mail system on kubernetes
 home: https://mailu.io
@@ -25,7 +25,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     tags:
       - bitnami-common
-    version: 2.0.3
+    version: 2.1.2
   - name: redis
     version: 17.3.*
     repository: https://charts.bitnami.com/bitnami
