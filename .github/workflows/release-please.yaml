@@ -60,6 +60,8 @@ jobs:
   notify-matrix:
     # Only run this job if the release-please job created a release
     if: needs.release-please.outputs.release_created
+    needs:
+      - release-please
     runs-on: ubuntu-latest
     name: Send message via Matrix
     steps:

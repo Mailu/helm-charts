@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'mailu/values.yaml'
+      - mailu/values.yaml
   workflow_dispatch: {}
 
 permissions:
