@@ -3,7 +3,8 @@ name: Send Matrix nofitication on release
 
 on:
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
   send-message:

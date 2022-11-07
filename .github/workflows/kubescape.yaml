@@ -3,6 +3,8 @@ name: Kubescape scanning for misconfigurations
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 jobs:

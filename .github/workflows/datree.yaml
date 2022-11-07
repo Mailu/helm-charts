@@ -3,6 +3,8 @@ name: Datree code scanning
 
 on:
   push:
+    branches:
+      - master
   pull_request:
 
 env:
