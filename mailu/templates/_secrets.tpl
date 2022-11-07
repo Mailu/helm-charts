@@ -30,5 +30,5 @@
 
 {{/* Get the certificates secret name */}}
 {{- define "mailu.certificatesSecretName" -}}
-{{ printf "%s-certificates" (include "mailu.fullname" . ) }}
+{{- include "common.secrets.name" (dict "existingSecret" .Values.ingress.existingSecret "defaultNameSuffix" "certificates" "context" .) }}
 {{- end -}}

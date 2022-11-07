@@ -32,6 +32,10 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- define "mailu.clamav.serviceFqdn" -}}
 {{- printf "%s.%s.svc.%s" (include "mailu.clamav.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
+{{/* Returns clamav internal headless service name. */}}
+{{- define "mailu.clamav.serviceNameHeadless" -}}
+{{- printf "%s-headless" (include "mailu.clamav.serviceName" .) -}}
+{{- end -}}
 
 {{/* Returns dovecot internal service name. */}}
 {{- define "mailu.dovecot.serviceName" -}}
