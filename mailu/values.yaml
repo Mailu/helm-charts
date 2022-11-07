@@ -557,7 +557,6 @@ front:
   ## @param front.externalService.ports.smtp Expose SMTP port
   ## @param front.externalService.ports.smtps Expose SMTP port (TLS)
   ## @param front.externalService.ports.submission Expose Submission port
-
   externalService:
     enabled: false
     type: ClusterIP
@@ -574,6 +573,12 @@ front:
       smtp: true
       smtps: true
       submission: true
+
+  ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
+  kind: Deployment
+
+  ## @param front.replicaCount Number of front replicas to deploy (only for `Deployment` kind)
+  replicaCount: 1
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -703,7 +708,9 @@ front:
   topologySpreadConstraints: []
 
   ## Strategy to use to update Pods
-  ## @param front.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  ## @param front.updateStrategy.type Strategy to use to update Pods
+  ## `Recreate` or `RollingUpdate` if `front.kind=Deployment`
+  ## `OnDelete` or `RollingUpdate` if `front.kind=DaemonSet`
   updateStrategy:
     type: RollingUpdate
 

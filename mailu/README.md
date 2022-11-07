@@ -274,6 +274,8 @@ Check that the deployed pods are all running.
 | `front.externalService.ports.smtp`            | Expose SMTP port                                                                      | `true`          |
 | `front.externalService.ports.smtps`           | Expose SMTP port (TLS)                                                                | `true`          |
 | `front.externalService.ports.submission`      | Expose Submission port                                                                | `true`          |
+| `front.kind`                                  | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
+| `front.replicaCount`                          | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |
 | `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |
 | `front.resources.requests`                    | The requested resources for the container                                             | `{}`            |
 | `front.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`          |
@@ -307,7 +309,7 @@ Check that the deployed pods are all running.
 | `front.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`            |
 | `front.service.annotations`                   | Admin service annotations                                                             | `{}`            |
 | `front.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`            |
-| `front.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate` |
+| `front.updateStrategy.type`                   | Strategy to use to update Pods                                                        | `RollingUpdate` |
 | `front.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`            |
 | `front.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`            |
 | `front.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
@@ -820,6 +822,8 @@ Depending on your environment you might want to shedule "only one pod" (`Deploym
 A `DaemonSet` can e.g. be usefull if you have multiple DNS entries / IPs in your MX record and want `front` to be reachable on every IP.
 
 This can be set with the `front.kind` value.
+
+Beware that if using a `DaemonSet` you'll need a storage class that supports `ReadWriteMany` access mode.
 
 ## Ingress
 

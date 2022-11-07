@@ -1,6 +1,6 @@
 ---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: Deployment
+kind: {{ .Values.front.kind }}
 metadata:
   name: {{ printf "%s-front" (include "mailu.fullname" .) }}
   namespace: {{ include "common.names.namespace" . | quote }}
@@ -13,9 +13,14 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
-  {{- if .Values.front.updateStrategy }}
+  {{- if eq .Values.front.kind "Deployment" }}
+  replicas: {{ .Values.front.replicaCount }}
+  {{- end }}
+  {{- if and .Values.front.updateStrategy (eq .Values.front.kind "Deployment") }}
   strategy: {{- toYaml .Values.front.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.front.updateStrategy (eq .Values.front.kind "DaemonSet") }}
+  updateStrategy: {{- toYaml .Values.front.updateStrategy | nindent 4 }}
   {{- end }}
   revisionHistoryLimit: {{ .Values.front.revisionHistoryLimit }}
   selector:
