@@ -83,7 +83,7 @@
 
 {{/* Return the username of the external database */}}
 {{- define "mailu.database.external.username" -}}
-{{ include "common.secrets.lookup" (dict "secret" (include "mailu.database.external.secretName" .) "key" .Values.externalDatabase.existingSecretUsernameKey "defaultValue" .Values.externalDatabase.user "context" .) }}
+{{ include "common.secrets.lookup" (dict "secret" (include "mailu.database.external.secretName" .) "key" .Values.externalDatabase.existingSecretUsernameKey "defaultValue" .Values.externalDatabase.username "context" .) }}
 {{- end -}}
 
 {{/* Return the password of the external database */}}
