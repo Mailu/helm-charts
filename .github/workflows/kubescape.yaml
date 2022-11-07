@@ -23,6 +23,10 @@ jobs:
           helm repo update
           helm dependency build mailu
 
+      - name: Generate k8s manifests
+        run: |
+          helm template mailu ./mailu -f mailu/ci/helm-lint-values.yaml > /tmp/mailu-generated.yaml
+
       - name: Run Kubescape
         uses: kubescape/github-action@main
         continue-on-error: true
@@ -32,7 +36,7 @@ jobs:
           # # Optional: Specify the Kubescape cloud account ID
           # account: ${{secrets.KUBESCAPE_ACCOUNT}}
           # # Optional: Scan a specific path. Default will scan the whole repository
-          # files: "examples/*.yaml"
+          files: /tmp/mailu-generated.yaml
       - name: Upload Kubescape scan results to Github Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
