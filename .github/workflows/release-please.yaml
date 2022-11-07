@@ -19,6 +19,13 @@ jobs:
         with:
           release-type: helm
           package-name: mailu
+          monorepo-tags: true
+          # changelog-path: mailu/CHANGELOG.md
+          token: ${{ secrets.GITHUB_TOKEN }}
+          changelog-notes-type: github
+          release-as: 1.0.0
+          prerelease: true
+          bootstrap-sha: fc5282eb32869c8092e9b8c0c58a37e6ae9c4c60
 
   # release-chart:
   #   # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
