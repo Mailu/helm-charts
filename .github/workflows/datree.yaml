@@ -34,6 +34,6 @@ jobs:
         uses: datreeio/action-datree@main
         with:
           path: 'mailu'
-          cliArguments: '--ignore-missing-schemas -s 1.22.0 --verbose'
+          cliArguments: '--ignore-missing-schemas -s 1.22.0 --verbose -p Mailu'
           isHelmChart: true
           helmArguments: '--values mailu/ci/helm-lint-values.yaml --namespace mailu'
