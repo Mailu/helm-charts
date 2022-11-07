@@ -88,7 +88,7 @@ initialAccount:
 subnet: 10.42.0.0/16
 
 ## @param mailuVersion Version/tag of mailu images - must be master or a version >= 1.9
-mailuVersion: 1.9.26
+mailuVersion: 1.9.39
 
 ## @param logLevel default log level. can be overridden globally or per service
 logLevel: WARNING
