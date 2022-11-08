@@ -1,6 +1,9 @@
 ---
 name: release-pipeline
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
     inputs:
@@ -59,3 +62,12 @@ jobs:
           git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
           git push
         working-directory: gh-pages
+
+      - name: Upload Chart build to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
+          tag_name: "${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}"
+          generate_release_notes: false
+          files: |
+            gh-pages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
