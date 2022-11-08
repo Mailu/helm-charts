@@ -27,6 +27,8 @@ jobs:
           include-v-in-tag: false
           tag-separator: '-'
           command: manifest-pr
+          # Only check the last 50 commits to avoid rate limiting
+          commit-search-depth: 50
       - run: |
           echo "Output: ${{ toJSON(steps.release.outputs) }}"
 
