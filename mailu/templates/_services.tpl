@@ -75,12 +75,49 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 
 {{/* Returns redis internal service name. */}}
 {{- define "mailu.redis.serviceName" -}}
-{{- printf "%s-redis-headless" (include "mailu.fullname" .) -}}
+{{- printf "%s-redis-master" (include "mailu.fullname" .) -}}
 {{- end -}}
-{{/* Returns redis internal service fqdn. */}}
+{{/* Returns redis service fqdn. */}}
 {{- define "mailu.redis.serviceFqdn" -}}
-{{- printf "%s.%s.svc.%s" (include "mailu.redis.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
+{{- if .Values.externalRedis.enabled -}}
+    {{- if not .Values.externalRedis.host -}}
+        {{- fail "externalRedis.host must be set when externalRedis.enabled is true" -}}
+    {{- else -}}
+        {{- printf "%s" .Values.externalRedis.host -}}
+    {{- end -}}
+{{- else -}}
+    {{- printf "%s.%s.svc.%s" (include "mailu.redis.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
+{{- end -}}
+{{/* Returns redis port */}}
+{{- define "mailu.redis.port" -}}
+{{- if .Values.externalRedis.enabled -}}
+    {{- if not .Values.externalRedis.port -}}
+        {{- fail "externalRedis.port must be set when externalRedis.enabled is true" -}}
+    {{- else -}}
+        {{- printf "%d" (.Values.externalRedis.port | int) -}}
+    {{- end -}}
+{{- else -}}
+    {{- printf "6379" -}}
+{{- end -}}
+{{- end -}}
+{{/* Returns Redis database ID for the quota storage on the admin pod */}}
+{{- define "mailu.redis.db.adminQuota" -}}
+{{- if .Values.externalRedis.enabled -}}
+    {{- printf "%d" (.Values.externalRedis.adminQuotaDbId | int) -}}
+{{- else -}}
+    {{- printf "1" -}}
+{{- end -}}
+{{- end -}}
+{{/* Returns Redis database ID for the rate limit storage on the admin pod */}}
+{{- define "mailu.redis.db.rateLimit" -}}
+{{- if .Values.externalRedis.enabled -}}
+    {{- printf "%d" (.Values.externalRedis.adminRateLimitDbId | int) -}}
+{{- else -}}
+    {{- printf "2" -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/* Returns roundcube internal service name. */}}
 {{- define "mailu.roundcube.serviceName" -}}
