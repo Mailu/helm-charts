@@ -17,6 +17,7 @@ keywords:
   - webmail
   - postfix
   - dovecot
+  - roundcube
 maintainers:
   - name: Mailu
     url: https://mailu.io
