@@ -77,6 +77,8 @@ jobs:
           git add .
           git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
           git push origin gh-pages
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Run helm repo index
       #   run: |
