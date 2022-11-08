@@ -17,6 +17,7 @@ jobs:
       - uses: google-github-actions/release-please-action@v3
         id: release
         with:
+          path: mailu
           release-type: helm
           package-name: mailu
           monorepo-tags: true
