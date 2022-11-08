@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.0-beta.18](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.17...mailu-1.0.0-beta.18) (2022-11-08)
+
+
+### Features
+
+* added support for redis external database ([88c1b0d](https://github.com/fastlorenzo/helm-charts-1/commit/88c1b0da26a94de6b31a98fad707d897c5f095cb))
+* added support for redis external database ([#23](https://github.com/fastlorenzo/helm-charts-1/issues/23)) ([7096a13](https://github.com/fastlorenzo/helm-charts-1/commit/7096a134f4f4008436075811807808a4b74dd2ce))
+
+
+### Bug Fixes
+
+* updated helm dependency ([c776220](https://github.com/fastlorenzo/helm-charts-1/commit/c77622074e7314301d58a02efa00c5d3928772c5))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.18 ([9065a20](https://github.com/fastlorenzo/helm-charts-1/commit/9065a202fe89ea2ac35f07291a973301c4b35f63))
+
 ## [1.0.0-beta.17](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.16...mailu-1.0.0-beta.17) (2022-11-08)
 
 
