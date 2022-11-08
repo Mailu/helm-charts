@@ -38,7 +38,7 @@ ingress:
     auth.cluster.arpa/enabled: "false"
 
 front:
-  logLevel: DEBUG
+  logLevel: WARNING
   image:
     tag: master
   resources:
@@ -50,7 +50,7 @@ front:
       cpu: 200m
 
 admin:
-  logLevel: DEBUG
+  logLevel: WARNING
   image:
     tag: master
   resources:
