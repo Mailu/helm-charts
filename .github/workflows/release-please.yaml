@@ -10,84 +10,140 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      release_created: ${{ steps.release.outputs.release_created }}
-      html_url: ${{ steps.release.outputs.html_url }}
-      tag_name: ${{ steps.release.outputs.tag_name }}
+      paths_released: ${{ steps.release.outputs.paths_released }}
+      releases_info: ${{ toJSON(steps.release.outputs) }}
     steps:
       - uses: google-github-actions/release-please-action@v3
         id: release
         with:
-          path: mailu
-          release-type: helm
-          package-name: mailu
-          monorepo-tags: true
+          # path: mailu
+          # release-type: helm
+          # package-name: mailu
+          # monorepo-tags: true
           token: ${{ secrets.GITHUB_TOKEN }}
           changelog-notes-type: github
-          prerelease: true
+          # prerelease: true
           include-v-in-tag: false
           tag-separator: '-'
-          command: manifest-pr
+          command: manifest
           # Only check the last 50 commits to avoid rate limiting
           commit-search-depth: 50
-      - run: |
-          echo "Output: ${{ toJSON(steps.release.outputs) }}"
 
-  release-chart:
-    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-    permissions:
-      contents: write
-    # Only run this job if the release-please job created a release
-    needs:
-      - release-please
-    if: ${{ needs.release-please.outputs.release_created }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-        with:
-          version: v3.10.0
-
-      - name: Add Helm dependency repos
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo update
-          helm dependency build mailu
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
-        with:
-          charts_dir: ./
+      - run: echo $JSON
+        name: Release Please Output Info
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          JSON: ${{ toJSON(steps.release.outputs) }}
 
-  notify-matrix:
+  packages-calculate:
+    if: needs.release-please.outputs.paths_released != '[]'
+    name: Packages Calculate
     needs:
       - release-please
-      - release-chart
     runs-on: ubuntu-latest
-    name: Send message via Matrix
+    outputs:
+      result: ${{ steps.interrogate.outputs.result }}
     steps:
-    - name: Send message to mailu-helm-chart channel
-      # Only run this job if the release-please job created a release
-      if: ${{ needs.release-please.outputs.release_created }}
-      id: matrix-chat-message
-      uses: fadenb/matrix-chat-message@v0.0.6
-      with:
-        homeserver: 'matrix.org'
-        token: ${{ secrets.MATRIX_TOKEN }}
-        channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
-        message: |
-          # New release of mailu-helm-chart\
-          \
-          [${{ needs.release-please.outputs.tag_name }}](${{ needs.release-please.outputs.html_url }}) has been released.
+
+      - uses: actions/checkout@v3
+
+      - id: interrogate
+        uses: actions/github-script@v4
+        env:
+          PATHS_RELEASED: ${{ needs.release-please.outputs.paths_released }}
+          RELEASES_INFO: ${{ needs.release-please.outputs.releases_info }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { PATHS_RELEASED, RELEASES_INFO } = process.env
+            const releases = JSON.parse(PATHS_RELEASED)
+            const releasesInfo = JSON.parse(RELEASES_INFO)
+            const result = []
+            for(const release of releases){
+              result.push(
+                {
+                  name: release.split('/')[1],
+                  version: releasesInfo[`${release}--version`]
+                }
+              )
+            }
+            return result
+
+  packages-publish:
+    needs:
+      - packages-calculate
+    name: Charts Packages Publish
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.packages-calculate.outputs.result) }}
+    steps:
+    - name: Workflow publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        curl \
+        -X POST \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $GITHUB_TOKEN" \
+        https://api.github.com/repos/${{ github.repository }}/actions/workflows/publish-chart.yaml/dispatches \
+        -d '{"ref":"master","inputs":{"package":"${{ matrix.package.name }}","version":"${{ matrix.package.version }}"}}'
+
+  # release-chart:
+  #   # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+  #   # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+  #   permissions:
+  #     contents: write
+  #   # Only run this job if the release-please job created a release
+  #   needs:
+  #     - release-please
+  #   if: ${{ needs.release-please.outputs.release_created }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Configure Git
+  #       run: |
+  #         git config user.name "$GITHUB_ACTOR"
+  #         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+  #     - name: Install Helm
+  #       uses: azure/setup-helm@v3
+  #       with:
+  #         version: v3.10.0
+
+  #     - name: Add Helm dependency repos
+  #       run: |
+  #         helm repo add bitnami https://charts.bitnami.com/bitnami
+  #         helm repo update
+  #         helm dependency build mailu
+
+  #     - name: Run chart-releaser
+  #       uses: helm/chart-releaser-action@v1.4.1
+  #       with:
+  #         charts_dir: ./
+  #       env:
+  #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  # notify-matrix:
+  #   needs:
+  #     - release-please
+  #     - release-chart
+  #   runs-on: ubuntu-latest
+  #   name: Send message via Matrix
+  #   steps:
+  #   - name: Send message to mailu-helm-chart channel
+  #     # Only run this job if the release-please job created a release
+  #     if: ${{ needs.release-please.outputs.release_created }}
+  #     id: matrix-chat-message
+  #     uses: fadenb/matrix-chat-message@v0.0.6
+  #     with:
+  #       homeserver: 'matrix.org'
+  #       token: ${{ secrets.MATRIX_TOKEN }}
+  #       channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
+  #       message: |
+  #         # New release of mailu-helm-chart\
+  #         \
+  #         [${{ needs.release-please.outputs.tag_name }}](${{ needs.release-please.outputs.html_url }}) has been released.
