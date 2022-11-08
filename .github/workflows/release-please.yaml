@@ -74,6 +74,7 @@ jobs:
   notify-matrix:
     needs:
       - release-please
+      - release-chart
     runs-on: ubuntu-latest
     name: Send message via Matrix
     steps:
