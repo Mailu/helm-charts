@@ -93,6 +93,6 @@ jobs:
         token: ${{ secrets.MATRIX_TOKEN }}
         channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
         message: |
-          # New release of ${{ github.event.inputs.package }} helm chart\
-          \
+          # New release of ${{ github.event.inputs.package }} helm chart: ${{ github.event.inputs.version }}
+
           [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}) has been released.
