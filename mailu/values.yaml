@@ -68,6 +68,7 @@ existingSecret: ""
 ##   domain: mydomain.com
 ##   password: ""
 ##   existingSecret: mailu-secret
+##
 ## @param initialAccount.enabled Enable the creation of the initial account
 ## @param initialAccount.username Username of the initial account
 ## @param initialAccount.domain Domain of the initial account
