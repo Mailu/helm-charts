@@ -34,6 +34,12 @@ jobs:
         with:
           version: v3.10.0
 
+      - name: Install dependencies
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency build mailu
+
       - name: Run helm lint
         run: helm lint --strict --values mailu/ci/helm-lint-values.yaml mailu
 
