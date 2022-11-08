@@ -24,7 +24,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           changelog-notes-type: github
           prerelease: true
-          snapshot: true
           bootstrap-sha: fc5282eb32869c8092e9b8c0c58a37e6ae9c4c60
           release-as: 1.0.0-beta.13
           include-v-in-tag: false
