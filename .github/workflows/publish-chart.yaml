@@ -17,7 +17,7 @@ on:
         required: true
         type: string
 jobs:
-  pipeline:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -46,9 +46,6 @@ jobs:
 
       - name: Run helm lint
         run: helm lint --strict --values mailu/ci/helm-lint-values.yaml mailu
-
-      # - name: Run helm package
-      #   run: helm package mailu --destination gh-pages
 
       - name: Install chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
@@ -81,16 +78,21 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Run helm repo index
-      #   run: |
-      #     REPO_NAME=$(echo "${{ github.repository }}" | cut -d "/" -f 2)
-      #     helm repo index gh-pages --url https://${{ github.repository_owner }}.github.io/${REPO_NAME}
-
-      # - name: Commit and push changes
-      #   run: |
-      #     git config --global user.email "actions@github.com"
-      #     git config --global user.name "Github actions"
-      #     git add .
-      #     git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
-      #     git push
-      #   working-directory: gh-pages
+  notify-matrix:
+    needs:
+      - publish
+    runs-on: ubuntu-latest
+    name: Send message via Matrix
+    steps:
+    - name: Send message to mailu-helm-chart channel
+      # Only run this job if the release-please job created a release
+      id: matrix-chat-message
+      uses: fadenb/matrix-chat-message@v0.0.6
+      with:
+        homeserver: 'matrix.org'
+        token: ${{ secrets.MATRIX_TOKEN }}
+        channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
+        message: |
+          # New release of ${{ github.event.inputs.package }} helm chart\
+          \
+          [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}) has been released.
