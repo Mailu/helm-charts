@@ -61,7 +61,7 @@ jobs:
             for(const release of releases){
               result.push(
                 {
-                  name: release.split('/')[1],
+                  name: release,
                   version: releasesInfo[`${release}--version`]
                 }
               )
