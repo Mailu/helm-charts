@@ -83,7 +83,7 @@ spec:
             - name: ADMIN_ADDRESS
               value: {{ include "mailu.admin.serviceFqdn" . }}
             - name: REDIS_ADDRESS
-              value: {{ include "mailu.redis.serviceFqdn" . }}
+              value: {{ printf "%s:%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) }}
             {{- if .Values.clamav.enabled }}
             - name: ANTIVIRUS
               value: clamav

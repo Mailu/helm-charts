@@ -78,9 +78,9 @@ spec:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.admin.logLevel }}
             - name: QUOTA_STORAGE_URL
-              value: redis://{{ include "mailu.fullname" . }}-redis/1
+              value: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.adminQuota" .) }}
             - name: RATELIMIT_STORAGE_URL
-              value: redis://{{ include "mailu.fullname" . }}-redis/2
+              value: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.rateLimit" .) }}
             - name: POSTMASTER
               value: {{ default "postmaster" .Values.postmaster }}
             - name: DOMAIN

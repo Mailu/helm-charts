@@ -219,6 +219,28 @@ externalDatabase:
   ## @param externalDatabase.existingSecretPasswordKey Key in the secret containing the database password
   existingSecretPasswordKey: "password"
 
+externalRedis:
+  ## @param externalRedis.enabled Set to true to use an external Redis instance (ignored if `redis.enabled` is true)
+  enabled: false
+
+  ## @param externalRedis.host Hostname of the external Redis instance
+  host: ""
+
+  ## @param externalRedis.port Port of the external Redis instance
+  port: 6379
+
+  ## @param externalRedis.adminQuotaDbId Redis database ID for the quota storage on the admin pod
+  adminQuotaDbId: 1
+
+  ## @param externalRedis.adminRateLimitDbId Redis database ID for the rate limit storage on the admin pod
+  adminRateLimitDbId: 2
+
+  ## @param externalRedis.rspamdDbId Redis database ID for the rspamd storage on the rspamd pod
+  ## Changing this value does nothing as the option is not configurable in rspamd pod yet
+  ## ref: https://rspamd.com/doc/configuration/redis.html#available-redis-options
+  rspamdDbId: 0
+
+
 ## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
 ## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
 database:
@@ -910,6 +932,9 @@ admin:
 ## Redis chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/redis
 redis:
+  ## @param redis.enabled Enable redis deployment through the redis subchart
+  enabled: true
+
   ## @param redis.architecture Redis architecture. Allowed values: `standalone` or `replication`
   architecture: standalone
 
