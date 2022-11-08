@@ -47,22 +47,17 @@ jobs:
       - name: Run helm lint
         run: helm lint --strict --values mailu/ci/helm-lint-values.yaml mailu
 
-      - name: Run helm package
-        run: helm package mailu --destination gh-pages
+      # - name: Run helm package
+      #   run: helm package mailu --destination gh-pages
 
-      - name: Run helm repo index
-        run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | cut -d "/" -f 2)
-          helm repo index gh-pages --url https://${{ github.repository_owner }}.github.io/${REPO_NAME}
+      - name: Install chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          install_only: true
 
-      - name: Commit and push changes
+      - name: Package Chart with chart-releaser
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "Github actions"
-          git add .
-          git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
-          git push
-        working-directory: gh-pages
+          cr package mailu
 
       - name: Upload Chart build to Release
         uses: softprops/action-gh-release@v1
@@ -71,4 +66,28 @@ jobs:
           tag_name: "${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}"
           generate_release_notes: false
           files: |
-            gh-pages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
+            .cr-release-packages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
+
+      - name: Update chart index and publish to Github pages
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "Github actions"
+          cr index -o ${{ github.repository_owner }} -r ${{ github.repository }} -i gh-pages/index.yaml --release-name-template "{{ .Name }}-v{{ .Version }}"
+          cd gh-pages
+          git add .
+          git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
+          git push origin gh-pages
+
+      # - name: Run helm repo index
+      #   run: |
+      #     REPO_NAME=$(echo "${{ github.repository }}" | cut -d "/" -f 2)
+      #     helm repo index gh-pages --url https://${{ github.repository_owner }}.github.io/${REPO_NAME}
+
+      # - name: Commit and push changes
+      #   run: |
+      #     git config --global user.email "actions@github.com"
+      #     git config --global user.name "Github actions"
+      #     git add .
+      #     git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
+      #     git push
+      #   working-directory: gh-pages
