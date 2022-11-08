@@ -72,13 +72,13 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "Github actions"
-          cr index -o ${{ github.repository_owner }} -r ${{ github.repository }} -i gh-pages/index.yaml --release-name-template "{{ .Name }}-v{{ .Version }}"
+          cr -t $GITHUB_TOKEN index -o ${{ github.repository_owner }} -r ${{ github.repository }} -i gh-pages/index.yaml --release-name-template "{{ .Name }}-v{{ .Version }}"
           cd gh-pages
           git add .
           git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
           git push origin gh-pages
         env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Run helm repo index
       #   run: |
