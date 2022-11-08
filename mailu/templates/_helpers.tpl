@@ -51,9 +51,9 @@ Get MailU domain name or throw an error if not set
 */}}
 {{- define "mailu.domain" -}}
 {{- if .Values.domain -}}
-{{- .Values.domain -}}
+    {{- .Values.domain -}}
 {{- else -}}
-{{- fail "You must set a domain name for Mailu (`domain:`)" -}}
+    {{- fail "You must set a domain name for Mailu (`domain:`)" -}}
 {{- end -}}
 {{- end -}}
 
