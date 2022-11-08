@@ -11,6 +11,7 @@ on:
         description: Name of the package that will be published
         required: true
         type: string
+        default: mailu
       version:
         description: Version of the package that will be published
         required: true
