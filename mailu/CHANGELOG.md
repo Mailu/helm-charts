@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-beta.15](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.14...mailu-v1.0.0-beta.15) (2022-11-08)
+
+
+### Bug Fixes
+
+* fixed syntax ([fb13f1e](https://github.com/fastlorenzo/helm-charts-1/commit/fb13f1eebf01aa98baf177efa74af6d69df028f1))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.15 ([24493f6](https://github.com/fastlorenzo/helm-charts-1/commit/24493f6bea127e2b474b5449a525e375079dc147))
+
 ## [1.0.0-beta.14](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.13...mailu-v1.0.0-beta.14) (2022-11-08)
 
 
