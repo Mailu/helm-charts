@@ -26,6 +26,7 @@ jobs:
           prerelease: true
           include-v-in-tag: false
           tag-separator: '-'
+          command: manifest-pr
       - run: |
           echo "Output: ${{ steps.release.outputs }}"
 
