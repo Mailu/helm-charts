@@ -24,11 +24,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           changelog-notes-type: github
           prerelease: true
-          release-as: 1.0.0-beta.14
           include-v-in-tag: false
           tag-separator: '-'
       - run: |
-          echo "Created: ${{ steps.release.outputs.release_created }}"
+          echo "Output: ${{ steps.release.outputs }}"
 
   release-chart:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions

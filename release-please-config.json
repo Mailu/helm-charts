@@ -2,7 +2,6 @@
   "packages": {
     "mailu": {
       "package-name": "mailu",
-      "component": "mailu",
       "changelog-path": "CHANGELOG.md",
       "release-type": "helm",
       "bump-minor-pre-major": false,
