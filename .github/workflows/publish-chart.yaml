@@ -35,7 +35,7 @@ jobs:
           version: v3.10.0
 
       - name: Run helm lint
-        run: helm lint --strict --values mailu/helm-lint-values.yaml mailu
+        run: helm lint --strict --values mailu/ci/helm-lint-values.yaml mailu
 
       - name: Run helm package
         run: helm package mailu --destination gh-pages
