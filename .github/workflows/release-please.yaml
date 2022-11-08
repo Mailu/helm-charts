@@ -27,43 +27,49 @@ jobs:
           snapshot: true
           bootstrap-sha: fc5282eb32869c8092e9b8c0c58a37e6ae9c4c60
           release-as: 1.0.0-beta.13
+          include-v-in-tag: false
+          tag-separator: '-'
+      - run: |
+          echo "Created: ${{ steps.release.outputs.release_created }}"
 
-  # release-chart:
-  #   # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
-  #   # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
-  #   permissions:
-  #     contents: write
-  #   # Only run this job if the release-please job created a release
-  #   if: needs.release-please.outputs.release_created
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
+  release-chart:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    # Only run this job if the release-please job created a release
+    needs:
+      - release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-  #     - name: Configure Git
-  #       run: |
-  #         git config user.name "$GITHUB_ACTOR"
-  #         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-  #     - name: Install Helm
-  #       uses: azure/setup-helm@v3
-  #       with:
-  #         version: v3.10.0
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
 
-  #     - name: Add Helm dependency repos
-  #       run: |
-  #         helm repo add bitnami https://charts.bitnami.com/bitnami
-  #         helm repo update
-  #         helm dependency build mailu
+      - name: Add Helm dependency repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+          helm dependency build mailu
 
-  #     - name: Run chart-releaser
-  #       uses: helm/chart-releaser-action@v1.4.1
-  #       with:
-  #         charts_dir: ./
-  #       env:
-  #         CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          charts_dir: ./
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   notify-matrix:
     needs:
@@ -73,7 +79,7 @@ jobs:
     steps:
     - name: Send message to mailu-helm-chart channel
       # Only run this job if the release-please job created a release
-      if: needs.release-please.outputs.release_created
+      if: ${{ needs.release-please.outputs.release_created }}
       id: matrix-chat-message
       uses: fadenb/matrix-chat-message@v0.0.6
       with:
