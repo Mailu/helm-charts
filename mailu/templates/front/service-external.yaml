@@ -27,36 +27,57 @@ spec:
     - name: pop3
       port: 110
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 110
+      {{- end }}
     {{- end }}
     {{- if .ports.pop3s }}
     - name: pop3s
       port: 995
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 995
+      {{- end }}
     {{- end }}
     {{- if .ports.imap }}
     - name: imap
       port: 143
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 143
+      {{- end }}
     {{- end }}
     {{- if .ports.imaps }}
     - name: imaps
       port: 993
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 993
+      {{- end }}
     {{- end }}
     {{- if .ports.smtp }}
     - name: smtp
       port: 25
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 25
+      {{- end }}
     {{- end }}
     {{- if .ports.smtps }}
     - name: smtps
       port: 465
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 465
+      {{- end }}
     {{- end }}
     {{- if .ports.submission }}
     - name: smtpd
       port: 587
       protocol: TCP
+      {{- if eq .Values.front.externalService "NodePort" -}}
+      nodePort: 587
+      {{- end }}
     {{- end }}
 {{- end }}
 {{- end }}
