@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0-beta.22](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.21...mailu-1.0.0-beta.22) (2022-11-09)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.22 ([9e996a2](https://github.com/fastlorenzo/helm-charts-1/commit/9e996a20f654a90c6d65a30f8b86e2044b5c92e4))
+
 ## [1.0.0-beta.21](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.20...mailu-1.0.0-beta.21) (2022-11-09)
 
 
