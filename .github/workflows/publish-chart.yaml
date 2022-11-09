@@ -62,6 +62,8 @@ jobs:
           name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
           tag_name: "${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}"
           generate_release_notes: false
+          append_body: true
+          body: ""
           files: |
             .cr-release-packages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
 
