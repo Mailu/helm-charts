@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0-beta.19](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.18...mailu-1.0.0-beta.19) (2022-11-09)
+
+
+### Features
+
+* Added support for NodePort for front External Service ([551c9ae](https://github.com/fastlorenzo/helm-charts-1/commit/551c9ae0d791acb67f6a31af7d9d409fe2c07cf6))
+* Added support for NodePort for front External Service ([#25](https://github.com/fastlorenzo/helm-charts-1/issues/25)) ([b9a1b84](https://github.com/fastlorenzo/helm-charts-1/commit/b9a1b8446a1452d3c54d4ecf828d8fa7adf1f851))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.19 ([f3d223c](https://github.com/fastlorenzo/helm-charts-1/commit/f3d223c565eff6aa7ec0821ce38e3f2c536f75eb))
+
 ## [1.0.0-beta.18](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.17...mailu-1.0.0-beta.18) (2022-11-08)
 
 
