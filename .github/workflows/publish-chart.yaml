@@ -19,6 +19,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ fromJSON(steps.get_release.outputs.data).body }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -56,14 +58,25 @@ jobs:
         run: |
           cr package mailu
 
+      - name: Get Release
+        uses: octokit/request-action@v2.x
+        id: get_release
+        with:
+          route: GET /repos/{repo}/releases/tags/{tag}
+          repo: ${{ github.repository }}
+          tag: ${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: "echo release: ${{ steps.get_release.outputs.data }}"
+
       - name: Upload Chart build to Release
         uses: softprops/action-gh-release@v1
         with:
           name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
           tag_name: "${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}"
           generate_release_notes: false
-          append_body: true
-          body: ""
+          body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
             .cr-release-packages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
 
@@ -86,15 +99,17 @@ jobs:
     runs-on: ubuntu-latest
     name: Send message via Matrix
     steps:
-    - name: Send message to mailu-helm-chart channel
-      # Only run this job if the release-please job created a release
-      id: matrix-chat-message
-      uses: fadenb/matrix-chat-message@v0.0.6
-      with:
-        homeserver: 'matrix.org'
-        token: ${{ secrets.MATRIX_TOKEN }}
-        channel: '!KluZWhQwHDYrOfqJdD:make-it.fr'
-        message: |
-          # New release of ${{ github.event.inputs.package }} helm chart: ${{ github.event.inputs.version }}
-
-          [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}) has been released.
+      - name: Send message to mailu-helm-chart channel
+        # Only run this job if the release-please job created a release
+        id: matrix-chat-message
+        uses: fadenb/matrix-chat-message@v0.0.6
+        with:
+          homeserver: "matrix.org"
+          token: ${{ secrets.MATRIX_TOKEN }}
+          channel: "!KluZWhQwHDYrOfqJdD:make-it.fr"
+          message: >
+            # New release of ${{ github.event.inputs.package }} helm chart: ${{ github.event.inputs.version }}\n
+            \n
+            [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}) has been released.\n
+            \n
+            ${{ needs.publish.outputs.release_body }}
