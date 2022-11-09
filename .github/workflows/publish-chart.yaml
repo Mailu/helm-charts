@@ -64,7 +64,7 @@ jobs:
         with:
           route: GET /repos/{repo}/releases/tags/{tag}
           repo: ${{ github.repository }}
-          tag: ${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}
+          tag: ${{ github.event.inputs.package }}-${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -74,7 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
-          tag_name: "${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}"
+          tag_name: "${{ github.event.inputs.package }}-${{ github.event.inputs.version }}"
           generate_release_notes: false
           body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
@@ -85,7 +85,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "Github actions"
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d "/" -f 2)
-          cr -t $GITHUB_TOKEN index -o ${{ github.repository_owner }} -r ${REPO_NAME} -i gh-pages/index.yaml --release-name-template "{{ .Name }}-v{{ .Version }}"
+          cr -t $GITHUB_TOKEN index -o ${{ github.repository_owner }} -r ${REPO_NAME} -i gh-pages/index.yaml --release-name-template "{{ .Name }}-{{ .Version }}"
           cd gh-pages
           git add .
           git commit -m "New Chart Release for ${{ github.event.inputs.package }}: ${{ github.event.inputs.version }}"
@@ -110,6 +110,6 @@ jobs:
           message: >
             # New release of ${{ github.event.inputs.package }} helm chart: ${{ github.event.inputs.version }}\n
             \n
-            [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-v${{ github.event.inputs.version }}) has been released.\n
+            [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}) has been released.\n
             \n
             ${{ needs.publish.outputs.release_body }}
