@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0-beta.21](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.20...mailu-1.0.0-beta.21) (2022-11-09)
+
+
+### Bug Fixes
+
+* Fixed typo in nodePort param ([cd29882](https://github.com/fastlorenzo/helm-charts-1/commit/cd298824d73079b0dae7deecf265b0fa4780c8e5))
+* Fixed typo in nodePort param ([#29](https://github.com/fastlorenzo/helm-charts-1/issues/29)) ([bc159d0](https://github.com/fastlorenzo/helm-charts-1/commit/bc159d029d211d62a5730a7dbb4b179091824743))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.21 ([87b2041](https://github.com/fastlorenzo/helm-charts-1/commit/87b2041bbba6e124119c196cca24d9b83f8bd805))
+
 ## [1.0.0-beta.20](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.19...mailu-1.0.0-beta.20) (2022-11-09)
 
 
