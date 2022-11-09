@@ -21,7 +21,7 @@ jobs:
           # package-name: mailu
           # monorepo-tags: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          changelog-notes-type: github
+          # changelog-notes-type: github
           # prerelease: true
           include-v-in-tag: false
           tag-separator: '-'

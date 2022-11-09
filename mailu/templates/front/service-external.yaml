@@ -27,7 +27,7 @@ spec:
     - name: pop3
       port: 110
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 110
       {{- end }}
     {{- end }}
@@ -35,7 +35,7 @@ spec:
     - name: pop3s
       port: 995
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 995
       {{- end }}
     {{- end }}
@@ -43,7 +43,7 @@ spec:
     - name: imap
       port: 143
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 143
       {{- end }}
     {{- end }}
@@ -51,7 +51,7 @@ spec:
     - name: imaps
       port: 993
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 993
       {{- end }}
     {{- end }}
@@ -59,7 +59,7 @@ spec:
     - name: smtp
       port: 25
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 25
       {{- end }}
     {{- end }}
@@ -67,7 +67,7 @@ spec:
     - name: smtps
       port: 465
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 465
       {{- end }}
     {{- end }}
@@ -75,7 +75,7 @@ spec:
     - name: smtpd
       port: 587
       protocol: TCP
-      {{- if eq .Values.front.externalService.type "NodePort" -}}
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
       nodePort: 587
       {{- end }}
     {{- end }}
