@@ -68,8 +68,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: "echo release: ${{ steps.get_release.outputs.data }}"
-
       - name: Upload Chart build to Release
         uses: softprops/action-gh-release@v1
         with:
