@@ -1,13 +1,13 @@
 # Changelog
 
-## [1.0.0-beta.22](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.21...mailu-1.0.0-beta.22) (2022-11-09)
+## [1.0.0-beta.22](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.21...mailu-1.0.0-beta.22) (2022-11-09)
 
 
 ### Miscellaneous Chores
 
 * release 1.0.0-beta.22 ([9e996a2](https://github.com/fastlorenzo/helm-charts-1/commit/9e996a20f654a90c6d65a30f8b86e2044b5c92e4))
 
-## [1.0.0-beta.21](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.20...mailu-1.0.0-beta.21) (2022-11-09)
+## [1.0.0-beta.21](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.20...mailu-1.0.0-beta.21) (2022-11-09)
 
 
 ### Bug Fixes
@@ -20,7 +20,7 @@
 
 * release 1.0.0-beta.21 ([87b2041](https://github.com/fastlorenzo/helm-charts-1/commit/87b2041bbba6e124119c196cca24d9b83f8bd805))
 
-## [1.0.0-beta.20](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.19...mailu-1.0.0-beta.20) (2022-11-09)
+## [1.0.0-beta.20](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.19...mailu-1.0.0-beta.20) (2022-11-09)
 
 
 ### Bug Fixes
@@ -33,7 +33,7 @@
 
 * release 1.0.0-beta.20 ([69697aa](https://github.com/fastlorenzo/helm-charts-1/commit/69697aaa79c4a8b9662a71d7d5ed29060fafdf2a))
 
-## [1.0.0-beta.19](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.18...mailu-1.0.0-beta.19) (2022-11-09)
+## [1.0.0-beta.19](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.18...mailu-1.0.0-beta.19) (2022-11-09)
 
 
 ### Features
@@ -46,7 +46,7 @@
 
 * release 1.0.0-beta.19 ([f3d223c](https://github.com/fastlorenzo/helm-charts-1/commit/f3d223c565eff6aa7ec0821ce38e3f2c536f75eb))
 
-## [1.0.0-beta.18](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.17...mailu-1.0.0-beta.18) (2022-11-08)
+## [1.0.0-beta.18](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.17...mailu-1.0.0-beta.18) (2022-11-08)
 
 
 ### Features
@@ -64,21 +64,21 @@
 
 * release 1.0.0-beta.18 ([9065a20](https://github.com/fastlorenzo/helm-charts-1/commit/9065a202fe89ea2ac35f07291a973301c4b35f63))
 
-## [1.0.0-beta.17](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.16...mailu-1.0.0-beta.17) (2022-11-08)
+## [1.0.0-beta.17](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.16...mailu-1.0.0-beta.17) (2022-11-08)
 
 
 ### Miscellaneous Chores
 
 * release 1.0.0-beta.17 ([14c48ee](https://github.com/fastlorenzo/helm-charts-1/commit/14c48ee3ea651d0c7a1fc6896bb5a06408250d55))
 
-## [1.0.0-beta.16](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-v1.0.0-beta.15...mailu-v1.0.0-beta.16) (2022-11-08)
+## [1.0.0-beta.16](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.15...mailu-1.0.0-beta.16) (2022-11-08)
 
 
 ### Miscellaneous Chores
 
 * release 1.0.0-beta.16 ([3752e90](https://github.com/fastlorenzo/helm-charts-1/commit/3752e90a310cb1ac1c4bbd7007d868e2618ebb2f))
 
-## [1.0.0-beta.15](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.14...mailu-v1.0.0-beta.15) (2022-11-08)
+## [1.0.0-beta.15](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.14...mailu-1.0.0-beta.15) (2022-11-08)
 
 
 ### Bug Fixes
@@ -90,7 +90,7 @@
 
 * release 1.0.0-beta.15 ([24493f6](https://github.com/fastlorenzo/helm-charts-1/commit/24493f6bea127e2b474b5449a525e375079dc147))
 
-## [1.0.0-beta.14](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.13...mailu-v1.0.0-beta.14) (2022-11-08)
+## [1.0.0-beta.14](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.13...mailu-1.0.0-beta.14) (2022-11-08)
 
 
 ### Bug Fixes
