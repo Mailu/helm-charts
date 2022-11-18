@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-beta.23](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.22...mailu-1.0.0-beta.23) (2022-11-18)
+
+
+### Bug Fixes
+
+* fixed missing check when using existing claim ([#34](https://github.com/fastlorenzo/helm-charts-1/issues/34)) ([8f36df0](https://github.com/fastlorenzo/helm-charts-1/commit/8f36df0ff0a7cbec6be444e58c21421009acfd4e))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.23 ([a6a86e1](https://github.com/fastlorenzo/helm-charts-1/commit/a6a86e1d7bf729c6e4e92676f6369b2922b87fd0))
+
 ## [1.0.0-beta.22](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.21...mailu-1.0.0-beta.22) (2022-11-09)
 
 
