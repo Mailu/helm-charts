@@ -39,8 +39,8 @@ ingress:
 
 front:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -51,8 +51,8 @@ front:
 
 admin:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 500Mi
@@ -63,8 +63,8 @@ admin:
 
 postfix:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 2Gi
@@ -75,8 +75,8 @@ postfix:
 
 dovecot:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 500Mi
@@ -87,8 +87,8 @@ dovecot:
 
 rspamd:
   logLevel: INFO
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -99,8 +99,8 @@ rspamd:
 
 clamav:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 1Gi
@@ -111,8 +111,8 @@ clamav:
 
 roundcube:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -123,13 +123,13 @@ roundcube:
 
 webdav:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
 
 fetchmail:
   logLevel: WARNING
-  image:
-    tag: master
+#  image:
+#    tag: master
 
 redis:
   master:
