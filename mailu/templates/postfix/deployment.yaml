@@ -68,6 +68,10 @@ spec:
             - mountPath: /queue
               name: data
               subPath: mailqueue
+            {{- if .Values.postfix.overrides }}
+            - name: overrides
+              mountPath: /overrides
+            {{- end }}
             {{- if .Values.postfix.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.postfix.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -115,10 +119,6 @@ spec:
               value: "{{ .Values.external_relay.password }}"
             {{- end}}
             {{- end}}
-            {{- if .Values.postfix.overrides }}
-            - name: overrides
-              mountPath: /overrides
-            {{- end }}
             {{- if .Values.timezone }}
             - name: TZ
               value: {{ .Values.timezone }}
