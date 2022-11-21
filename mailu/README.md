@@ -556,6 +556,7 @@ Check that the deployed pods are all running.
 | `rspamd.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `rspamd.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
 
 
 ### clamav parameters

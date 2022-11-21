@@ -1525,6 +1525,16 @@ rspamd:
   ## @param rspamd.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
+  ## @param rspamd.overrides Enable rspamd overrides
+  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
+  ## Example:
+  ## overrides:
+  ##   fileA.conf: |
+  ##     obj {
+  ##       key = value;
+  ##     }
+  overrides: {}
+
 ## @section clamav parameters
 clamav:
   ## @param clamav.enabled Enable ClamAV

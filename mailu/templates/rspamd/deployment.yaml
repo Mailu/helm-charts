@@ -72,6 +72,10 @@ spec:
             - name: data
               subPath: rspamd-local.d-maps.d
               mountPath: /etc/rspamd/local.d/maps.d
+            {{- if .Values.rspamd.overrides }}
+            - name: overrides
+              mountPath: /overrides
+            {{- end }}
             {{- if .Values.rspamd.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -145,3 +149,8 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.rspamd.claimName" . }}
+        {{- if .Values.rspamd.overrides }}
+        - name: overrides
+          configMap:
+            name: {{ printf "%s-rspamd-override" (include "mailu.fullname" .) }}
+        {{- end }}
