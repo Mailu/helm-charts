@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.0.0-beta.24](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.23...mailu-1.0.0-beta.24) (2022-11-22)
+
+
+### Features
+
+* Add Rspamd overrides [#38](https://github.com/fastlorenzo/helm-charts-1/issues/38) ([7c25309](https://github.com/fastlorenzo/helm-charts-1/commit/7c25309841252793199b650ce00cda1287daa755))
+
+
+### Bug Fixes
+
+* Fix postfix override settings ([6852d19](https://github.com/fastlorenzo/helm-charts-1/commit/6852d1924178260703f0b780358b24abf7bf1bf4))
+* Fixed usage of existingSecret for TLS (fixes [#37](https://github.com/fastlorenzo/helm-charts-1/issues/37)) ([cbb84c7](https://github.com/fastlorenzo/helm-charts-1/commit/cbb84c78d99edb61102b21a0822f236f5f7f6b36))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.24 ([b54e6e8](https://github.com/fastlorenzo/helm-charts-1/commit/b54e6e8b31d858134255d74526791c09a4e26fb5))
+
 ## [1.0.0-beta.23](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.22...mailu-1.0.0-beta.23) (2022-11-18)
 
 
