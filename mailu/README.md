@@ -827,6 +827,8 @@ deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadW
 
 It's very likely that your PODs run on a different subnet than the default `10.42.0.0/16`. Set the `subnet` value to the correct subnet and try again.
 
+**Warning:** For security reasons, make sure that the `subnet` value is scoped only to the resources that belongs to your cluster. Do not use a subnet that is too large as any IP within the `subnet` would have extended rights to send emails, bypassing some security controls and potentially making your installation an open relay.
+
 ## Deployment of DaemonSet for front nginx pod(s)
 
 Depending on your environment you might want to shedule "only one pod" (`Deployment`) or "one pod per node" (`DaemonSet`) for the `front` nginx pod(s).
