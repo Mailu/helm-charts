@@ -532,7 +532,7 @@ Check that the deployed pods are all running.
 | `rspamd.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
 | `rspamd.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
 | `rspamd.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `rspamd.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
+| `rspamd.startupProbe.enabled`               | Enable startupProbe                                                                   | `true`              |
 | `rspamd.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
 | `rspamd.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
 | `rspamd.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`                 |
