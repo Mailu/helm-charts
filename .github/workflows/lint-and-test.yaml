@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
           check-latest: true
 
       # - name: Run helm lint
@@ -47,15 +47,24 @@ jobs:
         run: |
           changed=$(ct list-changed --config ct.yaml --target-branch ${{ github.event.repository.default_branch }})
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --target-branch ${{ github.event.repository.default_branch }} --check-version-increment=false
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.4.0
         if: steps.list-changed.outputs.changed == 'true'
+        uses: helm/kind-action@v1.4.0
+        with:
+          config: kind-cluster.yaml
+
+      - name: Install Calico
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/calico.yaml
+          kubectl -n kube-system rollout status daemonset/calico-node --timeout=120s
+          kubectl -n kube-system rollout status deployment calico-kube-controllers --timeout=120s
 
       - name: Fix CoreDNS upstream resolver
         if: steps.list-changed.outputs.changed == 'true'

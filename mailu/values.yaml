@@ -88,6 +88,10 @@ initialAccount:
 ## @param subnet Change this if you're using different address ranges for pods
 subnet: 10.42.0.0/16
 
+## @param networkPolicy.enabled Enable network policy
+networkPolicy:
+  enabled: false
+
 ## @param mailuVersion Version/tag of mailu images - must be master or a version >= 1.9
 mailuVersion: 1.9.39
 
