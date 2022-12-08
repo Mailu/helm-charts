@@ -98,15 +98,15 @@ spec:
             - name: REAL_IP_FROM
               value: {{ default "0.0.0.0/0" .Values.ingress.realIpFrom }}
             {{- end }}
-            {{- if .Values.roundcube.enabled }}
+            {{- if .Values.webmail.enabled }}
             - name: WEBMAIL
-              value: roundcube
+              value: {{ .Values.webmail.type | quote }}
             - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.roundcube.serviceFqdn" . }}
+              value: {{ include "mailu.webmail.serviceFqdn" . }}
             - name: WEB_WEBMAIL
-              value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+              value: {{ required "webmail.uri" .Values.webmail.uri }}
             - name: WEBROOT_REDIRECT
-              value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+              value: {{ required "webmail.uri" .Values.webmail.uri }}
             {{- else }}
             - name: WEBMAIL
               value: none

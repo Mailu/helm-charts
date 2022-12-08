@@ -6,10 +6,12 @@ domain: example.com
 initialAccount:
   enabled: true
   username: mailadmin
-  domain: mydomain.com
+  domain: example.com
   password: chang3m3!
 
 secretKey: chang3m3!
+
+subnet: 10.0.0.0/8
 
 persistence:
   single_pvc: false
@@ -38,9 +40,9 @@ ingress:
     auth.cluster.arpa/enabled: "false"
 
 front:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -50,9 +52,9 @@ front:
       cpu: 200m
 
 admin:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: DEBUG
+  image:
+    tag: master
   resources:
     requests:
       memory: 500Mi
@@ -62,9 +64,9 @@ admin:
       cpu: 1
 
 postfix:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
   resources:
     requests:
       memory: 2Gi
@@ -74,9 +76,9 @@ postfix:
       cpu: 1
 
 dovecot:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
   resources:
     requests:
       memory: 500Mi
@@ -87,8 +89,8 @@ dovecot:
 
 rspamd:
   logLevel: INFO
-#  image:
-#    tag: master
+  image:
+    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -98,9 +100,9 @@ rspamd:
       cpu: 1
 
 clamav:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
   resources:
     requests:
       memory: 1Gi
@@ -109,10 +111,10 @@ clamav:
       memory: 2Gi
       cpu: 1
 
-roundcube:
-  logLevel: WARNING
-#  image:
-#    tag: master
+webmail:
+  logLevel: INFO
+  image:
+    tag: master
   resources:
     requests:
       memory: 100Mi
@@ -122,14 +124,14 @@ roundcube:
       cpu: 1
 
 webdav:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
 
 fetchmail:
-  logLevel: WARNING
-#  image:
-#    tag: master
+  logLevel: INFO
+  image:
+    tag: master
 
 redis:
   master:

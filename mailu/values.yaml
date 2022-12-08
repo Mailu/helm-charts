@@ -1746,32 +1746,35 @@ clamav:
   ## @param clamav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-## @section roundcube parameters
-roundcube:
-  ## @param roundcube.enabled Enable deployment of Roundcube webmail
+## @section webmail parameters
+webmail:
+  ## @param webmail.enabled Enable deployment of Roundcube webmail
   enabled: true
 
-  ## @param roundcube.uri URI to access Roundcube webmail
-  uri: /roundcube
+  ## @param webmail.uri URI to access Roundcube webmail
+  uri: /webmail
 
-  ## @param roundcube.logLevel Override default log level
+  ## @param webmail.type Type of webmail to deploy (`roundcube` or `snappymail`)
+  type: roundcube
+
+  ## @param webmail.logLevel Override default log level
   logLevel: ""
 
   ## Pod image
-  ## @param roundcube.image.repository Pod image repository
-  ## @param roundcube.image.tag Pod image tag (defaults to mailuVersion)
-  ## @param roundcube.image.pullPolicy Pod image pull policy
+  ## @param webmail.image.repository Pod image repository
+  ## @param webmail.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param webmail.image.pullPolicy Pod image pull policy
   image:
-    repository: mailu/roundcube
+    repository: mailu/webmail
     tag: ""
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
-  ## @param roundcube.persistence.size Pod pvc size
-  ## @param roundcube.persistence.storageClass Pod pvc storage class
-  ## @param roundcube.persistence.accessModes Pod pvc access modes
-  ## @param roundcube.persistence.claimNameOverride Pod pvc name override
-  ## @param roundcube.persistence.annotations Pod pvc annotations
+  ## @param webmail.persistence.size Pod pvc size
+  ## @param webmail.persistence.storageClass Pod pvc storage class
+  ## @param webmail.persistence.accessModes Pod pvc access modes
+  ## @param webmail.persistence.claimNameOverride Pod pvc name override
+  ## @param webmail.persistence.annotations Pod pvc annotations
   persistence:
     size: 20Gi
     storageClass: ""
@@ -1785,8 +1788,8 @@ roundcube:
   ## choice for the user. This also increases chances charts run on environments with little
   ## resources, such as Minikube. If you do want to specify resources, uncomment the following
   ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  ## @param roundcube.resources.limits The resources limits for the container
-  ## @param roundcube.resources.requests The requested resources for the container
+  ## @param webmail.resources.limits The resources limits for the container
+  ## @param webmail.resources.requests The requested resources for the container
   ##
   resources:
     ## Example:
@@ -1802,12 +1805,12 @@ roundcube:
 
   ## Liveness probe values
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param roundcube.livenessProbe.enabled Enable livenessProbe
-  ## @param roundcube.livenessProbe.failureThreshold Failure threshold for livenessProbe
-  ## @param roundcube.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-  ## @param roundcube.livenessProbe.periodSeconds Period seconds for livenessProbe
-  ## @param roundcube.livenessProbe.successThreshold Success threshold for livenessProbe
-  ## @param roundcube.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param webmail.livenessProbe.enabled Enable livenessProbe
+  ## @param webmail.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param webmail.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param webmail.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param webmail.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param webmail.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
   livenessProbe:
     enabled: true
     failureThreshold: 3
@@ -1818,12 +1821,12 @@ roundcube:
 
   ## Readiness probe values
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param roundcube.readinessProbe.enabled Enable readinessProbe
-  ## @param roundcube.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-  ## @param roundcube.readinessProbe.periodSeconds Period seconds for readinessProbe
-  ## @param roundcube.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-  ## @param roundcube.readinessProbe.failureThreshold Failure threshold for readinessProbe
-  ## @param roundcube.readinessProbe.successThreshold Success threshold for readinessProbe
+  ## @param webmail.readinessProbe.enabled Enable readinessProbe
+  ## @param webmail.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param webmail.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param webmail.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param webmail.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param webmail.readinessProbe.successThreshold Success threshold for readinessProbe
   readinessProbe:
     enabled: true
     failureThreshold: 3
@@ -1834,12 +1837,12 @@ roundcube:
 
   ## Startup probe values
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-  ## @param roundcube.startupProbe.enabled Enable startupProbe
-  ## @param roundcube.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-  ## @param roundcube.startupProbe.periodSeconds Period seconds for startupProbe
-  ## @param roundcube.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-  ## @param roundcube.startupProbe.failureThreshold Failure threshold for startupProbe
-  ## @param roundcube.startupProbe.successThreshold Success threshold for startupProbe
+  ## @param webmail.startupProbe.enabled Enable startupProbe
+  ## @param webmail.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param webmail.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param webmail.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param webmail.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param webmail.startupProbe.successThreshold Success threshold for startupProbe
   startupProbe:
     enabled: false
     failureThreshold: 3
@@ -1848,19 +1851,19 @@ roundcube:
     successThreshold: 1
     timeoutSeconds: 1
 
-  ## @param roundcube.podLabels Add extra labels to pod
+  ## @param webmail.podLabels Add extra labels to pod
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   podLabels: {}
 
-  ## @param roundcube.podAnnotations Add extra annotations to the pod
+  ## @param webmail.podAnnotations Add extra annotations to the pod
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   podAnnotations: {}
 
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ## @param roundcube.nodeSelector Node labels selector for pod assignment
+  ## @param webmail.nodeSelector Node labels selector for pod assignment
   nodeSelector: {}
 
-  ## @param roundcube.initContainers Add additional init containers to the pod
+  ## @param webmail.initContainers Add additional init containers to the pod
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
   ## e.g:
   ## initContainers:
@@ -1870,61 +1873,61 @@ roundcube:
   ##    command: ['sh', '-c', 'echo "hello world"']
   initContainers: []
 
-  ## @param roundcube.priorityClassName Pods' priorityClassName
+  ## @param webmail.priorityClassName Pods' priorityClassName
   priorityClassName: ""
 
-  ## @param roundcube.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## @param webmail.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
-  ## @param roundcube.affinity Affinity for roundcube pod assignment
+  ## @param webmail.affinity Affinity for webmail pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
 
-  ## @param roundcube.tolerations Tolerations for pod assignment
+  ## @param webmail.tolerations Tolerations for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   tolerations: []
 
-  ## @param roundcube.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## @param webmail.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
   revisionHistoryLimit: 3
 
-  ## @param roundcube.hostAliases Pod pod host aliases
+  ## @param webmail.hostAliases Pod pod host aliases
   ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   hostAliases: []
 
-  ## @param roundcube.schedulerName Name of the k8s scheduler (other than default)
+  ## @param webmail.schedulerName Name of the k8s scheduler (other than default)
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   schedulerName: ""
 
   # Service parameters
   service:
-    ## @param roundcube.service.annotations Admin service annotations
+    ## @param webmail.service.annotations Admin service annotations
     annotations: {}
 
-  ## @param roundcube.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## @param webmail.topologySpreadConstraints Topology Spread Constraints for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
   topologySpreadConstraints: []
 
   ## Strategy to use to update Pods
-  ## @param roundcube.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  ## @param webmail.updateStrategy.type Can be set to RollingUpdate or OnDelete
   updateStrategy:
     type: RollingUpdate
 
-  ## @param roundcube.extraEnvVars Extra environment variable to pass to the running container
+  ## @param webmail.extraEnvVars Extra environment variable to pass to the running container
   ## For example:
   ## extraEnvVars:
   ##  - name: MY_ENV_VAR
   ##    value: env_var_value
   extraEnvVars: []
 
-  ## @param roundcube.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  ## @param webmail.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
   extraEnvVarsCM: ""
 
-  ## @param roundcube.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  ## @param webmail.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
   extraEnvVarsSecret: ""
 
-  ## @param roundcube.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  ## @param webmail.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
 ## @section webdav parameters

@@ -1,0 +1,33 @@
+---
+{{- if and (.Values.webmail.enabled) (not .Values.persistence.single_pvc) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "mailu.webmail.claimName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: webmail
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.webmail.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.webmail.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.webmail.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.webmail.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.webmail.persistence.size | quote }}
+  {{- if .Values.webmail.persistence.storageClass }}
+  storageClassName: {{ .Values.webmail.persistence.storageClass }}
+  {{- end }}
+{{- end }}

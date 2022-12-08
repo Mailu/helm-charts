@@ -61,3 +61,4 @@ You will also need to manually delete the existing `Ingress`, as well as all exi
 | `certmanager.*`                         | `-`                                         | Removed. Configure using annotations on `ingress.annotations` to generate a valid certificate instead.              |
 | `ingress.tlsFlavor`                     | `ingress.tlsFlavorOverride`                 |                                                                                                                     |
 | `ingress.externalIngress`               | `ingress.enabled`                           |                                                                                                                     |
+| `roundcube.*`                           | `webmail.*`                                 | `roundcube` has been renamed to `webmail`                                                                           |
