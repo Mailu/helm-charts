@@ -149,6 +149,7 @@ Check that the deployed pods are all running.
 | `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`             |
 | `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`         |
 | `subnet`                                   | Change this if you're using different address ranges for pods                                                                          | `10.42.0.0/16`   |
+| `networkPolicy.enabled`                    | Enable network policy                                                                                                                  | `false`          |
 | `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.39`         |
 | `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`        |
 | `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`     |
