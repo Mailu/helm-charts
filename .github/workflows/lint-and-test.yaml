@@ -64,12 +64,6 @@ jobs:
           kubectl -n kube-system rollout status daemonset/calico-node --timeout=120s
           kubectl -n kube-system rollout status deployment calico-kube-controllers --timeout=120s
 
-      - name: Install ingress-nginx
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-          kubectl -n ingress-nginx rollout status deployment ingress-nginx-controller --timeout 120s
-
       - name: Fix CoreDNS upstream resolver
         if: steps.list-changed.outputs.changed == 'true'
         run: |
