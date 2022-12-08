@@ -97,13 +97,13 @@ spec:
               value: {{ include "mailu.postfix.serviceFqdn" . }}
             - name: REDIS_ADDRESS
               value: {{ include "mailu.redis.serviceFqdn" . }}
-            {{- if .Values.roundcube.enabled }}
+            {{- if .Values.webmail.enabled }}
             - name: WEBMAIL
-              value: roundcube
+              value: {{ .Values.webmail.type | quote }}
             - name: WEB_WEBMAIL
-              value: {{ required "roundcube.uri" .Values.roundcube.uri }}
+              value: {{ required "webmail.uri" .Values.webmail.uri }}
             - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.roundcube.serviceFqdn" . }}
+              value: {{ include "mailu.webmail.serviceFqdn" . }}
             {{- else }}
             - name: WEBMAIL
               value: none
@@ -218,6 +218,10 @@ spec:
               path: /sso/login
               port: http
           {{- end }}
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
       volumes:
         - name: data
           persistentVolumeClaim:

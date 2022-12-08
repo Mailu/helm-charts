@@ -7,7 +7,7 @@ Mailu services:
 - front
 - postfix
 - redis
-- roundcube
+- webmail
 - rspamd
 - webdav
 
@@ -119,13 +119,13 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- end -}}
 
 
-{{/* Returns roundcube internal service name. */}}
-{{- define "mailu.roundcube.serviceName" -}}
-{{- printf "%s-roundcube" (include "mailu.fullname" .) -}}
+{{/* Returns webmail internal service name. */}}
+{{- define "mailu.webmail.serviceName" -}}
+{{- printf "%s-webmail" (include "mailu.fullname" .) -}}
 {{- end -}}
-{{/* Returns roundcube internal service fqdn. */}}
-{{- define "mailu.roundcube.serviceFqdn" -}}
-{{- printf "%s.%s.svc.%s" (include "mailu.roundcube.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
+{{/* Returns webmail internal service fqdn. */}}
+{{- define "mailu.webmail.serviceFqdn" -}}
+{{- printf "%s.%s.svc.%s" (include "mailu.webmail.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
 
 {{/* Returns rspamd internal service name. */}}

@@ -532,7 +532,7 @@ Check that the deployed pods are all running.
 | `rspamd.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
 | `rspamd.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
 | `rspamd.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `rspamd.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
+| `rspamd.startupProbe.enabled`               | Enable startupProbe                                                                   | `true`              |
 | `rspamd.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
 | `rspamd.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
 | `rspamd.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`                 |
@@ -617,59 +617,60 @@ Check that the deployed pods are all running.
 | `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
-### roundcube parameters
+### webmail parameters
 
-| Name                                           | Description                                                                           | Value               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `roundcube.enabled`                            | Enable deployment of Roundcube webmail                                                | `true`              |
-| `roundcube.uri`                                | URI to access Roundcube webmail                                                       | `/roundcube`        |
-| `roundcube.logLevel`                           | Override default log level                                                            | `""`                |
-| `roundcube.image.repository`                   | Pod image repository                                                                  | `mailu/roundcube`   |
-| `roundcube.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
-| `roundcube.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `roundcube.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `roundcube.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `roundcube.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `roundcube.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `roundcube.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `roundcube.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `roundcube.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `roundcube.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `roundcube.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `roundcube.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `roundcube.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `roundcube.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `roundcube.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `roundcube.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `roundcube.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `roundcube.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `roundcube.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `roundcube.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `roundcube.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `roundcube.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `roundcube.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `roundcube.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `roundcube.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `roundcube.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `roundcube.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `roundcube.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `roundcube.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `roundcube.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `roundcube.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `roundcube.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `roundcube.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `roundcube.affinity`                           | Affinity for roundcube pod assignment                                                 | `{}`                |
-| `roundcube.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `roundcube.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `roundcube.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `roundcube.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `roundcube.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `roundcube.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `roundcube.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `roundcube.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `roundcube.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `roundcube.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `roundcube.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| Name                                         | Description                                                                           | Value               |
+| -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `webmail.enabled`                            | Enable deployment of Roundcube webmail                                                | `true`              |
+| `webmail.uri`                                | URI to access Roundcube webmail                                                       | `/webmail`          |
+| `webmail.type`                               | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`         |
+| `webmail.logLevel`                           | Override default log level                                                            | `""`                |
+| `webmail.image.repository`                   | Pod image repository                                                                  | `mailu/webmail`     |
+| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `webmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `webmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
+| `webmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
+| `webmail.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `webmail.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
+| `webmail.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
+| `webmail.resources.limits`                   | The resources limits for the container                                                | `{}`                |
+| `webmail.resources.requests`                 | The requested resources for the container                                             | `{}`                |
+| `webmail.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
+| `webmail.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
+| `webmail.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
+| `webmail.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
+| `webmail.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
+| `webmail.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `webmail.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
+| `webmail.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
+| `webmail.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
+| `webmail.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `webmail.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
+| `webmail.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
+| `webmail.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
+| `webmail.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
+| `webmail.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
+| `webmail.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
+| `webmail.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
+| `webmail.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
+| `webmail.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
+| `webmail.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
+| `webmail.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
+| `webmail.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
+| `webmail.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
+| `webmail.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `webmail.affinity`                           | Affinity for webmail pod assignment                                                   | `{}`                |
+| `webmail.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
+| `webmail.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `webmail.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
+| `webmail.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `webmail.service.annotations`                | Admin service annotations                                                             | `{}`                |
+| `webmail.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `webmail.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `webmail.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
+| `webmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `webmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 
 
 ### webdav parameters
@@ -826,6 +827,8 @@ deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadW
 ### All services are running but authentication fails for webmail and imap
 
 It's very likely that your PODs run on a different subnet than the default `10.42.0.0/16`. Set the `subnet` value to the correct subnet and try again.
+
+**Warning:** For security reasons, make sure that the `subnet` value is scoped only to the resources that belongs to your cluster. Do not use a subnet that is too large as any IP within the `subnet` would have extended rights to send emails, bypassing some security controls and potentially making your installation an open relay.
 
 ## Deployment of DaemonSet for front nginx pod(s)
 

@@ -1,0 +1,154 @@
+---
+{{- if .Values.webmail.enabled }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-webmail" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: webmail
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.webmail.updateStrategy }}
+  strategy: {{- toYaml .Values.webmail.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.webmail.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: webmail
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: webmail
+        {{- if .Values.webmail.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.webmail.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.webmail.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.webmail.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.webmail.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.webmail.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.hostAliases "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webmail.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webmail.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webmail.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webmail.priorityClassName }}
+      priorityClassName: {{ .Values.webmail.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.webmail.schedulerName }}
+      schedulerName: {{ .Values.webmail.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.webmail.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.webmail.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.webmail.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.webmail.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: webmail
+          image: {{ .Values.webmail.image.repository }}:{{ default .Values.mailuVersion .Values.webmail.image.tag }}
+          imagePullPolicy: {{ .Values.webmail.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /data
+              name: data
+              subPath: webmail
+            {{- if .Values.webmail.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.webmail.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ default .Values.logLevel .Values.webmail.logLevel }}
+            - name: MESSAGE_SIZE_LIMIT
+              value: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+            - name: IMAP_ADDRESS
+              value: {{ include "mailu.dovecot.serviceFqdn" . }}
+            - name: FRONT_ADDRESS
+              value: {{ include "mailu.front.serviceFqdn" . }}
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mailu.secretName" . }}
+                  key: secret-key
+            - name: SUBNET
+              value: {{ .Values.subnet }}
+            - name: ADMIN
+              value: "true"
+            - name: WEBMAIL
+              value: {{ .Values.webmail.type | quote }}
+            - name: WEB_ADMIN
+              value: "/admin/"
+            - name: ROUNDCUBE_DB_FLAVOR
+              value: {{ include "mailu.database.type" . }}
+            {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
+            - name: ROUNDCUBE_DB_USER
+              value: {{ include "mailu.database.roundcube.username" . }}
+            - name: ROUNDCUBE_DB_PW
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "mailu.database.roundcube.secretName" . }}
+                  key: {{ include "mailu.database.roundcube.secretKey" . }}
+            - name: ROUNDCUBE_DB_NAME
+              value: {{ include "mailu.database.roundcube.name" . }}
+            - name: ROUNDCUBE_DB_HOST
+              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
+            {{- end }}
+            {{- if .Values.timezone }}
+            - name: TZ
+              value: {{ .Values.timezone }}
+            {{- end }}
+            {{- if .Values.webmail.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.webmail.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- if .Values.webmail.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.webmail.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.webmail.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.webmail.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          {{- if .Values.webmail.resources }}
+          resources: {{- toYaml .Values.webmail.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.webmail.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.startupProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/ping" ]
+          {{- end }}
+          {{- if .Values.webmail.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/ping" ]
+          {{- end }}
+          {{- if .Values.webmail.readinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/ping" ]
+          {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.webmail.claimName" . }}
+{{- end }}
