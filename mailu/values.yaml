@@ -1439,7 +1439,7 @@ rspamd:
   ## @param rspamd.startupProbe.failureThreshold Failure threshold for startupProbe
   ## @param rspamd.startupProbe.successThreshold Success threshold for startupProbe
   startupProbe:
-    enabled: false
+    enabled: true
     failureThreshold: 90
     initialDelaySeconds: 10
     periodSeconds: 10

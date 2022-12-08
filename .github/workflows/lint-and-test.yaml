@@ -64,11 +64,6 @@ jobs:
           kubectl -n kube-system rollout restart deployment coredns
           kubectl -n kube-system rollout status deployment coredns --timeout=120s
 
-      - name: Install ingress-nginx
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
