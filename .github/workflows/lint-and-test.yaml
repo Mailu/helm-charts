@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
           check-latest: true
 
       # - name: Run helm lint
@@ -56,6 +56,19 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.4.0
         if: steps.list-changed.outputs.changed == 'true'
+
+      - name: Install Calico
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.24.5/manifests/calico.yaml
+          kubectl -n kube-system rollout status daemonset/calico-node --timeout=120s
+          kubectl -n kube-system rollout status deployment calico-kube-controllers --timeout=120s
+
+      - name: Install ingress-nginx
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+          kubectl -n ingress-nginx rollout status deployment ingress-nginx-controller --timeout 120s
 
       - name: Fix CoreDNS upstream resolver
         if: steps.list-changed.outputs.changed == 'true'
