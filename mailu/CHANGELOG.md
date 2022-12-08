@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.0.0-beta.25](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.24...mailu-1.0.0-beta.25) (2022-12-08)
+
+
+### Features
+
+* add support for network policy ([8fd3c6c](https://github.com/fastlorenzo/helm-charts-1/commit/8fd3c6c527a692983e54c82511c6e77fc9150df4))
+* add support for network policy ([7e42d15](https://github.com/fastlorenzo/helm-charts-1/commit/7e42d15df88d43213e672235e366edbfb53532c6))
+* add support for network policy ([#46](https://github.com/fastlorenzo/helm-charts-1/issues/46)) ([e42623b](https://github.com/fastlorenzo/helm-charts-1/commit/e42623b11b3bdde6c7c3678d5a1450e0af18e76d))
+
+
+### Bug Fixes
+
+* add compatibility with latest Mailu master branch ([#44](https://github.com/fastlorenzo/helm-charts-1/issues/44)) ([25eb5e5](https://github.com/fastlorenzo/helm-charts-1/commit/25eb5e5130a66457400cdffacffde93649af6e63))
+* fixed compatibility with Mailu master ([1a66cb5](https://github.com/fastlorenzo/helm-charts-1/commit/1a66cb545a5c47359069e1e6cf78a0556567b877))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.25 ([cd96738](https://github.com/fastlorenzo/helm-charts-1/commit/cd96738b188af220758f3fa436dd8ae32a3e6655))
+* release 1.0.0-beta.25 ([6129948](https://github.com/fastlorenzo/helm-charts-1/commit/61299485da7eac6456248baa24400c3e35ead737))
+
 ## [1.0.0-beta.24](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.23...mailu-1.0.0-beta.24) (2022-11-22)
 
 
