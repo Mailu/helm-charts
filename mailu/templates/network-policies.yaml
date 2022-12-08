@@ -34,7 +34,8 @@ metadata:
   {{- end }}
 spec:
   podSelector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Egress
   egress:
