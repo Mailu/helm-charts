@@ -131,4 +131,7 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fetchmail.claimName" . }}
+        {{- if .Values.fetchmail.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}
 {{- end }}

@@ -241,3 +241,6 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: {{ include "mailu.certificatesSecretName" . }}
+        {{- if .Values.front.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}

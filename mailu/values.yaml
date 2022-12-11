@@ -244,7 +244,6 @@ externalRedis:
   ## ref: https://rspamd.com/doc/configuration/redis.html#available-redis-options
   rspamdDbId: 0
 
-
 ## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
 ## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
 database:
@@ -376,7 +375,6 @@ postgresql:
   ## @param postgresql.primary.persistence.accessMode PVC Access Mode for PostgreSQL volume
   ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
   primary:
-
     ## @skip postgresql.primary.extraEnvVars
     ## Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
     extraEnvVars: |
@@ -757,6 +755,9 @@ front:
   ## @param front.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
+  ## @param front.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
 ## @section Admin parameters
 admin:
   ## @param admin.logLevel Override default log level
@@ -931,6 +932,9 @@ admin:
 
   ## @param admin.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
+
+  ## @param admin.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
 
 ## @section Redis parameters
 ## Redis chart configuration
@@ -1149,6 +1153,9 @@ postfix:
   ## @param postfix.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
+  ## @param postfix.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
   ## @param postfix.overrides Enable postfix overrides
   ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
   ## Example:
@@ -1334,6 +1341,9 @@ dovecot:
 
   ## @param dovecot.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
+
+  ## @param dovecot.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
 
   ## @param dovecot.overrides Enable dovecot overrides
   ## Example:
@@ -1528,6 +1538,9 @@ rspamd:
 
   ## @param rspamd.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
+
+  ## @param rspamd.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
 
   ## @param rspamd.overrides Enable rspamd overrides
   ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
@@ -1934,6 +1947,9 @@ webmail:
   ## @param webmail.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
 
+  ## @param webmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
 ## @section webdav parameters
 webdav:
   ## @param webdav.enabled Enable deployment of WebDAV server (using Radicale)
@@ -2111,6 +2127,9 @@ webdav:
 
   ## @param webdav.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
+
+  ## @param webdav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
 
 ## @section fetchmail parameters
 fetchmail:
@@ -2292,3 +2311,6 @@ fetchmail:
 
   ## @param fetchmail.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
   extraVolumeMounts: []
+
+  ## @param fetchmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []

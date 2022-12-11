@@ -226,3 +226,6 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.admin.claimName" . }}
+        {{- if .Values.admin.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}

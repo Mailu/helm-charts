@@ -184,3 +184,6 @@ spec:
           configMap:
             name: {{ printf "%s-postfix-override" (include "mailu.fullname" .) }}
         {{- end }}
+        {{- if .Values.postfix.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.postfix.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}

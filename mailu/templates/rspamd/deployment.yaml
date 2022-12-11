@@ -154,3 +154,6 @@ spec:
           configMap:
             name: {{ printf "%s-rspamd-override" (include "mailu.fullname" .) }}
         {{- end }}
+        {{- if .Values.rspamd.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}
