@@ -321,6 +321,7 @@ Check that the deployed pods are all running.
 | `front.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`            |
 | `front.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
+| `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
 
 
 ### Admin parameters
@@ -374,6 +375,7 @@ Check that the deployed pods are all running.
 | `admin.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `admin.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `admin.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
 ### Redis parameters
@@ -446,6 +448,7 @@ Check that the deployed pods are all running.
 | `postfix.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `postfix.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `postfix.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `postfix.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `postfix.overrides`                          | Enable postfix overrides                                                              | `{}`                |
 
 
@@ -501,6 +504,7 @@ Check that the deployed pods are all running.
 | `dovecot.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `dovecot.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `dovecot.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `dovecot.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `dovecot.overrides`                          | Enable dovecot overrides                                                              | `{}`                |
 | `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
 | `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
@@ -557,6 +561,7 @@ Check that the deployed pods are all running.
 | `rspamd.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `rspamd.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `rspamd.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
 
 
@@ -672,6 +677,7 @@ Check that the deployed pods are all running.
 | `webmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `webmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
 ### webdav parameters
@@ -726,6 +732,7 @@ Check that the deployed pods are all running.
 | `webdav.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `webdav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `webdav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `webdav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
 ### fetchmail parameters
@@ -781,6 +788,7 @@ Check that the deployed pods are all running.
 | `fetchmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
 | `fetchmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
 ## Example values.yaml to get started
