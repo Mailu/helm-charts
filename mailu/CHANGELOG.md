@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-beta.26](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.25...mailu-1.0.0-beta.26) (2022-12-11)
+
+
+### Bug Fixes
+
+* Added extra volumes for all pods ([#48](https://github.com/fastlorenzo/helm-charts-1/issues/48)) ([a466bb0](https://github.com/fastlorenzo/helm-charts-1/commit/a466bb005d6e3ce054edc0ea4b976b0dd89297bf))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.26 ([50b5a28](https://github.com/fastlorenzo/helm-charts-1/commit/50b5a287b581f7ac7fa91c988b947fbbe2358856))
+
 ## [1.0.0-beta.25](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.24...mailu-1.0.0-beta.25) (2022-12-08)
 
 
