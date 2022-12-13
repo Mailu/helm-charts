@@ -121,6 +121,7 @@ Check that the deployed pods are all running.
 | `global.database.roundcube.existingSecret`            | Name of an existing secret to use for the roundcube database                      | `""`        |
 | `global.database.roundcube.existingSecretPasswordKey` | Name of the key in the existing secret to use for the roundcube database password | `""`        |
 
+
 ### Common parameters
 
 | Name                | Description                                                                          | Value |
@@ -130,50 +131,65 @@ Check that the deployed pods are all running.
 | `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`  |
 | `commonLabels`      | Add labels to all the deployed resources                                             | `{}`  |
 | `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`  |
+| `tolerations`       | Tolerations for pod assignment                                                       | `[]`  |
+| `affinity`          | Affinity for pod assignment                                                          | `{}`  |
+
 
 ### Mailu parameters
 
-| Name                                       | Description                                                                                                                            | Value            |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| `hostnames`                                | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname.                         | `[]`             |
-| `domain`                                   | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames      | `""`             |
-| `secretKey`                                | The secret key is required for protecting authentication cookies and must be set individually for each deployment                      | `""`             |
-| `existingSecret`                           | Name of the existing secret to retrieve the secretKey.                                                                                 | `""`             |
-| `initialAccount.enabled`                   | Enable the creation of the initial account                                                                                             | `false`          |
-| `initialAccount.username`                  | Username of the initial account                                                                                                        | `""`             |
-| `initialAccount.domain`                    | Domain of the initial account                                                                                                          | `""`             |
-| `initialAccount.password`                  | Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret | `""`             |
-| `initialAccount.existingSecret`            | Name of the existing secret to retrieve the initial account's password                                                                 | `""`             |
-| `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`             |
-| `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`         |
-| `subnet`                                   | Change this if you're using different address ranges for pods                                                                          | `10.42.0.0/16`   |
-| `networkPolicy.enabled`                    | Enable network policy                                                                                                                  | `false`          |
-| `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.39`         |
-| `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`        |
-| `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`     |
-| `limits.messageSizeLimitInMegabytes`       | Maximum size of an email in megabytes                                                                                                  | `50`             |
-| `limits.authRatelimit.ip`                  | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`        |
-| `limits.authRatelimit.ipv4Mask`            | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`             |
-| `limits.authRatelimit.ipv6Mask`            | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`             |
-| `limits.authRatelimit.user`                | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`        |
-| `limits.authRatelimit.exemptionLength`     | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`          |
-| `limits.authRatelimit.exemption`           | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
-| `limits.messageRatelimit.value`            | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
-| `limits.messageRatelimit.exemption`        | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
-| `externalRelay.host`                       | Hostname of the external relay                                                                                                         | `""`             |
-| `externalRelay.username`                   | Username for the external relay                                                                                                        | `""`             |
-| `externalRelay.password`                   | Password for the external relay                                                                                                        | `""`             |
-| `externalRelay.secretName`                 | Name of the secret containing the username and password for the external relay; if set, username and password will be ignored          | `""`             |
-| `externalRelay.usernameKey`                | Key in the secret containing the username for the external relay                                                                       | `relay-username` |
-| `externalRelay.passwordKey`                | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
-| `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`  |
-| `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`             |
-| `sessionCookieSecure`                      | Controls the secure flag on the cookies of the administrative interface.                                                               | `true`           |
-| `sessionTimeout`                           | Maximum amount of time in seconds between requests before a session is invalidated                                                     | `3600`           |
-| `permanentSessionLifetime`                 | Maximum amount of time in seconds a session can be kept alive for if it hasn’t timed-out                                               | `108000`         |
-| `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`          |
-| `tolerations`                              | Tolerations for pod assignment                                                                                                         | `[]`             |
-| `affinity`                                 | Affinity for pod assignment                                                                                                            | `{}`             |
+| Name                                       | Description                                                                                                                            | Value                                                                                            |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `hostnames`                                | List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname.                         | `[]`                                                                                             |
+| `domain`                                   | Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames      | `""`                                                                                             |
+| `secretKey`                                | The secret key is required for protecting authentication cookies and must be set individually for each deployment                      | `""`                                                                                             |
+| `existingSecret`                           | Name of the existing secret to retrieve the secretKey.                                                                                 | `""`                                                                                             |
+| `timezone`                                 | Timezone to use for the containers                                                                                                     | `Etc/UTC`                                                                                        |
+| `initialAccount.enabled`                   | Enable the creation of the initial account                                                                                             | `false`                                                                                          |
+| `initialAccount.username`                  | Username of the initial account                                                                                                        | `""`                                                                                             |
+| `initialAccount.domain`                    | Domain of the initial account                                                                                                          | `""`                                                                                             |
+| `initialAccount.password`                  | Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret | `""`                                                                                             |
+| `initialAccount.existingSecret`            | Name of the existing secret to retrieve the initial account's password                                                                 | `""`                                                                                             |
+| `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`                                                                                             |
+| `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`                                                                                         |
+| `subnet`                                   | Change this if you're using different address ranges for pods (IPv4)                                                                   | `10.42.0.0/16`                                                                                   |
+| `subnet6`                                  | Change this if you're using different address ranges for pods (IPv6)                                                                   | `none`                                                                                           |
+| `networkPolicy.enabled`                    | Enable network policy                                                                                                                  | `false`                                                                                          |
+| `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.39`                                                                                         |
+| `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`                                                                                        |
+| `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`                                                                                     |
+| `recipientDelimiter`                       | The delimiter used to separate local part from extension in recipient addresses                                                        | `+`                                                                                              |
+| `dmarc.rua`                                | Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)                                                  | `none`                                                                                           |
+| `dmarc.ruf`                                | Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)                                          | `none`                                                                                           |
+| `limits.messageSizeLimitInMegabytes`       | Maximum size of an email in megabytes                                                                                                  | `50`                                                                                             |
+| `limits.authRatelimit.ip`                  | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`                                                                                        |
+| `limits.authRatelimit.ipv4Mask`            | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`                                                                                             |
+| `limits.authRatelimit.ipv6Mask`            | Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod                                                           | `56`                                                                                             |
+| `limits.authRatelimit.user`                | Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod                                                                 | `100/day`                                                                                        |
+| `limits.authRatelimit.exemptionLength`     | Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod                                                     | `86400`                                                                                          |
+| `limits.authRatelimit.exemption`           | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`                                                                                             |
+| `limits.messageRatelimit.value`            | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`                                                                                        |
+| `limits.messageRatelimit.exemption`        | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`                                                                                             |
+| `externalRelay.host`                       | Hostname of the external relay                                                                                                         | `""`                                                                                             |
+| `externalRelay.username`                   | Username for the external relay                                                                                                        | `""`                                                                                             |
+| `externalRelay.password`                   | Password for the external relay                                                                                                        | `""`                                                                                             |
+| `externalRelay.existingSecret`             | Name of the secret containing the username and password for the external relay; if set, username and password will be ignored          | `""`                                                                                             |
+| `externalRelay.usernameKey`                | Key in the secret containing the username for the external relay                                                                       | `relay-username`                                                                                 |
+| `externalRelay.passwordKey`                | Key in the secret containing the password for the external relay                                                                       | `relay-password`                                                                                 |
+| `externalRelay.networks`                   | List of networks that are allowed to use Mailu as external relay                                                                       | `[]`                                                                                             |
+| `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`                                                                                  |
+| `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`                                                                                             |
+| `sessionCookieSecure`                      | Controls the secure flag on the cookies of the administrative interface.                                                               | `true`                                                                                           |
+| `sessionTimeout`                           | Maximum amount of time in seconds between requests before a session is invalidated                                                     | `3600`                                                                                           |
+| `permanentSessionLifetime`                 | Maximum amount of time in seconds a session can be kept alive for if it hasn’t timed-out                                               | `108000`                                                                                         |
+| `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`                                                                                          |
+| `customization.siteName`                   | Website name                                                                                                                           | `Mailu`                                                                                          |
+| `customization.website`                    | URL of the website                                                                                                                     | `https://mailu.io`                                                                               |
+| `customization.logoUrl`                    | Sets a URL for a custom logo. This logo replaces the Mailu logo in the topleft of the main admin interface.                            | `none`                                                                                           |
+| `customization.logoBackground`             | Sets a custom background colour for the brand logo in the top left of the main admin interface.                                        | `none`                                                                                           |
+| `welcomeMessage.enabled`                   | Enable welcome message                                                                                                                 | `true`                                                                                           |
+| `welcomeMessage.subject`                   | Subject of the welcome message                                                                                                         | `Welcome to Mailu`                                                                               |
+| `welcomeMessage.body`                      | Body of the welcome message                                                                                                            | `Welcome to Mailu, your new email service. Please change your password and update your profile.` |
+
 
 ### Storage parameters
 
@@ -233,6 +249,7 @@ Check that the deployed pods are all running.
 | `persistence.storageClass`                          | Storage class of backing PVC (for single PVC)                                                                                                                                                             | `""`                   |
 | `persistence.claimNameOverride`                     | Override the name of the PVC (for single PVC)                                                                                                                                                             | `""`                   |
 
+
 ### Ingress settings
 
 | Name                        | Description                                                                                                                      | Value                    |
@@ -254,6 +271,7 @@ Check that the deployed pods are all running.
 | `ingress.realIpHeader`      | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
 | `ingress.realIpFrom`        | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `0.0.0.0/0`              |
 | `ingress.tlsFlavorOverride` | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
+
 
 ### Frontend load balancer for non-HTTP(s) services
 
@@ -318,10 +336,13 @@ Check that the deployed pods are all running.
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
 | `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
 
+
 ### Admin parameters
 
 | Name                                       | Description                                                                           | Value               |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------- |
+| `admin.enabled`                            | Enable access to the admin interface                                                  | `true`              |
+| `admin.uri`                                | URI to access the admin interface                                                     | `/admin`            |
 | `admin.logLevel`                           | Override default log level                                                            | `""`                |
 | `admin.image.repository`                   | Pod image repository                                                                  | `mailu/admin`       |
 | `admin.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
@@ -371,6 +392,7 @@ Check that the deployed pods are all running.
 | `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `admin.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### Redis parameters
 
 | Name                                     | Description                                                         | Value               |
@@ -388,6 +410,7 @@ Check that the deployed pods are all running.
 | `redis.master.persistence.existingClaim` | Pod pvc existing claim; necessary if using single_pvc               | `""`                |
 | `redis.master.persistence.subPath`       | Subpath in PVC; necessary if using single_pvc (set it to `/redis`)  | `""`                |
 | `redis.replica.count`                    | Number of redis replicas (only if `redis.architecture=replication`) | `0`                 |
+
 
 ### Postfix parameters
 
@@ -442,6 +465,7 @@ Check that the deployed pods are all running.
 | `postfix.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `postfix.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `postfix.overrides`                          | Enable postfix overrides                                                              | `{}`                |
+
 
 ### Dovecot parameters
 
@@ -500,10 +524,13 @@ Check that the deployed pods are all running.
 | `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
 | `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
 
+
 ### rspamd parameters
 
 | Name                                        | Description                                                                           | Value               |
 | ------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
+| `rspamd.antivirusAction`                    | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
 | `rspamd.logLevel`                           | Override default log level                                                            | `""`                |
 | `rspamd.image.repository`                   | Pod image repository                                                                  | `mailu/rspamd`      |
 | `rspamd.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
@@ -552,7 +579,7 @@ Check that the deployed pods are all running.
 | `rspamd.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `rspamd.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
+
 
 ### clamav parameters
 
@@ -611,61 +638,64 @@ Check that the deployed pods are all running.
 | `clamav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### webmail parameters
 
-| Name                                         | Description                                                                           | Value               |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `webmail.enabled`                            | Enable deployment of Roundcube webmail                                                | `true`              |
-| `webmail.uri`                                | URI to access Roundcube webmail                                                       | `/webmail`          |
-| `webmail.type`                               | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`         |
-| `webmail.logLevel`                           | Override default log level                                                            | `""`                |
-| `webmail.image.repository`                   | Pod image repository                                                                  | `mailu/webmail`     |
-| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
-| `webmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `webmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `webmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `webmail.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `webmail.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `webmail.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `webmail.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `webmail.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `webmail.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `webmail.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `webmail.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `webmail.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `webmail.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `webmail.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `webmail.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `webmail.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `webmail.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `webmail.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `webmail.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `webmail.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `webmail.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `webmail.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `webmail.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `webmail.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `webmail.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `webmail.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `webmail.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `webmail.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `webmail.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `webmail.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `webmail.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `webmail.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `webmail.affinity`                           | Affinity for webmail pod assignment                                                   | `{}`                |
-| `webmail.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `webmail.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `webmail.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `webmail.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `webmail.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `webmail.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `webmail.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `webmail.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `webmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `webmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                         | Description                                                                           | Value                                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `webmail.enabled`                            | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
+| `webmail.uri`                                | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
+| `webmail.type`                               | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
+| `webmail.roundcubePlugins`                   | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
+| `webmail.logLevel`                           | Override default log level                                                            | `""`                                                                              |
+| `webmail.image.repository`                   | Pod image repository                                                                  | `mailu/webmail`                                                                   |
+| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                                                                              |
+| `webmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
+| `webmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`                                                                            |
+| `webmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                                                                              |
+| `webmail.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
+| `webmail.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                                                                              |
+| `webmail.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                                                                              |
+| `webmail.resources.limits`                   | The resources limits for the container                                                | `{}`                                                                              |
+| `webmail.resources.requests`                 | The requested resources for the container                                             | `{}`                                                                              |
+| `webmail.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`                                                                            |
+| `webmail.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                                                                               |
+| `webmail.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                                                                              |
+| `webmail.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                                                                              |
+| `webmail.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                                                                               |
+| `webmail.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                                                                               |
+| `webmail.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`                                                                            |
+| `webmail.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                                                                              |
+| `webmail.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                                                                              |
+| `webmail.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                                                                               |
+| `webmail.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                                                                               |
+| `webmail.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                                                                               |
+| `webmail.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`                                                                           |
+| `webmail.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                                                                              |
+| `webmail.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                                                                              |
+| `webmail.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                                                                               |
+| `webmail.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                                                                               |
+| `webmail.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                                                                               |
+| `webmail.podLabels`                          | Add extra labels to pod                                                               | `{}`                                                                              |
+| `webmail.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                                                                              |
+| `webmail.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                                                                              |
+| `webmail.initContainers`                     | Add additional init containers to the pod                                             | `[]`                                                                              |
+| `webmail.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                                                                              |
+| `webmail.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                                                                               |
+| `webmail.affinity`                           | Affinity for webmail pod assignment                                                   | `{}`                                                                              |
+| `webmail.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                                                                              |
+| `webmail.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                                                                               |
+| `webmail.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                                                                              |
+| `webmail.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                                                                              |
+| `webmail.service.annotations`                | Admin service annotations                                                             | `{}`                                                                              |
+| `webmail.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                                                                              |
+| `webmail.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`                                                                   |
+| `webmail.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                                                                              |
+| `webmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                                                                              |
+| `webmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                                                                              |
+| `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                                                                              |
+| `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                                                                              |
+
 
 ### webdav parameters
 
@@ -721,6 +751,7 @@ Check that the deployed pods are all running.
 | `webdav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `webdav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### fetchmail parameters
 
 | Name                                           | Description                                                                           | Value               |
@@ -775,6 +806,7 @@ Check that the deployed pods are all running.
 | `fetchmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+
 
 ## Example values.yaml to get started
 
