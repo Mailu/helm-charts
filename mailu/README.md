@@ -25,12 +25,12 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 - A hosting service that allows inbound and outbound traffic on port 25.
 - Helm 3 (helm 2 support is dropped with release 0.3.0).
 
-| Repository | Name | Version |
-|------------|------|---------|
-| https://charts.bitnami.com/bitnami | common | 2.0.3 |
-| https://charts.bitnami.com/bitnami | mariadb | 11.3.* |
-| https://charts.bitnami.com/bitnami | postgresql | 11.9.* |
-| https://charts.bitnami.com/bitnami | redis | 17.3.* |
+| Repository                         | Name       | Version |
+| ---------------------------------- | ---------- | ------- |
+| https://charts.bitnami.com/bitnami | common     | 2.0.3   |
+| https://charts.bitnami.com/bitnami | mariadb    | 11.3.\* |
+| https://charts.bitnami.com/bitnami | postgresql | 11.9.\* |
+| https://charts.bitnami.com/bitnami | redis      | 17.3.\* |
 
 ### Warning about open relays
 
@@ -121,7 +121,6 @@ Check that the deployed pods are all running.
 | `global.database.roundcube.existingSecret`            | Name of an existing secret to use for the roundcube database                      | `""`        |
 | `global.database.roundcube.existingSecretPasswordKey` | Name of the key in the existing secret to use for the roundcube database password | `""`        |
 
-
 ### Common parameters
 
 | Name                | Description                                                                          | Value |
@@ -131,7 +130,6 @@ Check that the deployed pods are all running.
 | `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`  |
 | `commonLabels`      | Add labels to all the deployed resources                                             | `{}`  |
 | `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`  |
-
 
 ### Mailu parameters
 
@@ -162,12 +160,12 @@ Check that the deployed pods are all running.
 | `limits.authRatelimit.exemption`           | Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                            | `""`             |
 | `limits.messageRatelimit.value`            | Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod                                                                   | `200/day`        |
 | `limits.messageRatelimit.exemption`        | Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod                                                         | `""`             |
-| `external_relay.host`                      | Hostname of the external relay                                                                                                         | `""`             |
-| `external_relay.username`                  | Username for the external relay                                                                                                        | `""`             |
-| `external_relay.password`                  | Password for the external relay                                                                                                        | `""`             |
-| `external_relay.secretName`                | Name of the secret containing the username and password for the external relay; if set, username and password will be ignored          | `""`             |
-| `external_relay.usernameKey`               | Key in the secret containing the username for the external relay                                                                       | `relay-username` |
-| `external_relay.passwordKey`               | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
+| `externalRelay.host`                       | Hostname of the external relay                                                                                                         | `""`             |
+| `externalRelay.username`                   | Username for the external relay                                                                                                        | `""`             |
+| `externalRelay.password`                   | Password for the external relay                                                                                                        | `""`             |
+| `externalRelay.secretName`                 | Name of the secret containing the username and password for the external relay; if set, username and password will be ignored          | `""`             |
+| `externalRelay.usernameKey`                | Key in the secret containing the username for the external relay                                                                       | `relay-username` |
+| `externalRelay.passwordKey`                | Key in the secret containing the password for the external relay                                                                       | `relay-password` |
 | `clusterDomain`                            | Kubernetes cluster domain name                                                                                                         | `cluster.local`  |
 | `credentialRounds`                         | Number of rounds to use for password hashing                                                                                           | `12`             |
 | `sessionCookieSecure`                      | Controls the secure flag on the cookies of the administrative interface.                                                               | `true`           |
@@ -176,7 +174,6 @@ Check that the deployed pods are all running.
 | `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`          |
 | `tolerations`                              | Tolerations for pod assignment                                                                                                         | `[]`             |
 | `affinity`                                 | Affinity for pod assignment                                                                                                            | `{}`             |
-
 
 ### Storage parameters
 
@@ -236,7 +233,6 @@ Check that the deployed pods are all running.
 | `persistence.storageClass`                          | Storage class of backing PVC (for single PVC)                                                                                                                                                             | `""`                   |
 | `persistence.claimNameOverride`                     | Override the name of the PVC (for single PVC)                                                                                                                                                             | `""`                   |
 
-
 ### Ingress settings
 
 | Name                        | Description                                                                                                                      | Value                    |
@@ -258,7 +254,6 @@ Check that the deployed pods are all running.
 | `ingress.realIpHeader`      | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
 | `ingress.realIpFrom`        | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `0.0.0.0/0`              |
 | `ingress.tlsFlavorOverride` | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
-
 
 ### Frontend load balancer for non-HTTP(s) services
 
@@ -323,7 +318,6 @@ Check that the deployed pods are all running.
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
 | `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
 
-
 ### Admin parameters
 
 | Name                                       | Description                                                                           | Value               |
@@ -377,7 +371,6 @@ Check that the deployed pods are all running.
 | `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `admin.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
-
 ### Redis parameters
 
 | Name                                     | Description                                                         | Value               |
@@ -395,7 +388,6 @@ Check that the deployed pods are all running.
 | `redis.master.persistence.existingClaim` | Pod pvc existing claim; necessary if using single_pvc               | `""`                |
 | `redis.master.persistence.subPath`       | Subpath in PVC; necessary if using single_pvc (set it to `/redis`)  | `""`                |
 | `redis.replica.count`                    | Number of redis replicas (only if `redis.architecture=replication`) | `0`                 |
-
 
 ### Postfix parameters
 
@@ -450,7 +442,6 @@ Check that the deployed pods are all running.
 | `postfix.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `postfix.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `postfix.overrides`                          | Enable postfix overrides                                                              | `{}`                |
-
 
 ### Dovecot parameters
 
@@ -509,7 +500,6 @@ Check that the deployed pods are all running.
 | `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
 | `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
 
-
 ### rspamd parameters
 
 | Name                                        | Description                                                                           | Value               |
@@ -563,7 +553,6 @@ Check that the deployed pods are all running.
 | `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `rspamd.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
-
 
 ### clamav parameters
 
@@ -622,7 +611,6 @@ Check that the deployed pods are all running.
 | `clamav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
-
 ### webmail parameters
 
 | Name                                         | Description                                                                           | Value               |
@@ -679,7 +667,6 @@ Check that the deployed pods are all running.
 | `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
-
 ### webdav parameters
 
 | Name                                        | Description                                                                           | Value               |
@@ -733,7 +720,6 @@ Check that the deployed pods are all running.
 | `webdav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `webdav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `webdav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-
 
 ### fetchmail parameters
 
@@ -789,7 +775,6 @@ Check that the deployed pods are all running.
 | `fetchmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-
 
 ## Example values.yaml to get started
 
@@ -947,3 +932,92 @@ If you run on bare metal with k3s (e.g by using k3os), you can use the build-in 
 The [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip) is important to preserve the client's source IP and avoid an open relay.
 
 Please perform open relay tests after setup as described above!
+
+## Environment variables mapping
+
+The table below lists the environment variables that will be passed to the pods and their respective configuration path in the `values.yaml` file.
+
+| Mailu env var                     | `values.yaml` config path              | Comment                                                    | Default value (Mailu 'docker' version)                   | Helm default value                                                                               |
+| --------------------------------- | -------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `ADMIN`                           | `admin.enabled`                        |                                                            | `none`                                                   | `true`                                                                                           |
+| `ANTIVIRUS_ACTION`                | `rspamd.antivirusAction`               |                                                            | `discard`                                                | `discard`                                                                                        |
+| `AUTH_RATELIMIT_EXEMPTION_LENGTH` | `limits.authRatelimit.exemptionLength` |                                                            | `86400`                                                  | `86400`                                                                                          |
+| `AUTH_RATELIMIT_EXEMPTION`        | `limits.authRatelimit.exemption`       |                                                            | ``                                                       | ``                                                                                               |
+| `AUTH_RATELIMIT_IP`               | `limits.authRatelimit.ip`              |                                                            | `60/hour`                                                | `60/hour`                                                                                        |
+| `AUTH_RATELIMIT_IP_V4_MASK`       | `limits.authRatelimit.ipv4Mask`        |                                                            | `24`                                                     | `24`                                                                                             |
+| `AUTH_RATELIMIT_IP_V6_MASK`       | `limits.authRatelimit.ipv6Mask`        |                                                            | `56`                                                     | `56`                                                                                             |
+| `AUTH_RATELIMIT_USER`             | `limits.authRatelimit.user`            |                                                            | `100/day`                                                | `100/day`                                                                                        |
+| `BABEL_DEFAULT_LOCALE`            | -                                      |                                                            | `en`                                                     | `en`                                                                                             |
+| `BABEL_DEFAULT_TIMEZONE`          | -                                      |                                                            | `UTC`                                                    | `UTC`                                                                                            |
+| `BOOTSTRAP_SERVE_LOCAL`           | -                                      |                                                            | `True`                                                   | `True`                                                                                           |
+| `CREDENTIAL_ROUNDS`               | `credentialRounds`                     |                                                            | `12`                                                     | `12`                                                                                             |
+| `DB_FLAVOR`                       |                                        | Managed by Helm chart                                      | None                                                     |                                                                                                  |
+| `DB_HOST`                         |                                        | Managed by Helm chart                                      | database                                                 |                                                                                                  |
+| `DB_NAME`                         |                                        | Managed by Helm chart                                      | mailu                                                    |                                                                                                  |
+| `DB_PW`                           |                                        | Managed by Helm chart                                      | None                                                     |                                                                                                  |
+| `DB_USER`                         |                                        | Managed by Helm chart                                      | mailu                                                    |                                                                                                  |
+| `DEBUG_ASSETS`                    | -                                      |                                                            | ``                                                       |                                                                                                  |
+| `DEBUG`                           | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `DEBUG_PROFILER`                  | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `DEBUG_TB_INTERCEPT_REDIRECTS`    | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `DEFAULT_QUOTA`                   | -                                      |                                                            | `1000000000`                                             | `1000000000`                                                                                     |
+| `DEFAULT_SPAM_THRESHOLD`          | -                                      |                                                            | `80`                                                     | `80`                                                                                             |
+| `DEFER_ON_TLS_ERROR`              | -                                      |                                                            | `True`                                                   | `true`                                                                                           |
+| `DISABLE_STATISTICS`              | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `DKIM_PATH`                       | -                                      |                                                            | `/dkim/{domain}.{selector}.key`                          | `/dkim/{domain}.{selector}.key`                                                                  |
+| `DKIM_SELECTOR`                   | -                                      |                                                            | `dkim`                                                   | `dkim`                                                                                           |
+| `DMARC_RUA`                       | `dmarc.rua`                            |                                                            | `none`                                                   | `none`                                                                                           |
+| `DMARC_RUF`                       | `dmarc.ruf`                            |                                                            | `none`                                                   | `none`                                                                                           |
+| `DOCKER_SOCKET`                   | -                                      | Not set in Helm Chart                                      | `unix:///var/run/docker.sock`                            | -                                                                                                |
+| `DOMAIN`                          | `domain`                               |                                                            | `mailu.io`                                               | _unset_                                                                                          |
+| `DOMAIN_REGISTRATION`             | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `FETCHMAIL_ENABLED`               | `fetchmail.enabled`                    |                                                            | `False`                                                  | `false`                                                                                          |
+| `HOSTNAMES`                       | `hostnames`                            | Use an array in Helm values instead of a string            | `mail.mailu.io,alternative.mailu.io,yetanother.mailu.io` | `[]`                                                                                             |
+| `INBOUND_TLS_ENFORCE`             | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `INSTANCE_ID_PATH`                | -                                      |                                                            | `/data/instance`                                         | `/data/instance`                                                                                 |
+| `KUBERNETES_INGRESS`              | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `LOG_LEVEL`                       | `logLevel`                             | Can be overriden for each pod through `COMPONENT.logLevel` | `WARNING`                                                | `WARNING`                                                                                        |
+| `LOGO_BACKGROUND`                 | `customization.logoBackground`         |                                                            | `None`                                                   | `none`                                                                                           |
+| `LOGO_URL`                        | `customization.logoUrl`                |                                                            | `None`                                                   | `none`                                                                                           |
+| `MEMORY_SESSIONS`                 | `ingress.enabled`                      |                                                            | `False`                                                  | `true`                                                                                           |
+| `MESSAGE_RATELIMIT_EXEMPTION`     | `limits.messageRatelimit.exemption`    |                                                            | ``                                                       | ``                                                                                               |
+| `MESSAGE_RATELIMIT`               | `limits.messageRatelimit.value`        |                                                            | `200/day`                                                | `200/day`                                                                                        |
+| `PERMANENT_SESSION_LIFETIME`      | `permanentSessionLifetime`             |                                                            | `30*24*3600`                                             | `108000`                                                                                         |
+| `POSTMASTER`                      | `postmaster`                           |                                                            | `postmaster`                                             | `postmaster`                                                                                     |
+| `PROXY_AUTH_CREATE`               | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `PROXY_AUTH_HEADER`               | -                                      |                                                            | `X-Auth-Email`                                           | `X-Auth-Email`                                                                                   |
+| `PROXY_AUTH_WHITELIST`            | -                                      |                                                            | ``                                                       | ``                                                                                               |
+| `RATELIMIT_STORAGE_URL`           | -                                      | Managed by Helm chart                                      | ``                                                       |                                                                                                  |
+| `RECAPTCHA_PRIVATE_KEY`           | -                                      |                                                            | ``                                                       | ``                                                                                               |
+| `RECAPTCHA_PUBLIC_KEY`            | -                                      |                                                            | ``                                                       | ``                                                                                               |
+| `REAL_IP_FROM`                    | `ingress.realIpFrom`                   |                                                            | ``                                                       | `0.0.0.0/0`                                                                                      |
+| `REAL_IP_HEADER`                  | `ingress.realIpHeader`                 |                                                            | ``                                                       | `X-Forwarded-For`                                                                                |
+| `RECIPIENT_DELIMITER`             | `recipientDelimiter`                   |                                                            | ``                                                       | `+`                                                                                              |
+| `REJECT_UNLISTED_RECIPIENT`       | -                                      |                                                            | `yes`                                                    | `yes`                                                                                            |
+| `RELAYHOST`                       | `externalRealy.host`                   |                                                            | ``                                                       | ``                                                                                               |
+| `RELAYNETS`                       | `externalRealy.networks`               |                                                            | ``                                                       | ``                                                                                               |
+| `ROUNDCUBE_DB_FLAVOR`             | -                                      | Managed by Helm chart                                      | `sqlite`                                                 | ``                                                                                               |
+| `SECRET_KEY`                      | `secretKey` or `existingSecret`        | Auto-generated if not provided or empty                    | `changeMe`                                               | _auto-generated_                                                                                 |
+| `SESSION_COOKIE_SECURE`           | `sessionCookieSecure`                  |                                                            | `None`                                                   | `true`                                                                                           |
+| `SESSION_KEY_BITS`                | -                                      |                                                            | `128`                                                    | `128`                                                                                            |
+| `SESSION_TIMEOUT`                 | `sessionTimeout`                       |                                                            | `3600`                                                   | `3600`                                                                                           |
+| `SITENAME`                        | `customization.siteName`               |                                                            | `Mailu`                                                  | `Mailu`                                                                                          |
+| `SQLALCHEMY_DATABASE_URI`         | -                                      |                                                            | `sqlite:////data/main.db`                                | `sqlite:////data/main.db`                                                                        |
+| `SQLALCHEMY_TRACK_MODIFICATIONS`  | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `SQLITE_DATABASE_FILE`            | -                                      |                                                            | `data/main.db`                                           | `data/main.db`                                                                                   |
+| `STATS_ENDPOINT`                  | -                                      |                                                            | `19.{}.stats.mailu.io`                                   | `19.{}.stats.mailu.io`                                                                           |
+| `SUBNET6`                         | `subnet6`                              | _warning: IPv6 support with Kubernetes is untested_        | `None`                                                   | `none`                                                                                           |
+| `SUBNET`                          | `subnet`                               |                                                            | `192.168.203.0/24`                                       | `10.42.0.0/16`                                                                                   |
+| `TEMPLATES_AUTO_RELOAD`           | -                                      |                                                            | `True`                                                   | `True`                                                                                           |
+| `TLS_FLAVOR`                      | `ingress.tlsFlavorOverride`            |                                                            | `cert`                                                   | `cert`                                                                                           |
+| `TLS_PERMISSIVE`                  | -                                      |                                                            | `True`                                                   | `True`                                                                                           |
+| `TZ`                              | `timezone`                             |                                                            | `Etc/UTC`                                                | `Etc/UTC`                                                                                        |
+| `WEB_ADMIN`                       | `admin.uri`                            |                                                            | `/admin`                                                 | `/admin`                                                                                         |
+| `WEBMAIL`                         | `webmail.type`                         |                                                            | `none`                                                   | `roundcube`                                                                                      |
+| `WEBSITE`                         | `customization.website`                |                                                            | `https://mailu.io`                                       | `https://mailu.io`                                                                               |
+| `WEB_WEBMAIL`                     | `webmail.uri`                          |                                                            | `/webmail`                                               | `/webmail`                                                                                       |
+| `WELCOME`                         | `welcomeMessage.enabled`               |                                                            | `False`                                                  | `false`                                                                                          |
+| `WELCOME_BODY`                    | `welcomeMessage.body`                  |                                                            | `Dummy welcome body`                                     | `Welcome to Mailu, your new email service. Please change your password and update your profile.` |
+| `WELCOME_SUBJECT`                 | `welcomeMessage.subject`               |                                                            | `Dummy welcome topic`                                    | `Welcome to Mailu`                                                                               |
+| `WILDCARD_SENDERS`                | -                                      |                                                            | ``                                                       | ``                                                                                               |
+| `*_ADDRESS`                       | -                                      | Auto-generated by Helm chart                               | ``                                                       | ``                                                                                               |

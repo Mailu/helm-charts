@@ -79,20 +79,13 @@ spec:
               {{- else }}
               value: "False"
               {{- end }}
-            - name: HOST_SMTP
-              value: {{ include "mailu.front.serviceFqdn" . }}
-            - name: HOST_ADMIN
-              value: {{ include "mailu.admin.serviceFqdn" . }}
-            - name: FETCHMAIL_DELAY
-              value: "{{ .Values.fetchmail.delay }}"
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.fetchmail.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.fetchmail.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraEnvVarsCM "context" $) }}

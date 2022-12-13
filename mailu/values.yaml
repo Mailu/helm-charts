@@ -36,6 +36,14 @@ commonLabels: {}
 ## @param commonAnnotations Add annotations to all the deployed resources
 commonAnnotations: {}
 
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+## @param tolerations Tolerations for pod assignment
+tolerations: []
+
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## @param affinity Affinity for pod assignment
+affinity: {}
+
 ## @section Mailu parameters
 
 ## e.g.:
@@ -62,6 +70,9 @@ secretKey: ""
 ## The secret has to contain the secretKey value under the `secret-key` key.
 existingSecret: ""
 
+## @param timezone Timezone to use for the containers
+timezone: "Etc/UTC"
+
 ## e.g.:
 ## initialAccount:
 ##   username: mailadmin
@@ -85,8 +96,11 @@ initialAccount:
   existingSecretPasswordKey: ""
   mode: "update"
 
-## @param subnet Change this if you're using different address ranges for pods
+## @param subnet Change this if you're using different address ranges for pods (IPv4)
 subnet: 10.42.0.0/16
+
+## @param subnet6 Change this if you're using different address ranges for pods (IPv6)
+subnet6: "none"
 
 ## @param networkPolicy.enabled Enable network policy
 networkPolicy:
@@ -100,6 +114,15 @@ logLevel: WARNING
 
 ## @param postmaster local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
 postmaster: postmaster
+
+## @param recipientDelimiter The delimiter used to separate local part from extension in recipient addresses
+recipientDelimiter: "+"
+
+## @param dmarc.rua Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)
+## @param dmarc.ruf Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)
+dmarc:
+  rua: none
+  ruf: none
 
 limits:
   ## @param limits.messageSizeLimitInMegabytes Maximum size of an email in megabytes
@@ -129,27 +152,30 @@ limits:
 
 ## Mailu external relay configuration
 ## Example:
-##  external_relay:
+##  externalRelay:
 ##    host: "[domain.tld]:port"
 ##    username: username
 ##    password: SECRET
 ##    # username and password can also be stored as secret:
-##    secretName: external-relay-secret
+##    existingSecret: external-relay-secret
 ##    usernameKey: username
 ##    passwordKey: password
-## @param external_relay.host Hostname of the external relay
-## @param external_relay.username Username for the external relay
-## @param external_relay.password Password for the external relay
-## @param external_relay.secretName Name of the secret containing the username and password for the external relay; if set, username and password will be ignored
-## @param external_relay.usernameKey Key in the secret containing the username for the external relay
-## @param external_relay.passwordKey Key in the secret containing the password for the external relay
-external_relay:
+##    networks: ["10.0.0.0/24", "2001:db8::/32"]
+## @param externalRelay.host Hostname of the external relay
+## @param externalRelay.username Username for the external relay
+## @param externalRelay.password Password for the external relay
+## @param externalRelay.existingSecret Name of the secret containing the username and password for the external relay; if set, username and password will be ignored
+## @param externalRelay.usernameKey Key in the secret containing the username for the external relay
+## @param externalRelay.passwordKey Key in the secret containing the password for the external relay
+## @param externalRelay.networks List of networks that are allowed to use Mailu as external relay
+externalRelay:
   host: ""
   username: ""
   password: ""
-  secretName: ""
+  existingSecret: ""
   usernameKey: "relay-username"
   passwordKey: "relay-password"
+  networks: []
 
 ## @param clusterDomain Kubernetes cluster domain name
 clusterDomain: cluster.local
@@ -171,15 +197,23 @@ permanentSessionLifetime: 108000
 ## This is required for android handsets older than 7.1.1 but slows down the performance of modern devices.
 letsencryptShortchain: false
 
-## nodeSelector: {}
+## @param customization.siteName Website name
+## @param customization.website URL of the website
+## @param customization.logoUrl Sets a URL for a custom logo. This logo replaces the Mailu logo in the topleft of the main admin interface.
+## @param customization.logoBackground Sets a custom background colour for the brand logo in the top left of the main admin interface.
+customization:
+  siteName: "Mailu"
+  website: "https://mailu.io"
+  logoUrl: "none"
+  logoBackground: "none"
 
-## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-## @param tolerations Tolerations for pod assignment
-tolerations: []
-
-## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-## @param affinity Affinity for pod assignment
-affinity: {}
+## @param welcomeMessage.enabled Enable welcome message
+## @param welcomeMessage.subject Subject of the welcome message
+## @param welcomeMessage.body Body of the welcome message
+welcomeMessage:
+  enabled: true
+  subject: "Welcome to Mailu"
+  body: "Welcome to Mailu, your new email service. Please change your password and update your profile."
 
 ## @section Storage parameters
 
@@ -760,6 +794,12 @@ front:
 
 ## @section Admin parameters
 admin:
+  ## @param admin.enabled Enable access to the admin interface
+  enabled: true
+
+  ## @param admin.uri URI to access the admin interface
+  uri: /admin
+
   ## @param admin.logLevel Override default log level
   logLevel: ""
 
@@ -1365,6 +1405,19 @@ dovecot:
 
 ## @section rspamd parameters
 rspamd:
+  ## @param rspamd.overrides Enable rspamd overrides
+  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
+  ## Example:
+  ## overrides:
+  ##   fileA.conf: |
+  ##     obj {
+  ##       key = value;
+  ##     }
+  overrides: {}
+
+  ## @param rspamd.antivirusAction Action to take when an virus is detected. Possible values: `reject` or `discard`
+  antivirusAction: "discard"
+
   ## @param rspamd.logLevel Override default log level
   logLevel: ""
 
@@ -1541,16 +1594,6 @@ rspamd:
 
   ## @param rspamd.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
-
-  ## @param rspamd.overrides Enable rspamd overrides
-  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
-  ## Example:
-  ## overrides:
-  ##   fileA.conf: |
-  ##     obj {
-  ##       key = value;
-  ##     }
-  overrides: {}
 
 ## @section clamav parameters
 clamav:
@@ -1773,6 +1816,16 @@ webmail:
 
   ## @param webmail.type Type of webmail to deploy (`roundcube` or `snappymail`)
   type: roundcube
+
+  ## @param webmail.roundcubePlugins List of Roundcube plugins to enable
+  roundcubePlugins:
+    - archive
+    - zipdownload
+    - markasjunk
+    - managesieve
+    - enigma
+    - carddav
+    - mailu
 
   ## @param webmail.logLevel Override default log level
   logLevel: ""

@@ -82,39 +82,13 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
-            - name: FRONT_ADDRESS
-              value: {{ include "mailu.front.serviceFqdn" . }}
-            - name: ADMIN_ADDRESS
-              value: {{ include "mailu.admin.serviceFqdn" . }}
-            - name: ANTISPAM_WEBUI_ADDRESS
-              value: {{ printf "%s:11334" (include "mailu.rspamd.serviceFqdn" .) }}
-            - name: POSTMASTER
-              value: {{ default "postmaster" .Values.postmaster }}
-            - name: DOMAIN
-              value: {{ include "mailu.domain" . }}
-            - name: HOSTNAMES
-              value: "{{ join "," .Values.hostnames }}"
-            - name: RECIPIENT_DELIMITER
-              value: +
-            - name: COMPRESSION
-              value: {{ .Values.dovecot.compression | quote }}
-            - name: COMPRESSION_LEVEL
-              value: {{ .Values.dovecot.compressionLevel | quote }}
-            - name: WEBMAIL
-              value: none
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mailu.secretName" . }}
-                  key: secret-key
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.dovecot.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.dovecot.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVarsCM "context" $) }}

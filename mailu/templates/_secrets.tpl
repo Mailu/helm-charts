@@ -32,3 +32,56 @@
 {{- define "mailu.certificatesSecretName" -}}
 {{- include "common.secrets.name" (dict "existingSecret" .Values.ingress.existingSecret "defaultNameSuffix" "certificates" "context" .) }}
 {{- end -}}
+
+{{/* Get the mailu externalRelay secret */}}
+{{- define "mailu.externalRelay.secretName" -}}
+{{- include "common.secrets.name" (dict "existingSecret" .Values.externalRelay.existingSecret "defaultNameSuffix" "external-relay" "context" .) }}
+{{- end -}}
+
+{{/* Get the mailu externalRelay username value */}}
+{{- define "mailu.externalRelay.username" -}}
+{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.externalRelay.secretName" .) "key" .Values.externalRelay.usernameKey "providedValues" (list "externalRelay.username") "length" 10 "strong" false "context" .) }}
+{{- end -}}
+
+{{/* Get the mailu externalRelay password value */}}
+{{- define "mailu.externalRelay.password" -}}
+{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.externalRelay.secretName" .) "key" .Values.externalRelay.passwordKey "providedValues" (list "externalRelay.password") "length" 24 "strong" true "context" .) }}
+{{- end -}}
+
+{{/* Get the mailu env vars secrets */}}
+{{- define "mailu.envvars.secrets" -}}
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "mailu.secretName" . }}
+      key: secret-key
+{{- if .Values.initialAccount.enabled }}
+- name: INITIAL_ADMIN_PW
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.initialAccount.secretName" . }}
+      key: {{ include "mailu.initialAccount.secretKey" . }}
+{{- end }}
+{{- if not (eq (include "mailu.database.type" .) "sqlite") }}
+- name: DB_PW
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.database.secretName" . }}
+      key: {{ include "mailu.database.secretKey" . }}
+- name: ROUNDCUBE_DB_PW
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.database.roundcube.secretName" . }}
+      key: {{ include "mailu.database.roundcube.secretKey" . }}
+{{- end }}
+- name: RELAYUSER
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.externalRelay.secretName" . }}
+      key: {{ .Values.externalRelay.usernameKey }}
+- name: RELAYPASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.externalRelay.secretName" . }}
+      key: {{ .Values.externalRelay.passwordKey }}
+{{- end -}}

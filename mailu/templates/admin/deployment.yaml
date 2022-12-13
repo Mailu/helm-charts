@@ -79,112 +79,13 @@ spec:
               value: {{ default .Values.logLevel .Values.admin.logLevel }}
             - name: QUOTA_STORAGE_URL
               value: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.adminQuota" .) }}
-            - name: RATELIMIT_STORAGE_URL
-              value: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.rateLimit" .) }}
-            - name: POSTMASTER
-              value: {{ default "postmaster" .Values.postmaster }}
-            - name: DOMAIN
-              value: "{{ required "'domain' needs to be set" .Values.domain }}"
-            - name: HOSTNAMES
-              value: "{{ join "," .Values.hostnames }}"
-            - name: IMAP_ADDRESS
-              value: {{ include "mailu.dovecot.serviceFqdn" . }}
-            - name: POP3_ADDRESS
-              value: {{ include "mailu.dovecot.serviceFqdn" . }}
-            - name: SMTP_ADDRESS
-              value: {{ include "mailu.postfix.serviceFqdn" . }}
-            - name: AUTHSMTP_ADDRESS
-              value: {{ include "mailu.postfix.serviceFqdn" . }}
-            - name: REDIS_ADDRESS
-              value: {{ include "mailu.redis.serviceFqdn" . }}
-            {{- if .Values.webmail.enabled }}
-            - name: WEBMAIL
-              value: {{ .Values.webmail.type | quote }}
-            - name: WEB_WEBMAIL
-              value: {{ required "webmail.uri" .Values.webmail.uri }}
-            - name: WEBMAIL_ADDRESS
-              value: {{ include "mailu.webmail.serviceFqdn" . }}
-            {{- else }}
-            - name: WEBMAIL
-              value: none
-            - name: WEBMAIL_ADDRESS
-              value: localhost
-            - name: WEB_WEBMAIL
-              value: /
-            {{- end }}
-            - name: FRONT_ADDRESS
-              value: {{ include "mailu.front.serviceFqdn" . }}
-            - name: RECIPIENT_DELIMITER
-              value: +
-            - name: SUBNET
-              value: {{ .Values.subnet }}
-            - name: CREDENTIAL_ROUNDS
-              value: {{ .Values.credentialRounds | quote }}
-            - name: SESSION_COOKIE_SECURE
-              value: {{ .Values.sessionCookieSecure | quote }}
-            - name: SESSION_TIMEOUT
-              value: {{ .Values.sessionTimeout | quote }}
-            - name: PERMANENT_SESSION_LIFETIME
-              value: {{ .Values.permanentSessionLifetime | quote }}
-            - name: LETSENCRYPT_SHORTCHAIN
-              value: {{ .Values.letsencryptShortchain | quote }}
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mailu.secretName" . }}
-                  key: secret-key
-            - name: MESSAGE_RATELIMIT
-              value: "{{ required "limits.messageRatelimit.value" .Values.limits.messageRatelimit.value }}"
-            - name: MESSAGE_RATELIMIT_EXEMPTION
-              value: "{{ default "" .Values.limits.messageRatelimit.exemption }}"
-            - name: AUTH_RATELIMIT_IP
-              value: "{{ required "limits.authRatelimit.ip" .Values.limits.authRatelimit.ip }}"
-            - name: AUTH_RATELIMIT_IP_V4_MASK
-              value: "{{ required "limits.authRatelimit.ipv4Mask" .Values.limits.authRatelimit.ipv4Mask }}"
-            - name: AUTH_RATELIMIT_IP_V6_MASK
-              value: "{{ required "limits.authRatelimit.ipv6Mask" .Values.limits.authRatelimit.ipv6Mask }}"
-            - name: AUTH_RATELIMIT_USER
-              value: "{{ required "limits.authRatelimit.user" .Values.limits.authRatelimit.user }}"
-            - name: AUTH_RATELIMIT_EXEMPTION_LENGTH
-              value: "{{ required "limits.authRatelimit.exemptionLength" .Values.limits.authRatelimit.exemptionLength }}"
-            - name: AUTH_RATELIMIT_EXEMPTION
-              value: "{{ default "" .Values.limits.authRatelimit.exemption }}"
-            {{- if .Values.initialAccount.enabled }}
-            - name: INITIAL_ADMIN_MODE
-              value: {{ .Values.initialAccount.mode }}
-            - name: INITIAL_ADMIN_ACCOUNT
-              value: {{ required "'initialAccount.username' needs to be set if 'initialAccount' is used." .Values.initialAccount.username }}
-            - name: INITIAL_ADMIN_DOMAIN
-              value: {{ required "'initialAccount.domain' needs to be set if 'initialAccount' is used." .Values.initialAccount.domain }}
-            - name: INITIAL_ADMIN_PW
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "mailu.initialAccount.secretName" . }}
-                  key: {{ include "mailu.initialAccount.secretKey" . }}
-            {{- end }}
-            - name: DB_FLAVOR
-              value: {{ include "mailu.database.type" .}}
-            {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
-            - name: DB_USER
-              value: {{ include "mailu.database.username" . }}
-            - name: DB_PW
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "mailu.database.secretName" . }}
-                  key: {{ include "mailu.database.secretKey" . }}
-            - name: DB_HOST
-              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
-            - name: DB_NAME
-              value: {{ include "mailu.database.name" . }}
-            {{- end }}
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.admin.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.admin.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsCM "context" $) }}

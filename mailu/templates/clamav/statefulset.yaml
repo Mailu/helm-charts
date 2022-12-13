@@ -76,14 +76,13 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.clamav.logLevel }}
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.clamav.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.clamav.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.clamav.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.clamav.extraEnvVarsCM "context" $) }}

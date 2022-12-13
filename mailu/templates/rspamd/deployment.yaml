@@ -82,33 +82,13 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.rspamd.logLevel }}
-            - name: FRONT_ADDRESS
-              value: {{ include "mailu.front.serviceFqdn" . }}
-            - name: ADMIN_ADDRESS
-              value: {{ include "mailu.admin.serviceFqdn" . }}
-            - name: REDIS_ADDRESS
-              value: {{ printf "%s:%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) }}
-            {{- if .Values.clamav.enabled }}
-            - name: ANTIVIRUS
-              value: clamav
-            - name: ANTIVIRUS_ADDRESS
-              value: {{ include "mailu.clamav.serviceFqdn" . }}:3310
-            {{- else }}
-            - name: ANTIVIRUS
-              value: none
-            - name: ANTIVIRUS_ADDRESS
-              value: localhost
-            {{- end }}
-            - name: SUBNET
-              value: "{{ .Values.subnet }}"
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.rspamd.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.rspamd.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.rspamd.extraEnvVarsCM "context" $) }}
