@@ -75,7 +75,7 @@ data:
   ROUNDCUBE_DB_FLAVOR: {{ include "mailu.database.type" . }}
   # SECRET_KEY => via secret
   SESSION_COOKIE_SECURE: {{ .Values.sessionCookieSecure | quote }}
-  SESSION_KEY_BITS: "128"
+  SESSION_KEY_BITS: 128
   SESSION_TIMEOUT: {{ .Values.sessionTimeout | quote }}
   SITENAME: {{ .Values.customization.siteName | quote }}
   SQLALCHEMY_DATABASE_URI: "sqlite:////data/main.db"
