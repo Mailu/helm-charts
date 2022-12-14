@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.0-beta.27](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.26...mailu-1.0.0-beta.27) (2022-12-14)
+
+
+### Features
+
+* Refactor env vars ([#50](https://github.com/fastlorenzo/helm-charts-1/issues/50)) ([07feb7a](https://github.com/fastlorenzo/helm-charts-1/commit/07feb7a2c07e3127bac8f90fe5a283adb35817bb))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.27 ([607c463](https://github.com/fastlorenzo/helm-charts-1/commit/607c463f0a01b865bc8189d7ad6360e71c99e2cb))
+
 ## [1.0.0-beta.26](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.25...mailu-1.0.0-beta.26) (2022-12-11)
 
 
