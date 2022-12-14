@@ -75,48 +75,13 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.webmail.logLevel }}
-            - name: MESSAGE_SIZE_LIMIT
-              value: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
-            - name: IMAP_ADDRESS
-              value: {{ include "mailu.dovecot.serviceFqdn" . }}
-            - name: FRONT_ADDRESS
-              value: {{ include "mailu.front.serviceFqdn" . }}
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mailu.secretName" . }}
-                  key: secret-key
-            - name: SUBNET
-              value: {{ .Values.subnet }}
-            - name: ADMIN
-              value: "true"
-            - name: WEBMAIL
-              value: {{ .Values.webmail.type | quote }}
-            - name: WEB_ADMIN
-              value: "/admin/"
-            - name: ROUNDCUBE_DB_FLAVOR
-              value: {{ include "mailu.database.type" . }}
-            {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
-            - name: ROUNDCUBE_DB_USER
-              value: {{ include "mailu.database.roundcube.username" . }}
-            - name: ROUNDCUBE_DB_PW
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "mailu.database.roundcube.secretName" . }}
-                  key: {{ include "mailu.database.roundcube.secretKey" . }}
-            - name: ROUNDCUBE_DB_NAME
-              value: {{ include "mailu.database.roundcube.name" . }}
-            - name: ROUNDCUBE_DB_HOST
-              value: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
-            {{- end }}
-            {{- if .Values.timezone }}
-            - name: TZ
-              value: {{ .Values.timezone }}
-            {{- end }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.webmail.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.webmail.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.webmail.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.webmail.extraEnvVarsCM "context" $) }}
