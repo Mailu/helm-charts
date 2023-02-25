@@ -377,11 +377,11 @@ rspamd:
     #  "helm.sh/resource-policy": keep
   resources:
     requests:
-      memory: 100Mi
-      cpu: 100m
+      memory: 500Mi
+      cpu: 500m
     limits:
-      memory: 200Mi
-      cpu: 200m
+      memory: 500Mi
+      cpu: 600m
   startupProbe: # give it 15 minutes for initial rule compilation
     periodSeconds: 10
     failureThreshold: 90
