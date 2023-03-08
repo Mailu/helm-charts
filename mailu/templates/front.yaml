@@ -104,8 +104,10 @@ spec:
           {{- end }}
           - name: MESSAGE_SIZE_LIMIT
             value: "{{ mul .Values.mail.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+          {{- if not .Values.webdav.enabled }}
           - name: WEBDAV
             value: none
+          {{- end }}
           - name: WEBDAV_ADDRESS
             value: localhost
           - name: ADMIN
