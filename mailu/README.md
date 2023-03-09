@@ -269,7 +269,7 @@ Check that the deployed pods are all running.
 | `ingress.secrets`           | Custom TLS certificates as secrets                                                                                               | `[]`                     |
 | `ingress.extraRules`        | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
 | `ingress.realIpHeader`      | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
-| `ingress.realIpFrom`        | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `0.0.0.0/0`              |
+| `ingress.realIpFrom`        | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `""`                     |
 | `ingress.tlsFlavorOverride` | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
 
 
