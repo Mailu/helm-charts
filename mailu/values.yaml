@@ -384,7 +384,7 @@ postgresql:
     enablePostgresUser: true
     postgresPassword: changeme
     username: mailu
-    password: changeme
+    password: ""
     database: mailu
     existingSecret: ""
 
