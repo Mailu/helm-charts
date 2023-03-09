@@ -575,7 +575,7 @@ ingress:
   realIpHeader: X-Forwarded-For
 
   ## @param ingress.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
-  realIpFrom: 0.0.0.0/0
+  realIpFrom: ""
 
   ## @param ingress.tlsFlavorOverride Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod
   ## This is normally auto-detected, only change it if you know what you are doing.

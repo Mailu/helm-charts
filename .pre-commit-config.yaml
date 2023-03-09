@@ -1,16 +1,16 @@
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
-  hooks:
-    - id: check-yaml
-      exclude: >
-        (?x)^(
-            ^{{.*}}.*\.yaml$|
-            ^.*/templates/.*$
-        )
-    - id: end-of-file-fixer
-    - id: trailing-whitespace
-- repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.17
-  hooks:
-    - id: helmlint
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: check-yaml
+        exclude: >
+          (?x)^(
+              ^{{.*}}.*\.yaml$|
+              ^.*/templates/.*$
+          )
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.18
+    hooks:
+      - id: helmlint
