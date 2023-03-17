@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.0-beta.29](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.28...mailu-1.0.0-beta.29) (2023-03-17)
+
+
+### Bug Fixes
+
+* add missing container registry for admin ([1cb6a88](https://github.com/fastlorenzo/helm-charts-1/commit/1cb6a887518e115761ea0260b675969e60ea3ba1))
+* Add missing container registry for admin ([a051d71](https://github.com/fastlorenzo/helm-charts-1/commit/a051d7196ee3cebbf7175395eb65374cea877cb0))
+* Add missing container registry for admin ([a051d71](https://github.com/fastlorenzo/helm-charts-1/commit/a051d7196ee3cebbf7175395eb65374cea877cb0))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.29 ([4892a2a](https://github.com/fastlorenzo/helm-charts-1/commit/4892a2a5757697d5ffc47bd2e6590f65fdad4898))
+
 ## [1.0.0-beta.28](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.27...mailu-1.0.0-beta.28) (2023-03-17)
 
 
