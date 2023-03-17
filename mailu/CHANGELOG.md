@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.0-beta.28](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.27...mailu-1.0.0-beta.28) (2023-03-17)
+
+
+### Bug Fixes
+
+* migrate container registry to ghcr.io ([77ad28a](https://github.com/fastlorenzo/helm-charts-1/commit/77ad28a41c9e956fd538f949bab0d36dcd1d9237))
+* Unset default value for realIpFrom ([#53](https://github.com/fastlorenzo/helm-charts-1/issues/53)) ([1d1aa9a](https://github.com/fastlorenzo/helm-charts-1/commit/1d1aa9ac6a2ffbd3729cca8d44e431554b468f57))
+* Updated documentation ([#55](https://github.com/fastlorenzo/helm-charts-1/issues/55)) ([7c52126](https://github.com/fastlorenzo/helm-charts-1/commit/7c521269611c22bad2070b67544e2a6bc162b647))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.28 ([dff244e](https://github.com/fastlorenzo/helm-charts-1/commit/dff244e2cd61a01fa1de4b11d101f7c3db67b4b9))
+
 ## [1.0.0-beta.27](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.26...mailu-1.0.0-beta.27) (2022-12-14)
 
 
