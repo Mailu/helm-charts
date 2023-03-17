@@ -62,7 +62,7 @@ spec:
       {{- end }}
       containers:
         - name: admin
-          image: {{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.admin.image.repository }}:{{ default .Values.mailuVersion .Values.admin.image.tag }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
           volumeMounts:
             - name: data
