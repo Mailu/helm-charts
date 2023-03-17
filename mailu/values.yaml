@@ -44,6 +44,9 @@ tolerations: []
 ## @param affinity Affinity for pod assignment
 affinity: {}
 
+## @param imageRegistry Container registry to use for all Mailu images
+imageRegistry: ghcr.io
+
 ## @section Mailu parameters
 
 ## e.g.:

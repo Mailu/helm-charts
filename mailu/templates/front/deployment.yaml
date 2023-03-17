@@ -67,7 +67,7 @@ spec:
       {{- end }}
       containers:
         - name: front
-          image: {{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.front.image.repository }}:{{ default .Values.mailuVersion .Values.front.image.tag }}
           imagePullPolicy: {{ .Values.front.image.pullPolicy }}
           volumeMounts:
             - name: certs

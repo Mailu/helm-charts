@@ -63,7 +63,7 @@ spec:
       {{- end }}
       containers:
         - name: fetchmail
-          image: {{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.fetchmail.image.repository }}:{{ default .Values.mailuVersion .Values.fetchmail.image.tag }}
           imagePullPolicy: {{ .Values.fetchmail.image.pullPolicy }}
           volumeMounts:
             - name: data
