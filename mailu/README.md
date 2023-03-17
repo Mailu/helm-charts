@@ -124,15 +124,16 @@ Check that the deployed pods are all running.
 
 ### Common parameters
 
-| Name                | Description                                                                          | Value |
-| ------------------- | ------------------------------------------------------------------------------------ | ----- |
-| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                 | `""`  |
-| `nameOverride`      | String to partially override mailu.fullname include (will maintain the release name) | `""`  |
-| `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`  |
-| `commonLabels`      | Add labels to all the deployed resources                                             | `{}`  |
-| `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`  |
-| `tolerations`       | Tolerations for pod assignment                                                       | `[]`  |
-| `affinity`          | Affinity for pod assignment                                                          | `{}`  |
+| Name                | Description                                                                          | Value     |
+| ------------------- | ------------------------------------------------------------------------------------ | --------- |
+| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                 | `""`      |
+| `nameOverride`      | String to partially override mailu.fullname include (will maintain the release name) | `""`      |
+| `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`      |
+| `commonLabels`      | Add labels to all the deployed resources                                             | `{}`      |
+| `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`      |
+| `tolerations`       | Tolerations for pod assignment                                                       | `[]`      |
+| `affinity`          | Affinity for pod assignment                                                          | `{}`      |
+| `imageRegistry`     | Container registry to use for all Mailu images                                       | `ghcr.io` |
 
 
 ### Mailu parameters
