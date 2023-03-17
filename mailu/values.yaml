@@ -100,7 +100,7 @@ initialAccount:
 subnet: 10.42.0.0/16
 
 ## @param subnet6 Change this if you're using different address ranges for pods (IPv6)
-subnet6: "none"
+subnet6: ""
 
 ## @param networkPolicy.enabled Enable network policy
 networkPolicy:
@@ -121,8 +121,8 @@ recipientDelimiter: "+"
 ## @param dmarc.rua Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)
 ## @param dmarc.ruf Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)
 dmarc:
-  rua: none
-  ruf: none
+  rua: ""
+  ruf: ""
 
 limits:
   ## @param limits.messageSizeLimitInMegabytes Maximum size of an email in megabytes
@@ -204,8 +204,8 @@ letsencryptShortchain: false
 customization:
   siteName: "Mailu"
   website: "https://mailu.io"
-  logoUrl: "none"
-  logoBackground: "none"
+  logoUrl: ""
+  logoBackground: ""
 
 ## @param welcomeMessage.enabled Enable welcome message
 ## @param welcomeMessage.subject Subject of the welcome message
@@ -384,7 +384,7 @@ postgresql:
     enablePostgresUser: true
     postgresPassword: changeme
     username: mailu
-    password: changeme
+    password: ""
     database: mailu
     existingSecret: ""
 

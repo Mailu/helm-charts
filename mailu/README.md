@@ -152,14 +152,14 @@ Check that the deployed pods are all running.
 | `initialAccount.existingSecretPasswordKey` | Name of the key in the existing secret to use for the initial account's password                                                       | `""`                                                                                             |
 | `initialAccount.mode`                      | How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"                                  | `update`                                                                                         |
 | `subnet`                                   | Change this if you're using different address ranges for pods (IPv4)                                                                   | `10.42.0.0/16`                                                                                   |
-| `subnet6`                                  | Change this if you're using different address ranges for pods (IPv6)                                                                   | `none`                                                                                           |
+| `subnet6`                                  | Change this if you're using different address ranges for pods (IPv6)                                                                   | `""`                                                                                             |
 | `networkPolicy.enabled`                    | Enable network policy                                                                                                                  | `false`                                                                                          |
 | `mailuVersion`                             | Version/tag of mailu images - must be master or a version >= 1.9                                                                       | `1.9.39`                                                                                         |
 | `logLevel`                                 | default log level. can be overridden globally or per service                                                                           | `WARNING`                                                                                        |
 | `postmaster`                               | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`                                                                                     |
 | `recipientDelimiter`                       | The delimiter used to separate local part from extension in recipient addresses                                                        | `+`                                                                                              |
-| `dmarc.rua`                                | Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)                                                  | `none`                                                                                           |
-| `dmarc.ruf`                                | Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)                                          | `none`                                                                                           |
+| `dmarc.rua`                                | Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)                                                  | `""`                                                                                             |
+| `dmarc.ruf`                                | Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)                                          | `""`                                                                                             |
 | `limits.messageSizeLimitInMegabytes`       | Maximum size of an email in megabytes                                                                                                  | `50`                                                                                             |
 | `limits.authRatelimit.ip`                  | Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod                                                                   | `60/hour`                                                                                        |
 | `limits.authRatelimit.ipv4Mask`            | Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod                                                           | `24`                                                                                             |
@@ -184,8 +184,8 @@ Check that the deployed pods are all running.
 | `letsencryptShortchain`                    | Controls whether we send the ISRG Root X1 certificate in TLS handshakes.                                                               | `false`                                                                                          |
 | `customization.siteName`                   | Website name                                                                                                                           | `Mailu`                                                                                          |
 | `customization.website`                    | URL of the website                                                                                                                     | `https://mailu.io`                                                                               |
-| `customization.logoUrl`                    | Sets a URL for a custom logo. This logo replaces the Mailu logo in the topleft of the main admin interface.                            | `none`                                                                                           |
-| `customization.logoBackground`             | Sets a custom background colour for the brand logo in the top left of the main admin interface.                                        | `none`                                                                                           |
+| `customization.logoUrl`                    | Sets a URL for a custom logo. This logo replaces the Mailu logo in the topleft of the main admin interface.                            | `""`                                                                                             |
+| `customization.logoBackground`             | Sets a custom background colour for the brand logo in the top left of the main admin interface.                                        | `""`                                                                                             |
 | `welcomeMessage.enabled`                   | Enable welcome message                                                                                                                 | `true`                                                                                           |
 | `welcomeMessage.subject`                   | Subject of the welcome message                                                                                                         | `Welcome to Mailu`                                                                               |
 | `welcomeMessage.body`                      | Body of the welcome message                                                                                                            | `Welcome to Mailu, your new email service. Please change your password and update your profile.` |
@@ -230,7 +230,7 @@ Check that the deployed pods are all running.
 | `postgresql.auth.enablePostgresUser`                | Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user                                                                                                    | `true`                 |
 | `postgresql.auth.postgresPassword`                  | Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided                                                                                         | `changeme`             |
 | `postgresql.auth.username`                          | Name for a custom user to create                                                                                                                                                                          | `mailu`                |
-| `postgresql.auth.password`                          | Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided                                                                                                  | `changeme`             |
+| `postgresql.auth.password`                          | Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided                                                                                                  | `""`                   |
 | `postgresql.auth.database`                          | Name for a custom database to create                                                                                                                                                                      | `mailu`                |
 | `postgresql.auth.existingSecret`                    | Use existing secret for password details (`auth.postgresPassword`, `auth.password` will be ignored and picked up from this secret). The secret has to contain the keys `postgres-password` and `password` | `""`                   |
 | `postgresql.auth.secretKeys.adminPasswordKey`       | Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.                                                                                            | `postgres-password`    |
@@ -836,19 +836,20 @@ If `persistence.hostPath` is set, a path on the host is used for persistence. Th
 
 ### PVC with existing claim
 
-If `persistence.existingClaim` is set, not PVC is created and the PCV with the given name is being used.
+If `persistence.existingClaim` is set, no PVC is created and the existing PVC with the given name is being used.
+
+This can be configured on an individual basis for each Mailu component as well.
 
 ### PVC with automatic provisioning
 
 If neither `persistence.hostPath` nor `persistence.existingClaim` is set, a new PVC is created. The name of the claim is generated but it
 can be overridden with `persistence.claimNameOverride`.
 
-The `persistence.storageClass` is not set by default. It can be set to `-` to have an empty storageClassName or to anything else to use this name.
+The `persistence.storageClass` is not set by default. It can be set to `-` to have an empty storageClassName or to anything else depending on your setup.
 
-All pods are using the same PV. This is not a technical but a historical limitation which could be changed in the future. If you plan to
-deploy to multiple nodes, ensure that you set `persistence.accessMode` to `ReadWriteMany`.
+If you use only one PVC for all components and you have multiple nodes, ensure that you set `persistence.accessMode` to `ReadWriteMany` (and that your storage class supports it).
 
-## Trouble shooting
+## Troubleshooting
 
 ### All services are running but authentication fails for webmail and imap
 
@@ -876,9 +877,9 @@ By setting `ingress.enabled` to false, the internal NGINX instance provided by `
 
 CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
 
-## CertManager
+## Cert Manager
 
-The default logic is to use CertManager to generate certificate for Mailu via Ingress annotations (`ingress.annotations={}`).
+The default logic is to use Cert Manager to generate certificate for Mailu via Ingress annotations (`ingress.annotations={}`).
 
 In some configuration you want to handle certificate generation and update another way, use `ingress.existingSecret=NAME_OF_EXISTING_SECRET` to let the Chart know where to find certificates managed externally.
 
@@ -888,53 +889,43 @@ You will have to create and keep up-to-date your TLS keys.
 
 By default both, Mailu and RoundCube uses an embedded SQLite database.
 
-The chart allows to use an embedded MySQL or external MySQL or PostgreSQL databases instead. It can be controlled by the following values:
+The chart allows to deploy a MariaDB or a PostgresQL database.
 
-### MySQL / MariaDB
+You can also make use of an existing database by setting the correct under `externalDatabase`.
 
-In the sub-sections, we we use the reference "MySQL", it is meant for any MySQL-compatible database system (like MariaDB).
+### Embedded MariaDB / MySQL
 
-#### Using MySQL for Mailu
+This chart can deploy a MariaDB instance (using Bitnami's Helm Chart dependency) and configure it for Mailu to use it.
 
-Set `database.type` to `mysql`.
+In order to do so, set `mariadb.enabled` to `true`.
 
-The `database.mysql.database`, `database.mysql.user`, and `database.mysql.password` variables must also be set.
+The `root` and `mailu` passwords will be automatically generated by default and stored in a secret.
 
-### Using MySQL for RoundCube
+Make sure to also set `mariadb.primary.persistence.enabled` to `true` and configure it accordingly.
 
-Set `database.roundcubeType` to `mysql`.
+See [Bitnami's MariaDB Helm Chart](https://artifacthub.io/packages/helm/bitnami/mariadb) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
 
-The `database.mysql.roundcubeDatabase`, `database.mysql.roundcubeUser`, and `database.mysql.roundcubePassword` variables must also be set.
+### Embedded Postgresql
 
-### Using the internal MySQL database
+This chart can deploy a Postgresql instance (using Bitnami's Helm Chart dependency) and configure it for Mailu to use it.
 
-The chart deploys an instance of MariaDB if either `database.type` or `database.roundcubeType` is set to `mysql` and the `database.mysql.host` is NOT set.
+In order to do so, set `postgresql.enabled` to `true`.
 
-Mailu and RoundCube will use the same MariaDB instance. A database root password can be set with `database.mysql.rootPassword`. If not set, a random root password will be used.
+The `postgres` and `mailu` passwords will be automatically generated by default and stored in a secret.
 
-### Using an external mysql database
+Make sure to also set `postgresql.primary.persistence.enabled` to `true` and configure it accordingly.
 
-An external mysql database can be used by setting `database.mysql.host`. The chart does not support different mysql hosts for mailu and dovecot. Using other mysql ports than the default 3306 port is also nur supported by the chart.
+See [Bitnami's Postgresql Helm Chart](https://artifacthub.io/packages/helm/bitnami/postgresql) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
 
-### PostgreSQL
+### Using an external database
 
-PostgreSQL can be used as an external database management system for Mailu and Roundcube.
+An external MariaDB / MySQL or Postgresql database can be used by setting `externalDatabase.enabled` to `true`.
 
-An external PostgreSQL database can be used by setting `database.postgresql.host`.
+The connection settings to the external database needs to be configured under `externalDatabase`.
 
-The chart does not support different PostgreSQL hosts for Mailu and RoundCube. Using other PostgreSQL ports than the default 5432 port is also not supported by the chart.
+### Roundcube's database
 
-#### Using PostgreSQL for Mailu
-
-Set `database.type` to `postgresql`.
-
-The `database.postgresql.database`, `database.postgresql.user`, and `database.postgresql.password` chart values must also be set.
-
-#### Using Postgresql for Roundcube
-
-Set `database.roundcubeType` to `postgresql`.
-
-The`database.postgresql.roundcubeDatabase`, `database.postgresql.roundcubeUser`, and `database.postgresql.roundcubePassword` must also be set.
+The roundcube database settings can be moified via `global.database.roundcube` (database name, username, password).
 
 ## Timezone
 
