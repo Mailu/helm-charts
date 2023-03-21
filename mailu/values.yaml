@@ -3,6 +3,7 @@
 # A list of mail hostnames is required. The first will be used as primary mail hostname
 #hostnames:
 #  - mail.example.com
+#  - autoconfig.example.com
 #  - imap.example.com
 
 # The mail domain is required. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
@@ -129,7 +130,7 @@ certmanager:
 ingress:
   externalIngress: true
   tlsFlavor: cert
-  className: ""
+  className: "traefik"
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
   realIpHeader: X-Forwarded-For
@@ -165,6 +166,8 @@ front:
   controller:
     kind: Deployment
   nodeSelector: {}
+  ## serve xml for client autoconfiguration: https://mailu.io/1.9/faq.html#how-do-i-setup-client-autoconfiguration
+  # autoConfigUrl: "autoconfig.example.com"
 
   # Expose front mail ports via hostPort
   hostPort:

@@ -1,0 +1,45 @@
+## Creates config map for front nginx, it provides the XML used for the clients config
+{{- if .Values.front.autoConfigUrl  -}}
+{{- $main_hostname := first .Values.hostnames -}}
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "mailu.fullname" . }}-front-override
+data:
+  autoconfiguration.conf: 
+    location ^~ /mail/config-v1.1.xml {
+    return 200 "<?xml version=\"1.0\"?>
+    <clientConfig version=\"1.1\">
+    <emailProvider id=\"%EMAILDOMAIN%\">
+    <domain>%EMAILDOMAIN%</domain>
+
+    <displayName>Email</displayName>
+    <displayShortName>Email</displayShortName>
+
+    <incomingServer type=\"imap\">
+    <hostname>{{- $main_hostname -}}</hostname>
+    <port>993</port>
+    <socketType>SSL</socketType>
+    <username>%EMAILADDRESS%</username>
+    <authentication>password-cleartext</authentication>
+    </incomingServer>
+
+    <outgoingServer type=\"smtp\">
+    <hostname>{{- $main_hostname -}}</hostname>
+    <port>465</port>
+    <socketType>SSL</socketType>
+    <username>%EMAILADDRESS%</username>
+    <authentication>password-cleartext</authentication>
+    <addThisServer>true</addThisServer>
+    <useGlobalPreferredServer>true</useGlobalPreferredServer>
+    </outgoingServer>
+
+    <documentation url=\"https://{{- $main_hostname -}}/admin/ui/client\">
+    <descr lang=\"en\">Configure your email client</descr>
+    </documentation>
+    </emailProvider>
+    </clientConfig>\r\n";
+    }
+    
+{{ end -}}

@@ -2,6 +2,11 @@
 # It will be issued by cert-manager
 {{ if .Values.certmanager.enabled }}
 
+{{- $dnshostnames := .Values.hostnames -}}
+{{- if .Values.front.autoConfigUrl -}}
+{{- $dnshostnames = append $dnshostnames .Values.front.autoConfigUrl | uniq -}}
+{{- end -}}
+
 apiVersion: {{ .Values.certmanager.apiVersion }}
 kind: Certificate
 metadata:
@@ -12,7 +17,7 @@ spec:
   renewBefore: 1440h0m0s
   commonName: "{{ first (required "hostnames" .Values.hostnames) }}"
   dnsNames:
-{{- range .Values.hostnames }}
+{{- range $dnshostnames }}
   - "{{ . }}"
 {{- end }}
   issuerRef:

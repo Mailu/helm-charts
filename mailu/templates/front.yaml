@@ -60,6 +60,10 @@ spec:
             mountPath: /etc/localtime
             readOnly: true
           {{- end }}
+          {{- if .Values.front.autoConfigUrl}}
+          - name: {{ include "mailu.fullname" . }}-front-override
+            mountPath: /overrides
+          {{- end }}
         env:
           - name: LOG_LEVEL
             value: {{ default .Values.logLevel .Values.front.logLevel }}
@@ -212,6 +216,11 @@ spec:
           timeoutSeconds: {{ default 5 .Values.front.readinessProbe.timeoutSeconds }}
         {{- end }}
       volumes:
+        {{- if .Values.front.autoConfigUrl}}
+        - configMap:
+          defaultMode: 440
+          name: {{ include "mailu.fullname" . }}-front-override
+        {{- end }}
         - name: certs
           secret:
             items:
