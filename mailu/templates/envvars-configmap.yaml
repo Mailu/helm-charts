@@ -97,12 +97,9 @@ data:
 
   # Addresses
   ADMIN_ADDRESS: {{ include "mailu.admin.serviceFqdn" . }}
-  ANTISPAM_ADDRESS: {{ printf "%s" (include "mailu.rspamd.serviceFqdn" .) }}
-  AUTHSMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
+  ANTISPAM_ADDRESS: {{ include "mailu.rspamd.serviceFqdn" . }}
   FRONT_ADDRESS: {{ include "mailu.front.serviceFqdn" . }}
   IMAP_ADDRESS: {{ include "mailu.dovecot.serviceFqdn" . }}
-  LMTP_ADDRESS: {{ printf "%s:2525" (include "mailu.dovecot.serviceFqdn" .) }}
-  POP3_ADDRESS: {{ include "mailu.dovecot.serviceFqdn" . }}
   REDIS_ADDRESS: {{ include "mailu.redis.serviceFqdn" . }}
   SMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
 
@@ -142,7 +139,7 @@ data:
 
 {{- if .Values.clamav.enabled }}
   ANTIVIRUS: clamav
-  ANTIVIRUS_ADDRESS: {{ printf "%s:3310" (include "mailu.clamav.serviceFqdn" .) }}
+  ANTIVIRUS_ADDRESS: {{ include "mailu.clamav.serviceFqdn" . }}
 {{- else }}
   ANTIVIRUS: none
   ANTIVIRUS_ADDRESS: localhost
