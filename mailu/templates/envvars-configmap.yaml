@@ -97,8 +97,7 @@ data:
 
   # Addresses
   ADMIN_ADDRESS: {{ include "mailu.admin.serviceFqdn" . }}
-  ANTISPAM_MILTER_ADDRESS: {{ printf "%s:11332" (include "mailu.rspamd.serviceFqdn" .) }}
-  ANTISPAM_WEBUI_ADDRESS: {{ printf "%s:11334" (include "mailu.rspamd.serviceFqdn" .) }}
+  ANTISPAM_ADDRESS: {{ printf "%s" (include "mailu.rspamd.serviceFqdn" .) }}
   AUTHSMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
   FRONT_ADDRESS: {{ include "mailu.front.serviceFqdn" . }}
   IMAP_ADDRESS: {{ include "mailu.dovecot.serviceFqdn" . }}
