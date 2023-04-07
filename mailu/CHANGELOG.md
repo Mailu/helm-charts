@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.0-beta.31](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.30...mailu-1.0.0-beta.31) (2023-04-07)
+
+
+### Bug Fixes
+
+* cleaned env vars for addresses ([11eeea0](https://github.com/fastlorenzo/helm-charts-1/commit/11eeea0738cd56ef881acfa1f0dfe850733ebce3))
+* cleaned env vars for addresses ([#65](https://github.com/fastlorenzo/helm-charts-1/issues/65)) ([1768f6a](https://github.com/fastlorenzo/helm-charts-1/commit/1768f6abf94a61e7379202f4815f8c775cf1774d))
+* Fixed env var for antispam ([c180724](https://github.com/fastlorenzo/helm-charts-1/commit/c18072403f204c68aa2766c29f44255f0aa310a3))
+* Fixed env var for antispam ([#63](https://github.com/fastlorenzo/helm-charts-1/issues/63)) ([00e62e6](https://github.com/fastlorenzo/helm-charts-1/commit/00e62e65011ffe748061fcc1ef126cc9d88678e9))
+
+
+### Miscellaneous Chores
+
+* release 1.0.0-beta.31 ([87fa8e8](https://github.com/fastlorenzo/helm-charts-1/commit/87fa8e8b96fca5cbaf0cef08d094ba3f51dd4233))
+
 ## [1.0.0-beta.30](https://github.com/fastlorenzo/helm-charts-1/compare/mailu-1.0.0-beta.29...mailu-1.0.0-beta.30) (2023-04-07)
 
 
