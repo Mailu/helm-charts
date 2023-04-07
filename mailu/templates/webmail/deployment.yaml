@@ -63,7 +63,7 @@ spec:
       {{- end }}
       containers:
         - name: webmail
-          image: {{ .Values.imageRegistry }}/{{ .Values.webmail.image.repository }}:{{ default .Values.mailuVersion .Values.webmail.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.webmail.image.repository }}:{{ default (include "mailu.version" .) .Values.webmail.image.tag }}
           imagePullPolicy: {{ .Values.webmail.image.pullPolicy }}
           volumeMounts:
             - mountPath: /data

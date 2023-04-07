@@ -63,7 +63,7 @@ spec:
       {{- end }}
       containers:
         - name: webdav
-          image: {{ .Values.imageRegistry }}/{{ .Values.webdav.image.repository }}:{{ default .Values.mailuVersion .Values.webdav.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.webdav.image.repository }}:{{ default (include "mailu.version" .) .Values.webdav.image.tag }}
           imagePullPolicy: {{ .Values.webdav.image.pullPolicy }}
           volumeMounts:
             - name: data

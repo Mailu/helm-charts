@@ -280,7 +280,7 @@ Check that the deployed pods are all running.
 | --------------------------------------------- | ------------------------------------------------------------------------------------- | --------------- |
 | `front.logLevel`                              | Override default log level                                                            | `""`            |
 | `front.image.repository`                      | Pod image repository                                                                  | `mailu/nginx`   |
-| `front.image.tag`                             | Pod image tag (defaults to mailuVersion)                                              | `""`            |
+| `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
@@ -346,7 +346,7 @@ Check that the deployed pods are all running.
 | `admin.uri`                                | URI to access the admin interface                                                     | `/admin`            |
 | `admin.logLevel`                           | Override default log level                                                            | `""`                |
 | `admin.image.repository`                   | Pod image repository                                                                  | `mailu/admin`       |
-| `admin.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `admin.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `admin.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `admin.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
 | `admin.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
@@ -419,7 +419,7 @@ Check that the deployed pods are all running.
 | -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | `postfix.logLevel`                           | Override default log level                                                            | `""`                |
 | `postfix.image.repository`                   | Pod image repository                                                                  | `mailu/postfix`     |
-| `postfix.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `postfix.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `postfix.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `postfix.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
 | `postfix.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
@@ -475,7 +475,7 @@ Check that the deployed pods are all running.
 | `dovecot.enabled`                            | Enable dovecot                                                                        | `true`              |
 | `dovecot.logLevel`                           | Override default log level                                                            | `""`                |
 | `dovecot.image.repository`                   | Pod image repository                                                                  | `mailu/dovecot`     |
-| `dovecot.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `dovecot.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `dovecot.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `dovecot.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
 | `dovecot.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
@@ -534,7 +534,7 @@ Check that the deployed pods are all running.
 | `rspamd.antivirusAction`                    | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
 | `rspamd.logLevel`                           | Override default log level                                                            | `""`                |
 | `rspamd.image.repository`                   | Pod image repository                                                                  | `mailu/rspamd`      |
-| `rspamd.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `rspamd.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `rspamd.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `rspamd.persistence.size`                   | Pod pvc size                                                                          | `1Gi`               |
 | `rspamd.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
@@ -589,7 +589,7 @@ Check that the deployed pods are all running.
 | `clamav.enabled`                            | Enable ClamAV                                                                         | `true`              |
 | `clamav.logLevel`                           | Override default log level                                                            | `""`                |
 | `clamav.image.repository`                   | Pod image repository                                                                  | `mailu/clamav`      |
-| `clamav.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `clamav.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `clamav.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `clamav.persistence.enabled`                | Enable persistence using PVC                                                          | `true`              |
 | `clamav.persistence.size`                   | Pod pvc size                                                                          | `2Gi`               |
@@ -650,7 +650,7 @@ Check that the deployed pods are all running.
 | `webmail.roundcubePlugins`                   | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
 | `webmail.logLevel`                           | Override default log level                                                            | `""`                                                                              |
 | `webmail.image.repository`                   | Pod image repository                                                                  | `mailu/webmail`                                                                   |
-| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                                                                              |
+| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                                                                              |
 | `webmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
 | `webmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`                                                                            |
 | `webmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                                                                              |
@@ -705,7 +705,7 @@ Check that the deployed pods are all running.
 | `webdav.enabled`                            | Enable deployment of WebDAV server (using Radicale)                                   | `false`             |
 | `webdav.logLevel`                           | Override default log level                                                            | `""`                |
 | `webdav.image.repository`                   | Pod image repository                                                                  | `mailu/radicale`    |
-| `webdav.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `webdav.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `webdav.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `webdav.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
 | `webdav.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
@@ -761,7 +761,7 @@ Check that the deployed pods are all running.
 | `fetchmail.delay`                              | Delay between fetchmail runs                                                          | `600`               |
 | `fetchmail.logLevel`                           | Override default log level                                                            | `""`                |
 | `fetchmail.image.repository`                   | Pod image repository                                                                  | `mailu/fetchmail`   |
-| `fetchmail.image.tag`                          | Pod image tag (defaults to mailuVersion)                                              | `""`                |
+| `fetchmail.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                                              | `""`                |
 | `fetchmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `fetchmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
 | `fetchmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |

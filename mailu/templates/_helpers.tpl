@@ -36,6 +36,17 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Mailu version. If Values.mailuVersion is not set, using Chart.AppVersion
+*/}}
+{{- define "mailu.version" -}}
+{{- if .Values.mailuVersion -}}
+{{- .Values.mailuVersion -}}
+{{- else -}}
+{{- .Chart.AppVersion -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Get the cluster domain name or default to cluster.local
 */}}
 {{- define "mailu.clusterDomain" -}}
