@@ -63,7 +63,7 @@ spec:
       {{- end }}
       containers:
         - name: dovecot
-          image: {{ .Values.imageRegistry }}/{{ .Values.dovecot.image.repository }}:{{ default .Values.mailuVersion .Values.dovecot.image.tag }}
+          image: {{ .Values.imageRegistry }}/{{ .Values.dovecot.image.repository }}:{{ default (include "mailu.version" .) .Values.dovecot.image.tag }}
           imagePullPolicy: {{ .Values.dovecot.image.pullPolicy }}
           volumeMounts:
             - name: data

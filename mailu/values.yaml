@@ -109,8 +109,8 @@ subnet6: ""
 networkPolicy:
   enabled: false
 
-## @param mailuVersion Version/tag of mailu images - must be master or a version >= 1.9
-mailuVersion: 1.9.39
+## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
+mailuVersion: ""
 
 ## @param logLevel default log level. can be overridden globally or per service
 logLevel: WARNING
@@ -591,7 +591,7 @@ front:
 
   ## Pod image
   ## @param front.image.repository Pod image repository
-  ## @param front.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param front.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param front.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/nginx
@@ -808,7 +808,7 @@ admin:
 
   ## Pod image
   ## @param admin.image.repository Pod image repository
-  ## @param admin.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param admin.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param admin.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/admin
@@ -1028,7 +1028,7 @@ postfix:
 
   ## Pod image
   ## @param postfix.image.repository Pod image repository
-  ## @param postfix.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param postfix.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param postfix.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/postfix
@@ -1217,7 +1217,7 @@ dovecot:
 
   ## Pod image
   ## @param dovecot.image.repository Pod image repository
-  ## @param dovecot.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param dovecot.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param dovecot.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/dovecot
@@ -1426,7 +1426,7 @@ rspamd:
 
   ## Pod image
   ## @param rspamd.image.repository Pod image repository
-  ## @param rspamd.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param rspamd.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param rspamd.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/rspamd
@@ -1608,7 +1608,7 @@ clamav:
 
   ## Pod image
   ## @param clamav.image.repository Pod image repository
-  ## @param clamav.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param clamav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param clamav.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/clamav
@@ -1835,7 +1835,7 @@ webmail:
 
   ## Pod image
   ## @param webmail.image.repository Pod image repository
-  ## @param webmail.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param webmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param webmail.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/webmail
@@ -2016,7 +2016,7 @@ webdav:
 
   ## Pod image
   ## @param webdav.image.repository Pod image repository
-  ## @param webdav.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param webdav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param webdav.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/radicale
@@ -2200,7 +2200,7 @@ fetchmail:
 
   ## Pod image
   ## @param fetchmail.image.repository Pod image repository
-  ## @param fetchmail.image.tag Pod image tag (defaults to mailuVersion)
+  ## @param fetchmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param fetchmail.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/fetchmail
