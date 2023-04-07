@@ -9,5 +9,7 @@
       "include-v-in-tag": false
     }
   },
+  "release-search-depth": 100,
+  "commit-search-depth": 100,
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
