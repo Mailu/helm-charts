@@ -1,4 +1,10 @@
-# Repository for mailu helm charts ![Build Status](https://github.com/Mailu/helm-charts/actions/workflows/main.yml/badge.svg)
+# Repository for mailu helm charts
+
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/mailu)](https://artifacthub.io/packages/search?repo=mailu)
+[![Mailu version](https://img.shields.io/badge/Mailu%20Version-2.0.3-informational?style=flat-square)](https://github.com/Mailu/Mailu)
+[![release-pipeline](https://github.com/Mailu/helm-charts/actions/workflows/publish-chart.yaml/badge.svg?branch=master)](https://github.com/Mailu/helm-charts/actions/workflows/publish-chart.yaml)
+[![Kubescape](https://github.com/Mailu/helm-charts/actions/workflows/kubescape.yaml/badge.svg?branch=master)](https://github.com/Mailu/helm-charts/actions/workflows/kubescape.yaml)
+[![Datree code scanning](https://github.com/Mailu/helm-charts/actions/workflows/datree.yaml/badge.svg?branch=master)](https://github.com/Mailu/helm-charts/actions/workflows/datree.yaml)
 
 [Chart documentation](mailu/README.md)
 
