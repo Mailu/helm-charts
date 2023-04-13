@@ -2370,3 +2370,171 @@ fetchmail:
 
   ## @param fetchmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+## @section OLETools parameters
+oletools:
+  ## @param oletools.enabled Enable OLETools
+  enabled: true
+
+  ## @param oletools.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param oletools.image.repository Pod image repository
+  ## @param oletools.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param oletools.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/oletools
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param oletools.resources.limits The resources limits for the container
+  ## @param oletools.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.livenessProbe.enabled Enable livenessProbe
+  ## @param oletools.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param oletools.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param oletools.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param oletools.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param oletools.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.readinessProbe.enabled Enable readinessProbe
+  ## @param oletools.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param oletools.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param oletools.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param oletools.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param oletools.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.startupProbe.enabled Enable startupProbe
+  ## @param oletools.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param oletools.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param oletools.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param oletools.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param oletools.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param oletools.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param oletools.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param oletools.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param oletools.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param oletools.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param oletools.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param oletools.affinity Affinity for oletools pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param oletools.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param oletools.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param oletools.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param oletools.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param oletools.service.annotations oletools service annotations
+    annotations: {}
+
+  ## @param oletools.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param oletools.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param oletools.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param oletools.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param oletools.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param oletools.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param oletools.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []

@@ -810,6 +810,56 @@ Check that the deployed pods are all running.
 | `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 
+### OLETools parameters
+
+| Name                                          | Description                                                                           | Value            |
+| --------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------- |
+| `oletools.enabled`                            | Enable OLETools                                                                       | `true`           |
+| `oletools.logLevel`                           | Override default log level                                                            | `""`             |
+| `oletools.image.repository`                   | Pod image repository                                                                  | `mailu/oletools` |
+| `oletools.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`             |
+| `oletools.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`   |
+| `oletools.resources.limits`                   | The resources limits for the container                                                | `{}`             |
+| `oletools.resources.requests`                 | The requested resources for the container                                             | `{}`             |
+| `oletools.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`           |
+| `oletools.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`              |
+| `oletools.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`             |
+| `oletools.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`             |
+| `oletools.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`              |
+| `oletools.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `5`              |
+| `oletools.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`           |
+| `oletools.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`             |
+| `oletools.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`             |
+| `oletools.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `5`              |
+| `oletools.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`              |
+| `oletools.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`              |
+| `oletools.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`          |
+| `oletools.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`             |
+| `oletools.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`             |
+| `oletools.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`              |
+| `oletools.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`              |
+| `oletools.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`              |
+| `oletools.podLabels`                          | Add extra labels to pod                                                               | `{}`             |
+| `oletools.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`             |
+| `oletools.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`             |
+| `oletools.initContainers`                     | Add additional init containers to the pod                                             | `[]`             |
+| `oletools.priorityClassName`                  | Pods' priorityClassName                                                               | `""`             |
+| `oletools.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`              |
+| `oletools.affinity`                           | Affinity for oletools pod assignment                                                  | `{}`             |
+| `oletools.tolerations`                        | Tolerations for pod assignment                                                        | `[]`             |
+| `oletools.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`              |
+| `oletools.hostAliases`                        | Pod pod host aliases                                                                  | `[]`             |
+| `oletools.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`             |
+| `oletools.service.annotations`                | oletools service annotations                                                          | `{}`             |
+| `oletools.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`             |
+| `oletools.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`  |
+| `oletools.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`             |
+| `oletools.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`             |
+| `oletools.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`             |
+| `oletools.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`             |
+| `oletools.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
+
+
 ## Example values.yaml to get started
 
 ```yaml
