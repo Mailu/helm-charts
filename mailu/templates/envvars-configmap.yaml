@@ -36,7 +36,7 @@ data:
   DEBUG_TB_INTERCEPT_REDIRECTS: "false"
   DEFAULT_QUOTA: "1000000000"
   DEFAULT_SPAM_THRESHOLD: "80"
-  DEFER_ON_TLS_ERROR: "true"
+  DEFER_ON_TLS_ERROR: {{ .Values.tls.deferOnError | quote }}
   DISABLE_STATISTICS: "false"
   DKIM_PATH: "/dkim/{domain}.{selector}.key"
   DKIM_SELECTOR: "dkim"
@@ -47,7 +47,7 @@ data:
   FETCHMAIL_DELAY: {{ .Values.fetchmail.delay | quote }}
   FETCHMAIL_ENABLED: {{ .Values.fetchmail.enabled | quote }}
   HOSTNAMES: {{ join "," .Values.hostnames }}
-  INBOUND_TLS_ENFORCE: "false"
+  INBOUND_TLS_ENFORCE: {{ .Values.tls.inboundEnforce | quote }}
   INSTANCE_ID_PATH: "/data/instance"
   KUBERNETES_INGRESS: {{ .Values.ingress.enabled | quote }}
   LETSENCRYPT_SHORTCHAIN: {{ .Values.letsencryptShortchain | quote }}
@@ -58,6 +58,7 @@ data:
   MESSAGE_RATELIMIT_EXEMPTION: {{ .Values.limits.messageRatelimit.exemption | quote }}
   MESSAGE_RATELIMIT: {{ .Values.limits.messageRatelimit.value | quote  }}
   MESSAGE_SIZE_LIMIT: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+  OUTBOUND_TLS_LEVEL: {{ .Values.tls.outboundLevel | quote }}
   PERMANENT_SESSION_LIFETIME: {{ .Values.permanentSessionLifetime | quote }}
   POSTMASTER: {{ .Values.postmaster | quote }}
   PROXY_AUTH_CREATE: "false"

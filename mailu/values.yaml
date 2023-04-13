@@ -231,6 +231,14 @@ welcomeMessage:
 ## @param wildcardSenders List of user emails that can send emails from any address
 wildcardSenders: []
 
+## @param tls.outboundLevel Sets the `OUTBOUND_TLS_LEVEL` environment variable
+## @param tls.deferOnError Sets the `DEFER_ON_TLS_ERROR` environment variable
+## @param tls.inboundEnforce Sets the `INBOUND_TLS_ENFORCE` environment variable
+tls:
+  outboundLevel: ""
+  deferOnError: ""
+  inboundEnforce: ""
+
 ## @section Storage parameters
 
 ## If deploying mariadb or postgresql from this chart (see `mariadb.enabled` and `postgresql.enabled`),
