@@ -144,3 +144,10 @@ data:
   ANTIVIRUS: none
   ANTIVIRUS_ADDRESS: localhost
 {{- end }}
+
+{{- if .Values.oletools.enabled }}
+  OLETOOLS_ADDRESS: {{ include "mailu.oletools.serviceFqdn" . }}
+  SCAN_MACROS: "true"
+{{- else }}
+  SCAN_MACROS: "false"
+{{- end }}
