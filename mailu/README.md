@@ -490,17 +490,17 @@ Check that the deployed pods are all running.
 | `dovecot.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
 | `dovecot.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
 | `dovecot.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `dovecot.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `dovecot.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `10`                |
 | `dovecot.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
 | `dovecot.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
 | `dovecot.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `dovecot.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `dovecot.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `10`                |
 | `dovecot.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
 | `dovecot.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
 | `dovecot.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
 | `dovecot.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
 | `dovecot.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `dovecot.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
+| `dovecot.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `10`                |
 | `dovecot.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
 | `dovecot.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
 | `dovecot.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
