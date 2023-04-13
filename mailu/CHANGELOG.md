@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Mailu/helm-charts/compare/mailu-1.0.0...mailu-1.0.1) (2023-04-13)
+
+
+### Bug Fixes
+
+* Fixed Dovecot probes ([41f3497](https://github.com/Mailu/helm-charts/commit/41f349766e5c7a4084befd0b2b62a6c3081f5e6b))
+
 ## [1.0.0](https://github.com/Mailu/helm-charts/compare/mailu-1.0.0-beta.32...mailu-1.0.0) (2023-04-12)
 
 
