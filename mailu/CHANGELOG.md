@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/Mailu/helm-charts/compare/mailu-1.0.1...mailu-1.1.0) (2023-04-13)
+
+
+### Features
+
+* Add support for TLS settings ([07fad3a](https://github.com/Mailu/helm-charts/commit/07fad3a81bb823ca979afdc1dca0d4944d4e7775))
+* Added oletools component ([0a4f95f](https://github.com/Mailu/helm-charts/commit/0a4f95f3d0d42a5a42b9d3db612ff6afb2a62628))
+* Added support for WILDCARD_SENDERS ([f72db8d](https://github.com/Mailu/helm-charts/commit/f72db8d78dd0de4d77ad8085dfafe5de0f38cab8))
+
+
+### Bug Fixes
+
+* Fixed sieve support ([91792ff](https://github.com/Mailu/helm-charts/commit/91792ffbc0811d1c0252603c53c17d1e25d646a6))
+* Restrict web ports to ingress-nginx when network policies are enabled ([e21cc8b](https://github.com/Mailu/helm-charts/commit/e21cc8bcdecfcba509bfaea01609858393a2730e))
+
 ## [1.0.1](https://github.com/Mailu/helm-charts/compare/mailu-1.0.0...mailu-1.0.1) (2023-04-13)
 
 
