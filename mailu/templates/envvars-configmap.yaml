@@ -93,7 +93,7 @@ data:
   WELCOME_BODY: {{ .Values.welcomeMessage.body | quote }}
   WELCOME_SUBJECT: {{ .Values.welcomeMessage.subject | quote }}
   WELCOME: {{ .Values.welcomeMessage.enabled | quote}}
-  WILDCARD_SENDERS: ""
+  WILDCARD_SENDERS: {{ .Values.wildcardSenders | join "," | quote }}
 
   # Addresses
   ADMIN_ADDRESS: {{ include "mailu.admin.serviceFqdn" . }}

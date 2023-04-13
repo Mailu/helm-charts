@@ -228,6 +228,9 @@ welcomeMessage:
   subject: "Welcome to Mailu"
   body: "Welcome to Mailu, your new email service. Please change your password and update your profile."
 
+## @param wildcardSenders List of user emails that can send emails from any address
+wildcardSenders: []
+
 ## @section Storage parameters
 
 ## If deploying mariadb or postgresql from this chart (see `mariadb.enabled` and `postgresql.enabled`),
