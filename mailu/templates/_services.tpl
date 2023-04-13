@@ -10,6 +10,7 @@ Mailu services:
 - webmail
 - rspamd
 - webdav
+- oletools
 
 Service name can be retrieved with `mailu.SERVICE.serviceName`
 Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
@@ -144,4 +145,14 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{/* Returns webdav internal service fqdn. */}}
 {{- define "mailu.webdav.serviceFqdn" -}}
 {{- printf "%s.%s.svc.%s" (include "mailu.webdav.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
+{{- end -}}
+
+
+{{/* Returns oletools internal service name. */}}
+{{- define "mailu.oletools.serviceName" -}}
+{{- printf "%s-oletools" (include "mailu.fullname" .) -}}
+{{- end -}}
+{{/* Returns oletools internal service fqdn. */}}
+{{- define "mailu.oletools.serviceFqdn" -}}
+{{- printf "%s.%s.svc.%s" (include "mailu.oletools.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
