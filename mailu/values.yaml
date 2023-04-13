@@ -1272,7 +1272,7 @@ dovecot:
     initialDelaySeconds: 10
     periodSeconds: 10
     successThreshold: 1
-    timeoutSeconds: 1
+    timeoutSeconds: 10
 
   ## Readiness probe values
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
@@ -1288,7 +1288,7 @@ dovecot:
     initialDelaySeconds: 10
     periodSeconds: 10
     successThreshold: 1
-    timeoutSeconds: 1
+    timeoutSeconds: 10
 
   ## Startup probe values
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
@@ -1304,7 +1304,7 @@ dovecot:
     initialDelaySeconds: 10
     periodSeconds: 10
     successThreshold: 1
-    timeoutSeconds: 1
+    timeoutSeconds: 10
 
   ## @param dovecot.podLabels Add extra labels to pod
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
