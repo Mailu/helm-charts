@@ -105,9 +105,19 @@ subnet: 10.42.0.0/16
 ## @param subnet6 Change this if you're using different address ranges for pods (IPv6)
 subnet6: ""
 
-## @param networkPolicy.enabled Enable network policy
 networkPolicy:
+  ## @param networkPolicy.enabled Enable network policy
   enabled: false
+
+  ## @param networkPolicy.ingressController.namespace Namespace where the ingress controller is deployed
+  ## @param networkPolicy.ingressController.podSelector Selector for the ingress controller pods
+  ingressController:
+    namespace: ingress-nginx
+    podSelector: |
+      matchLabels:
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/component: controller
 
 ## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
 mailuVersion: ""
