@@ -1,4 +1,4 @@
-{{- if and .Values.postfix.overrides .Values.postfix.enabled }}
+{{- if .Values.postfix.overrides }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
