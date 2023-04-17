@@ -181,43 +181,13 @@ entries:
     urls:
     - https://github.com/Mailu/helm-charts/releases/download/mailu-1.0.0-beta.32/mailu-1.0.0-beta.32.tgz
     version: 1.0.0-beta.32
-  - apiVersion: v2
+  - apiVersion: v1
     appVersion: "1.9"
-    created: "2022-10-10T20:12:37.358401317Z"
-    dependencies:
-    - name: common
-      repository: https://charts.bitnami.com/bitnami
-      tags:
-      - bitnami-common
-      version: 2.0.3
-    - name: redis
-      repository: https://charts.bitnami.com/bitnami
-      version: 17.3.*
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://charts.bitnami.com/bitnami
-      version: 11.9.*
-    - condition: mariadb.enabled
-      name: mariadb
-      repository: https://charts.bitnami.com/bitnami
-      version: 11.3.*
-    description: This chart installs the Mailu mail system on kubernetes
-    digest: dff4d7d39158f194608fcd8ee022c7ba8bbb4d646a6aa5bde6eee9468fe1b865
-    home: https://mailu.io
+    created: "2023-04-17T22:32:41.476404558+02:00"
+    description: Mailu mail system
+    digest: 4e812e9ba90ee7c5de1ccb4829878c124d6398e5dd951ec7a25d8ec9097d88e5
     icon: https://mailu.io/master/_images/logo.png
-    keywords:
-    - mailu
-    - mail
-    - email
-    - smtp
-    - imap
-    - pop3
-    - webmail
-    - postfix
-    - dovecot
     name: mailu
-    sources:
-    - https://github.com/Mailu/helm-charts/
     urls:
     - https://mailu.github.io/helm-charts/mailu-0.3.3.tgz
     version: 0.3.3
