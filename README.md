@@ -19,7 +19,9 @@ helm install my-release mailu/mailu
 
 **Note:** migration from 0.x.x to 1.x.x requires to follow the [migration guide](https://github.com/Mailu/helm-charts/blob/master/mailu/MIGRATION_GUIDE.md).
 
-* [0.3.3](mailu-0.3.3.tgz)
+* [0.3.5](mailu-0.3.5.tgz) - NOTE: same as 0.3.3 but points to mailu 1.9.50 and the new docker image locations
+* [0.3.4](mailu-0.3.4.tgz) - NOTE: same as 0.3.3 with updated version number
+* [0.3.3](mailu-0.3.3.tgz) - NOTE: until 2023-04-17 this contained a build from the 1.0.x branch
 * [0.2.0](mailu-0.2.0.tgz)
 * [0.1.6](mailu-0.1.6.tgz)
 * [0.1.5](mailu-0.1.5.tgz)
