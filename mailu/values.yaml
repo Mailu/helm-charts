@@ -95,7 +95,7 @@ persistence:
 subnet: 10.42.0.0/16
 
 # Version of mailu docker images to use when not specified otherwise
-mailuVersion: 1.9.26
+mailuVersion: 1.9.50
 
 # default log level. can be overridden globally or per service
 logLevel: WARNING
@@ -139,7 +139,7 @@ ingress:
 front:
   # logLevel: WARNING
   image:
-    repository: mailu/nginx
+    repository: ghcr.io/mailu/nginx
     # tag defaults to mailuVersion
     # tag: master
   resources:
@@ -193,7 +193,7 @@ front:
 admin:
   # logLevel: WARNING
   image:
-    repository: mailu/admin
+    repository: ghcr.io/mailu/admin
     # tag defaults to mailuVersion
     # tag: master
   persistence:
@@ -260,7 +260,7 @@ redis:
 postfix:
   # logLevel: WARNING
   image:
-    repository: mailu/postfix
+    repository: ghcr.io/mailu/postfix
     # tag defaults to mailuVersion
     # tag: master
   containerSecurityContext: {}
@@ -299,7 +299,7 @@ dovecot:
   enabled: true
   # logLevel: WARNING
   image:
-    repository: mailu/dovecot
+    repository: ghcr.io/mailu/dovecot
     # tag defaults to mailuVersion
     # tag: master
   containerSecurityContext: {}
@@ -365,7 +365,7 @@ rspamd_clamav_persistence:
 rspamd:
   # logLevel: WARNING
   image:
-    repository: mailu/rspamd
+    repository: ghcr.io/mailu/rspamd
     # tag defaults to mailuVersion
     # tag: master
   persistence:
@@ -399,7 +399,7 @@ clamav:
   enabled: true
   # logLevel: WARNING
   image:
-    repository: mailu/clamav
+    repository: ghcr.io/mailu/clamav
     # tag defaults to mailuVersion
     # tag: master
   persistence:
@@ -445,7 +445,7 @@ roundcube:
   enabled: true
   # logLevel: WARNING
   image:
-    repository: mailu/roundcube
+    repository: ghcr.io/mailu/roundcube
     # tag defaults to mailuVersion
     # tag: master
   persistence:
@@ -481,7 +481,7 @@ webdav:
   enabled: false
   # logLevel: WARNING
   image:
-    repository: mailu/radicale
+    repository: ghcr.io/mailu/radicale
     # tag defaults to mailuVersion
     # tag: master
   persistence:
@@ -539,7 +539,7 @@ fetchmail:
   enabled: false
   # logLevel: WARNING
   image:
-    repository: mailu/fetchmail
+    repository: ghcr.io/mailu/fetchmail
     # tag defaults to mailuVersion
     # tag: master
   persistence:
