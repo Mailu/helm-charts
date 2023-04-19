@@ -640,6 +640,7 @@ front:
   ## @param front.externalService.ports.smtp Expose SMTP port
   ## @param front.externalService.ports.smtps Expose SMTP port (TLS)
   ## @param front.externalService.ports.submission Expose Submission port
+  ## @param front.externalService.ports.sieve Expose Sieve port (TLS)
   externalService:
     enabled: false
     type: ClusterIP
