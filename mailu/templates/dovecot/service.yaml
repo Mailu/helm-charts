@@ -30,6 +30,9 @@ spec:
       port: 110
       protocol: TCP
     - name: sieve
+      port: 14190
+      protocol: TCP
+    - name: sieve-ext
       port: 4190
       protocol: TCP
 {{- end }}

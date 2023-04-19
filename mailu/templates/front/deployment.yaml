@@ -151,6 +151,9 @@ spec:
             - name: sieve
               containerPort: 14190
               protocol: TCP
+            - name: sieve-ext
+              containerPort: 4190
+              protocol: TCP
             {{ if not .Values.ingress.enabled }}
             - name: https
               containerPort: 443

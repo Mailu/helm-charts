@@ -656,6 +656,7 @@ front:
       smtp: true
       smtps: true
       submission: true
+      sieve: true
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment

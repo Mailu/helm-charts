@@ -79,5 +79,13 @@ spec:
       nodePort: 587
       {{- end }}
     {{- end }}
+    {{- if .ports.sieve }}
+    - name: sieve
+      port: 4190
+      protocol: TCP
+      {{- if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: 4190
+      {{- end }}
+    {{- end }}
 {{- end }}
 {{- end }}
