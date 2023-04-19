@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1](https://github.com/Mailu/helm-charts/compare/mailu-1.1.0...mailu-1.1.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* [BUG] Helm error when deploying with webdav.enabled=true because of missing template [#232](https://github.com/Mailu/helm-charts/issues/232) ([91cd49e](https://github.com/Mailu/helm-charts/commit/91cd49e57166f1d64f2e667b96efe5ba1f01d7c1))
+* [BUG] postfix-overrides ConfigMap will never render [#234](https://github.com/Mailu/helm-charts/issues/234) ([bc73acc](https://github.com/Mailu/helm-charts/commit/bc73acca4f24d162716c73fad6833ffb7dbf9f02))
+* fixed encoding of relayuser and relaypassword ([0209240](https://github.com/Mailu/helm-charts/commit/02092404f1d060699fff81554b54872bcfbb6479))
+* fixed typo in fetchmail deployment ([baca17a](https://github.com/Mailu/helm-charts/commit/baca17a2c12019a8504f3a72b17809690c2d79fc))
+* fixed typo when external service set to NodePort ([741a90d](https://github.com/Mailu/helm-charts/commit/741a90daf10d45f181e253f06c863919b00e9dc3))
+
 ## [1.1.0](https://github.com/Mailu/helm-charts/compare/mailu-1.0.1...mailu-1.1.0) (2023-04-13)
 
 
