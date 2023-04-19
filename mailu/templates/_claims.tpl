@@ -27,3 +27,8 @@
 {{ define "mailu.fetchmail.claimName" }}
 {{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.fetchmail.persistence.claimNameOverride | default (printf "%s-fetchmail" (include "mailu.fullname" .)) -}}
 {{- end -}}
+
+{{/* Webdav pod persistent volume claim name */}}
+{{ define "mailu.webdav.claimName" }}
+{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.webdav.persistence.claimNameOverride | default (printf "%s-webdav" (include "mailu.fullname" .)) -}}
+{{- end -}}
