@@ -74,7 +74,7 @@
       name: {{ include "mailu.database.roundcube.secretName" . }}
       key: {{ include "mailu.database.roundcube.secretKey" . }}
 {{- end }}
-{{- if and .Values.externalRelay.host (not .Values.externalRelay.existingSecret) }}
+{{- if .Values.externalRelay.host }}
 - name: RELAYUSER
   valueFrom:
     secretKeyRef:
