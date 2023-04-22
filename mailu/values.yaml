@@ -605,6 +605,18 @@ ingress:
   ## This is normally auto-detected, only change it if you know what you are doing.
   tlsFlavorOverride: ""
 
+## @section Proxy auth configuration
+## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
+proxyAuth:
+  ## @param proxyAuth.whitelist Comma separated list of CIDRs of proxies to trust for authentication
+  whitelist: ""
+
+  ## @param proxyAuth.header HTTP header containing the email address of the user to authenticate
+  header: "X-Auth-Email"
+
+  ## @param proxyAuth.create Whether non-existing accounts should be auto-created
+  create: "false"
+
 ## @section Frontend load balancer for non-HTTP(s) services
 front:
   ## @param front.logLevel Override default log level

@@ -285,6 +285,16 @@ Check that the deployed pods are all running.
 | `ingress.tlsFlavorOverride` | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
 
 
+### Proxy header authentication settings
+
+| Name                        | Description                                                                                                                      | Value                    |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
+| `proxyAuth.whitelist`           | Comma separated list of CIDRs of proxies to trust for authentication                                                                                                          | `""`                   |
+| `proxyAuth.header`  | HTTP header containing the email address of the user to authenticate                                                    | `"X-Auth-Email"`                     |
+| `proxyAuth.create`          | Whether non-existing accounts should be auto-created                                                                                                                | `"false"` |
+|
+
+
 ### Frontend load balancer for non-HTTP(s) services
 
 | Name                                          | Description                                                                           | Value           |
@@ -2486,9 +2496,9 @@ The table below lists the environment variables that will be passed to the pods 
 | `MESSAGE_RATELIMIT`               | `limits.messageRatelimit.value`        |                                                            | `200/day`                                                | `200/day`                                                                                        |
 | `PERMANENT_SESSION_LIFETIME`      | `permanentSessionLifetime`             |                                                            | `30*24*3600`                                             | `108000`                                                                                         |
 | `POSTMASTER`                      | `postmaster`                           |                                                            | `postmaster`                                             | `postmaster`                                                                                     |
-| `PROXY_AUTH_CREATE`               | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
-| `PROXY_AUTH_HEADER`               | -                                      |                                                            | `X-Auth-Email`                                           | `X-Auth-Email`                                                                                   |
-| `PROXY_AUTH_WHITELIST`            | -                                      |                                                            | ``                                                       | ``                                                                                               |
+| `PROXY_AUTH_CREATE`               | `proxyAuth.create`                                      |                                                            | `False`                                                  | `false`                                                                                          |
+| `PROXY_AUTH_HEADER`               | `proxyAuth.header`                                      |                                                            | `X-Auth-Email`                                           | `X-Auth-Email`                                                                                   |
+| `PROXY_AUTH_WHITELIST`            | `proxyAuth.whitelist`                                      |                                                            | ``                                                       | ``                                                                                               |
 | `RATELIMIT_STORAGE_URL`           | -                                      | Managed by Helm chart                                      | ``                                                       |                                                                                                  |
 | `RECAPTCHA_PRIVATE_KEY`           | -                                      |                                                            | ``                                                       | ``                                                                                               |
 | `RECAPTCHA_PUBLIC_KEY`            | -                                      |                                                            | ``                                                       | ``                                                                                               |
