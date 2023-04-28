@@ -122,6 +122,7 @@ Check that the deployed pods are all running.
 | `global.database.roundcube.existingSecret`            | Name of an existing secret to use for the roundcube database                      | `""`        |
 | `global.database.roundcube.existingSecretPasswordKey` | Name of the key in the existing secret to use for the roundcube database password | `""`        |
 
+
 ### Common parameters
 
 | Name                | Description                                                                          | Value     |
@@ -134,6 +135,7 @@ Check that the deployed pods are all running.
 | `tolerations`       | Tolerations for pod assignment                                                       | `[]`      |
 | `affinity`          | Affinity for pod assignment                                                          | `{}`      |
 | `imageRegistry`     | Container registry to use for all Mailu images                                       | `ghcr.io` |
+
 
 ### Mailu parameters
 
@@ -196,6 +198,7 @@ Check that the deployed pods are all running.
 | `tls.deferOnError`                            | Sets the `DEFER_ON_TLS_ERROR` environment variable                                                                                     | `""`                                                                                             |
 | `tls.inboundEnforce`                          | Sets the `INBOUND_TLS_ENFORCE` environment variable                                                                                    | `""`                                                                                             |
 
+
 ### Storage parameters
 
 | Name                                                | Description                                                                                                                                                                                               | Value                  |
@@ -254,6 +257,7 @@ Check that the deployed pods are all running.
 | `persistence.storageClass`                          | Storage class of backing PVC (for single PVC)                                                                                                                                                             | `""`                   |
 | `persistence.claimNameOverride`                     | Override the name of the PVC (for single PVC)                                                                                                                                                             | `""`                   |
 
+
 ### Ingress settings
 
 | Name                        | Description                                                                                                                      | Value                    |
@@ -275,6 +279,7 @@ Check that the deployed pods are all running.
 | `ingress.realIpHeader`      | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
 | `ingress.realIpFrom`        | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `""`                     |
 | `ingress.tlsFlavorOverride` | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
+
 
 ### Frontend load balancer for non-HTTP(s) services
 
@@ -340,6 +345,7 @@ Check that the deployed pods are all running.
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
 | `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
 
+
 ### Admin parameters
 
 | Name                                       | Description                                                                           | Value               |
@@ -395,6 +401,7 @@ Check that the deployed pods are all running.
 | `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `admin.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### Redis parameters
 
 | Name                                     | Description                                                         | Value               |
@@ -412,6 +419,7 @@ Check that the deployed pods are all running.
 | `redis.master.persistence.existingClaim` | Pod pvc existing claim; necessary if using single_pvc               | `""`                |
 | `redis.master.persistence.subPath`       | Subpath in PVC; necessary if using single_pvc (set it to `/redis`)  | `""`                |
 | `redis.replica.count`                    | Number of redis replicas (only if `redis.architecture=replication`) | `0`                 |
+
 
 ### Postfix parameters
 
@@ -466,6 +474,7 @@ Check that the deployed pods are all running.
 | `postfix.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `postfix.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 | `postfix.overrides`                          | Enable postfix overrides                                                              | `{}`                |
+
 
 ### Dovecot parameters
 
@@ -524,6 +533,7 @@ Check that the deployed pods are all running.
 | `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
 | `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
 
+
 ### rspamd parameters
 
 | Name                                        | Description                                                                           | Value               |
@@ -578,6 +588,7 @@ Check that the deployed pods are all running.
 | `rspamd.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `rspamd.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+
 
 ### clamav parameters
 
@@ -636,6 +647,7 @@ Check that the deployed pods are all running.
 | `clamav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### webmail parameters
 
 | Name                                         | Description                                                                           | Value                                                                             |
@@ -693,6 +705,7 @@ Check that the deployed pods are all running.
 | `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                                                                              |
 | `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                                                                              |
 
+
 ### webdav parameters
 
 | Name                                        | Description                                                                           | Value               |
@@ -746,6 +759,7 @@ Check that the deployed pods are all running.
 | `webdav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `webdav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `webdav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+
 
 ### fetchmail parameters
 
@@ -802,6 +816,7 @@ Check that the deployed pods are all running.
 | `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
+
 ### OLETools parameters
 
 | Name                                          | Description                                                                           | Value            |
@@ -850,6 +865,7 @@ Check that the deployed pods are all running.
 | `oletools.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`             |
 | `oletools.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`             |
 | `oletools.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
+
 
 ## Example values.yaml to get started
 
