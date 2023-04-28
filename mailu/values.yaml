@@ -110,7 +110,7 @@ networkPolicy:
   enabled: false
 
   ## @param networkPolicy.ingressController.namespace Namespace where the ingress controller is deployed
-  ## @param networkPolicy.ingressController.podSelector Selector for the ingress controller pods
+  ## @param networkPolicy.ingressController.podSelector [string] Selector for the ingress controller pods
   ingressController:
     namespace: ingress-nginx
     podSelector: |

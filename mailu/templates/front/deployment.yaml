@@ -149,9 +149,6 @@ spec:
               containerPort: 80
               protocol: TCP
             - name: sieve
-              containerPort: 14190
-              protocol: TCP
-            - name: sieve-ext
               containerPort: 4190
               protocol: TCP
             {{ if not .Values.ingress.enabled }}
