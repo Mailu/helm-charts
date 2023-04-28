@@ -110,7 +110,7 @@ networkPolicy:
   enabled: false
 
   ## @param networkPolicy.ingressController.namespace Namespace where the ingress controller is deployed
-  ## @param networkPolicy.ingressController.podSelector Selector for the ingress controller pods
+  ## @param networkPolicy.ingressController.podSelector [string] Selector for the ingress controller pods
   ingressController:
     namespace: ingress-nginx
     podSelector: |
@@ -640,6 +640,7 @@ front:
   ## @param front.externalService.ports.smtp Expose SMTP port
   ## @param front.externalService.ports.smtps Expose SMTP port (TLS)
   ## @param front.externalService.ports.submission Expose Submission port
+  ## @param front.externalService.ports.sieve Expose Sieve port (TLS)
   externalService:
     enabled: false
     type: ClusterIP
@@ -656,6 +657,7 @@ front:
       smtp: true
       smtps: true
       submission: true
+      sieve: true
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment

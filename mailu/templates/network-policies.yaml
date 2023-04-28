@@ -74,7 +74,7 @@ spec:
             kubernetes.io/metadata.name: {{ .Values.networkPolicy.ingressController.namespace }}
         podSelector:
           {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.ingressController.podSelector "context" $) | nindent 10 }}
-    # Allow ports 25/TCP, 110/TCP, 143/TCP, 465/TCP, 587/TCP, 995/TCP, 993/TCP through loadbalancer
+    # Allow ports 25/TCP, 110/TCP, 143/TCP, 465/TCP, 587/TCP, 995/TCP, 993/TCP, 4190/TCP through loadbalancer
     - ports:
       - port: 25
         protocol: TCP
@@ -89,6 +89,8 @@ spec:
       - port: 995
         protocol: TCP
       - port: 993
+        protocol: TCP
+      - port: 4190
         protocol: TCP
 ---
 apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
