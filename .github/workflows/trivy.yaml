@@ -8,6 +8,11 @@ on:
       - master
     paths:
       - mailu/**
+  push:
+    branches:
+      - master
+    paths:
+      - mailu/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: {}
 
