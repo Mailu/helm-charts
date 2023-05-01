@@ -14,6 +14,7 @@ on:
     paths:
       - mailu/**
       - .github/workflows/trivy.yaml
+      - .trivy.yaml
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: {}
 
