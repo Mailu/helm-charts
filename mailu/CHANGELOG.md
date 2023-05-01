@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/Mailu/helm-charts/compare/mailu-1.1.1...mailu-1.2.0) (2023-05-01)
+
+
+### Features
+
+* Add proxyAuth section to values to configure PROXY_AUTH_* env vars ([04825ef](https://github.com/Mailu/helm-charts/commit/04825ef1457ae34e2b0471fefd04397df4ba4a01))
+
+
+### Bug Fixes
+
+* bumped Mailu version to 2.0.10 ([f70466c](https://github.com/Mailu/helm-charts/commit/f70466cde9d11891593d0ecb25b5b1d3bf69a11d))
+* fixed dovecot probes ([b1b0405](https://github.com/Mailu/helm-charts/commit/b1b0405681350a85464cf3d69c3bc28355f7d8c5))
+* fixed readme and generator ([98c21c7](https://github.com/Mailu/helm-charts/commit/98c21c79a68d0aef21c2022d2eb562e232456086))
+
 ## [1.1.1](https://github.com/Mailu/helm-charts/compare/mailu-1.1.0...mailu-1.1.1) (2023-04-19)
 
 
