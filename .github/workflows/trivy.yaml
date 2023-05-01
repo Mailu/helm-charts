@@ -50,7 +50,7 @@ jobs:
           # output: 'trivy-results.sarif'
           # exit-code: '1'
           # ignore-unfixed: true
-          trivy-config: './trivy.yaml'
+          trivy-config: './.trivy.yaml'
       
       - name: Display sarif file
         run: ls -l && ls -l mailu && cat trivy-results.sarif
