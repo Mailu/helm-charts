@@ -16,6 +16,7 @@ on:
         description: Version of the package that will be published
         required: true
         type: string
+
 jobs:
   publish:
     runs-on: ubuntu-latest

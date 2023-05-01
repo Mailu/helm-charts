@@ -1,0 +1,55 @@
+---
+name: trivy-security-scanning
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - mailu/**
+  push:
+    branches:
+      - master
+    paths:
+      - mailu/**
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch: {}
+
+permissions:
+  security-events: write # To upload sarif files
+
+jobs:
+  chart-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run Trivy vulnerability scanner in IaC mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          hide-progress: false
+          format: 'sarif'
+          scan-ref: 'mailu'
+          output: 'trivy-results.sarif'
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
