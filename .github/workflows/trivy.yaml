@@ -46,7 +46,7 @@ jobs:
           scan-type: 'config'
           # hide-progress: false
           # format: 'sarif'
-          # scan-ref: './mailu/'
+          scan-ref: './mailu/'
           # output: 'trivy-results.sarif'
           # exit-code: '1'
           # ignore-unfixed: true
