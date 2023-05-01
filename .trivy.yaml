@@ -3,11 +3,11 @@ debug: true
 quiet: false
 report: all
 exit-code: 1
-ignorefile: .trivyignore
+# ignorefile: .trivyignore
 format: sarif
 output: trivy-results.sarif
 misconfiguration:
   helm:
     values:
-      - ./mailu/ci/helm-lint-values.yaml
+      - ./ci/helm-lint-values.yaml
 severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
