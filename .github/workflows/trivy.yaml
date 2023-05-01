@@ -1,5 +1,5 @@
 ---
-name: trivy-security-scanning
+name: "[secops] Trivy"
 
 # Controls when the workflow will run
 on:
