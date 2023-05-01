@@ -13,7 +13,7 @@ on:
       - master
     paths:
       - mailu/**
-      - .github/workflows/trivy.yml
+      - .github/workflows/trivy.yaml
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: {}
 
@@ -49,7 +49,6 @@ jobs:
           output: 'trivy-results.sarif'
           exit-code: '1'
           ignore-unfixed: true
-          scanners: 'vuln,secret,config'
       
       - name: Display sarif file
         run: cat trivy-results.sarif
