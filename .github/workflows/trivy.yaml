@@ -45,9 +45,11 @@ jobs:
           scan-type: 'config'
           hide-progress: false
           format: 'sarif'
+          scan-ref: './mailu/'
           output: 'trivy-results.sarif'
           exit-code: '1'
           ignore-unfixed: true
+          scanners: 'vuln,secret,config'
       
       - name: Display sarif file
         run: cat trivy-results.sarif
