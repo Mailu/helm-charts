@@ -1,12 +1,11 @@
 config: .trivy.yaml
-debug: false
-exit-code: 0
+debug: true
+exit-code: 1
 ignorefile: .trivyignore
 misconfiguration:
   helm:
+    set:
+      - ./mailu/
     values:
       - ./mailu/ci/helm-lint-values.yaml
-report: all
 severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
-timeout: 5m0s
-version: false
