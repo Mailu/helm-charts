@@ -47,7 +47,7 @@ jobs:
           format: 'sarif'
           scan-ref: './mailu/'
           output: 'trivy-results.sarif'
-          exit-code: '1'
+          exit-code: '1 --helm-values ./mailu/ci/helm-lint-values.yaml'
           ignore-unfixed: true
       
       - name: Display sarif file
