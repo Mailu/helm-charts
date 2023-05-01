@@ -44,12 +44,12 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'config'
-          hide-progress: false
-          format: 'sarif'
-          scan-ref: './mailu/'
-          output: 'trivy-results.sarif'
-          exit-code: '1'
-          ignore-unfixed: true
+          # hide-progress: false
+          # format: 'sarif'
+          # scan-ref: './mailu/'
+          # output: 'trivy-results.sarif'
+          # exit-code: '1'
+          # ignore-unfixed: true
           trivy-config: './trivy.yaml'
       
       - name: Display sarif file
