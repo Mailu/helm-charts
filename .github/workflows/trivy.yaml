@@ -57,9 +57,6 @@ jobs:
           # exit-code: '1'
           # ignore-unfixed: true
           trivy-config: './.trivy.yaml'
-      
-      - name: Display sarif file
-        run: ls -l && ls -l mailu && cat trivy-results.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2

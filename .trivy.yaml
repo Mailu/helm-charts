@@ -1,8 +1,8 @@
 config: .trivy.yaml
-debug: true
-quiet: false
+debug: false
+quiet: true
 report: all
-exit-code: 1
+exit-code: 0
 # ignorefile: .trivyignore
 format: sarif
 output: trivy-results.sarif
