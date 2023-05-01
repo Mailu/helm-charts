@@ -2,12 +2,19 @@
 name: Update README metadata
 
 on:
-  pull_request_target:
-    branches:
-      - master
-    paths:
-      - mailu/values.yaml
-  workflow_dispatch: {}
+  # pull_request_target:
+  #   branches:
+  #     - master
+  #   paths:
+  #     - mailu/values.yaml
+  workflow_dispatch:
+    inputs:
+      head_ref:
+        description: 'Pull request head ref'
+        required: true
+      head_repo:
+        description: 'Pull request head repo'
+        required: true
 
 permissions:
   contents: write
@@ -23,8 +30,8 @@ jobs:
       - name: Checkout mailu/helm-charts
         uses: actions/checkout@v3
         with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
+          ref: ${{ github.event.inputs.head_ref }}
+          repository: ${{ github.event.inputs.head_repo }}
           path: charts
           token: ${{ secrets.GITHUB_TOKEN }}
 
