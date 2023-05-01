@@ -132,7 +132,7 @@ spec:
                 - -c
                 - 'kill -0 `cat /run/dovecot/master.pid` && echo $?'
           {{- end }}
-          {{- if .Values.dovecot.readinessProbe }}
+          {{- if .Values.dovecot.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
