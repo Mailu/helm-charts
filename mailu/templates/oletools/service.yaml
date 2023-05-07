@@ -1,4 +1,5 @@
 ---
+{{- if .Values.oletools.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,3 +20,4 @@ spec:
   - name: olefy
     port: 11343
     protocol: TCP
+{{- end }}
