@@ -874,8 +874,10 @@ initialAccount:
   password: chang3m3!
   username: mailadmin
 logLevel: INFO
-mail:
-  authRatelimit: 100/minute;3600/hour
+limits:
+  authRatelimit:
+    ip: 100/minute;3600/hour
+    user: 100/day
   messageSizeLimitInMegabytes: 200
 persistence:
   size: 100Gi
