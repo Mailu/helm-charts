@@ -61,11 +61,15 @@ spec:
       {{- if .Values.dovecot.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- with .Values.dovecot.podSecurityContext }}
+      securityContext:
+        {{- . | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: dovecot
           image: {{ .Values.imageRegistry }}/{{ .Values.dovecot.image.repository }}:{{ default (include "mailu.version" .) .Values.dovecot.image.tag }}
           imagePullPolicy: {{ .Values.dovecot.image.pullPolicy }}
-          {{- with .Values.dovecot.containerSecurityContext }}
+          {{- with .Values.dovecot.securityContext }}
           securityContext:
             {{- . | toYaml | nindent 12 }}
           {{- end }}
