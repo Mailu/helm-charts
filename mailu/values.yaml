@@ -1240,6 +1240,9 @@ postfix:
   ##     my_variable = my_value
   overrides: {}
 
+  ## @param postfix.containerSecurityContext `securityContext` for postfix container
+  containerSecurityContext: {}
+
 ## @section Dovecot parameters
 dovecot:
   ## @param dovecot.enabled Enable dovecot
@@ -1438,6 +1441,9 @@ dovecot:
 
   ## @param dovecot.compressionLevel Maildir compression level (1-9)
   compressionLevel: 6
+
+  ## @param dovecot.containerSecurityContext `securityContext` for dovecot container
+  containerSecurityContext: {}
 
 ## @section rspamd parameters
 rspamd:

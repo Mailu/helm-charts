@@ -65,6 +65,10 @@ spec:
         - name: dovecot
           image: {{ .Values.imageRegistry }}/{{ .Values.dovecot.image.repository }}:{{ default (include "mailu.version" .) .Values.dovecot.image.tag }}
           imagePullPolicy: {{ .Values.dovecot.image.pullPolicy }}
+          {{- with .Values.dovecot.containerSecurityContext }}
+          securityContext:
+            {{- . | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: dovecotdata
