@@ -76,7 +76,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 
 {{/* Returns redis internal service name. */}}
 {{- define "mailu.redis.serviceName" -}}
-{{- printf "%s-redis-master" (include "mailu.fullname" .) -}}
+{{- printf "%s-master" (include "common.names.dependency.fullname" (dict "chartName" "redis" "chartValues" .Values.redis "context" $)) -}}
 {{- end -}}
 {{/* Returns redis service fqdn. */}}
 {{- define "mailu.redis.serviceFqdn" -}}
