@@ -68,11 +68,13 @@
     secretKeyRef:
       name: {{ include "mailu.database.secretName" . }}
       key: {{ include "mailu.database.secretKey" . }}
+{{- if and .Values.webmail.enabled (eq .Values.webmail.type "roundcube") }}
 - name: ROUNDCUBE_DB_PW
   valueFrom:
     secretKeyRef:
       name: {{ include "mailu.database.roundcube.secretName" . }}
       key: {{ include "mailu.database.roundcube.secretKey" . }}
+{{- end }}
 {{- end }}
 {{- if .Values.externalRelay.host }}
 - name: RELAYUSER
