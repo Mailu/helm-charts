@@ -1,6 +1,6 @@
 # mailu
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: 1.9](https://img.shields.io/badge/AppVersion-1.9-informational?style=flat-square)
+![Version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.version&style=flat-square&label=Version) ![AppVersion](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.appVersion&style=flat-square&label=AppVersion)
 
 This chart installs the Mailu mail system on kubernetes
 
