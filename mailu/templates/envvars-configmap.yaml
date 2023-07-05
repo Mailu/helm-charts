@@ -106,9 +106,11 @@ data:
 
 
 {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
+{{- if .Values.webmail.enabled }}
   ROUNDCUBE_DB_USER: {{ include "mailu.database.roundcube.username" . }}
   ROUNDCUBE_DB_NAME: {{ include "mailu.database.roundcube.name" . }}
   ROUNDCUBE_DB_HOST: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
+{{- end }}
 {{- end }}
 
 {{- if .Values.initialAccount.enabled }}
