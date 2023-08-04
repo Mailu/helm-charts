@@ -171,7 +171,7 @@ spec:
               path: /health
               port: http
           {{- end }}
-          {{- if .Values.front.readinessProbe }}
+          {{- if .Values.front.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.readinessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /health

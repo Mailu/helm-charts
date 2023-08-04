@@ -113,7 +113,7 @@ spec:
               path: /sso/login
               port: http
           {{- end }}
-          {{- if .Values.admin.readinessProbe }}
+          {{- if .Values.admin.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.readinessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /sso/login
