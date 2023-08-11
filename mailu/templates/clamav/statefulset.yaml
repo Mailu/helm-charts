@@ -108,7 +108,7 @@ spec:
             exec:
               command: ["echo", "PING", "|", "nc", "localhost", "3310", "|", "grep", "PONG"]
           {{- end }}
-          {{- if .Values.clamav.readinessProbe }}
+          {{- if .Values.clamav.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.clamav.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command: ["echo", "PING", "|", "nc", "localhost", "3310", "|", "grep", "PONG"]

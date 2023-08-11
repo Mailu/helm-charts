@@ -119,7 +119,7 @@ spec:
               path: /
               port: rspamd-http
           {{- end }}
-          {{- if .Values.rspamd.readinessProbe }}
+          {{- if .Values.rspamd.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.readinessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
               path: /

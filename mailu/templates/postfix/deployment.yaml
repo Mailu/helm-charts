@@ -125,7 +125,7 @@ spec:
                 - -c
                 - 'echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"'
           {{- end }}
-          {{- if .Values.postfix.readinessProbe }}
+          {{- if .Values.postfix.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:

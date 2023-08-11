@@ -109,7 +109,7 @@ spec:
                 - -c
                 - 'echo PING|nc -q1 localhost 11343|grep PONG'
           {{- end }}
-          {{- if .Values.oletools.readinessProbe }}
+          {{- if .Values.oletools.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.oletools.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:

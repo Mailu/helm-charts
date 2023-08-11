@@ -107,7 +107,7 @@ spec:
             exec:
               command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/ping" ]
           {{- end }}
-          {{- if .Values.webmail.readinessProbe }}
+          {{- if .Values.webmail.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command: [ "curl", "-f", "-L", "-H", "User-Agent: health", "http://localhost/ping" ]

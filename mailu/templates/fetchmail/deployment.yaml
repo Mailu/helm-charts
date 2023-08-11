@@ -115,7 +115,7 @@ spec:
             exec:
               command: [ "true" ]
           {{- end }}
-          {{- if .Values.fetchmail.readinessProbe }}
+          {{- if .Values.fetchmail.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command: [ "true" ]
