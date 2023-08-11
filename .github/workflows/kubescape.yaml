@@ -42,7 +42,7 @@ jobs:
         continue-on-error: true
         with:
           format: sarif
-          outputFile: results.sarif
+          outputFile: results
           # # Optional: Specify the Kubescape cloud account ID
           # account: ${{secrets.KUBESCAPE_ACCOUNT}}
           # # Optional: Scan a specific path. Default will scan the whole repository
