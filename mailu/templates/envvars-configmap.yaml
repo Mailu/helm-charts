@@ -59,7 +59,7 @@ data:
   MESSAGE_RATELIMIT: {{ .Values.limits.messageRatelimit.value | quote  }}
   MESSAGE_SIZE_LIMIT: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
   OUTBOUND_TLS_LEVEL: {{ .Values.tls.outboundLevel | quote }}
-  PERMANENT_SESSION_LIFETIME: {{ .Values.permanentSessionLifetime | quote }}
+  PERMANENT_SESSION_LIFETIME: {{ .Values.permanentSessionLifetime | int64 | quote }}
   POSTMASTER: {{ .Values.postmaster | quote }}
   PROXY_AUTH_CREATE: {{ .Values.proxyAuth.create | quote }}
   PROXY_AUTH_HEADER: {{ .Values.proxyAuth.header | quote }}
