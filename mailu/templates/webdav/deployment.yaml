@@ -99,21 +99,27 @@ spec:
           {{- end }}
           {{- if .Values.webdav.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webdav.startupProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]radicale.conf'
           {{- end }}
           {{- if .Values.webdav.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webdav.livenessProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]radicale.conf'
           {{- end }}
           {{- if .Values.webdav.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webdav.readinessProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: http
+            exec:
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]radicale.conf'
           {{- end }}
       volumes:
         - name: data

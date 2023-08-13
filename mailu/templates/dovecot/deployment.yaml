@@ -122,7 +122,7 @@ spec:
               command:
                 - sh
                 - -c
-                - 'kill -0 `cat /run/dovecot/master.pid` && echo $?'
+                - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.dovecot.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.livenessProbe "enabled") "context" $) | nindent 12 }}
@@ -130,7 +130,7 @@ spec:
               command:
                 - sh
                 - -c
-                - 'kill -0 `cat /run/dovecot/master.pid` && echo $?'
+                - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.dovecot.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.readinessProbe "enabled") "context" $) | nindent 12 }}
@@ -138,7 +138,7 @@ spec:
               command:
                 - sh
                 - -c
-                - 'kill -0 `cat /run/dovecot/master.pid` && echo $?'
+                - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
       volumes:
         - name: data

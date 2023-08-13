@@ -101,17 +101,26 @@ spec:
           {{- if .Values.clamav.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.clamav.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              command: ["echo", "PING", "|", "nc", "localhost", "3310", "|", "grep", "PONG"]
+              command:
+                - sh
+                - -c
+                - 'kill -0 `cat /run/clamd.pid` && kill -0 `cat /run/freshclam.pid`'
           {{- end }}
           {{- if .Values.clamav.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.clamav.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              command: ["echo", "PING", "|", "nc", "localhost", "3310", "|", "grep", "PONG"]
+              command:
+                - sh
+                - -c
+                - 'kill -0 `cat /run/clamd.pid` && kill -0 `cat /run/freshclam.pid`'
           {{- end }}
           {{- if .Values.clamav.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.clamav.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              command: ["echo", "PING", "|", "nc", "localhost", "3310", "|", "grep", "PONG"]
+              command:
+                - sh
+                - -c
+                - 'kill -0 `cat /run/clamd.pid` && kill -0 `cat /run/freshclam.pid`'
           {{- end }}
       volumes:
         {{- if .Values.clamav.extraVolumes }}

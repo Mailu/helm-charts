@@ -104,19 +104,19 @@ spec:
           {{- if .Values.admin.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.startupProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
-              path: /sso/login
+              path: /ping
               port: http
           {{- end }}
           {{- if .Values.admin.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.livenessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
-              path: /sso/login
+              path: /ping
               port: http
           {{- end }}
           {{- if .Values.admin.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.readinessProbe "enabled") "context" $) | nindent 12 }}
             httpGet:
-              path: /sso/login
+              path: /ping
               port: http
           {{- end }}
           securityContext:
