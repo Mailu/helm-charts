@@ -1020,6 +1020,74 @@ The [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-
 
 Please perform open relay tests after setup as described above!
 
+### Running behind an external load balancer with a NodePort service
+
+If you use an external load balancer such as [haproxy](https://www.haproxy.org/), mail services should be exposed as a [NodePort service](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport).
+
+By default, when `front.externalService.type=NodePort`, this chart will set node port numbers to `30000 + <service port>` (eg: SMTP on 30025). Individual node port numbers can be customized in `front.externalService.nodePorts.*`. Keep in mind that node ports must be within the range defined by `--service-node-port-range` Kubernetes flag (default: 30000-32767).
+
+To preserve the client's source IP and avoid open relays:
+- Mailu front container and your external load balancer should communicate using [PROXY protocol](https://github.com/haproxy/haproxy/blob/master/doc/proxy-protocol.txt):
+  - Instruct Mailu front container to accept PROXY protocol and trust your load balancer's IP address using [environment variables](https://mailu.io/2.0/configuration.html#reverse-proxy-headers) `PROXY_PROTOCOL=mail` and `REAL_IP_FROM=<load balancer address>`.
+  - You will also need to instruct your external load balancer to use PROXY protocol. An example for haproxy using a `default-server` line and PROXY protocol v2 is provided below.
+- Set `front.externalTrafficPolicy=Local`.
+- The IP address of your external load balancer does **NOT** need to be within in your `subnet` range. (And it should not.)
+
+Please perform open relay tests after setup!
+
+Sample `values.yaml`:
+
+```yaml
+front:
+  hostPort:
+    enabled: false
+  externalService:
+    enabled: true
+    type: NodePort
+    externalTrafficPolicy: Local
+  extraEnvVars:
+    - name: PROXY_PROTOCOL
+      value: mail
+    - name: REAL_IP_FROM
+      value: <load balancer address>
+```
+
+Example haproxy configuration `haproxy.cfg`:
+
+```
+defaults
+  mode tcp
+  default-server send-proxy-v2 check observe layer4
+  timeout connect 5s
+  timeout client 30s
+  timeout server 30s
+
+listen pop3s
+  bind :995
+  server node1 <node1 address>:30995
+  server node2 <node2 address>:30995
+
+listen imaps
+  bind :993
+  server node1 <node1 address>:30993
+  server node2 <node2 address>:30993
+
+listen smtp
+  bind :25
+  server node1 <node1 address>:30025
+  server node2 <node2 address>:30025
+
+listen smtps
+  bind :465
+  server node1 <node1 address>:30465
+  server node2 <node2 address>:30465
+
+listen smtpd
+  bind :587
+  server node1 <node1 address>:30587
+  server node2 <node2 address>:30587
+```
+
 ## Environment variables mapping
 
 The table below lists the environment variables that will be passed to the pods and their respective configuration path in the `values.yaml` file.
