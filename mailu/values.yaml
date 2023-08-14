@@ -1242,7 +1242,7 @@ postfix:
 
   ## @param postfix.securityContext `securityContext` for postfix container
   securityContext: {}
-  ## @param postfix.securityContext `securityContext` for postfix pod
+  ## @param postfix.podSecurityContext `securityContext` for postfix pod
   podSecurityContext: {}
 
 ## @section Dovecot parameters
