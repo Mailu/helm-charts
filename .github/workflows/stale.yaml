@@ -2,6 +2,7 @@ name: "Close stale issues and PR"
 on:
   schedule:
     - cron: "30 1 * * *"
+  workflow_dispatch:
 
 jobs:
   stale:
@@ -15,3 +16,4 @@ jobs:
           days-before-stale: 30
           days-before-close: 5
           days-before-pr-close: -1
+          start-date: '2023-08-14T00:00:00Z'
