@@ -336,6 +336,11 @@ Check that the deployed pods are all running.
 | `front.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`            |
 | `front.initContainers`                        | Add additional init containers to the pod                                             | `[]`            |
 | `front.priorityClassName`                     | Pods' priorityClassName                                                               | `""`            |
+| `front.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`         |
+| `front.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`          |
+| `front.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`         |
+| `front.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`          |
+| `front.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`         |
 | `front.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`             |
 | `front.affinity`                              | Affinity for front pod assignment                                                     | `{}`            |
 | `front.tolerations`                           | Tolerations for pod assignment                                                        | `[]`            |
@@ -353,58 +358,63 @@ Check that the deployed pods are all running.
 
 ### Admin parameters
 
-| Name                                       | Description                                                                           | Value               |
-| ------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------- |
-| `admin.enabled`                            | Enable access to the admin interface                                                  | `true`              |
-| `admin.uri`                                | URI to access the admin interface                                                     | `/admin`            |
-| `admin.logLevel`                           | Override default log level                                                            | `""`                |
-| `admin.image.repository`                   | Pod image repository                                                                  | `mailu/admin`       |
-| `admin.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `admin.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `admin.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `admin.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `admin.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `admin.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `admin.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `admin.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `admin.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `admin.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `admin.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `admin.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `admin.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `admin.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `admin.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `admin.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `admin.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `admin.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `admin.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `admin.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `admin.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `admin.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `admin.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `admin.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `admin.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `admin.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `admin.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `admin.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `admin.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `admin.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `admin.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `admin.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `admin.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `admin.affinity`                           | Affinity for admin pod assignment                                                     | `{}`                |
-| `admin.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `admin.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `admin.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `admin.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `admin.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `admin.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `admin.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `admin.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `admin.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `admin.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `admin.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `admin.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                          | Description                                                                           | Value               |
+| --------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `admin.enabled`                               | Enable access to the admin interface                                                  | `true`              |
+| `admin.uri`                                   | URI to access the admin interface                                                     | `/admin`            |
+| `admin.logLevel`                              | Override default log level                                                            | `""`                |
+| `admin.image.repository`                      | Pod image repository                                                                  | `mailu/admin`       |
+| `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `admin.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `admin.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
+| `admin.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `admin.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `admin.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `admin.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `admin.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `admin.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `admin.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `admin.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `admin.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `admin.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `admin.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `admin.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `admin.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `admin.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `admin.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `admin.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `admin.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `admin.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `admin.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
+| `admin.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `admin.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `admin.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
+| `admin.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                 |
+| `admin.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `admin.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `admin.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `admin.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `admin.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `admin.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `admin.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `admin.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `admin.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `admin.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `admin.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `admin.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `admin.affinity`                              | Affinity for admin pod assignment                                                     | `{}`                |
+| `admin.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `admin.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `admin.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `admin.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `admin.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `admin.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `admin.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `admin.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `admin.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `admin.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `admin.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `admin.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 ### Redis parameters
 
@@ -426,441 +436,481 @@ Check that the deployed pods are all running.
 
 ### Postfix parameters
 
-| Name                                         | Description                                                                           | Value               |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `postfix.logLevel`                           | Override default log level                                                            | `""`                |
-| `postfix.image.repository`                   | Pod image repository                                                                  | `mailu/postfix`     |
-| `postfix.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `postfix.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `postfix.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `postfix.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `postfix.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `postfix.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `postfix.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `postfix.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `postfix.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `postfix.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `postfix.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `postfix.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `postfix.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `postfix.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `postfix.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `postfix.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `postfix.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `postfix.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `postfix.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `postfix.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `postfix.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `postfix.startupProbe.enabled`               | Enable startupProbe                                                                   | `true`              |
-| `postfix.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `postfix.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `postfix.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `postfix.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `30`                |
-| `postfix.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `postfix.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `postfix.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `postfix.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `postfix.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `postfix.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `postfix.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `postfix.affinity`                           | Affinity for postfix pod assignment                                                   | `{}`                |
-| `postfix.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `postfix.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `postfix.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `postfix.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `postfix.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `postfix.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `postfix.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `postfix.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `postfix.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `postfix.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `postfix.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `postfix.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `postfix.overrides`                          | Enable postfix overrides                                                              | `{}`                |
+| Name                                            | Description                                                                           | Value               |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `postfix.logLevel`                              | Override default log level                                                            | `""`                |
+| `postfix.image.repository`                      | Pod image repository                                                                  | `mailu/postfix`     |
+| `postfix.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `postfix.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `postfix.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
+| `postfix.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `postfix.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `postfix.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `postfix.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `postfix.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `postfix.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `postfix.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `postfix.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `postfix.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `postfix.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `postfix.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `postfix.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `postfix.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `postfix.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `postfix.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `postfix.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `postfix.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `postfix.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `postfix.startupProbe.enabled`                  | Enable startupProbe                                                                   | `true`              |
+| `postfix.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `postfix.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `postfix.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
+| `postfix.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `30`                |
+| `postfix.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `postfix.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `postfix.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `postfix.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `postfix.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `postfix.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `postfix.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `postfix.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `postfix.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `postfix.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `postfix.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `postfix.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `postfix.affinity`                              | Affinity for postfix pod assignment                                                   | `{}`                |
+| `postfix.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `postfix.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `postfix.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `postfix.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `postfix.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `postfix.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `postfix.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `postfix.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `postfix.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `postfix.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `postfix.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `postfix.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `postfix.overrides`                             | Enable postfix overrides                                                              | `{}`                |
 
 ### Dovecot parameters
 
-| Name                                         | Description                                                                           | Value               |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `dovecot.enabled`                            | Enable dovecot                                                                        | `true`              |
-| `dovecot.logLevel`                           | Override default log level                                                            | `""`                |
-| `dovecot.image.repository`                   | Pod image repository                                                                  | `mailu/dovecot`     |
-| `dovecot.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `dovecot.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `dovecot.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `dovecot.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `dovecot.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `dovecot.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `dovecot.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `dovecot.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `dovecot.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `dovecot.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `dovecot.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `dovecot.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `dovecot.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `dovecot.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `dovecot.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `10`                |
-| `dovecot.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `dovecot.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `dovecot.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `dovecot.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `10`                |
-| `dovecot.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `dovecot.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `dovecot.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `dovecot.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `dovecot.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `dovecot.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `10`                |
-| `dovecot.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `dovecot.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `dovecot.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `dovecot.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `dovecot.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `dovecot.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `dovecot.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `dovecot.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `dovecot.affinity`                           | Affinity for dovecot pod assignment                                                   | `{}`                |
-| `dovecot.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `dovecot.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `dovecot.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `dovecot.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `dovecot.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `dovecot.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `dovecot.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `dovecot.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `dovecot.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `dovecot.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `dovecot.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `dovecot.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `dovecot.overrides`                          | Enable dovecot overrides                                                              | `{}`                |
-| `dovecot.compression`                        | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
-| `dovecot.compressionLevel`                   | Maildir compression level (1-9)                                                       | `6`                 |
+| Name                                            | Description                                                                           | Value               |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `dovecot.enabled`                               | Enable dovecot                                                                        | `true`              |
+| `dovecot.logLevel`                              | Override default log level                                                            | `""`                |
+| `dovecot.image.repository`                      | Pod image repository                                                                  | `mailu/dovecot`     |
+| `dovecot.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `dovecot.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `dovecot.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
+| `dovecot.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `dovecot.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `dovecot.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `dovecot.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `dovecot.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `dovecot.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `dovecot.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `dovecot.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `dovecot.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `dovecot.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `dovecot.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `dovecot.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `10`                |
+| `dovecot.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `dovecot.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `dovecot.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `dovecot.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `10`                |
+| `dovecot.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `dovecot.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `dovecot.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
+| `dovecot.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `dovecot.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `dovecot.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `10`                |
+| `dovecot.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                 |
+| `dovecot.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `dovecot.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `dovecot.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `dovecot.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `dovecot.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `dovecot.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `dovecot.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `dovecot.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `dovecot.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `dovecot.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `dovecot.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `dovecot.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `dovecot.affinity`                              | Affinity for dovecot pod assignment                                                   | `{}`                |
+| `dovecot.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `dovecot.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `dovecot.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `dovecot.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `dovecot.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `dovecot.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `dovecot.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `dovecot.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `dovecot.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `dovecot.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `dovecot.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `dovecot.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `dovecot.overrides`                             | Enable dovecot overrides                                                              | `{}`                |
+| `dovecot.compression`                           | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
+| `dovecot.compressionLevel`                      | Maildir compression level (1-9)                                                       | `6`                 |
 
 ### rspamd parameters
 
-| Name                                        | Description                                                                           | Value               |
-| ------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `rspamd.overrides`                          | Enable rspamd overrides                                                               | `{}`                |
-| `rspamd.antivirusAction`                    | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
-| `rspamd.logLevel`                           | Override default log level                                                            | `""`                |
-| `rspamd.image.repository`                   | Pod image repository                                                                  | `mailu/rspamd`      |
-| `rspamd.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `rspamd.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `rspamd.persistence.size`                   | Pod pvc size                                                                          | `1Gi`               |
-| `rspamd.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `rspamd.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `rspamd.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `rspamd.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `rspamd.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `rspamd.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `rspamd.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `rspamd.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `rspamd.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `rspamd.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `rspamd.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `rspamd.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `rspamd.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `rspamd.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `rspamd.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `rspamd.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `rspamd.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `rspamd.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `rspamd.startupProbe.enabled`               | Enable startupProbe                                                                   | `true`              |
-| `rspamd.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `rspamd.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `rspamd.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`                 |
-| `rspamd.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `90`                |
-| `rspamd.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `rspamd.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `rspamd.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `rspamd.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `rspamd.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `rspamd.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `rspamd.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `rspamd.affinity`                           | Affinity for rspamd pod assignment                                                    | `{}`                |
-| `rspamd.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `rspamd.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `rspamd.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `rspamd.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `rspamd.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `rspamd.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `rspamd.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `rspamd.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `rspamd.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `rspamd.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `rspamd.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `rspamd.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                           | Description                                                                           | Value               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `rspamd.overrides`                             | Enable rspamd overrides                                                               | `{}`                |
+| `rspamd.antivirusAction`                       | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
+| `rspamd.logLevel`                              | Override default log level                                                            | `""`                |
+| `rspamd.image.repository`                      | Pod image repository                                                                  | `mailu/rspamd`      |
+| `rspamd.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `rspamd.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `rspamd.persistence.size`                      | Pod pvc size                                                                          | `1Gi`               |
+| `rspamd.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `rspamd.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `rspamd.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `rspamd.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `rspamd.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `rspamd.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `rspamd.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `rspamd.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `rspamd.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `rspamd.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `rspamd.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `rspamd.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `rspamd.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `rspamd.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `rspamd.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `rspamd.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `rspamd.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `rspamd.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `rspamd.startupProbe.enabled`                  | Enable startupProbe                                                                   | `true`              |
+| `rspamd.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `rspamd.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `rspamd.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`                 |
+| `rspamd.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `90`                |
+| `rspamd.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `rspamd.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `rspamd.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `rspamd.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `rspamd.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `rspamd.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `rspamd.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `rspamd.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `rspamd.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `rspamd.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `rspamd.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `rspamd.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `rspamd.affinity`                              | Affinity for rspamd pod assignment                                                    | `{}`                |
+| `rspamd.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `rspamd.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `rspamd.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `rspamd.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `rspamd.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `rspamd.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `rspamd.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `rspamd.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `rspamd.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `rspamd.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `rspamd.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `rspamd.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 ### clamav parameters
 
-| Name                                        | Description                                                                           | Value               |
-| ------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `clamav.enabled`                            | Enable ClamAV                                                                         | `true`              |
-| `clamav.logLevel`                           | Override default log level                                                            | `""`                |
-| `clamav.image.repository`                   | Pod image repository                                                                  | `mailu/clamav`      |
-| `clamav.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `clamav.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `clamav.persistence.enabled`                | Enable persistence using PVC                                                          | `true`              |
-| `clamav.persistence.size`                   | Pod pvc size                                                                          | `2Gi`               |
-| `clamav.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `clamav.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `clamav.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `clamav.persistence.labels`                 | Pod pvc labels                                                                        | `{}`                |
-| `clamav.persistence.selector`               | Additional labels to match for the PVC                                                | `{}`                |
-| `clamav.persistence.dataSource`             | Custom PVC data source                                                                | `{}`                |
-| `clamav.persistence.existingClaim`          | Use a existing PVC which must be created manually before bound                        | `""`                |
-| `clamav.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `clamav.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `clamav.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `clamav.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `clamav.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `clamav.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `clamav.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `clamav.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `clamav.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `clamav.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `clamav.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `clamav.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `clamav.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `clamav.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `clamav.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `clamav.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `clamav.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `clamav.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`                 |
-| `clamav.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `60`                |
-| `clamav.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `clamav.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `clamav.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `clamav.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `clamav.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `clamav.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `clamav.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `clamav.affinity`                           | Affinity for clamav pod assignment                                                    | `{}`                |
-| `clamav.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `clamav.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `clamav.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `clamav.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `clamav.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `clamav.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `clamav.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `clamav.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `clamav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `clamav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `clamav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                           | Description                                                                           | Value               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `clamav.enabled`                               | Enable ClamAV                                                                         | `true`              |
+| `clamav.logLevel`                              | Override default log level                                                            | `""`                |
+| `clamav.image.repository`                      | Pod image repository                                                                  | `mailu/clamav`      |
+| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `clamav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `clamav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`              |
+| `clamav.persistence.size`                      | Pod pvc size                                                                          | `2Gi`               |
+| `clamav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `clamav.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `clamav.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `clamav.persistence.labels`                    | Pod pvc labels                                                                        | `{}`                |
+| `clamav.persistence.selector`                  | Additional labels to match for the PVC                                                | `{}`                |
+| `clamav.persistence.dataSource`                | Custom PVC data source                                                                | `{}`                |
+| `clamav.persistence.existingClaim`             | Use a existing PVC which must be created manually before bound                        | `""`                |
+| `clamav.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `clamav.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `clamav.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `clamav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `clamav.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `clamav.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `clamav.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `clamav.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `clamav.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `clamav.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `clamav.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `clamav.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `clamav.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `clamav.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `clamav.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
+| `clamav.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `clamav.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `clamav.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`                 |
+| `clamav.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `60`                |
+| `clamav.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `clamav.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `clamav.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `clamav.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `clamav.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `clamav.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `clamav.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `clamav.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `clamav.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `clamav.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `clamav.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `clamav.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `clamav.affinity`                              | Affinity for clamav pod assignment                                                    | `{}`                |
+| `clamav.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `clamav.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `clamav.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `clamav.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `clamav.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `clamav.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `clamav.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `clamav.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `clamav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `clamav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `clamav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 ### webmail parameters
 
-| Name                                         | Description                                                                           | Value                                                                             |
-| -------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `webmail.enabled`                            | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
-| `webmail.uri`                                | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
-| `webmail.type`                               | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
-| `webmail.roundcubePlugins`                   | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
-| `webmail.logLevel`                           | Override default log level                                                            | `""`                                                                              |
-| `webmail.image.repository`                   | Pod image repository                                                                  | `mailu/webmail`                                                                   |
-| `webmail.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                                                                              |
-| `webmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
-| `webmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`                                                                            |
-| `webmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                                                                              |
-| `webmail.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
-| `webmail.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                                                                              |
-| `webmail.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                                                                              |
-| `webmail.resources.limits`                   | The resources limits for the container                                                | `{}`                                                                              |
-| `webmail.resources.requests`                 | The requested resources for the container                                             | `{}`                                                                              |
-| `webmail.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`                                                                            |
-| `webmail.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                                                                               |
-| `webmail.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                                                                              |
-| `webmail.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                                                                              |
-| `webmail.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                                                                               |
-| `webmail.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                                                                               |
-| `webmail.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`                                                                            |
-| `webmail.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                                                                              |
-| `webmail.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                                                                              |
-| `webmail.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                                                                               |
-| `webmail.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                                                                               |
-| `webmail.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                                                                               |
-| `webmail.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`                                                                           |
-| `webmail.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                                                                              |
-| `webmail.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                                                                              |
-| `webmail.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                                                                               |
-| `webmail.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                                                                               |
-| `webmail.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                                                                               |
-| `webmail.podLabels`                          | Add extra labels to pod                                                               | `{}`                                                                              |
-| `webmail.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                                                                              |
-| `webmail.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                                                                              |
-| `webmail.initContainers`                     | Add additional init containers to the pod                                             | `[]`                                                                              |
-| `webmail.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                                                                              |
-| `webmail.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                                                                               |
-| `webmail.affinity`                           | Affinity for webmail pod assignment                                                   | `{}`                                                                              |
-| `webmail.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                                                                              |
-| `webmail.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                                                                               |
-| `webmail.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                                                                              |
-| `webmail.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                                                                              |
-| `webmail.service.annotations`                | Admin service annotations                                                             | `{}`                                                                              |
-| `webmail.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                                                                              |
-| `webmail.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`                                                                   |
-| `webmail.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                                                                              |
-| `webmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                                                                              |
-| `webmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                                                                              |
-| `webmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                                                                              |
-| `webmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                                                                              |
+| Name                                            | Description                                                                           | Value                                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `webmail.enabled`                               | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
+| `webmail.uri`                                   | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
+| `webmail.type`                                  | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
+| `webmail.roundcubePlugins`                      | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
+| `webmail.logLevel`                              | Override default log level                                                            | `""`                                                                              |
+| `webmail.image.repository`                      | Pod image repository                                                                  | `mailu/webmail`                                                                   |
+| `webmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                                                                              |
+| `webmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
+| `webmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`                                                                            |
+| `webmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                                                                              |
+| `webmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
+| `webmail.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                                                                              |
+| `webmail.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                                                                              |
+| `webmail.resources.limits`                      | The resources limits for the container                                                | `{}`                                                                              |
+| `webmail.resources.requests`                    | The requested resources for the container                                             | `{}`                                                                              |
+| `webmail.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`                                                                            |
+| `webmail.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                                                                               |
+| `webmail.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                                                                              |
+| `webmail.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                                                                              |
+| `webmail.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                                                                               |
+| `webmail.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                                                                               |
+| `webmail.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`                                                                            |
+| `webmail.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                                                                              |
+| `webmail.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                                                                              |
+| `webmail.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                                                                               |
+| `webmail.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                                                                               |
+| `webmail.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                                                                               |
+| `webmail.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`                                                                           |
+| `webmail.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                                                                              |
+| `webmail.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                                                                              |
+| `webmail.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                                                                               |
+| `webmail.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                                                                               |
+| `webmail.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                                                                               |
+| `webmail.podLabels`                             | Add extra labels to pod                                                               | `{}`                                                                              |
+| `webmail.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                                                                              |
+| `webmail.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                                                                              |
+| `webmail.initContainers`                        | Add additional init containers to the pod                                             | `[]`                                                                              |
+| `webmail.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                                                                              |
+| `webmail.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`                                                                           |
+| `webmail.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`                                                                            |
+| `webmail.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`                                                                           |
+| `webmail.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`                                                                            |
+| `webmail.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`                                                                           |
+| `webmail.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                                                                               |
+| `webmail.affinity`                              | Affinity for webmail pod assignment                                                   | `{}`                                                                              |
+| `webmail.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                                                                              |
+| `webmail.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                                                                               |
+| `webmail.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                                                                              |
+| `webmail.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                                                                              |
+| `webmail.service.annotations`                   | Admin service annotations                                                             | `{}`                                                                              |
+| `webmail.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                                                                              |
+| `webmail.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`                                                                   |
+| `webmail.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                                                                              |
+| `webmail.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                                                                              |
+| `webmail.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                                                                              |
+| `webmail.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                                                                              |
+| `webmail.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                                                                              |
 
 ### webdav parameters
 
-| Name                                        | Description                                                                           | Value               |
-| ------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `webdav.enabled`                            | Enable deployment of WebDAV server (using Radicale)                                   | `false`             |
-| `webdav.logLevel`                           | Override default log level                                                            | `""`                |
-| `webdav.image.repository`                   | Pod image repository                                                                  | `mailu/radicale`    |
-| `webdav.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `webdav.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `webdav.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `webdav.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `webdav.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `webdav.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `webdav.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `webdav.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `webdav.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `webdav.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `webdav.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `webdav.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `webdav.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `webdav.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `webdav.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `webdav.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `webdav.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `webdav.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `webdav.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `webdav.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `webdav.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `webdav.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `webdav.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `webdav.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `webdav.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `webdav.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `webdav.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `webdav.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `webdav.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `webdav.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `webdav.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `webdav.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `webdav.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `webdav.affinity`                           | Affinity for webdav pod assignment                                                    | `{}`                |
-| `webdav.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `webdav.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `webdav.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `webdav.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `webdav.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `webdav.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `webdav.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `webdav.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `webdav.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `webdav.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `webdav.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `webdav.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                           | Description                                                                           | Value               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `webdav.enabled`                               | Enable deployment of WebDAV server (using Radicale)                                   | `false`             |
+| `webdav.logLevel`                              | Override default log level                                                            | `""`                |
+| `webdav.image.repository`                      | Pod image repository                                                                  | `mailu/radicale`    |
+| `webdav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `webdav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `webdav.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
+| `webdav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `webdav.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `webdav.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `webdav.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `webdav.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `webdav.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `webdav.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `webdav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `webdav.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `webdav.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `webdav.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `webdav.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `webdav.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `webdav.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `webdav.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `webdav.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `webdav.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `webdav.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `webdav.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
+| `webdav.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `webdav.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `webdav.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
+| `webdav.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                 |
+| `webdav.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `webdav.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `webdav.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `webdav.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `webdav.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `webdav.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `webdav.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `webdav.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `webdav.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `webdav.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `webdav.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `webdav.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `webdav.affinity`                              | Affinity for webdav pod assignment                                                    | `{}`                |
+| `webdav.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `webdav.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `webdav.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `webdav.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `webdav.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `webdav.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `webdav.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `webdav.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `webdav.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `webdav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `webdav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `webdav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 ### fetchmail parameters
 
-| Name                                           | Description                                                                           | Value               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `fetchmail.enabled`                            | Enable deployment of fetchmail                                                        | `false`             |
-| `fetchmail.delay`                              | Delay between fetchmail runs                                                          | `600`               |
-| `fetchmail.logLevel`                           | Override default log level                                                            | `""`                |
-| `fetchmail.image.repository`                   | Pod image repository                                                                  | `mailu/fetchmail`   |
-| `fetchmail.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `fetchmail.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `fetchmail.persistence.size`                   | Pod pvc size                                                                          | `20Gi`              |
-| `fetchmail.persistence.storageClass`           | Pod pvc storage class                                                                 | `""`                |
-| `fetchmail.persistence.accessModes`            | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `fetchmail.persistence.claimNameOverride`      | Pod pvc name override                                                                 | `""`                |
-| `fetchmail.persistence.annotations`            | Pod pvc annotations                                                                   | `{}`                |
-| `fetchmail.resources.limits`                   | The resources limits for the container                                                | `{}`                |
-| `fetchmail.resources.requests`                 | The requested resources for the container                                             | `{}`                |
-| `fetchmail.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`              |
-| `fetchmail.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`                 |
-| `fetchmail.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`                |
-| `fetchmail.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`                |
-| `fetchmail.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`                 |
-| `fetchmail.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `fetchmail.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`              |
-| `fetchmail.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`                |
-| `fetchmail.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`                |
-| `fetchmail.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `fetchmail.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
-| `fetchmail.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `fetchmail.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
-| `fetchmail.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
-| `fetchmail.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
-| `fetchmail.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `fetchmail.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
-| `fetchmail.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
-| `fetchmail.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
-| `fetchmail.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |
-| `fetchmail.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`                |
-| `fetchmail.initContainers`                     | Add additional init containers to the pod                                             | `[]`                |
-| `fetchmail.priorityClassName`                  | Pods' priorityClassName                                                               | `""`                |
-| `fetchmail.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `fetchmail.affinity`                           | Affinity for fetchmail pod assignment                                                 | `{}`                |
-| `fetchmail.tolerations`                        | Tolerations for pod assignment                                                        | `[]`                |
-| `fetchmail.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `fetchmail.hostAliases`                        | Pod pod host aliases                                                                  | `[]`                |
-| `fetchmail.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `fetchmail.service.annotations`                | Admin service annotations                                                             | `{}`                |
-| `fetchmail.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `fetchmail.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `fetchmail.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`                |
-| `fetchmail.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `fetchmail.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `fetchmail.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `fetchmail.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| Name                                              | Description                                                                           | Value               |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `fetchmail.enabled`                               | Enable deployment of fetchmail                                                        | `false`             |
+| `fetchmail.delay`                                 | Delay between fetchmail runs                                                          | `600`               |
+| `fetchmail.logLevel`                              | Override default log level                                                            | `""`                |
+| `fetchmail.image.repository`                      | Pod image repository                                                                  | `mailu/fetchmail`   |
+| `fetchmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `fetchmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `fetchmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
+| `fetchmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
+| `fetchmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
+| `fetchmail.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
+| `fetchmail.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `fetchmail.resources.limits`                      | The resources limits for the container                                                | `{}`                |
+| `fetchmail.resources.requests`                    | The requested resources for the container                                             | `{}`                |
+| `fetchmail.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
+| `fetchmail.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
+| `fetchmail.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
+| `fetchmail.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
+| `fetchmail.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
+| `fetchmail.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
+| `fetchmail.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
+| `fetchmail.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
+| `fetchmail.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
+| `fetchmail.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
+| `fetchmail.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
+| `fetchmail.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
+| `fetchmail.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
+| `fetchmail.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
+| `fetchmail.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
+| `fetchmail.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
+| `fetchmail.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                 |
+| `fetchmail.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
+| `fetchmail.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
+| `fetchmail.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
+| `fetchmail.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
+| `fetchmail.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
+| `fetchmail.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
+| `fetchmail.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
+| `fetchmail.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
+| `fetchmail.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
+| `fetchmail.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
+| `fetchmail.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
+| `fetchmail.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `fetchmail.affinity`                              | Affinity for fetchmail pod assignment                                                 | `{}`                |
+| `fetchmail.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
+| `fetchmail.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
+| `fetchmail.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
+| `fetchmail.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
+| `fetchmail.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `fetchmail.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
+| `fetchmail.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
+| `fetchmail.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
+| `fetchmail.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
+| `fetchmail.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
+| `fetchmail.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
+| `fetchmail.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
 
 ### OLETools parameters
 
-| Name                                          | Description                                                                           | Value            |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------- |
-| `oletools.enabled`                            | Enable OLETools                                                                       | `true`           |
-| `oletools.logLevel`                           | Override default log level                                                            | `""`             |
-| `oletools.image.repository`                   | Pod image repository                                                                  | `mailu/oletools` |
-| `oletools.image.tag`                          | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`             |
-| `oletools.image.pullPolicy`                   | Pod image pull policy                                                                 | `IfNotPresent`   |
-| `oletools.resources.limits`                   | The resources limits for the container                                                | `{}`             |
-| `oletools.resources.requests`                 | The requested resources for the container                                             | `{}`             |
-| `oletools.livenessProbe.enabled`              | Enable livenessProbe                                                                  | `true`           |
-| `oletools.livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                                   | `3`              |
-| `oletools.livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                               | `10`             |
-| `oletools.livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                                      | `10`             |
-| `oletools.livenessProbe.successThreshold`     | Success threshold for livenessProbe                                                   | `1`              |
-| `oletools.livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                                     | `5`              |
-| `oletools.readinessProbe.enabled`             | Enable readinessProbe                                                                 | `true`           |
-| `oletools.readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                              | `10`             |
-| `oletools.readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                                     | `10`             |
-| `oletools.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `5`              |
-| `oletools.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`              |
-| `oletools.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`              |
-| `oletools.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`          |
-| `oletools.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`             |
-| `oletools.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`             |
-| `oletools.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `5`              |
-| `oletools.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`              |
-| `oletools.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`              |
-| `oletools.podLabels`                          | Add extra labels to pod                                                               | `{}`             |
-| `oletools.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`             |
-| `oletools.nodeSelector`                       | Node labels selector for pod assignment                                               | `{}`             |
-| `oletools.initContainers`                     | Add additional init containers to the pod                                             | `[]`             |
-| `oletools.priorityClassName`                  | Pods' priorityClassName                                                               | `""`             |
-| `oletools.terminationGracePeriodSeconds`      | In seconds, time given to the pod to terminate gracefully                             | `2`              |
-| `oletools.affinity`                           | Affinity for oletools pod assignment                                                  | `{}`             |
-| `oletools.tolerations`                        | Tolerations for pod assignment                                                        | `[]`             |
-| `oletools.revisionHistoryLimit`               | Configure the revisionHistoryLimit of the deployment                                  | `3`              |
-| `oletools.hostAliases`                        | Pod pod host aliases                                                                  | `[]`             |
-| `oletools.schedulerName`                      | Name of the k8s scheduler (other than default)                                        | `""`             |
-| `oletools.service.annotations`                | oletools service annotations                                                          | `{}`             |
-| `oletools.topologySpreadConstraints`          | Topology Spread Constraints for pod assignment                                        | `[]`             |
-| `oletools.updateStrategy.type`                | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`  |
-| `oletools.extraEnvVars`                       | Extra environment variable to pass to the running container                           | `[]`             |
-| `oletools.extraEnvVarsCM`                     | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`             |
-| `oletools.extraEnvVarsSecret`                 | Name of existing Secret containing extra environment variables to mount in the pod    | `""`             |
-| `oletools.extraVolumeMounts`                  | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`             |
-| `oletools.extraVolumes`                       | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
+| Name                                             | Description                                                                           | Value            |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------- | ---------------- |
+| `oletools.enabled`                               | Enable OLETools                                                                       | `true`           |
+| `oletools.logLevel`                              | Override default log level                                                            | `""`             |
+| `oletools.image.repository`                      | Pod image repository                                                                  | `mailu/oletools` |
+| `oletools.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`             |
+| `oletools.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`   |
+| `oletools.resources.limits`                      | The resources limits for the container                                                | `{}`             |
+| `oletools.resources.requests`                    | The requested resources for the container                                             | `{}`             |
+| `oletools.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`           |
+| `oletools.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`              |
+| `oletools.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`             |
+| `oletools.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`             |
+| `oletools.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`              |
+| `oletools.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `5`              |
+| `oletools.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`           |
+| `oletools.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`             |
+| `oletools.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`             |
+| `oletools.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `5`              |
+| `oletools.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`              |
+| `oletools.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`              |
+| `oletools.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`          |
+| `oletools.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`             |
+| `oletools.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`             |
+| `oletools.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`              |
+| `oletools.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`              |
+| `oletools.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`              |
+| `oletools.podLabels`                             | Add extra labels to pod                                                               | `{}`             |
+| `oletools.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`             |
+| `oletools.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`             |
+| `oletools.initContainers`                        | Add additional init containers to the pod                                             | `[]`             |
+| `oletools.priorityClassName`                     | Pods' priorityClassName                                                               | `""`             |
+| `oletools.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`          |
+| `oletools.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`           |
+| `oletools.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`          |
+| `oletools.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`           |
+| `oletools.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`          |
+| `oletools.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`              |
+| `oletools.affinity`                              | Affinity for oletools pod assignment                                                  | `{}`             |
+| `oletools.tolerations`                           | Tolerations for pod assignment                                                        | `[]`             |
+| `oletools.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`              |
+| `oletools.hostAliases`                           | Pod pod host aliases                                                                  | `[]`             |
+| `oletools.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`             |
+| `oletools.service.annotations`                   | oletools service annotations                                                          | `{}`             |
+| `oletools.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`             |
+| `oletools.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`  |
+| `oletools.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`             |
+| `oletools.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`             |
+| `oletools.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`             |
+| `oletools.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`             |
+| `oletools.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
 
 
 ## Example values.yaml to get started
