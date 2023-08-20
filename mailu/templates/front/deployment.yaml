@@ -65,10 +65,16 @@ spec:
       {{- if .Values.front.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.front.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.front.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.front.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: front
           image: {{ .Values.imageRegistry }}/{{ .Values.front.image.repository }}:{{ default (include "mailu.version" .) .Values.front.image.tag }}
           imagePullPolicy: {{ .Values.front.image.pullPolicy }}
+          {{- if .Values.front.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.front.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: certs
               mountPath: /certs

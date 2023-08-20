@@ -61,10 +61,16 @@ spec:
       {{- if .Values.fetchmail.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.fetchmail.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.fetchmail.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: fetchmail
           image: {{ .Values.imageRegistry }}/{{ .Values.fetchmail.image.repository }}:{{ default (include "mailu.version" .) .Values.fetchmail.image.tag }}
           imagePullPolicy: {{ .Values.fetchmail.image.pullPolicy }}
+          {{- if .Values.fetchmail.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.fetchmail.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: fetchmail

@@ -60,10 +60,16 @@ spec:
       {{- if .Values.admin.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.admin.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.admin.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: admin
           image: {{ .Values.imageRegistry }}/{{ .Values.admin.image.repository }}:{{ default (include "mailu.version" .) .Values.admin.image.tag }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+          {{- if .Values.admin.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.admin.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: admin

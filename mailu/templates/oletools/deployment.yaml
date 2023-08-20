@@ -61,10 +61,16 @@ spec:
       {{- if .Values.oletools.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.oletools.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.oletools.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: oletools
           image: {{ .Values.imageRegistry }}/{{ .Values.oletools.image.repository }}:{{ default (include "mailu.version" .) .Values.oletools.image.tag }}
           imagePullPolicy: {{ .Values.oletools.image.pullPolicy }}
+          {{- if .Values.oletools.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.oletools.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           {{- if .Values.oletools.extraVolumeMounts }}
           volumeMounts:
             {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraVolumeMounts "context" $) | nindent 12 }}
