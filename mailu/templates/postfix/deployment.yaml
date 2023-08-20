@@ -60,6 +60,9 @@ spec:
       {{- if .Values.postfix.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.postfix.sidecars }}
+      sidecars: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.sidecars "context" $) | nindent 8 }}
+      {{- end }}
       containers:
         - name: postfix
           image: {{ .Values.imageRegistry }}/{{ .Values.postfix.image.repository }}:{{ default (include "mailu.version" .) .Values.postfix.image.tag }}

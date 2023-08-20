@@ -1172,6 +1172,16 @@ postfix:
   ##    command: ['sh', '-c', 'echo "hello world"']
   initContainers: []
 
+  ## @param postfix.sidecards Add additional sidecars to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/
+  ## e.g:
+  ## sidecars:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  sidecars: []
+
   ## @param postfix.priorityClassName Pods' priorityClassName
   priorityClassName: ""
 
