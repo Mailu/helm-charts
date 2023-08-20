@@ -451,11 +451,11 @@ Check that the deployed pods are all running.
 | `postfix.readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                                    | `1`                 |
 | `postfix.readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                                  | `3`                 |
 | `postfix.readinessProbe.successThreshold`    | Success threshold for readinessProbe                                                  | `1`                 |
-| `postfix.startupProbe.enabled`               | Enable startupProbe                                                                   | `false`             |
+| `postfix.startupProbe.enabled`               | Enable startupProbe                                                                   | `true`              |
 | `postfix.startupProbe.initialDelaySeconds`   | Initial delay seconds for startupProbe                                                | `10`                |
 | `postfix.startupProbe.periodSeconds`         | Period seconds for startupProbe                                                       | `10`                |
 | `postfix.startupProbe.timeoutSeconds`        | Timeout seconds for startupProbe                                                      | `1`                 |
-| `postfix.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `3`                 |
+| `postfix.startupProbe.failureThreshold`      | Failure threshold for startupProbe                                                    | `30`                |
 | `postfix.startupProbe.successThreshold`      | Success threshold for startupProbe                                                    | `1`                 |
 | `postfix.podLabels`                          | Add extra labels to pod                                                               | `{}`                |
 | `postfix.podAnnotations`                     | Add extra annotations to the pod                                                      | `{}`                |

@@ -83,6 +83,8 @@ jobs:
 
   update-readme-metadata:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: lint-and-test
     steps:
       - name: Install readme-generator-for-helm

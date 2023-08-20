@@ -107,18 +107,26 @@ spec:
           {{- if .Values.fetchmail.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              # TODO: Add a proper healthcheck
-              command: [ "true" ]
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]fetchmail.py'
           {{- end }}
           {{- if .Values.fetchmail.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              command: [ "true" ]
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]fetchmail.py'
           {{- end }}
           {{- if .Values.fetchmail.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.fetchmail.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
-              command: [ "true" ]
+              command:
+                - sh
+                - -c
+                - 'ps ax | grep [/]fetchmail.py'
           {{- end }}
       volumes:
         - name: data
