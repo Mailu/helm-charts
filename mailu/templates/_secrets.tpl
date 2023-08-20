@@ -68,6 +68,8 @@
     secretKeyRef:
       name: {{ include "mailu.database.secretName" . }}
       key: {{ include "mailu.database.secretKey" . }}
+{{- end }}
+{{- if .Values.webmail.enabled }}
 - name: ROUNDCUBE_DB_PW
   valueFrom:
     secretKeyRef:
