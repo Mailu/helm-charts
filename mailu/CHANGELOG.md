@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.3.0](https://github.com/Mailu/helm-charts/compare/mailu-1.2.0...mailu-1.3.0) (2023-08-24)
+
+
+### Features
+
+* add securityContext and podSecurityContext options ([#263](https://github.com/Mailu/helm-charts/issues/263)) ([6f9e25b](https://github.com/Mailu/helm-charts/commit/6f9e25bba7c7f69e84af6f6cd13fb7648bb5fe0c))
+* dynamic shields ([0651568](https://github.com/Mailu/helm-charts/commit/065156800f661c522a7d89a2c77b107a5f859356))
+* upgrade mailu version to 2.0.20 ([#294](https://github.com/Mailu/helm-charts/issues/294)) ([d7fc85c](https://github.com/Mailu/helm-charts/commit/d7fc85cbc4b68a496a7f9ddc2fdc50d85fac4206))
+
+
+### Bug Fixes
+
+* fix postgresql initdb script ([#258](https://github.com/Mailu/helm-charts/issues/258)) ([04b803a](https://github.com/Mailu/helm-charts/commit/04b803a83e89f17a7fc247ebec0b4cd06fbbc73a))
+* fixed probes ([#289](https://github.com/Mailu/helm-charts/issues/289)) ([76c333c](https://github.com/Mailu/helm-charts/commit/76c333c7682536141262255754b74f1065609f17))
+* only include roudcube secrets if webmail.enabled is set to true ([#272](https://github.com/Mailu/helm-charts/issues/272)) ([5e652c0](https://github.com/Mailu/helm-charts/commit/5e652c0b2b5db10032320e7b9e805c711cc6853f))
+* readinessProbe.enabled has no effect ([b33d602](https://github.com/Mailu/helm-charts/commit/b33d60238aaf83fe322c1d100e3b9d4b2cae6ecd))
+* set default permanentSessionLifetime to 30 days instead of 30 hours ([180109f](https://github.com/Mailu/helm-charts/commit/180109f96ff3f9bea39890998a65ab501690cba8))
+
 ## [1.2.0](https://github.com/Mailu/helm-charts/compare/mailu-1.1.1...mailu-1.2.0) (2023-05-01)
 
 
