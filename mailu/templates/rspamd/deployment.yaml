@@ -60,11 +60,17 @@ spec:
       {{- if .Values.rspamd.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.rspamd.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.rspamd.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.rspamd.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       hostname: rspamd # https://github.com/Mailu/helm-charts/issues/95
       containers:
         - name: rspamd
           image: {{ .Values.imageRegistry }}/{{ .Values.rspamd.image.repository }}:{{ default (include "mailu.version" .) .Values.rspamd.image.tag }}
           imagePullPolicy: {{ .Values.rspamd.image.pullPolicy }}
+          {{- if .Values.rspamd.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.rspamd.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: rspamd

@@ -61,10 +61,16 @@ spec:
       {{- if .Values.webdav.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.webdav.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.webdav.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.webdav.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: webdav
           image: {{ .Values.imageRegistry }}/{{ .Values.webdav.image.repository }}:{{ default (include "mailu.version" .) .Values.webdav.image.tag }}
           imagePullPolicy: {{ .Values.webdav.image.pullPolicy }}
+          {{- if .Values.webdav.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.webdav.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: webdav

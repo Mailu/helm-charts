@@ -61,10 +61,16 @@ spec:
       {{- if .Values.webmail.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.webmail.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.webmail.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.webmail.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: webmail
           image: {{ .Values.imageRegistry }}/{{ .Values.webmail.image.repository }}:{{ default (include "mailu.version" .) .Values.webmail.image.tag }}
           imagePullPolicy: {{ .Values.webmail.image.pullPolicy }}
+          {{- if .Values.webmail.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.webmail.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /data
               name: data

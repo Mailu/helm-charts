@@ -62,10 +62,16 @@ spec:
       {{- if .Values.clamav.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.clamav.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.clamav.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.clamav.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: clamav
           image: {{ .Values.imageRegistry }}/{{ .Values.clamav.image.repository }}:{{ default (include "mailu.version" .) .Values.clamav.image.tag }}
           imagePullPolicy: {{ .Values.clamav.image.pullPolicy }}
+          {{- if .Values.clamav.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.clamav.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - name: data
               subPath: clamav

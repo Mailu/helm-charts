@@ -60,10 +60,16 @@ spec:
       {{- if .Values.postfix.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.initContainers "context" $) | nindent 8 }}
       {{- end }}
+      {{- if .Values.postfix.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.postfix.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
         - name: postfix
           image: {{ .Values.imageRegistry }}/{{ .Values.postfix.image.repository }}:{{ default (include "mailu.version" .) .Values.postfix.image.tag }}
           imagePullPolicy: {{ .Values.postfix.image.pullPolicy }}
+          {{- if .Values.postfix.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.postfix.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
           volumeMounts:
             - mountPath: /queue
               name: data
