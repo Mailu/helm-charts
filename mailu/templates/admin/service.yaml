@@ -16,6 +16,6 @@ spec:
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: admin
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
+    - name: http
+      port: {{ int (include "mailu.admin.port" .) }}
+      protocol: TCP
