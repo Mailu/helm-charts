@@ -102,7 +102,7 @@ spec:
             {{- end }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ int (include "mailu.admin.port" .) }}
               protocol: TCP
           {{- if .Values.admin.resources }}
           resources: {{- toYaml .Values.admin.resources | nindent 12 }}

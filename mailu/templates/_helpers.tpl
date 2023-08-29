@@ -82,7 +82,25 @@ Get MailU domain name or throw an error if not set
 {{- end -}}
 
 {{/*
-
+Helper function to get the correct admin port.
+Change was made in Mailu 2.0.22 and the port was switched from 80 to 8080.
+This is for retro-compatibility purposes.
+We need to perform some error handling in case the version provided is not a valid semver.
+Only "master" is allowed to be used as a version other than the semver notation.
+*/}}
+{{- define "mailu.admin.port" -}}
+{{- $semverRegex := `^v?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*)?(?:\+[\da-zA-Z-]+(?:\.[\da-zA-Z-]+)*)?$` -}}
+{{- $version := (default (include "mailu.version" .) .Values.admin.image.tag) -}}
+{{- if mustRegexMatch $semverRegex $version -}}
+    {{- if semverCompare "<2.0.22" $version -}}
+        {{- print "80" -}}
+    {{- else -}}
+        {{- print "8080" -}}
+    {{- end -}}
+{{- else -}}
+    {{- print "8080" -}}
+{{- end -}}
+{{- end -}}
 
 {{/* Check for deprecated values and raise an error if found (upgrade to v1.0.0) */}}
 {{- define "mailu.validateValues.deprecated" -}}
