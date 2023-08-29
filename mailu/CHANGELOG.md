@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/Mailu/helm-charts/compare/mailu-1.3.0...mailu-1.4.0) (2023-08-29)
+
+
+### Features
+
+* bump mailu version to 2.0.22 ([#296](https://github.com/Mailu/helm-charts/issues/296)) ([17d3b94](https://github.com/Mailu/helm-charts/commit/17d3b94558f795e0f7f43804f51e23285f8c8075))
+
 ## [1.3.0](https://github.com/Mailu/helm-charts/compare/mailu-1.2.0...mailu-1.3.0) (2023-08-24)
 
 
