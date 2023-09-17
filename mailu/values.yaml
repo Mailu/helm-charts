@@ -864,6 +864,9 @@ admin:
     tag: ""
     pullPolicy: IfNotPresent
 
+  ## @param admin.replicaCount Number of admin replicas to deploy
+  replicaCount: 1
+
   ## Pod persistence (if not using single_pvc)
   ## @param admin.persistence.size Pod pvc size
   ## @param admin.persistence.storageClass Pod pvc storage class
@@ -1304,6 +1307,9 @@ dovecot:
     repository: mailu/dovecot
     tag: ""
     pullPolicy: IfNotPresent
+
+  ## @param dovecot.replicaCount Number of dovecot replicas to deploy
+  replicaCount: 1
 
   ## Pod persistence (if not using single_pvc)
   ## @param dovecot.persistence.size Pod pvc size
@@ -1971,6 +1977,9 @@ webmail:
     tag: ""
     pullPolicy: IfNotPresent
 
+  ## @param webmail.replicaCount Number of webmail replicas to deploy
+  replicaCount: 1
+
   ## Pod persistence (if not using single_pvc)
   ## @param webmail.persistence.size Pod pvc size
   ## @param webmail.persistence.storageClass Pod pvc storage class
@@ -2564,6 +2573,9 @@ oletools:
     repository: mailu/oletools
     tag: ""
     pullPolicy: IfNotPresent
+
+  ## @param oletools.replicaCount Number of oletools replicas to deploy
+  replicaCount: 1
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
