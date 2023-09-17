@@ -113,6 +113,11 @@ data:
 {{- end }}
 {{- end }}
 
+{{- if .Values.api.enabled }}
+  API: {{ .Values.api.enabled | quote }}
+  WEB_API: {{ .Values.api.web | quote }}
+{{- end }}
+
 {{- if .Values.initialAccount.enabled }}
   INITIAL_ADMIN_MODE: {{ .Values.initialAccount.mode | quote }}
   INITIAL_ADMIN_ACCOUNT: {{ .Values.initialAccount.username | quote }}

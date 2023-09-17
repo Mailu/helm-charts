@@ -14,9 +14,19 @@
 {{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.initialAccount.secretName" .) "key" (include "mailu.initialAccount.secretKey" .) "providedValues" (list "initialAccount.password") "length" 10 "strong" true "context" .) }}
 {{- end -}}
 
+{{/* Return mailu api.token */}}
+{{- define "mailu.api.token" -}}
+{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.api.secretName" .) "key" (include "mailu.api.secretKey" .) "providedValues" (list "api.token") "length" 20 "strong" true "context" .) }}
+{{- end -}}
+
 {{/* Returns the mailu initialAccount secret name */}}
 {{- define "mailu.initialAccount.secretName" -}}
 {{- include "common.secrets.name" (dict "existingSecret" .Values.initialAccount.existingSecret "defaultNameSuffix" "initial-account" "context" .) }}
+{{- end -}}
+
+{{/* Returns the mailu api secret name */}}
+{{- define "mailu.api.secretName" -}}
+{{- include "common.secrets.name" (dict "existingSecret" .Values.api.existingSecret "defaultNameSuffix" "api-token" "context" .) }}
 {{- end -}}
 
 {{/* Returns the mailu initialAccount key that contains the password in the secret */}}
@@ -25,6 +35,15 @@
 {{- .Values.initialAccount.existingSecretPasswordKey -}}
 {{- else -}}
 {{- print "initial-account-password" -}}
+{{- end -}}
+{{- end -}}
+
+{{/* Returns the mailu api key that contains the token in the secret */}}
+{{- define "mailu.api.secretKey" -}}
+{{ if .Values.api.existingSecretTokenKey }}
+{{- .Values.api.existingSecretTokenKey -}}
+{{- else -}}
+{{- print "api-token" -}}
 {{- end -}}
 {{- end -}}
 
@@ -61,6 +80,13 @@
     secretKeyRef:
       name: {{ include "mailu.initialAccount.secretName" . }}
       key: {{ include "mailu.initialAccount.secretKey" . }}
+{{- end }}
+{{- if .Values.api.enabled }}
+- name: API_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.api.secretName" . }}
+      key: {{ include "mailu.api.secretKey" . }}
 {{- end }}
 {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
 - name: DB_PW
