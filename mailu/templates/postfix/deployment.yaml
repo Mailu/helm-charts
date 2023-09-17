@@ -140,9 +140,14 @@ spec:
                 - '! /usr/libexec/postfix/master -t'
           {{- end }}
       volumes:
+{{- if not .Values.postfix.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.postfix.claimName" . }}
+{{- end }}
         {{- if .Values.postfix.overrides }}
         - name: overrides
           configMap:

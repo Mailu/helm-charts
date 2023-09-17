@@ -1,5 +1,5 @@
 ---
-{{- if .Values.fetchmail.enabled }}
+{{- if (.Values.fetchmail.enabled) }}
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
@@ -135,9 +135,14 @@ spec:
                 - 'ps ax | grep [/]fetchmail.py'
           {{- end }}
       volumes:
+{{- if not .Values.fetchmail.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fetchmail.claimName" . }}
+{{- end }}
         {{- if .Values.fetchmail.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
