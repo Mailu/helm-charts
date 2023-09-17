@@ -1,5 +1,5 @@
 ---
-{{- if .Values.dovecot.enabled }}
+{{- if and (.Values.dovecot.persistence.enabled) (.Values.dovecot.enabled) }}
 {{- if not .Values.persistence.single_pvc }}
 kind: PersistentVolumeClaim
 apiVersion: v1

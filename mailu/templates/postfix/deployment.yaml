@@ -143,9 +143,14 @@ spec:
         {{- toYaml .Values.postfix.extraContainers | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if not .Values.postfix.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.postfix.claimName" . }}
+        {{- end }}
         {{- if .Values.postfix.overrides }}
         - name: overrides
           configMap:

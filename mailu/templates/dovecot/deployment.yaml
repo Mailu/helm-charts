@@ -150,9 +150,14 @@ spec:
         {{- toYaml .Values.dovecot.extraContainers | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if not .Values.dovecot.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.dovecot.claimName" . }}
+        {{- end }}
         {{- if .Values.dovecot.overrides }}
         - name: overrides
           configMap:
