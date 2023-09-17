@@ -115,21 +115,27 @@ spec:
           {{- end }}
           {{- if .Values.rspamd.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.startupProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: rspamd-http
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'curl --fail http://localhost:11334/ 2>&1 | grep "Rspamd" && df'
           {{- end }}
           {{- if .Values.rspamd.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.livenessProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: rspamd-http
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'curl --fail http://localhost:11334/ 2>&1 | grep "Rspamd" && df'
           {{- end }}
           {{- if .Values.rspamd.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.rspamd.readinessProbe "enabled") "context" $) | nindent 12 }}
-            httpGet:
-              path: /
-              port: rspamd-http
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'curl --fail http://localhost:11334/ 2>&1 | grep "Rspamd" && df'
           {{- end }}
       volumes:
         - name: data
