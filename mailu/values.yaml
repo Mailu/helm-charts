@@ -1100,6 +1100,12 @@ postfix:
     tag: ""
     pullPolicy: IfNotPresent
 
+  ## @param postfix.kind Kind of resource to create for postfix (`Deployment` or `StatefulSet`)
+  kind: Deployment
+
+  ## @param postfix.replicaCount Number of front replicas to deploy (only for `StatefulSet` kind)
+  replicaCount: 1
+
   ## Pod persistence (if not using single_pvc)
   ## @param postfix.persistence.size Pod pvc size
   ## @param postfix.persistence.storageClass Pod pvc storage class

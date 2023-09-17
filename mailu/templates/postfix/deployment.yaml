@@ -13,7 +13,12 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
+  {{- if eq .Values.postfix.kind "StatefulSet" }}
+  replicas: {{ .Values.postfix.replicaCount }}
+  podManagementPolicy: "Parallel"
+  {{- else }}
   replicas: 1
+  {{- end }}
   {{- if .Values.postfix.updateStrategy }}
   strategy: {{- toYaml .Values.postfix.updateStrategy | nindent 4 }}
   {{- end }}
@@ -140,9 +145,11 @@ spec:
                 - '! /usr/libexec/postfix/master -t'
           {{- end }}
       volumes:
+        {{- if not eq .Values.postfix.kind "StatefulSet" }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.postfix.claimName" . }}
+        {{- end }}
         {{- if .Values.postfix.overrides }}
         - name: overrides
           configMap:
@@ -151,3 +158,40 @@ spec:
         {{- if .Values.postfix.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.postfix.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
+{{- if eq .Values.postfix.kind "StatefulSet" }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels: {{- include "common.labels.standard" . | nindent 10 }}
+          app.kubernetes.io/component: postfix
+          {{- if .Values.postfix.persistence.labels }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.postfix.persistence.labels "context" $ ) | nindent 10 }}
+          {{- end }}
+          {{- if .Values.commonLabels }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 10 }}
+          {{- end }}
+        {{- if or .Values.postfix.persistence.annotations .Values.commonAnnotations }}
+        annotations:
+          {{- if .Values.postfix.persistence.annotations }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.postfix.persistence.annotations "context" $ ) | nindent 10 }}
+          {{- end }}
+          {{- if .Values.commonAnnotations }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 10 }}
+          {{- end }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.postfix.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.postfix.persistence.size | quote }}
+        {{- if .Values.postfix.persistence.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.persistence.selector "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.postfix.persistence.dataSource }}
+        dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.postfix.persistence.dataSource "context" $) | nindent 10 }}
+        {{- end }}
+        {{- include "common.storage.class" (dict "persistence" .Values.postfix.persistence "global" .Values.global) | nindent 8 }}
+{{- end }}
