@@ -145,7 +145,7 @@ spec:
                 - '! /usr/libexec/postfix/master -t'
           {{- end }}
       volumes:
-        {{- if not eq .Values.postfix.kind "StatefulSet" }}
+        {{- if not (eq .Values.postfix.kind "StatefulSet") }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.postfix.claimName" . }}
