@@ -1,6 +1,6 @@
 ---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: Deployment
+kind: {{ .Values.postfix.kind }}
 metadata:
   name: {{ printf "%s-postfix" (include "mailu.fullname" .) }}
   namespace: {{ include "common.names.namespace" . | quote }}
