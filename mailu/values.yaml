@@ -617,6 +617,11 @@ proxyAuth:
   ## @param proxyAuth.create Whether non-existing accounts should be auto-created
   create: "false"
 
+## @param proxyProtocol Allows the the front container to receive TCP and HTTP connections with the PROXY protocol.
+## Valid values are `http`, `mail` and `all`.
+## ref: https://mailu.io/master/configuration.html#advanced-settings
+proxyProtocol: ""
+
 ## @section Frontend load balancer for non-HTTP(s) services
 front:
   ## @param front.logLevel Override default log level
