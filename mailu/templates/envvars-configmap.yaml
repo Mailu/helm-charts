@@ -54,6 +54,7 @@ data:
   LOG_LEVEL: {{ .Values.logLevel | quote }}
   LOGO_BACKGROUND: {{ .Values.customization.logoBackground | quote }}
   LOGO_URL: {{ .Values.customization.logoUrl | quote }}
+  MAILU_HELM_CHART: "true"
   MEMORY_SESSIONS: "false"
   MESSAGE_RATELIMIT_EXEMPTION: {{ .Values.limits.messageRatelimit.exemption | quote }}
   MESSAGE_RATELIMIT: {{ .Values.limits.messageRatelimit.value | quote  }}
