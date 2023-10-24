@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/Mailu/helm-charts/compare/mailu-1.4.0...mailu-1.5.0) (2023-10-24)
+
+
+### Features
+
+* add MAILU_HELM_CHART environment variable ([#312](https://github.com/Mailu/helm-charts/issues/312)) ([e26ffd7](https://github.com/Mailu/helm-charts/commit/e26ffd7c70a8788db93cb48cbf48d51a33a8eb8a))
+* bump mailu version to 2.0.30 ([#314](https://github.com/Mailu/helm-charts/issues/314)) ([4884ca4](https://github.com/Mailu/helm-charts/commit/4884ca4d0e030038f262d569b15bca550b404539))
+
 ## [1.4.0](https://github.com/Mailu/helm-charts/compare/mailu-1.3.0...mailu-1.4.0) (2023-08-29)
 
 
