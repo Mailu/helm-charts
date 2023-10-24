@@ -55,6 +55,8 @@ data:
   LOGO_BACKGROUND: {{ .Values.customization.logoBackground | quote }}
   LOGO_URL: {{ .Values.customization.logoUrl | quote }}
   MAILU_HELM_CHART: "true"
+  # Temporary workaround for https://github.com/Mailu/helm-charts/issues/309 until MAILU_HELM_CHART is taken into consideration in Mailu
+  I_KNOW_MY_SETUP_DOESNT_FIT_REQUIREMENTS_AND_WONT_FILE_ISSUES_WITHOUT_PATCHES: "true"
   MEMORY_SESSIONS: "false"
   MESSAGE_RATELIMIT_EXEMPTION: {{ .Values.limits.messageRatelimit.exemption | quote }}
   MESSAGE_RATELIMIT: {{ .Values.limits.messageRatelimit.value | quote  }}
