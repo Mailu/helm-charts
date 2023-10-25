@@ -228,6 +228,18 @@ welcomeMessage:
   subject: "Welcome to Mailu"
   body: "Welcome to Mailu, your new email service. Please change your password and update your profile."
 
+## @param api.enabled Enable access to the REST API
+## @param api.web Path for REST API
+## @param api.token Token for REST API; ignored if using existing secret; if empty, a random token will be generated and saved in a secret
+## @param api.existingSecret Name of the existing secret to retrieve the REST API token
+## @param api.existingSecretPasswordKey Name of the key in the existing secret to use for the REST API token
+api:
+  enabled: false
+  web: /api
+  token: ""
+  existingSecret: ""
+  existingSecretTokenKey: ""
+
 ## @param wildcardSenders List of user emails that can send emails from any address
 wildcardSenders: []
 
