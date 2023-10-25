@@ -137,9 +137,14 @@ spec:
                 - "http://localhost/ping"
           {{- end }}
       volumes:
+{{- if not .Values.webmail.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.webmail.claimName" . }}
+{{- end }}
         {{- if .Values.webmail.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.webmail.extraVolumes "context" $) | nindent 8 }}
         {{- end }}

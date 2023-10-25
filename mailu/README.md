@@ -359,13 +359,14 @@ Check that the deployed pods are all running.
 ### Admin parameters
 
 | Name                                          | Description                                                                           | Value               |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|-----------------------------------------------| ------------------------------------------------------------------------------------- | ------------------- |
 | `admin.enabled`                               | Enable access to the admin interface                                                  | `true`              |
 | `admin.uri`                                   | URI to access the admin interface                                                     | `/admin`            |
 | `admin.logLevel`                              | Override default log level                                                            | `""`                |
 | `admin.image.repository`                      | Pod image repository                                                                  | `mailu/admin`       |
 | `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `admin.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `admin.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `admin.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `admin.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `admin.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -437,11 +438,12 @@ Check that the deployed pods are all running.
 ### Postfix parameters
 
 | Name                                            | Description                                                                           | Value               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|-------------------------------------------------| ------------------------------------------------------------------------------------- | ------------------- |
 | `postfix.logLevel`                              | Override default log level                                                            | `""`                |
 | `postfix.image.repository`                      | Pod image repository                                                                  | `mailu/postfix`     |
 | `postfix.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `postfix.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `postfix.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `postfix.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `postfix.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `postfix.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -496,12 +498,13 @@ Check that the deployed pods are all running.
 ### Dovecot parameters
 
 | Name                                            | Description                                                                           | Value               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|-------------------------------------------------| ------------------------------------------------------------------------------------- | ------------------- |
 | `dovecot.enabled`                               | Enable dovecot                                                                        | `true`              |
 | `dovecot.logLevel`                              | Override default log level                                                            | `""`                |
 | `dovecot.image.repository`                      | Pod image repository                                                                  | `mailu/dovecot`     |
 | `dovecot.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `dovecot.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `dovecot.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `dovecot.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `dovecot.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `dovecot.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -558,13 +561,14 @@ Check that the deployed pods are all running.
 ### rspamd parameters
 
 | Name                                           | Description                                                                           | Value               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|------------------------------------------------| ------------------------------------------------------------------------------------- | ------------------- |
 | `rspamd.overrides`                             | Enable rspamd overrides                                                               | `{}`                |
 | `rspamd.antivirusAction`                       | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
 | `rspamd.logLevel`                              | Override default log level                                                            | `""`                |
 | `rspamd.image.repository`                      | Pod image repository                                                                  | `mailu/rspamd`      |
 | `rspamd.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `rspamd.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `rspamd.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `rspamd.persistence.size`                      | Pod pvc size                                                                          | `1Gi`               |
 | `rspamd.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `rspamd.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -680,7 +684,7 @@ Check that the deployed pods are all running.
 ### webmail parameters
 
 | Name                                            | Description                                                                           | Value                                                                             |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- |-----------------------------------------------------------------------------------|
 | `webmail.enabled`                               | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
 | `webmail.uri`                                   | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
 | `webmail.type`                                  | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
@@ -689,7 +693,7 @@ Check that the deployed pods are all running.
 | `webmail.image.repository`                      | Pod image repository                                                                  | `mailu/webmail`                                                                   |
 | `webmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                                                                              |
 | `webmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
-| `webmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`                                                                            |
+| `webmail.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `webmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                                                                              |
 | `webmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
 | `webmail.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                                                                              |
@@ -742,12 +746,13 @@ Check that the deployed pods are all running.
 ### webdav parameters
 
 | Name                                           | Description                                                                           | Value               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|------------------------------------------------| ------------------------------------------------------------------------------------- | ------------------- |
 | `webdav.enabled`                               | Enable deployment of WebDAV server (using Radicale)                                   | `false`             |
 | `webdav.logLevel`                              | Override default log level                                                            | `""`                |
 | `webdav.image.repository`                      | Pod image repository                                                                  | `mailu/radicale`    |
 | `webdav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `webdav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `webdav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `webdav.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `webdav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `webdav.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -801,13 +806,14 @@ Check that the deployed pods are all running.
 ### fetchmail parameters
 
 | Name                                              | Description                                                                           | Value               |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|---------------------------------------------------| ------------------------------------------------------------------------------------- |---------------------|
 | `fetchmail.enabled`                               | Enable deployment of fetchmail                                                        | `false`             |
 | `fetchmail.delay`                                 | Delay between fetchmail runs                                                          | `600`               |
 | `fetchmail.logLevel`                              | Override default log level                                                            | `""`                |
 | `fetchmail.image.repository`                      | Pod image repository                                                                  | `mailu/fetchmail`   |
 | `fetchmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `fetchmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `fetchmail.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                            |
 | `fetchmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `fetchmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `fetchmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |

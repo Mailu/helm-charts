@@ -132,9 +132,14 @@ spec:
               port: rspamd-http
           {{- end }}
       volumes:
+{{- if not .Values.rspamd.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.rspamd.claimName" . }}
+{{- end }}
         {{- if .Values.rspamd.overrides }}
         - name: overrides
           configMap:

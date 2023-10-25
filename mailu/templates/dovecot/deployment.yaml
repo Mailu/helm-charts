@@ -147,9 +147,14 @@ spec:
                 - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
       volumes:
+{{- if not .Values.dovecot.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+{{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.dovecot.claimName" . }}
+{{- end }}
         {{- if .Values.dovecot.overrides }}
         - name: overrides
           configMap:
