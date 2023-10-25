@@ -107,34 +107,25 @@ spec:
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - curl
-                - -f
-                - -L
-                - -H
-                - 'User-Agent: health'
-                - "http://localhost/ping"
+                - sh
+                - -c
+                - 'curl -f -L -H "User-Agent: health" http://localhost/ping && df'
           {{- end }}
           {{- if .Values.webmail.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - curl
-                - -f
-                - -L
-                - -H
-                - 'User-Agent: health'
-                - "http://localhost/ping"
+                - sh
+                - -c
+                - 'curl -f -L -H "User-Agent: health" http://localhost/ping && df'
           {{- end }}
           {{- if .Values.webmail.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.webmail.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
-                - curl
-                - -f
-                - -L
-                - -H
-                - 'User-Agent: health'
-                - "http://localhost/ping"
+                - sh
+                - -c
+                - 'curl -f -L -H "User-Agent: health" http://localhost/ping && df'
           {{- end }}
       volumes:
         - name: data
