@@ -659,6 +659,7 @@ front:
     ## type: LoadBalancer
     loadBalancerIP: ""
     externalTrafficPolicy: Local
+    ipFamilyPolicy: PreferDualStack
     annotations: {}
     ports:
       pop3: false
