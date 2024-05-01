@@ -183,6 +183,9 @@ spec:
               path: /health
               port: http
           {{- end }}
+      {{- if .Values.front.extraContainers }}
+        {{- toYaml .Values.front.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: certs
           secret:

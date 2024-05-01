@@ -128,6 +128,9 @@ spec:
                 - -c
                 - 'kill -0 `cat /run/clamd.pid` && kill -0 `cat /run/freshclam.pid`'
           {{- end }}
+      {{- if .Values.clamav.extraContainers }}
+        {{- toYaml .Values.clamav.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         {{- if .Values.clamav.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.clamav.extraVolumes "context" $) | nindent 8 }}

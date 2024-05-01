@@ -139,6 +139,9 @@ spec:
                 - -c
                 - '! /usr/libexec/postfix/master -t'
           {{- end }}
+      {{- if .Values.postfix.extraContainers }}
+        {{- toYaml .Values.postfix.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

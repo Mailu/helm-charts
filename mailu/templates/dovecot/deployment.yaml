@@ -146,6 +146,9 @@ spec:
                 - -c
                 - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
+      {{- if .Values.dovecot.extraContainers }}
+        {{- toYaml .Values.dovecot.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

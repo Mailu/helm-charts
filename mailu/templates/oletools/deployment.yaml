@@ -124,6 +124,9 @@ spec:
                 - -c
                 - 'echo PING|nc -q1 localhost 11343|grep PONG'
           {{- end }}
+      {{- if .Values.oletools.extraContainers }}
+        {{- toYaml .Values.oletools.extraContainers | nindent 8 }}
+      {{- end }}
       {{- if .Values.oletools.extraVolumes }}
       volumes:
         {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraVolumes "context" $) | nindent 8 }}
