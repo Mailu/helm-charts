@@ -563,6 +563,7 @@ Check that the deployed pods are all running.
 
 | Name                                           | Description                                                                           | Value               |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| `rspamd.enabled`                               | Enable rspamd                                                                         | `true`              |
 | `rspamd.overrides`                             | Enable rspamd overrides                                                               | `{}`                |
 | `rspamd.antivirusAction`                       | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
 | `rspamd.logLevel`                              | Override default log level                                                            | `""`                |
