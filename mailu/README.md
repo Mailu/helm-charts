@@ -355,6 +355,7 @@ Check that the deployed pods are all running.
 | `front.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
 | `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
+| `front.extraContainers`                       | Add additional containers to the pod                                                  | `[]`            |
 
 ### Admin parameters
 
@@ -415,6 +416,7 @@ Check that the deployed pods are all running.
 | `admin.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `admin.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `admin.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `admin.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 
 ### Redis parameters
 
@@ -491,6 +493,7 @@ Check that the deployed pods are all running.
 | `postfix.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `postfix.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `postfix.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `postfix.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 | `postfix.overrides`                             | Enable postfix overrides                                                              | `{}`                |
 
 ### Dovecot parameters
@@ -551,6 +554,7 @@ Check that the deployed pods are all running.
 | `dovecot.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `dovecot.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `dovecot.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `dovecot.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 | `dovecot.overrides`                             | Enable dovecot overrides                                                              | `{}`                |
 | `dovecot.compression`                           | Maildir compression algorithm (gz, bz2, lz4, zstd)                                    | `""`                |
 | `dovecot.compressionLevel`                      | Maildir compression level (1-9)                                                       | `6`                 |
@@ -614,6 +618,7 @@ Check that the deployed pods are all running.
 | `rspamd.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `rspamd.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `rspamd.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `rspamd.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 
 ### clamav parameters
 
@@ -676,6 +681,7 @@ Check that the deployed pods are all running.
 | `clamav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `clamav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `clamav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `clamav.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 
 ### webmail parameters
 
@@ -738,6 +744,7 @@ Check that the deployed pods are all running.
 | `webmail.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                                                                              |
 | `webmail.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                                                                              |
 | `webmail.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                                                                              |
+| `webmail.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                                                                              |
 
 ### webdav parameters
 
@@ -797,6 +804,7 @@ Check that the deployed pods are all running.
 | `webdav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `webdav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `webdav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `webdav.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 
 ### fetchmail parameters
 
@@ -857,6 +865,7 @@ Check that the deployed pods are all running.
 | `fetchmail.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
 | `fetchmail.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
 | `fetchmail.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
+| `fetchmail.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
 
 ### OLETools parameters
 
@@ -911,6 +920,7 @@ Check that the deployed pods are all running.
 | `oletools.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`             |
 | `oletools.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`             |
 | `oletools.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
+| `oletools.extraContainers`                       | Add additional containers to the pod                                                  | `[]`             |
 
 
 ## Example values.yaml to get started
