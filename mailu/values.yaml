@@ -1738,10 +1738,12 @@ clamav:
   ## @param clamav.image.repository Pod image repository
   ## @param clamav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
   ## @param clamav.image.pullPolicy Pod image pull policy
+  ## @param clamav.image.registry Pod image registry (specific for clamav as it is not part of the mailu organization)
   image:
-    repository: mailu/clamav
-    tag: ""
+    repository: clamav/clamav-debian
+    tag: 1.2.0-6
     pullPolicy: IfNotPresent
+    registry: docker.io
 
   ## Pod persistence (if not using single_pvc)
   persistence:

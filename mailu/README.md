@@ -622,66 +622,67 @@ Check that the deployed pods are all running.
 
 ### clamav parameters
 
-| Name                                           | Description                                                                           | Value               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `clamav.enabled`                               | Enable ClamAV                                                                         | `true`              |
-| `clamav.logLevel`                              | Override default log level                                                            | `""`                |
-| `clamav.image.repository`                      | Pod image repository                                                                  | `mailu/clamav`      |
-| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `clamav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `clamav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`              |
-| `clamav.persistence.size`                      | Pod pvc size                                                                          | `2Gi`               |
-| `clamav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
-| `clamav.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `clamav.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
-| `clamav.persistence.labels`                    | Pod pvc labels                                                                        | `{}`                |
-| `clamav.persistence.selector`                  | Additional labels to match for the PVC                                                | `{}`                |
-| `clamav.persistence.dataSource`                | Custom PVC data source                                                                | `{}`                |
-| `clamav.persistence.existingClaim`             | Use a existing PVC which must be created manually before bound                        | `""`                |
-| `clamav.resources.limits`                      | The resources limits for the container                                                | `{}`                |
-| `clamav.resources.requests`                    | The requested resources for the container                                             | `{}`                |
-| `clamav.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
-| `clamav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
-| `clamav.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
-| `clamav.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
-| `clamav.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
-| `clamav.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `clamav.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
-| `clamav.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
-| `clamav.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
-| `clamav.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `clamav.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
-| `clamav.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
-| `clamav.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
-| `clamav.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
-| `clamav.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
-| `clamav.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`                 |
-| `clamav.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `60`                |
-| `clamav.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
-| `clamav.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
-| `clamav.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
-| `clamav.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
-| `clamav.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
-| `clamav.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
-| `clamav.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
-| `clamav.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
-| `clamav.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
-| `clamav.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
-| `clamav.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
-| `clamav.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `clamav.affinity`                              | Affinity for clamav pod assignment                                                    | `{}`                |
-| `clamav.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
-| `clamav.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
-| `clamav.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `clamav.service.annotations`                   | Admin service annotations                                                             | `{}`                |
-| `clamav.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `clamav.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `clamav.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
-| `clamav.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `clamav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `clamav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `clamav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `clamav.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
+| Name                                           | Description                                                                           | Value                  |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------- |
+| `clamav.enabled`                               | Enable ClamAV                                                                         | `true`                 |
+| `clamav.logLevel`                              | Override default log level                                                            | `""`                   |
+| `clamav.image.repository`                      | Pod image repository                                                                  | `clamav/clamav-debian` |
+| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `1.2.0-6`              |
+| `clamav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`         |
+| `clamav.image.registry`                        | Pod image registry (specific for clamav as it is not part of the mailu organization)  | `docker.io`            |
+| `clamav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                 |
+| `clamav.persistence.size`                      | Pod pvc size                                                                          | `2Gi`                  |
+| `clamav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                   |
+| `clamav.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`    |
+| `clamav.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                   |
+| `clamav.persistence.labels`                    | Pod pvc labels                                                                        | `{}`                   |
+| `clamav.persistence.selector`                  | Additional labels to match for the PVC                                                | `{}`                   |
+| `clamav.persistence.dataSource`                | Custom PVC data source                                                                | `{}`                   |
+| `clamav.persistence.existingClaim`             | Use a existing PVC which must be created manually before bound                        | `""`                   |
+| `clamav.resources.limits`                      | The resources limits for the container                                                | `{}`                   |
+| `clamav.resources.requests`                    | The requested resources for the container                                             | `{}`                   |
+| `clamav.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`                 |
+| `clamav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                    |
+| `clamav.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                   |
+| `clamav.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                   |
+| `clamav.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                    |
+| `clamav.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                    |
+| `clamav.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`                 |
+| `clamav.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                   |
+| `clamav.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                   |
+| `clamav.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                    |
+| `clamav.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                    |
+| `clamav.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                    |
+| `clamav.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`                |
+| `clamav.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                   |
+| `clamav.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                   |
+| `clamav.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`                    |
+| `clamav.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `60`                   |
+| `clamav.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                    |
+| `clamav.podLabels`                             | Add extra labels to pod                                                               | `{}`                   |
+| `clamav.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                   |
+| `clamav.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                   |
+| `clamav.initContainers`                        | Add additional init containers to the pod                                             | `[]`                   |
+| `clamav.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                   |
+| `clamav.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`                |
+| `clamav.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`                 |
+| `clamav.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`                |
+| `clamav.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`                 |
+| `clamav.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`                |
+| `clamav.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                    |
+| `clamav.affinity`                              | Affinity for clamav pod assignment                                                    | `{}`                   |
+| `clamav.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                   |
+| `clamav.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                   |
+| `clamav.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                   |
+| `clamav.service.annotations`                   | Admin service annotations                                                             | `{}`                   |
+| `clamav.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                   |
+| `clamav.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`        |
+| `clamav.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                   |
+| `clamav.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                   |
+| `clamav.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                   |
+| `clamav.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                   |
+| `clamav.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                   |
+| `clamav.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                   |
 
 ### webmail parameters
 
