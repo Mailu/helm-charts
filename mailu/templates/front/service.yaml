@@ -37,6 +37,9 @@ spec:
     - name: smtpd
       port: 587
       protocol: TCP
+    - name: lmtp
+      port: 2525
+      protocol: TCP
     - name: smtp-auth
       port: 10025
       protocol: TCP
