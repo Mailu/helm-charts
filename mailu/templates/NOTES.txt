@@ -19,7 +19,7 @@ You can login to the admin panel using the following initial credentials (if not
         The password can be retrieved in the '{{ include "mailu.initialAccount.secretName" . }}' secret.
         To retrieve the password, run:
 
-          kubectl --namespace={{ .Release.Namespace }} get secrets get secrets {{ include "mailu.initialAccount.secretName" . }} -o jsonpath='{.data.{{ include "mailu.initialAccount.secretKey" . }}}' | base64 --decode
+          kubectl --namespace={{ .Release.Namespace }} get secrets {{ include "mailu.initialAccount.secretName" . }} -o jsonpath='{.data.{{ include "mailu.initialAccount.secretKey" . }}}' | base64 --decode
 
         !!! Please change the password after 1st login !!!
 
