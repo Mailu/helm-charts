@@ -1517,7 +1517,7 @@ dovecot:
 
 ## @section rspamd parameters
 rspamd:
-  ## @param admin.enabled Enable rspamd 
+  ## @param rspamd.enabled Enable rspamd
   enabled: true
   ## @param rspamd.overrides Enable rspamd overrides
   ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings

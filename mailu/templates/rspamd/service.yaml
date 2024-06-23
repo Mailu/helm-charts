@@ -1,4 +1,5 @@
 ---
+{{- if .Values.rspamd.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,3 +23,4 @@ spec:
     - name: rspamd-http
       protocol: TCP
       port: 11334
+{{ end }}
