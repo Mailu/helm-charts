@@ -14,3 +14,12 @@ repos:
     rev: v0.1.18
     hooks:
       - id: helmlint
+  - repo: https://github.com/bitnami/readme-generator-for-helm
+    rev: "main"
+    hooks:
+      - id: helm-readme-generator
+        # in order to run helm-readme-generator only once
+        pass_filenames: false
+        always_run: true
+        # default args are [--readme=chart/README.md, --values=chart/values.yaml]
+        args: [--readme=path/to/README.md, --values=path/to/values.yaml]
