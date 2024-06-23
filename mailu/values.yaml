@@ -844,6 +844,9 @@ front:
   ## @param front.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
 ## @section Admin parameters
 admin:
   ## @param admin.enabled Enable access to the admin interface
@@ -1043,6 +1046,9 @@ admin:
 
   ## @param admin.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
 
 ## @section Redis parameters
 ## Redis chart configuration
@@ -1280,6 +1286,9 @@ postfix:
   ## @param postfix.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
   ## @param postfix.overrides Enable postfix overrides
   ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
   ## Example:
@@ -1484,6 +1493,9 @@ dovecot:
 
   ## @param dovecot.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
 
   ## @param dovecot.overrides Enable dovecot overrides
   ## Example:
@@ -1710,6 +1722,9 @@ rspamd:
 
   ## @param rspamd.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
 
 ## @section clamav parameters
 clamav:
@@ -1938,6 +1953,9 @@ clamav:
   ## @param clamav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
 ## @section webmail parameters
 webmail:
   ## @param webmail.enabled Enable deployment of Roundcube webmail
@@ -2151,6 +2169,9 @@ webmail:
   ## @param webmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
 ## @section webdav parameters
 webdav:
   ## @param webdav.enabled Enable deployment of WebDAV server (using Radicale)
@@ -2347,6 +2368,9 @@ webdav:
 
   ## @param webdav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
 
 ## @section fetchmail parameters
 fetchmail:
@@ -2548,6 +2572,9 @@ fetchmail:
   ## @param fetchmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
 ## @section OLETools parameters
 oletools:
   ## @param oletools.enabled Enable OLETools
@@ -2731,3 +2758,6 @@ oletools:
 
   ## @param oletools.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []

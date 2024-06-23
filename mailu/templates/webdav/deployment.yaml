@@ -127,6 +127,9 @@ spec:
                 - -c
                 - 'ps ax | grep [/]radicale.conf'
           {{- end }}
+      {{- if .Values.webdav.extraContainers }}
+        {{- toYaml .Values.webdav.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

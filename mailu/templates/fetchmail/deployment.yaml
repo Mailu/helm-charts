@@ -134,6 +134,9 @@ spec:
                 - -c
                 - 'ps ax | grep [/]fetchmail.py'
           {{- end }}
+      {{- if .Values.fetchmail.extraContainers }}
+        {{- toYaml .Values.fetchmail.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

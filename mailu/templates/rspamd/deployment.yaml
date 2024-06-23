@@ -131,6 +131,9 @@ spec:
               path: /
               port: rspamd-http
           {{- end }}
+      {{- if .Values.rspamd.extraContainers }}
+        {{- toYaml .Values.rspamd.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:

@@ -136,6 +136,9 @@ spec:
                 - 'User-Agent: health'
                 - "http://localhost/ping"
           {{- end }}
+      {{- if .Values.webmail.extraContainers }}
+        {{- toYaml .Values.webmail.extraContainers | nindent 8 }}
+      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
