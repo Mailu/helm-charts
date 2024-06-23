@@ -22,4 +22,4 @@ repos:
         pass_filenames: false
         always_run: true
         # default args are [--readme=chart/README.md, --values=chart/values.yaml]
-        args: [--readme=path/to/README.md, --values=path/to/values.yaml]
+        args: [--readme=mailu/README.md, --values=mailu/values.yaml]
