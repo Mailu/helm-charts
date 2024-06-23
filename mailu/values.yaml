@@ -1047,7 +1047,7 @@ admin:
   ## @param admin.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param admin.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section Redis parameters
@@ -1286,7 +1286,7 @@ postfix:
   ## @param postfix.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param postfix.extraContainers Add additional containers to the pod
   extraContainers: []
 
   ## @param postfix.overrides Enable postfix overrides
@@ -1494,7 +1494,7 @@ dovecot:
   ## @param dovecot.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param dovecot.extraContainers Add additional containers to the pod
   extraContainers: []
 
   ## @param dovecot.overrides Enable dovecot overrides
@@ -1723,7 +1723,7 @@ rspamd:
   ## @param rspamd.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param rspamd.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section clamav parameters
@@ -1953,7 +1953,7 @@ clamav:
   ## @param clamav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param clamav.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section webmail parameters
@@ -2169,7 +2169,7 @@ webmail:
   ## @param webmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param webmail.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section webdav parameters
@@ -2369,7 +2369,7 @@ webdav:
   ## @param webdav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param webdav.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section fetchmail parameters
@@ -2572,7 +2572,7 @@ fetchmail:
   ## @param fetchmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param fetchmail.extraContainers Add additional containers to the pod
   extraContainers: []
 
 ## @section OLETools parameters
@@ -2759,5 +2759,5 @@ oletools:
   ## @param oletools.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
   extraVolumes: []
 
-  ## @param front.extraContainers Add additional containers to the pod
+  ## @param oletools.extraContainers Add additional containers to the pod
   extraContainers: []
