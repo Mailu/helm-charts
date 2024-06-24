@@ -13,8 +13,9 @@ This chart installs the Mailu mail system on kubernetes
 | 0.0.x, 0.1.x, 0.2.x | 1.8           |
 | 0.3.x               | 1.9.x         |
 | 1.x.x               | 2.x           |
+| 2.x.x               | >= 2024.06    |
 
-Active development of this chart is only for the latest supported Mailu version (currently 1.9.x).
+Active development of this chart is only for the latest supported Mailu version.
 Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ## Prerequisites
