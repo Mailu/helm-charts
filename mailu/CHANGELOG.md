@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.0.0](https://github.com/Mailu/helm-charts/compare/mailu-1.5.0...mailu-2.0.0) (2024-06-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* replace mailu clamav container with official container ([#350](https://github.com/Mailu/helm-charts/issues/350))
+
+### Features
+
+* add extraContainers to helm chart in order to allow users to inject sidecar-containers to each component ([#344](https://github.com/Mailu/helm-charts/issues/344)) ([369a6cd](https://github.com/Mailu/helm-charts/commit/369a6cd3c17c9734d44e74857f96a77700228a40))
+* add the possibility to disable RSPAMD ([#337](https://github.com/Mailu/helm-charts/issues/337)) ([bb5a3ab](https://github.com/Mailu/helm-charts/commit/bb5a3ab6cb919f6334973430ad1175775f8ac829))
+* bump mailu version to 2024.06.3 ([#351](https://github.com/Mailu/helm-charts/issues/351)) ([d35ecce](https://github.com/Mailu/helm-charts/commit/d35ecce77e4c31d379fc9632e57d3db73b53eeb8))
+* replace mailu clamav container with official container ([#350](https://github.com/Mailu/helm-charts/issues/350)) ([b45bd55](https://github.com/Mailu/helm-charts/commit/b45bd55fe61013a14ff2576eda86ff956bf1055c))
+
+
+### Bug Fixes
+
+* remove duplicate 'get secrets' in notes ([#345](https://github.com/Mailu/helm-charts/issues/345)) ([1d3cec3](https://github.com/Mailu/helm-charts/commit/1d3cec3f72f372dd0e1116c54ab64557fcfb9f7e))
+
 ## [1.5.0](https://github.com/Mailu/helm-charts/compare/mailu-1.4.0...mailu-1.5.0) (2023-10-24)
 
 
