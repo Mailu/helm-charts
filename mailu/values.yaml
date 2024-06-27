@@ -200,6 +200,9 @@ credentialRounds: 12
 ## It should only be turned off if you intend to access it over plain HTTP.
 sessionCookieSecure: true
 
+## @param authRequireTokens Require tokens for authentication
+authRequireTokens: false
+
 ## @param sessionTimeout Maximum amount of time in seconds between requests before a session is invalidated
 sessionTimeout: 3600
 
@@ -605,6 +608,25 @@ ingress:
   ## This is normally auto-detected, only change it if you know what you are doing.
   tlsFlavorOverride: ""
 
+  ## @param ingress.proxyProtocol.pop3 Enable PROXY protocol for POP3 (110/tcp)
+  ## @param ingress.proxyProtocol.pop3s Enable PROXY protocol for POP3S (995/tcp)
+  ## @param ingress.proxyProtocol.imap Enable PROXY protocol for IMAP (143/tcp)
+  ## @param ingress.proxyProtocol.imaps Enable PROXY protocol for IMAPS (993/tcp)
+  ## @param ingress.proxyProtocol.smtp Enable PROXY protocol for SMTP (25/tcp)
+  ## @param ingress.proxyProtocol.smtps Enable PROXY protocol for SMTPS (465/tcp)
+  ## @param ingress.proxyProtocol.submission Enable PROXY protocol for Submission (587/tcp)
+  ## @param ingress.proxyProtocol.manageSieve Enable PROXY protocol for ManageSieve (4190/tcp)
+  ## Enabling any of these requires to have ingress.realIpFrom set
+  proxyProtocol:
+    pop3: false
+    pop3s: false
+    imap: false
+    imaps: false
+    smtp: false
+    smtps: false
+    submission: false
+    manageSieve: false
+
 ## @section Proxy auth configuration
 ## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
 proxyAuth:
@@ -645,13 +667,14 @@ front:
   ## @param front.externalService.externalTrafficPolicy Service externalTrafficPolicy (Cluster or Local)
   ## @param front.externalService.loadBalancerIP Service loadBalancerIP
   ## @param front.externalService.annotations Service annotations
-  ## @param front.externalService.ports.pop3 Expose POP3 port
-  ## @param front.externalService.ports.pop3s Expose POP3 port (TLS)
-  ## @param front.externalService.ports.imap Expose IMAP port
-  ## @param front.externalService.ports.imaps Expose IMAP port (TLS)
-  ## @param front.externalService.ports.smtp Expose SMTP port
-  ## @param front.externalService.ports.smtps Expose SMTP port (TLS)
-  ## @param front.externalService.ports.submission Expose Submission port
+  ## @param front.externalService.ports.pop3 Expose POP3 port - 110/tcp
+  ## @param front.externalService.ports.pop3s Expose POP3 port (TLS) - 995/tcp
+  ## @param front.externalService.ports.imap Expose IMAP port - 143/tcp
+  ## @param front.externalService.ports.imaps Expose IMAP port (TLS) - 993/tcp
+  ## @param front.externalService.ports.smtp Expose SMTP port - 25/tcp
+  ## @param front.externalService.ports.smtps Expose SMTP port (TLS) - 465/tcp
+  ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
+  ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
   externalService:
     enabled: false
     type: ClusterIP
@@ -667,7 +690,8 @@ front:
       imaps: true
       smtp: true
       smtps: true
-      submission: true
+      submission: false
+      manageSieve: true
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment

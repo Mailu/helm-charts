@@ -156,3 +156,89 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- define "mailu.oletools.serviceFqdn" -}}
 {{- printf "%s.%s.svc.%s" (include "mailu.oletools.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
+
+
+{{/* Combine the enabled ports that should be exposed into a comma-separated string */}}
+{{- define "mailu.enabledPorts" -}}
+{{- $enabledPorts := list -}}
+
+{{- if .Values.ingress.enabled -}}
+    {{- $enabledPorts = append $enabledPorts "80" -}}
+    {{- $enabledPorts = append $enabledPorts "443" -}}
+{{- end -}}
+
+{{- if .Values.front.externalService.enabled -}}
+    {{- if .Values.front.externalService.ports.pop3 -}}
+        {{- $enabledPorts = append $enabledPorts "110" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.pop3s -}}
+        {{- $enabledPorts = append $enabledPorts "995" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.imap -}}
+        {{- $enabledPorts = append $enabledPorts "143" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.imaps -}}
+        {{- $enabledPorts = append $enabledPorts "993" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.smtp -}}
+        {{- $enabledPorts = append $enabledPorts "25" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.smtps -}}
+        {{- $enabledPorts = append $enabledPorts "465" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.submission -}}
+        {{- $enabledPorts = append $enabledPorts "587" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.manageSieve -}}
+        {{- $enabledPorts = append $enabledPorts "4190" -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $enabledPortsString := join "," $enabledPorts -}}
+{{- printf "%s" $enabledPortsString -}}
+{{- end -}}
+
+{{/* Combine the ports for which PROXY protocol should be enabled into a comma-separated string */}}
+{{- define "mailu.proxyProtocolPorts" -}}
+{{- $proxyProtocolPorts := list -}}
+
+{{- if .Values.front.externalService.enabled -}}
+    {{- if .Values.front.externalService.ports.pop3 -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "110" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.pop3s -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "995" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.imap -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "143" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.imaps -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "993" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.smtp -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.smtps -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.submission -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "587" -}}
+    {{- end -}}
+    {{- if .Values.front.externalService.ports.manageSieve -}}
+        {{- $proxyProtocolPorts = append $proxyProtocolPorts "4190" -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $proxyProtocolPortsString := join "," $proxyProtocolPorts -}}
+{{/* if any ports are enabled and .front.realIpFrom is empty, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) (not .Values.front.realIpFrom) -}}
+    {{- fail "PROXY protocol is enabled for some ports, but front.realIpFrom is not set" -}}
+{{- end -}}
+
+{{/* if any ports are enabled and .front.realIpHeader is set, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) .Values.front.realIpHeader -}}
+    {{- fail "PROXY protocol is enabled for some ports, but front.realIpHeader is set" -}}
+{{- end -}}
+
+{{- printf "%s" $proxyProtocolPortsString -}}
+{{- end -}}

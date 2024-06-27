@@ -52,8 +52,6 @@ spec:
     - name: sieve
       port: 14190
       protocol: TCP
-  {{ if not .Values.ingress.enabled }}
     - name: https
       port: 443
       protocol: TCP
-  {{end}}

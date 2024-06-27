@@ -19,6 +19,7 @@ data:
   AUTH_RATELIMIT_IP_V6_MASK: {{ .Values.limits.authRatelimit.ipv6Mask | quote }}
   AUTH_RATELIMIT_IP: {{ .Values.limits.authRatelimit.ip | quote  }}
   AUTH_RATELIMIT_USER: {{ .Values.limits.authRatelimit.user | quote  }}
+  AUTH_REQUIRE_TOKENS: {{ .Values.authRequireTokens | quote }}
   BABEL_DEFAULT_LOCALE: "en"
   BABEL_DEFAULT_TIMEZONE: "UTC"
   BOOTSTRAP_SERVE_LOCAL: "true"
@@ -63,6 +64,7 @@ data:
   MESSAGE_SIZE_LIMIT: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
   OUTBOUND_TLS_LEVEL: {{ .Values.tls.outboundLevel | quote }}
   PERMANENT_SESSION_LIFETIME: {{ .Values.permanentSessionLifetime | int64 | quote }}
+  PORTS: {{ include "mailu.enabledPorts" . }}
   POSTMASTER: {{ .Values.postmaster | quote }}
   PROXY_AUTH_CREATE: {{ .Values.proxyAuth.create | quote }}
   PROXY_AUTH_HEADER: {{ .Values.proxyAuth.header | quote }}
