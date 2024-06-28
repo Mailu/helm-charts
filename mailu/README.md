@@ -935,6 +935,63 @@ Check that the deployed pods are all running.
 | `oletools.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`             |
 | `oletools.extraContainers`                       | Add additional containers to the pod                                                  | `[]`             |
 
+### Tika parameters
+
+| Name                                         | Description                                                                                     | Value           |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------- |
+| `tika.enabled`                               | Enable OLETools                                                                                 | `true`          |
+| `tika.logLevel`                              | Override default log level                                                                      | `""`            |
+| `tika.languages`                             | Array of languages to enable (sets the FULL_TEXT_SEARCH environment variable); "off" to disable | `["en"]`        |
+| `tika.image.repository`                      | Pod image repository                                                                            | `apache/tika`   |
+| `tika.image.tag`                             | Pod image tag                                                                                   | `2.9.2.1-full`  |
+| `tika.image.pullPolicy`                      | Pod image pull policy                                                                           | `IfNotPresent`  |
+| `tika.image.registry`                        | Pod image registry (specific for tika as it is not part of the mailu organization)              | `docker.io`     |
+| `tika.resources.limits`                      | The resources limits for the container                                                          | `{}`            |
+| `tika.resources.requests`                    | The requested resources for the container                                                       | `{}`            |
+| `tika.livenessProbe.enabled`                 | Enable livenessProbe                                                                            | `true`          |
+| `tika.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                             | `3`             |
+| `tika.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                                         | `10`            |
+| `tika.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                                | `10`            |
+| `tika.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                             | `1`             |
+| `tika.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                               | `5`             |
+| `tika.readinessProbe.enabled`                | Enable readinessProbe                                                                           | `true`          |
+| `tika.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                                        | `10`            |
+| `tika.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                               | `10`            |
+| `tika.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                              | `5`             |
+| `tika.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                            | `3`             |
+| `tika.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                            | `1`             |
+| `tika.startupProbe.enabled`                  | Enable startupProbe                                                                             | `false`         |
+| `tika.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                          | `10`            |
+| `tika.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                                 | `10`            |
+| `tika.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                                | `5`             |
+| `tika.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                              | `3`             |
+| `tika.startupProbe.successThreshold`         | Success threshold for startupProbe                                                              | `1`             |
+| `tika.podLabels`                             | Add extra labels to pod                                                                         | `{}`            |
+| `tika.podAnnotations`                        | Add extra annotations to the pod                                                                | `{}`            |
+| `tika.nodeSelector`                          | Node labels selector for pod assignment                                                         | `{}`            |
+| `tika.initContainers`                        | Add additional init containers to the pod                                                       | `[]`            |
+| `tika.priorityClassName`                     | Pods' priorityClassName                                                                         | `""`            |
+| `tika.podSecurityContext.enabled`            | Enabled pods' Security Context                                                                  | `false`         |
+| `tika.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                              | `1001`          |
+| `tika.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                            | `false`         |
+| `tika.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                                      | `1001`          |
+| `tika.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                                   | `false`         |
+| `tika.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                                       | `2`             |
+| `tika.affinity`                              | Affinity for tika pod assignment                                                                | `{}`            |
+| `tika.tolerations`                           | Tolerations for pod assignment                                                                  | `[]`            |
+| `tika.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                            | `3`             |
+| `tika.hostAliases`                           | Pod pod host aliases                                                                            | `[]`            |
+| `tika.schedulerName`                         | Name of the k8s scheduler (other than default)                                                  | `""`            |
+| `tika.service.annotations`                   | tika service annotations                                                                        | `{}`            |
+| `tika.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                                  | `[]`            |
+| `tika.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                                         | `RollingUpdate` |
+| `tika.extraEnvVars`                          | Extra environment variable to pass to the running container                                     | `[]`            |
+| `tika.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod           | `""`            |
+| `tika.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod              | `""`            |
+| `tika.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                            | `[]`            |
+| `tika.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                              | `[]`            |
+| `tika.extraContainers`                       | Add additional containers to the pod                                                            | `[]`            |
+
 
 ## Example values.yaml to get started
 

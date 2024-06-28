@@ -47,6 +47,7 @@ data:
   DOMAIN: {{ .Values.domain | quote }}
   FETCHMAIL_DELAY: {{ .Values.fetchmail.delay | quote }}
   FETCHMAIL_ENABLED: {{ .Values.fetchmail.enabled | quote }}
+  FULL_TEXT_SEARCH: {{ include "mailu.fullTextSearch" . }}
   HOSTNAMES: {{ join "," .Values.hostnames }}
   INBOUND_TLS_ENFORCE: {{ .Values.tls.inboundEnforce | quote }}
   INSTANCE_ID_PATH: "/data/instance"
