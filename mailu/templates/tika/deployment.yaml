@@ -66,7 +66,7 @@ spec:
       {{- end }}
       containers:
         - name: tika
-          image: {{ .Values.clamav.image.registry }}/{{ .Values.clamav.image.repository }}:{{ .Values.clamav.image.tag }}
+          image: {{ .Values.tika.image.registry }}/{{ .Values.tika.image.repository }}:{{ .Values.tika.image.tag }}
           imagePullPolicy: {{ .Values.tika.image.pullPolicy }}
           {{- if .Values.tika.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.tika.containerSecurityContext "enabled" | toYaml | nindent 12 }}
