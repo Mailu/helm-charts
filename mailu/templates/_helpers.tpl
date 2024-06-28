@@ -163,6 +163,7 @@ Please read the upgrade guide at XXX.
 {{- $messages := list -}}
 {{- $messages := append $messages (include "mailu.validateValues.deprecated" .) -}}
 {{- $messages := append $messages (include "mailu.validateValues.domain" .) -}}
+{{- $messages := append $messages (include "mailu.validateValues.tika" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 {{- if $message -}}
@@ -176,5 +177,34 @@ Please read the upgrade guide at XXX.
 {{- if not .Values.domain }}
 mailu: domain
     You need to set the domain to be used
+{{- end -}}
+{{- end -}}
+
+{{/* Check if .Values.tika.enabled and .Values.tika.languages is a non-empty array.
+If .Values.tika.enabled is false, then mailu.fullTextSearch should be "off".
+If .Values.tika.enabled is true, and .Values.tika.languages is an empty array, throw an error.
+If .Values.tika.enabled is true, and .Values.tika.languages is a non-empty array, then mailu.fullTextSearch should be all languages joined by a comma.
+*/}}
+{{- define "mailu.validateValues.tika" -}}
+{{- if .Values.tika.enabled -}}
+{{/* Check if .Values.tika.languages is an empty array */}}
+{{- if not .Values.tika.languages -}}
+mailu: tika
+    Tika is enabled but no languages are set (tika.enabled = true, tika.languages = [])
+    You need to set at least one language for Tika in tika.languages
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/* Check if .Values.tika.enabled is false or a comma-separated list of languages in .Values.tika.languages */}}
+{{- define "mailu.fullTextSearch" -}}
+{{- if .Values.tika.enabled -}}
+    {{- if not .Values.tika.languages -}}
+        {{- print "off" -}}
+    {{- else -}}
+        {{- join "," .Values.tika.languages -}}
+    {{- end -}}
+{{- else -}}
+    {{- print "off" -}}
 {{- end -}}
 {{- end -}}

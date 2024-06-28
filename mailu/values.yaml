@@ -2789,3 +2789,197 @@ oletools:
 
   ## @param oletools.extraContainers Add additional containers to the pod
   extraContainers: []
+
+## @section Tika parameters
+tika:
+  ## @param tika.enabled Enable OLETools
+  enabled: true
+
+  ## @param tika.logLevel Override default log level
+  logLevel: ""
+
+  ## @param tika.languages Array of languages to enable (sets the FULL_TEXT_SEARCH environment variable); "off" to disable
+  ## See https://doc.dovecot.org/settings/plugin/fts-plugin/#fts-languages for all available languages
+  languages:
+    - en
+
+  ## Pod image
+  ## @param tika.image.repository Pod image repository
+  ## @param tika.image.tag Pod image tag
+  ## @param tika.image.pullPolicy Pod image pull policy
+  ## @param tika.image.registry Pod image registry (specific for tika as it is not part of the mailu organization)
+  image:
+    repository: apache/tika
+    tag: 2.9.2.1-full
+    pullPolicy: IfNotPresent
+    registry: docker.io
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param tika.resources.limits The resources limits for the container
+  ## @param tika.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.livenessProbe.enabled Enable livenessProbe
+  ## @param tika.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param tika.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param tika.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param tika.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param tika.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.readinessProbe.enabled Enable readinessProbe
+  ## @param tika.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param tika.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param tika.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param tika.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param tika.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.startupProbe.enabled Enable startupProbe
+  ## @param tika.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param tika.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param tika.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param tika.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param tika.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param tika.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param tika.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param tika.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param tika.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param tika.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param tika.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param tika.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param tika.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param tika.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param tika.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param tika.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param tika.affinity Affinity for tika pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param tika.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param tika.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param tika.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param tika.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param tika.service.annotations tika service annotations
+    annotations: {}
+
+  ## @param tika.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param tika.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param tika.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param tika.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param tika.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param tika.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param tika.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param tika.extraContainers Add additional containers to the pod
+  extraContainers: []

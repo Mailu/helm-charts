@@ -145,3 +145,12 @@ redis:
       limits:
         memory: 500Mi
         cpu: 1
+
+tika:
+  enabled: true
+  languages:
+    - en
+    - fr
+
+oletools:
+  enabled: true

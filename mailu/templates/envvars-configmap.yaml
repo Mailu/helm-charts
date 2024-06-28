@@ -159,3 +159,11 @@ data:
 {{- else }}
   SCAN_MACROS: "false"
 {{- end }}
+
+{{- if .Values.tika.enabled }}
+  FULL_TEXT_SEARCH: {{ include "mailu.fullTextSearch" . }}
+  FULL_TEXT_SEARCH_ATTACHMENTS: "true"
+  FTS_ATTACHMENTS_ADDRESS: {{ include "mailu.tika.serviceFqdn" . }}
+{{- else }}
+  FULL_TEXT_SEARCH_ATTACHMENTS: "false"
+{{- end}}

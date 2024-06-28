@@ -11,6 +11,7 @@ Mailu services:
 - rspamd
 - webdav
 - oletools
+- tika
 
 Service name can be retrieved with `mailu.SERVICE.serviceName`
 Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
@@ -155,6 +156,15 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{/* Returns oletools internal service fqdn. */}}
 {{- define "mailu.oletools.serviceFqdn" -}}
 {{- printf "%s.%s.svc.%s" (include "mailu.oletools.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
+{{- end -}}
+
+{{/* Returns tika internal service name. */}}
+{{- define "mailu.tika.serviceName" -}}
+{{- printf "%s-tika" (include "mailu.fullname" .) -}}
+{{- end -}}
+{{/* Returns tika internal service fqdn. */}}
+{{- define "mailu.tika.serviceFqdn" -}}
+{{- printf "%s.%s.svc.%s" (include "mailu.tika.serviceName" . ) (include "common.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
 {{- end -}}
 
 
