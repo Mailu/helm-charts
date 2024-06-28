@@ -682,6 +682,7 @@ front:
     ## type: LoadBalancer
     loadBalancerIP: ""
     externalTrafficPolicy: Local
+    ipFamilyPolicy: SingleStack
     annotations: {}
     ports:
       pop3: false
