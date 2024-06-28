@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/Mailu/helm-charts/compare/mailu-2.0.0...mailu-2.1.0) (2024-06-28)
+
+
+### Features
+
+* added Tika support ([#356](https://github.com/Mailu/helm-charts/issues/356)) ([34ef061](https://github.com/Mailu/helm-charts/commit/34ef061e9f2c3a906dc198b9fe430361f3a3554f))
+* several fixes for Mailu 2024.06 support ([#354](https://github.com/Mailu/helm-charts/issues/354)) ([3fa16db](https://github.com/Mailu/helm-charts/commit/3fa16db195f3361388c4b9cee329c0e67970dc9a))
+
 ## [2.0.0](https://github.com/Mailu/helm-charts/compare/mailu-1.5.0...mailu-2.0.0) (2024-06-24)
 
 
