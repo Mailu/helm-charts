@@ -28,7 +28,7 @@ spec:
       port: 110
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 110
+      nodePort: {{ .nodePorts.pop3 }}
       {{- end }}
     {{- end }}
     {{- if .ports.pop3s }}
@@ -36,7 +36,7 @@ spec:
       port: 995
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 995
+      nodePort: {{ .nodePorts.pop3s }}
       {{- end }}
     {{- end }}
     {{- if .ports.imap }}
@@ -44,7 +44,7 @@ spec:
       port: 143
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 143
+      nodePort: {{ .nodePorts.imap }}
       {{- end }}
     {{- end }}
     {{- if .ports.imaps }}
@@ -52,7 +52,7 @@ spec:
       port: 993
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 993
+      nodePort: {{ .nodePorts.imaps }}
       {{- end }}
     {{- end }}
     {{- if .ports.smtp }}
@@ -60,7 +60,7 @@ spec:
       port: 25
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 25
+      nodePort: {{ .nodePorts.smtp }}
       {{- end }}
     {{- end }}
     {{- if .ports.smtps }}
@@ -68,7 +68,7 @@ spec:
       port: 465
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 465
+      nodePort: {{ .nodePorts.smtps }}
       {{- end }}
     {{- end }}
     {{- if .ports.submission }}
@@ -76,7 +76,7 @@ spec:
       port: 587
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 587
+      nodePort: {{ .nodePorts.submission }}
       {{- end }}
     {{- end }}
     {{- if .ports.manageSieve }}
@@ -84,7 +84,7 @@ spec:
       port: 4190
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
-      nodePort: 4190
+      nodePort: {{ .nodePorts.manageSieve }}
       {{- end }}
     {{- end }}
 {{- end }}
