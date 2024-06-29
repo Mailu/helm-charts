@@ -307,8 +307,8 @@ Check that the deployed pods are all running.
 | `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
-| `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
-| `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
+| `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP, NodePort, or LoadBalancer)   | `false`         |
+| `front.externalService.type`                  | Service type (ClusterIP, NodePort, or LoadBalancer)                                   | `ClusterIP`     |
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
 | `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
 | `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
@@ -320,6 +320,14 @@ Check that the deployed pods are all running.
 | `front.externalService.ports.smtps`           | Expose SMTP port (TLS) - 465/tcp                                                      | `true`          |
 | `front.externalService.ports.submission`      | Expose Submission port - 587/tcp                                                      | `false`         |
 | `front.externalService.ports.manageSieve`     | Expose ManageSieve port - 4190/tcp                                                    | `true`          |
+| `front.externalService.nodePorts.pop3`        | POP3 node port (only if `front.externalService.type=NodePort`)                        | `30110`         |
+| `front.externalService.nodePorts.pop3s`       | POP3 (TLS) node port (only if `front.externalService.type=NodePort`)                  | `30995`         |
+| `front.externalService.nodePorts.imap`        | IMAP node port (only if `front.externalService.type=NodePort`)                        | `30143`         |
+| `front.externalService.nodePorts.imaps`       | IMAP (TLS) node port (only if `front.externalService.type=NodePort`)                  | `30993`         |
+| `front.externalService.nodePorts.smtp`        | SMTP node port (only if `front.externalService.type=NodePort`)                        | `30025`         |
+| `front.externalService.nodePorts.smtps`       | SMTP (TLS) node port (only if `front.externalService.type=NodePort`)                  | `30465`         |
+| `front.externalService.nodePorts.submission`  | Submission node port (only if `front.externalService.type=NodePort`)                  | `30587`         |
+| `front.externalService.nodePorts.manageSieve` | ManageSieve node port (only if `front.externalService.type=NodePort`)                 | `30419`         |
 | `front.kind`                                  | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
 | `front.replicaCount`                          | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |
 | `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |
