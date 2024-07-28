@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/Mailu/helm-charts/compare/mailu-2.1.0...mailu-2.1.1) (2024-07-28)
+
+
+### Bug Fixes
+
+* bump mailu to 2024.06.6 ([#359](https://github.com/Mailu/helm-charts/issues/359)) ([cfc2b7b](https://github.com/Mailu/helm-charts/commit/cfc2b7bf2425ac6e05574da48ee13b29b0307d32))
+
 ## [2.1.0](https://github.com/Mailu/helm-charts/compare/mailu-2.0.0...mailu-2.1.0) (2024-07-28)
 
 
