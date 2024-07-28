@@ -154,3 +154,7 @@ tika:
 
 oletools:
   enabled: true
+
+api:
+  enabled: true
+  token: chang3m3!
