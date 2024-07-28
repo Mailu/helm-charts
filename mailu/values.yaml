@@ -99,6 +99,18 @@ initialAccount:
   existingSecretPasswordKey: ""
   mode: "update"
 
+## @param api.enabled Enable the API interface
+## @param api.token Token to use for the API interface - if empty, a random token will be generated and saved in a secret
+## @param api.existingSecret Name of the existing secret to retrieve the API token - if set, the token will be ignored
+## @param api.existingSecretTokenKey Name of the key in the existing secret to use for the API token
+## @param api.webPath Path for the API interface
+api:
+  enabled: false
+  token: ""
+  existingSecret: ""
+  existingSecretTokenKey: "api-token"
+  webPath: "/api"
+
 ## @param subnet Change this if you're using different address ranges for pods (IPv4)
 subnet: 10.42.0.0/16
 

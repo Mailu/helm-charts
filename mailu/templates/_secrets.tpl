@@ -48,6 +48,26 @@
 {{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.externalRelay.secretName" .) "key" .Values.externalRelay.passwordKey "providedValues" (list "externalRelay.password") "length" 24 "strong" true "context" .) }}
 {{- end -}}
 
+
+{{/* Return mailu api.token */}}
+{{- define "mailu.api.token" -}}
+{{- include "common.secrets.passwords.manage" (dict "secret" (include "mailu.api.secretName" .) "key" (include "mailu.api.secretKey" .) "providedValues" (list "api.token") "length" 16 "strong" true "context" .) }}
+{{- end -}}
+
+{{/* Returns the mailu api secret name */}}
+{{- define "mailu.api.secretName" -}}
+{{- include "common.secrets.name" (dict "existingSecret" .Values.api.existingSecret "defaultNameSuffix" "api" "context" .) }}
+{{- end -}}
+
+{{/* Returns the mailu api key that contains the token in the secret */}}
+{{- define "mailu.api.secretKey" -}}
+{{ if .Values.api.existingSecretTokenKey }}
+{{- .Values.api.existingSecretTokenKey -}}
+{{- else -}}
+{{- print "api-token" -}}
+{{- end -}}
+{{- end -}}
+
 {{/* Get the mailu env vars secrets */}}
 {{- define "mailu.envvars.secrets" -}}
 - name: SECRET_KEY
@@ -87,5 +107,12 @@
     secretKeyRef:
       name: {{ include "mailu.externalRelay.secretName" . }}
       key: {{ .Values.externalRelay.passwordKey }}
+{{- end }}
+{{- if .Values.api.enabled }}
+- name: API_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "mailu.api.secretName" . }}
+      key: {{ include "mailu.api.secretKey" . }}
 {{- end }}
 {{- end -}}
