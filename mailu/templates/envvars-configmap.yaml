@@ -167,3 +167,10 @@ data:
 {{- else }}
   FULL_TEXT_SEARCH_ATTACHMENTS: "false"
 {{- end}}
+
+{{- if .Values.api.enabled }}
+  API: "true"
+  WEB_API: {{ .Values.api.webPath | quote }}
+{{- else }}
+  API: "false"
+{{- end }}
