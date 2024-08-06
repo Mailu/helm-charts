@@ -19,6 +19,9 @@ spec:
 {{- with .Values.front.externalService }}
   type: {{ .type | default "ClusterIP" }}
   externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
+  {{- with .ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . | quote }}
+  {{- end }}
   {{- if .loadBalancerIP }}
   loadBalancerIP: {{ .loadBalancerIP }}
   {{- end }}
