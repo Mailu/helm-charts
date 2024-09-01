@@ -138,9 +138,14 @@ spec:
         {{- toYaml .Values.fetchmail.extraContainers | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if not .Values.fetchmail.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.fetchmail.claimName" . }}
+        {{- end }}
         {{- if .Values.fetchmail.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.fetchmail.extraVolumes "context" $) | nindent 8 }}
         {{- end }}

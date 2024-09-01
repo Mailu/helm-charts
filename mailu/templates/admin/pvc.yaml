@@ -1,5 +1,5 @@
 ---
-{{- if not .Values.persistence.single_pvc }}
+{{- if and (.Values.admin.persistence.enabled) (not .Values.persistence.single_pvc) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:

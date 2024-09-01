@@ -133,9 +133,14 @@ spec:
         {{- toYaml .Values.admin.extraContainers | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if not .Values.admin.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.admin.claimName" . }}
+        {{- end }}
         {{- if .Values.admin.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
