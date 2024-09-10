@@ -325,7 +325,7 @@ Check that the deployed pods are all running.
 | `front.externalService.ports.smtp`            | Expose SMTP port - 25/tcp                                                             | `true`          |
 | `front.externalService.ports.smtps`           | DEPRECATED: Do not use, use submissions instead                                       | `true`          |
 | `front.externalService.ports.submission`      | Expose Submission port - 587/tcp                                                      | `false`         |
-| `front.externalService.ports.submissions`     | Expose SMTP port (TLS) - 465/tcp                                                      | `true`          |
+| `front.externalService.ports.submissions`     | Expose Submission port (TLS) - 465/tcp                                                | `true`          |
 | `front.externalService.ports.manageSieve`     | Expose ManageSieve port - 4190/tcp                                                    | `true`          |
 | `front.kind`                                  | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
 | `front.replicaCount`                          | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |

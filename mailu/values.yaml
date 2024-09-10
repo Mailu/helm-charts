@@ -688,7 +688,7 @@ front:
   ## @param front.externalService.ports.smtp Expose SMTP port - 25/tcp
   ## @param front.externalService.ports.smtps DEPRECATED: Do not use, use submissions instead
   ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
-  ## @param front.externalService.ports.submissions Expose SMTP port (TLS) - 465/tcp
+  ## @param front.externalService.ports.submissions Expose Submission port (TLS) - 465/tcp
   ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
   externalService:
     enabled: false
