@@ -625,8 +625,9 @@ ingress:
   ## @param ingress.proxyProtocol.imap Enable PROXY protocol for IMAP (143/tcp)
   ## @param ingress.proxyProtocol.imaps Enable PROXY protocol for IMAPS (993/tcp)
   ## @param ingress.proxyProtocol.smtp Enable PROXY protocol for SMTP (25/tcp)
-  ## @param ingress.proxyProtocol.smtps Enable PROXY protocol for SMTPS (465/tcp)
+  ## @param ingress.proxyProtocol.smtps DEPRECATED: Do not use, use submissions instead.
   ## @param ingress.proxyProtocol.submission Enable PROXY protocol for Submission (587/tcp)
+  ## @param ingress.proxyProtocol.submissions Enable PROXY protocol for Submissions (465/tcp)
   ## @param ingress.proxyProtocol.manageSieve Enable PROXY protocol for ManageSieve (4190/tcp)
   ## Enabling any of these requires to have ingress.realIpFrom set
   proxyProtocol:
@@ -637,6 +638,7 @@ ingress:
     smtp: false
     smtps: false
     submission: false
+    submissions: false
     manageSieve: false
 
 ## @section Proxy auth configuration
@@ -684,8 +686,9 @@ front:
   ## @param front.externalService.ports.imap Expose IMAP port - 143/tcp
   ## @param front.externalService.ports.imaps Expose IMAP port (TLS) - 993/tcp
   ## @param front.externalService.ports.smtp Expose SMTP port - 25/tcp
-  ## @param front.externalService.ports.smtps Expose SMTP port (TLS) - 465/tcp
+  ## @param front.externalService.ports.smtps DEPRECATED: Do not use, use submissions instead
   ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
+  ## @param front.externalService.ports.submissions Expose SMTP port (TLS) - 465/tcp
   ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
   externalService:
     enabled: false
@@ -703,6 +706,7 @@ front:
       smtp: true
       smtps: true
       submission: false
+      submissions: true
       manageSieve: true
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
