@@ -323,7 +323,7 @@ Check that the deployed pods are all running.
 | `front.externalService.ports.imap`            | Expose IMAP port - 143/tcp                                                            | `false`         |
 | `front.externalService.ports.imaps`           | Expose IMAP port (TLS) - 993/tcp                                                      | `true`          |
 | `front.externalService.ports.smtp`            | Expose SMTP port - 25/tcp                                                             | `true`          |
-| `front.externalService.ports.smtps`           | DEPRECATED: Do not use, use submissions instead                                       | `true`          |
+| `front.externalService.ports.smtps`           | DEPRECATED: Do not use, use submissions instead                                       | `false`         |
 | `front.externalService.ports.submission`      | Expose Submission port - 587/tcp                                                      | `false`         |
 | `front.externalService.ports.submissions`     | Expose Submission port (TLS) - 465/tcp                                                | `true`          |
 | `front.externalService.ports.manageSieve`     | Expose ManageSieve port - 4190/tcp                                                    | `true`          |

@@ -704,7 +704,7 @@ front:
       imap: false
       imaps: true
       smtp: true
-      smtps: true
+      smtps: false
       submission: false
       submissions: true
       manageSieve: true
