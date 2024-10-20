@@ -449,7 +449,7 @@ Check that the deployed pods are all running.
 | `redis.master.persistence.accessModes`   | Pod pvc access modes                                                | `["ReadWriteOnce"]` |
 | `redis.master.persistence.annotations`   | Pod pvc annotations                                                 | `{}`                |
 | `redis.master.persistence.existingClaim` | Pod pvc existing claim; necessary if using single_pvc               | `""`                |
-| `redis.master.persistence.subPath`       | Subpath in PVC; necessary if using single_pvc (set it to `/redis`)  | `""`                |
+| `redis.master.persistence.subPath`       | Subpath in PVC; necessary if using single_pvc (set it to `redis`)   | `""`                |
 | `redis.replica.count`                    | Number of redis replicas (only if `redis.architecture=replication`) | `0`                 |
 
 ### Postfix parameters
