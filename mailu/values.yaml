@@ -704,6 +704,15 @@ front:
       smtps: true
       submission: false
       manageSieve: true
+    nodePorts:
+      pop3: 110
+      pop3s: 995
+      imap: 143
+      imaps: 993
+      smtp: 25
+      smtps: 465
+      submission: 587
+      manageSieve: 4190
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment
