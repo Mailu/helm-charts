@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.version&style=flat-square&label=Version) ![AppVersion](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.appVersion&style=flat-square&label=AppVersion)
 
-This chart installs the Mailu mail system on kubernetes
+This chart installs the Mailu mail system on Kubernetes
 
 **Homepage:** <https://mailu.io>
 
@@ -16,16 +16,16 @@ This chart installs the Mailu mail system on kubernetes
 | 2.x.x               | >= 2024.06    |
 
 Active development of this chart is only for the latest supported Mailu version.
-Branches exists for older mailu versions (e.g. old/mailu-1.8).
+Branches exists for older Mailu versions (e.g. old/mailu-1.8).
 
 ## Prerequisites
 
-- ⚠️Starting with version 1.9, you need a validating DNSSEC compatible resolver in order to run Mailu.
-- a working HTTP/HTTPS ingress controller such as nginx or traefik
-- cert-manager v0.12 or higher installed and configured (including a working cert issuer). Otherwise you will need to handle it by yourself and provide the secret to Mailu.
-- A node which has a public reachable IP, static address because mail service binds directly to the node's IP
-- A hosting service that allows inbound and outbound traffic on port 25.
-- Helm 3 (helm 2 support is dropped with release 0.3.0).
+- Starting with version 1.9, you need a validating DNSSEC compatible resolver in order to run Mailu.
+- a working HTTP/HTTPS ingress controller such as nginx or Traefik
+- cert-manager v0.12 or higher installed and configured (including a working cert issuer) – otherwise you'll need to handle issuing certificates and providing the secret to Mailu yourself
+- a node which has a publicly reachable static IP address, because mail service binds directly to the node's IP
+- a hosting provider that allows inbound and outbound traffic on port 25
+- Helm 3 (Helm 2 support is dropped with release 0.3.0)
 
 | Repository                         | Name       | Version |
 | ---------------------------------- | ---------- | ------- |
@@ -36,17 +36,19 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ### Warning about open relays
 
-One of the biggest mistakes when running a mail server is a so called "Open Relay". This kind of misconfiguration is in most cases caused by a badly configured
-load balancer which hides the originating IP address of an email which makes Mailu think, the email comes from an internal address and ommits authentification and other checks. In the result, your mail server can be abused to spread spam and will get blacklisted within hours.
+One of the biggest mistakes when running a mail server is a so-called "open relay".
+In most cases, this kind of misconfiguration is caused by a badly configured load balancer that hides the originating IP address of an email.
+This makes Mailu think that the email is coming from an internal address and it omits authentification and other checks.
+As a result, your mail server can be abused to spread spam and will get blacklisted within hours.
 
-It is very important that you check your setup for open relay at least:
+It is very important to check whether your setup is an open relay at least:
 
 - after installation
-- at any time you change network settings or load balancer configuration
+- any time you change network settings or load balancer configuration
 
 The check is quite simple:
 
-- watch the logs for the "mailu-front" POD
+- watch the logs for the "mailu-front" pod
 - browse to an open relay checker like <https://mxtoolbox.com/diagnostic.aspx>
 - enter the hostname or IP address of your mail server and start the test
 
@@ -56,7 +58,7 @@ In the logs, you should see some message like
 2021/10/26 21:23:25 [info] 12#12: *25691 client 18.205.72.90:56741 connected to 0.0.0.0:25
 ```
 
-It is very important that the IP address shown here is an external public IP address, not an internal like 10.x.x.x, 192.168.x.x or 172.x.x.x.
+The IP address shown here must be a public IP address, i.e. not in any of the RFC 1918 subnets: `10.0.0.0/8`, `172.16.0.0/12`, or `192.168.0.0/16`
 
 Also verify that the result of the check confirms that there is no open relay:
 
@@ -66,21 +68,20 @@ SMTP Open Relay OK - Not an open relay.
 
 ### Warning, this will not work on most cloud providers
 
-- Google cloud does not allow outgoing connections to connect to port 25. You will not be able to send
-  mails with mailu on google cloud (<https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec>)
-- Many cloud providers don't allow to assign fixed IPs directly to nodes. They use proxies or load balancers instead. While
-  this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP get's lost.
-  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by mailu (due the lack of
-  support in the nginx mail modules). Without the original IP information, a mail server will not work properly, or worse, will be
+- Google Cloud does not allow outgoing connections to connect to port 25, so
+  [you will not be able to send mails with Mailu on Google Cloud](<https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec>)
+- Many cloud providers don't assign fixed IPs to nodes directly. They use proxies or load balancers instead.
+  While this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP gets lost.
+  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by Mailu (due the lack of support in the nginx mail modules).
+  Without the original IP information, a mail server will not work properly, or worse, become
   an open relay.
-- If you'd like to run mailu on kubernetes, consider to rent a cheap VPS and run kuberneres on it (e.g. using rancher2). A good option is to
-  use hetzner cloud VPS (author's personal opinion).
-- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides
-  source ip addresses behind a load balancer.
+- If you'd like to run Mailu on Kubernetes, consider renting a cheap VPS to run Kubernetes on (e.g. using Rancher2).
+  A good option for a hosting provider is [Hetzner Cloud VPS](<https://www.hetzner.com/cloud/>) (author's personal opinion).
+- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides source ip addresses behind a load balancer.
 
 ## Installation
 
-- Add the repository via:
+- add the repository:
 
 ```bash
 helm repo add mailu https://mailu.github.io/helm-charts/
@@ -94,19 +95,19 @@ helm show values mailu/mailu > my-values-file.yaml
 
 Edit the `my-values-file.yaml` to reflect your environment.
 
-- deploy the helm-chart with:
+- deploy the Helm chart:
 
 ```bash
 helm install mailu mailu/mailu -n mailu-mailserver --values my-values-file.yaml
 ```
 
-- Uninstall the helm-chart with:
+- check that the deployed pods are all running
+
+### Uninstall
 
 ```bash
 helm uninstall mailu --namespace=mailu-mailserver
 ```
-
-Check that the deployed pods are all running.
 
 ## Parameters
 
@@ -117,24 +118,24 @@ Check that the deployed pods are all running.
 | `global.imageRegistry`                                | Global container image registry                                                   | `""`        |
 | `global.imagePullSecrets`                             | Global container image pull secret                                                | `[]`        |
 | `global.storageClass`                                 | Global storageClass to use for persistent volumes                                 | `""`        |
-| `global.database.roundcube.database`                  | Name of the roundcube database                                                    | `roundcube` |
-| `global.database.roundcube.username`                  | Username to use for the roundcube database                                        | `roundcube` |
-| `global.database.roundcube.password`                  | Password to use for the roundcube database                                        | `""`        |
-| `global.database.roundcube.existingSecret`            | Name of an existing secret to use for the roundcube database                      | `""`        |
-| `global.database.roundcube.existingSecretPasswordKey` | Name of the key in the existing secret to use for the roundcube database password | `""`        |
+| `global.database.roundcube.database`                  | Name of the Roundcube database                                                    | `roundcube` |
+| `global.database.roundcube.username`                  | Username to use for the Roundcube database                                        | `roundcube` |
+| `global.database.roundcube.password`                  | Password to use for the Roundcube database                                        | `""`        |
+| `global.database.roundcube.existingSecret`            | Name of an existing secret to use for the Roundcube database                      | `""`        |
+| `global.database.roundcube.existingSecretPasswordKey` | Name of the key in the existing secret to use for the Roundcube database password | `""`        |
 
 ### Common parameters
 
-| Name                | Description                                                                          | Value     |
-| ------------------- | ------------------------------------------------------------------------------------ | --------- |
-| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                 | `""`      |
-| `nameOverride`      | String to partially override mailu.fullname include (will maintain the release name) | `""`      |
-| `fullnameOverride`  | String to fully override mailu.fullname template                                     | `""`      |
-| `commonLabels`      | Add labels to all the deployed resources                                             | `{}`      |
-| `commonAnnotations` | Add annotations to all the deployed resources                                        | `{}`      |
-| `tolerations`       | Tolerations for pod assignment                                                       | `[]`      |
-| `affinity`          | Affinity for pod assignment                                                          | `{}`      |
-| `imageRegistry`     | Container registry to use for all Mailu images                                       | `ghcr.io` |
+| Name                | Description                                                                            | Value     |
+| ------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `kubeVersion`       | Force target Kubernetes version (using Helm capabilities if not set)                   | `""`      |
+| `nameOverride`      | String to partially override `mailu.fullname` include (will maintain the release name) | `""`      |
+| `fullnameOverride`  | String to fully override `mailu.fullname` template                                     | `""`      |
+| `commonLabels`      | Add labels to all the deployed resources                                               | `{}`      |
+| `commonAnnotations` | Add annotations to all the deployed resources                                          | `{}`      |
+| `tolerations`       | Tolerations for pod assignment                                                         | `[]`      |
+| `affinity`          | Affinity for pod assignment                                                            | `{}`      |
+| `imageRegistry`     | Container registry to use for all Mailu images                                         | `ghcr.io` |
 
 ### Mailu parameters
 
@@ -171,7 +172,7 @@ Check that the deployed pods are all running.
   app.kubernetes.io/name: prometheus-agent
   app.kubernetes.io/instance: kps
 `                                                  |
-| `mailuVersion`                                | Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0       | `""`                                                                                                                                          |
+| `mailuVersion`                                | Override Mailu version to be deployed (tag of `mailu` images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0     | `""`                                                                                                                                          |
 | `logLevel`                                    | default log level. can be overridden globally or per service                                                                           | `WARNING`                                                                                                                                     |
 | `postmaster`                                  | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`                                                                                                                                  |
 | `recipientDelimiter`                          | The delimiter used to separate local part from extension in recipient addresses                                                        | `+`                                                                                                                                           |
@@ -217,7 +218,7 @@ Check that the deployed pods are all running.
 | Name                                                | Description                                                                                                                                                                                               | Value                             |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `externalDatabase.enabled`                          | Set to true to use an external database                                                                                                                                                                   | `false`                           |
-| `externalDatabase.type`                             | Type of the external database for mailu and roundcube (`mysql`/`postgresql`)                                                                                                                              | `""`                              |
+| `externalDatabase.type`                             | Type of the external database for Mailu and Roundcube (`mysql`/`postgresql`)                                                                                                                              | `""`                              |
 | `externalDatabase.host`                             | Hostname of the database                                                                                                                                                                                  | `""`                              |
 | `externalDatabase.port`                             | Override for port of the database                                                                                                                                                                         | `""`                              |
 | `externalDatabase.database`                         | Name of the database                                                                                                                                                                                      | `mailu`                           |
@@ -233,8 +234,8 @@ Check that the deployed pods are all running.
 | `externalRedis.adminQuotaDbId`                      | Redis database ID for the quota storage on the admin pod                                                                                                                                                  | `1`                               |
 | `externalRedis.adminRateLimitDbId`                  | Redis database ID for the rate limit storage on the admin pod                                                                                                                                             | `2`                               |
 | `externalRedis.rspamdDbId`                          | Redis database ID for the rspamd storage on the rspamd pod                                                                                                                                                | `0`                               |
-| `database.mysql.roundcubePassword`                  | DEPRECATED - DO NOT USE: Password for the roundcube database                                                                                                                                              | `""`                              |
-| `database.postgresql.roundcubePassword`             | DEPRECATED - DO NOT USE: Password for the roundcube database                                                                                                                                              | `""`                              |
+| `database.mysql.roundcubePassword`                  | DEPRECATED - DO NOT USE: Password for the Roundcube database                                                                                                                                              | `""`                              |
+| `database.postgresql.roundcubePassword`             | DEPRECATED - DO NOT USE: Password for the Roundcube database                                                                                                                                              | `""`                              |
 | `mariadb.enabled`                                   | Enable MariaDB deployment                                                                                                                                                                                 | `false`                           |
 | `mariadb.architecture`                              | MariaDB architecture. Allowed values: standalone or replication                                                                                                                                           | `standalone`                      |
 | `mariadb.image.repository`                          | MariaDB image repository (using bitnamilegacy for now)                                                                                                                                                    | `bitnamilegacy/mariadb`           |
@@ -320,7 +321,7 @@ Check that the deployed pods are all running.
 | --------------------------------------------- | ------------------------------------------------------------------------------------- | --------------- |
 | `front.logLevel`                              | Override default log level                                                            | `""`            |
 | `front.image.repository`                      | Pod image repository                                                                  | `mailu/nginx`   |
-| `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
+| `front.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
@@ -401,7 +402,7 @@ Check that the deployed pods are all running.
 | `admin.uri`                                   | URI to access the admin interface                                                             | `/admin`            |
 | `admin.logLevel`                              | Override default log level                                                                    | `""`                |
 | `admin.image.repository`                      | Pod image repository                                                                          | `mailu/admin`       |
-| `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                   | `""`                |
+| `admin.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)               | `""`                |
 | `admin.image.pullPolicy`                      | Pod image pull policy                                                                         | `IfNotPresent`      |
 | `admin.persistence.size`                      | Pod pvc size                                                                                  | `20Gi`              |
 | `admin.persistence.storageClass`              | Pod pvc storage class                                                                         | `""`                |
@@ -486,7 +487,7 @@ Check that the deployed pods are all running.
 | ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
 | `postfix.logLevel`                              | Override default log level                                                            | `""`                |
 | `postfix.image.repository`                      | Pod image repository                                                                  | `mailu/postfix`     |
-| `postfix.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `postfix.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
 | `postfix.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `postfix.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `postfix.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
@@ -547,7 +548,7 @@ Check that the deployed pods are all running.
 | `dovecot.enabled`                               | Enable dovecot                                                                        | `true`              |
 | `dovecot.logLevel`                              | Override default log level                                                            | `""`                |
 | `dovecot.image.repository`                      | Pod image repository                                                                  | `mailu/dovecot`     |
-| `dovecot.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `dovecot.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
 | `dovecot.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `dovecot.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `dovecot.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
@@ -617,7 +618,7 @@ Check that the deployed pods are all running.
 | `rspamd.antivirusAction`                       | Action to take when an virus is detected. Possible values: `reject` or `discard`      | `discard`           |
 | `rspamd.logLevel`                              | Override default log level                                                            | `""`                |
 | `rspamd.image.repository`                      | Pod image repository                                                                  | `mailu/rspamd`      |
-| `rspamd.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `rspamd.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
 | `rspamd.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `rspamd.persistence.size`                      | Pod pvc size                                                                          | `1Gi`               |
 | `rspamd.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
@@ -682,9 +683,9 @@ Check that the deployed pods are all running.
 | `clamav.enabled`                               | Enable ClamAV                                                                         | `true`                                                                        |
 | `clamav.logLevel`                              | Override default log level                                                            | `""`                                                                          |
 | `clamav.image.repository`                      | Pod image repository                                                                  | `clamav/clamav-debian`                                                        |
-| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `1.4@sha256:9a761d591ece47ecbc0927480aa39fafc23c827fe578b61e5123c27e0eafd34d` |
+| `clamav.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `1.4@sha256:9a761d591ece47ecbc0927480aa39fafc23c827fe578b61e5123c27e0eafd34d` |
 | `clamav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`                                                                |
-| `clamav.image.registry`                        | Pod image registry (specific for clamav as it is not part of the mailu organization)  | `docker.io`                                                                   |
+| `clamav.image.registry`                        | Pod image registry (specific for ClamAV as it is not part of the Mailu organization)  | `docker.io`                                                                   |
 | `clamav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                                                                        |
 | `clamav.persistence.size`                      | Pod pvc size                                                                          | `2Gi`                                                                         |
 | `clamav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                                                                          |
@@ -749,7 +750,7 @@ Check that the deployed pods are all running.
 | `webmail.roundcubePlugins`                      | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
 | `webmail.logLevel`                              | Override default log level                                                            | `""`                                                                              |
 | `webmail.image.repository`                      | Pod image repository                                                                  | `mailu/webmail`                                                                   |
-| `webmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                                                                              |
+| `webmail.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                                                                              |
 | `webmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
 | `webmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`                                                                            |
 | `webmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                                                                              |
@@ -809,7 +810,7 @@ Check that the deployed pods are all running.
 | `webdav.enabled`                               | Enable deployment of WebDAV server (using Radicale)                                   | `false`             |
 | `webdav.logLevel`                              | Override default log level                                                            | `""`                |
 | `webdav.image.repository`                      | Pod image repository                                                                  | `mailu/radicale`    |
-| `webdav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `webdav.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
 | `webdav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `webdav.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `webdav.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
@@ -870,7 +871,7 @@ Check that the deployed pods are all running.
 | `fetchmail.delay`                                 | Delay between fetchmail runs                                                          | `600`               |
 | `fetchmail.logLevel`                              | Override default log level                                                            | `""`                |
 | `fetchmail.image.repository`                      | Pod image repository                                                                  | `mailu/fetchmail`   |
-| `fetchmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
+| `fetchmail.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
 | `fetchmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
 | `fetchmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `fetchmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
@@ -930,7 +931,7 @@ Check that the deployed pods are all running.
 | `oletools.enabled`                               | Enable OLETools                                                                       | `true`           |
 | `oletools.logLevel`                              | Override default log level                                                            | `""`             |
 | `oletools.image.repository`                      | Pod image repository                                                                  | `mailu/oletools` |
-| `oletools.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`             |
+| `oletools.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`             |
 | `oletools.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`   |
 | `oletools.resources.limits`                      | The resources limits for the container                                                | `{}`             |
 | `oletools.resources.requests`                    | The requested resources for the container                                             | `{}`             |
@@ -988,7 +989,7 @@ Check that the deployed pods are all running.
 | `tika.image.repository`                      | Pod image repository                                                                            | `apache/tika`                                                                          |
 | `tika.image.tag`                             | Pod image tag                                                                                   | `3.2.3.0-full@sha256:21d8052de04e491ccf66e8680ade4da6f3d453a56d59f740b4167e54167219b7` |
 | `tika.image.pullPolicy`                      | Pod image pull policy                                                                           | `IfNotPresent`                                                                         |
-| `tika.image.registry`                        | Pod image registry (specific for tika as it is not part of the mailu organization)              | `docker.io`                                                                            |
+| `tika.image.registry`                        | Pod image registry (specific for Tika as it is not part of the Mailu organization)              | `docker.io`                                                                            |
 | `tika.resources.limits`                      | The resources limits for the container                                                          | `{}`                                                                                   |
 | `tika.resources.requests`                    | The requested resources for the container                                                       | `{}`                                                                                   |
 | `tika.livenessProbe.enabled`                 | Enable livenessProbe                                                                            | `true`                                                                                 |
@@ -1091,7 +1092,7 @@ It's very likely that your PODs run on a different subnet than the default `10.4
 
 Depending on your environment you might want to shedule "only one pod" (`Deployment`) or "one pod per node" (`DaemonSet`) for the `front` nginx pod(s).
 
-A `DaemonSet` can e.g. be usefull if you have multiple DNS entries / IPs in your MX record and want `front` to be reachable on every IP.
+A `DaemonSet` can e.g. be useful if you have multiple DNS entries / IPs in your MX record and want `front` to be reachable on every IP.
 
 This can be set with the `front.kind` value.
 
@@ -1125,7 +1126,7 @@ You can also make use of an existing database by setting the correct under `exte
 
 ### Embedded MariaDB / MySQL
 
-This chart can deploy a MariaDB instance (using Bitnami's Helm Chart dependency) and configure it for Mailu to use it.
+This chart can deploy a MariaDB instance (using Bitnami's Helm chart dependency) and configure it for Mailu to use it.
 
 In order to do so, set `mariadb.enabled` to `true`.
 
@@ -1133,11 +1134,11 @@ The `root` and `mailu` passwords will be automatically generated by default and 
 
 Make sure to also set `mariadb.primary.persistence.enabled` to `true` and configure it accordingly.
 
-See [Bitnami's MariaDB Helm Chart](https://artifacthub.io/packages/helm/bitnami/mariadb) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
+See [Bitnami's MariaDB Helm chart](https://artifacthub.io/packages/helm/bitnami/mariadb) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
 
 ### Embedded Postgresql
 
-This chart can deploy a Postgresql instance (using Bitnami's Helm Chart dependency) and configure it for Mailu to use it.
+This chart can deploy a Postgresql instance (using Bitnami's Helm chart dependency) and configure it for Mailu to use it.
 
 In order to do so, set `postgresql.enabled` to `true`.
 
@@ -1145,7 +1146,7 @@ The `postgres` and `mailu` passwords will be automatically generated by default 
 
 Make sure to also set `postgresql.primary.persistence.enabled` to `true` and configure it accordingly.
 
-See [Bitnami's Postgresql Helm Chart](https://artifacthub.io/packages/helm/bitnami/postgresql) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
+See [Bitnami's Postgresql Helm chart](https://artifacthub.io/packages/helm/bitnami/postgresql) for more configuration options (to be configured under the `mailu` key in your `values.yaml` file).
 
 ### Using an external database
 
@@ -1169,13 +1170,13 @@ There are several ways to expose mail ports to the public. If you do so, make su
 
 ### Running on a single node with a public IP
 
-This is the most straightforward way to run mailu. It can be used when the node where mailu (or at least the "front" POD) runs on a specific node that has a public ip address which is used for mail. All mail ports of the "front" POD will be simply exposed via the "hostPort" function.
+This is the most straightforward way to run Mailu. It can be used when the node where Mailu (or at least the "front" POD) runs on a specific node that has a public ip address which is used for mail. All mail ports of the "front" POD will be simply exposed via the "hostPort" function.
 
 To use this mode, set `front.hostPort.enabled` to `true` (which is the default). If your cluster has multiple nodes, you should use `front.nodeSelector` to bind the front container on the node where your public mail IP is located on.
 
 ### Running on bare metal with k3s and klipper-lb
 
-If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose mailu via loadBalancer, set:
+If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose Mailu via loadBalancer, set:
 
 - `front.hostPort.enabled`: `false`
 - `externalService.enabled`: `true`
@@ -1221,7 +1222,7 @@ The table below lists the environment variables that will be passed to the pods 
 | `DKIM_SELECTOR`                   | -                                      |                                                            | `dkim`                                                   | `dkim`                                                                                           |
 | `DMARC_RUA`                       | `dmarc.rua`                            |                                                            | `none`                                                   | `none`                                                                                           |
 | `DMARC_RUF`                       | `dmarc.ruf`                            |                                                            | `none`                                                   | `none`                                                                                           |
-| `DOCKER_SOCKET`                   | -                                      | Not set in Helm Chart                                      | `unix:///var/run/docker.sock`                            | -                                                                                                |
+| `DOCKER_SOCKET`                   | -                                      | Not set in Helm chart                                      | `unix:///var/run/docker.sock`                            | -                                                                                                |
 | `DOMAIN`                          | `domain`                               |                                                            | `mailu.io`                                               | _unset_                                                                                          |
 | `DOMAIN_REGISTRATION`             | -                                      |                                                            | `False`                                                  | `false`                                                                                          |
 | `FETCHMAIL_ENABLED`               | `fetchmail.enabled`                    |                                                            | `False`                                                  | `false`                                                                                          |
