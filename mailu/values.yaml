@@ -1047,11 +1047,11 @@ admin:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
-  ## @param admin.dnsPolicy DNS Policy of the front pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## @param admin.dnsPolicy DNS Policy of the admin pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
   ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
   dnsPolicy: ""
 
-  ## @param admin.dnsConfig DNS settings for the front pod
+  ## @param admin.dnsConfig DNS settings for the admin pod
   ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
   dnsConfig: {}
 

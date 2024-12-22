@@ -427,8 +427,8 @@ Check that the deployed pods are all running.
 | `admin.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                                    | `1001`              |
 | `admin.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                                 | `false`             |
 | `admin.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                                     | `2`                 |
-| `admin.dnsPolicy`                             | DNS Policy of the front pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                |
-| `admin.dnsConfig`                             | DNS settings for the front pod                                                                | `{}`                |
+| `admin.dnsPolicy`                             | DNS Policy of the admin pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                |
+| `admin.dnsConfig`                             | DNS settings for the admin pod                                                                | `{}`                |
 | `admin.affinity`                              | Affinity for admin pod assignment                                                             | `{}`                |
 | `admin.tolerations`                           | Tolerations for pod assignment                                                                | `[]`                |
 | `admin.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                          | `3`                 |
