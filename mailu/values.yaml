@@ -1113,7 +1113,7 @@ redis:
     ## @param redis.master.persistence.accessModes Pod pvc access modes
     ## @param redis.master.persistence.annotations Pod pvc annotations
     ## @param redis.master.persistence.existingClaim Pod pvc existing claim; necessary if using single_pvc
-    ## @param redis.master.persistence.subPath Subpath in PVC; necessary if using single_pvc (set it to `/redis`)
+    ## @param redis.master.persistence.subPath Subpath in PVC; necessary if using single_pvc (set it to `redis`)
     persistence:
       enabled: true
       size: 8Gi
