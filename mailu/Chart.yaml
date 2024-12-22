@@ -1,6 +1,6 @@
 apiVersion: v2
 appVersion: 2024.06.10
-version: 2.1.1
+version: 2.1.2
 name: mailu
 description: This chart installs the Mailu mail system on kubernetes
 home: https://mailu.io
