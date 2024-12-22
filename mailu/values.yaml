@@ -687,6 +687,14 @@ front:
   ## @param front.externalService.ports.smtps Expose SMTP port (TLS) - 465/tcp
   ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
   ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
+  ## @param front.externalService.nodePorts.pop3 NodePort to use for POP3 (defaults to 110/tcp)
+  ## @param front.externalService.nodePorts.pop3s NodePort to use for POP3 (TLS) (defaults to 995/tcp)
+  ## @param front.externalService.nodePorts.imap NodePort to use for IMAP (defaults to 143/tcp)
+  ## @param front.externalService.nodePorts.imaps NodePort to use for IMAP (TLS) (defaults to 993/tcp)
+  ## @param front.externalService.nodePorts.smtp NodePort to use for SMTP (defaults to 25/tcp)
+  ## @param front.externalService.nodePorts.smtps NodePort to use for SMTP (TLS) (defaults to 465/tcp)
+  ## @param front.externalService.nodePorts.submission NodePort to use for Submission (defaults to 587/tcp)
+  ## @param front.externalService.nodePorts.manageSieve NodePort to use for ManageSieve (defaults to 4190/tcp)
   externalService:
     enabled: false
     type: ClusterIP
@@ -704,6 +712,15 @@ front:
       smtps: true
       submission: false
       manageSieve: true
+    nodePorts:
+      pop3: 110
+      pop3s: 995
+      imap: 143
+      imaps: 993
+      smtp: 25
+      smtps: 465
+      submission: 587
+      manageSieve: 4190
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment
