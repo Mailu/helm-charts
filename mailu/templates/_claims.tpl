@@ -1,34 +1,90 @@
 {{/* Admin pod persistent volume claim name */}}
 {{ define "mailu.admin.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.admin.persistence.claimNameOverride | default (printf "%s-admin" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.admin.persistence.existingClaim -}}
+{{- .Values.admin.persistence.existingClaim -}}
+{{- else if .Values.admin.persistence.claimNameOverride -}}
+{{- .Values.admin.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-admin" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Dovecot pod persistent volume claim name */}}
 {{ define "mailu.dovecot.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.dovecot.persistence.claimNameOverride | default (printf "%s-dovecot" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.dovecot.persistence.existingClaim -}}
+{{- .Values.dovecot.persistence.existingClaim -}}
+{{- else if .Values.dovecot.persistence.claimNameOverride -}}
+{{- .Values.dovecot.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-dovecot" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Postfix pod persistent volume claim name */}}
 {{ define "mailu.postfix.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.postfix.persistence.claimNameOverride | default (printf "%s-postfix" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.postfix.persistence.existingClaim -}}
+{{- .Values.postfix.persistence.existingClaim -}}
+{{- else if .Values.postfix.persistence.claimNameOverride -}}
+{{- .Values.postfix.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-postfix" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Rspamd pod persistent volume claim name */}}
 {{ define "mailu.rspamd.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.rspamd.persistence.claimNameOverride | default (printf "%s-rspamd" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.rspamd.persistence.existingClaim -}}
+{{- .Values.rspamd.persistence.existingClaim -}}
+{{- else if .Values.rspamd.persistence.claimNameOverride -}}
+{{- .Values.rspamd.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-rspamd" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Roundcube pod persistent volume claim name */}}
 {{ define "mailu.webmail.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.webmail.persistence.claimNameOverride | default (printf "%s-webmail" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.webmail.persistence.existingClaim -}}
+{{- .Values.webmail.persistence.existingClaim -}}
+{{- else if .Values.webmail.persistence.claimNameOverride -}}
+{{- .Values.webmail.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-webmail" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Fetchmail pod persistent volume claim name */}}
 {{ define "mailu.fetchmail.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.fetchmail.persistence.claimNameOverride | default (printf "%s-fetchmail" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.fetchmail.persistence.existingClaim -}}
+{{- .Values.fetchmail.persistence.existingClaim -}}
+{{- else if .Values.fetchmail.persistence.claimNameOverride -}}
+{{- .Values.fetchmail.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-fetchmail" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
 
 {{/* Webdav pod persistent volume claim name */}}
 {{ define "mailu.webdav.claimName" }}
-{{- .Values.persistence.single_pvc | ternary (include "mailu.claimName" .) .Values.webdav.persistence.claimNameOverride | default (printf "%s-webdav" (include "mailu.fullname" .)) -}}
+{{- if .Values.persistence.single_pvc -}}
+{{- (include "mailu.claimName" .) -}}
+{{- else if .Values.webdav.persistence.existingClaim -}}
+{{- .Values.webdav.persistence.existingClaim -}}
+{{- else if .Values.webdav.persistence.claimNameOverride -}}
+{{- .Values.webdav.persistence.claimNameOverride -}}
+{{- else -}}
+{{ printf "%s-webdav" (include "mailu.fullname" .) }}
+{{- end -}}
 {{- end -}}
