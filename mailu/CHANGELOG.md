@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.2](https://github.com/Mailu/helm-charts/compare/mailu-2.1.1...mailu-2.1.2) (2024-12-22)
+
+
+### Bug Fixes
+
+* Allow setting custom NodePorts for externalService ([#383](https://github.com/Mailu/helm-charts/issues/383)) ([0b1a9cd](https://github.com/Mailu/helm-charts/commit/0b1a9cda3448f2735460f2aa1c79b50a8f6d38c0))
+* Fix issue with redis subpath needing to be relative ([#376](https://github.com/Mailu/helm-charts/issues/376)) ([0fd99a6](https://github.com/Mailu/helm-charts/commit/0fd99a668bcb32f710bdbce729f38074895d8273))
+
 ## [2.1.1](https://github.com/Mailu/helm-charts/compare/mailu-2.1.0...mailu-2.1.1) (2024-08-20)
 
 
