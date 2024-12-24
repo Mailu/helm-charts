@@ -109,6 +109,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/cache/restore@v4
+        with:
+          path: charts/mailu/README.md
+          key: README.md
+
       - name: Push changes
         run: |
           # Push all the changes
