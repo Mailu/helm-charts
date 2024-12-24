@@ -40,7 +40,7 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-          helm dependency build mailu
+          helm dependency build charts/mailu
 
       - name: Set up python
         uses: actions/setup-python@v4
