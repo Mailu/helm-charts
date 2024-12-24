@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/Mailu/helm-charts/compare/mailu-2.1.2...mailu-2.1.3) (2024-12-24)
+
+
+### Bug Fixes
+
+* added PROXY_PROTOCOL environment variable ([#375](https://github.com/Mailu/helm-charts/issues/375)) ([a80d638](https://github.com/Mailu/helm-charts/commit/a80d6384331928444810be37918fc5533220330e))
+
 ## [2.1.2](https://github.com/Mailu/helm-charts/compare/mailu-2.1.1...mailu-2.1.2) (2024-12-22)
 
 
