@@ -391,12 +391,12 @@ mariadb:
       echo "Checking for DB initialisation"
       if [ -S /opt/bitnami/mariadb/tmp/mysql.sock ]; then
         echo "Running DB initialisation..."
-        /opt/bitnami/mariadb/bin/mysql --user="root" --password="$MARIADB_ROOT_PASSWORD" <<SQL
+        /opt/bitnami/mariadb/bin/mysql --user="root" --password="${MARIADB_ROOT_PASSWORD}" <<SQL
         --
         -- Initialisation script for roundcube database
         --
-        CREATE DATABASE IF NOT EXISTS $ROUNDCUBE_DB_NAME;
-        GRANT ALL PRIVILEGES ON $ROUNDCUBE_DB_NAME.* TO '$ROUNDCUBE_DB_USER'@'%' IDENTIFIED BY '$ROUNDCUBE_DB_PW';
+        CREATE DATABASE IF NOT EXISTS ${ROUNDCUBE_DB_NAME};
+        GRANT ALL PRIVILEGES ON ${ROUNDCUBE_DB_NAME}.* TO '${ROUNDCUBE_DB_USER}'@'%' IDENTIFIED BY '${ROUNDCUBE_DB_PW}';
         FLUSH PRIVILEGES;
       SQL
         echo "DB initialisation complete"
@@ -471,15 +471,15 @@ postgresql:
           # set -o nounset
           # set -o pipefail
           info "Running DB initialisation..."
-          info "Creating database $ROUNDCUBE_DB_NAME..."
+          info "Creating database ${ROUNDCUBE_DB_NAME}..."
           echo "CREATE DATABASE \"$ROUNDCUBE_DB_NAME\"" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
-          info "Creating user $ROUNDCUBE_DB_USER"
-          echo "CREATE ROLE \"$ROUNDCUBE_DB_USER\" WITH LOGIN CREATEDB PASSWORD '$ROUNDCUBE_DB_PW';" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
-          info "Granting access to \"$ROUNDCUBE_DB_USER\" to the database \"$ROUNDCUBE_DB_NAME\""
-          echo "GRANT ALL PRIVILEGES ON DATABASE \"$ROUNDCUBE_DB_NAME\" TO \"$ROUNDCUBE_DB_USER\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
-          echo "ALTER DATABASE \"$ROUNDCUBE_DB_NAME\" OWNER TO \"$ROUNDCUBE_DB_USER\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
-          info "Setting ownership for the 'public' schema database \"$ROUNDCUBE_DB_NAME\" to \"$ROUNDCUBE_DB_USER\""
-          echo "ALTER SCHEMA public OWNER TO \"$ROUNDCUBE_DB_USER\"\;" | postgresql_execute "$ROUNDCUBE_DB_NAME" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Creating user ${ROUNDCUBE_DB_USER}"
+          echo "CREATE ROLE \"${ROUNDCUBE_DB_USER}\" WITH LOGIN CREATEDB PASSWORD '${ROUNDCUBE_DB_PW}';" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Granting access to \"${ROUNDCUBE_DB_USER}\" to the database \"${ROUNDCUBE_DB_NAME}\""
+          echo "GRANT ALL PRIVILEGES ON DATABASE \"${ROUNDCUBE_DB_NAME}\" TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          echo "ALTER DATABASE \"${ROUNDCUBE_DB_NAME}\" OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Setting ownership for the 'public' schema database \"${ROUNDCUBE_DB_NAME}\" to \"${ROUNDCUBE_DB_USER}\""
+          echo "ALTER SCHEMA public OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "$ROUNDCUBE_DB_NAME" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
 
     persistence:
       enabled: false
