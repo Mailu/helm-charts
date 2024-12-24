@@ -6,13 +6,14 @@ on:
   pull_request:
     branches:
       - master
-    paths:
-      - mailu/**
+# commented out to always run.
+#    paths:
+#      - ../../charts/mailu/**
   push:
     branches:
       - master
     paths:
-      - mailu/**
+      - ../../charts/mailu/**
       - .github/workflows/trivy.yaml
       - .trivy.yaml
   # Allows you to run this workflow manually from the Actions tab
