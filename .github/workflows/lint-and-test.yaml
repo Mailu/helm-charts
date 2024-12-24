@@ -91,7 +91,7 @@ jobs:
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
-          git diff --exit-code --name-status charts/mailu/README.md || { echo "README update missing!; exit 1; }
+          git diff --exit-code --name-status charts/mailu/README.md || { echo "README update missing!"; exit 1; }
 
       - uses: actions/upload-artifact@v4
         with:
