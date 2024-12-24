@@ -93,7 +93,7 @@ jobs:
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
           git diff --exit-code --name-status charts/mailu/README.md || { echo "README update missing!"; exit 1; }
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           key: README.md
           path: charts/mailu/README.md
