@@ -11,9 +11,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
@@ -83,8 +80,6 @@ jobs:
 
   update-readme-metadata:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     needs: lint-and-test
     steps:
       - name: Install readme-generator-for-helm
@@ -102,7 +97,14 @@ jobs:
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
+          git diff --exit-code --name-status charts/mailu/README.md || { echo "README update missing!; exit 1; }
 
+  push-readme-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: update-readme-metadata
+    steps:
       - name: Push changes
         run: |
           # Push all the changes
