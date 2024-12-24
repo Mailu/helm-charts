@@ -69,6 +69,7 @@ data:
   PROXY_AUTH_CREATE: {{ .Values.proxyAuth.create | quote }}
   PROXY_AUTH_HEADER: {{ .Values.proxyAuth.header | quote }}
   PROXY_AUTH_WHITELIST: {{  .Values.proxyAuth.whitelist | quote }}
+  PROXY_PROTOCOL: {{ include "mailu.proxyProtocolPorts" . | quote }}
   RATELIMIT_STORAGE_URL: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.rateLimit" .) }}
   REAL_IP_FROM: {{ .Values.ingress.realIpFrom | quote }}
   REAL_IP_HEADER: {{ .Values.ingress.realIpHeader | quote }}
