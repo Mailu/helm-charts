@@ -6,6 +6,7 @@ on:
   pull_request:
     branches:
       - master
+# commented out to always run.
 #    paths:
 #      - mailu/**
   # Allows you to run this workflow manually from the Actions tab
@@ -36,9 +37,6 @@ jobs:
           python-version: "3.9"
           check-latest: true
 
-      # - name: Run helm lint
-      #   run: helm lint --strict --values mailu/helm-lint-values.yaml mailu
-
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.3.1
 
@@ -49,7 +47,6 @@ jobs:
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
-          ct version
 
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml --target-branch ${{ github.event.repository.default_branch }} --check-version-increment=false
