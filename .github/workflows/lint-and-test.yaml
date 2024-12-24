@@ -91,7 +91,9 @@ jobs:
       - name: Execute readme-generator-for-helm
         run: |
           echo "Updating README.md for mailu chart"
-          readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
+          readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json" || {
+            head /home/runner/work/_temp/*-*.sh
+          }
           git diff --exit-code --name-status charts/mailu/README.md || { echo "README update missing!; exit 1; }
 
   push-readme-changes:
