@@ -51,12 +51,22 @@ jobs:
           scan-ref: '.'
           trivy-config: '.trivy.yaml'
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results
+          path: trivy-results.sarif
+
   trivy-publish:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
     needs: trivy-scan
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: trivy-results
+          path: trivy-results.sarif
+
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
