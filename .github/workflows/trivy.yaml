@@ -51,9 +51,9 @@ jobs:
           scan-ref: '.'
           trivy-config: '.trivy.yaml'
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/cache@v2
         with:
-          name: trivy-results
+          key: trivy-results
           path: trivy-results.sarif
 
   trivy-publish:
@@ -62,9 +62,9 @@ jobs:
       security-events: write
     needs: trivy-scan
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/cache/restore@v4
         with:
-          name: trivy-results
+          key: trivy-results
           path: trivy-results.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
