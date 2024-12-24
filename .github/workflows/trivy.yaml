@@ -8,12 +8,12 @@ on:
       - master
 # commented out to always run.
 #    paths:
-#      - ../../charts/mailu/**
+#      - charts/mailu/**
   push:
     branches:
       - master
     paths:
-      - ../../charts/mailu/**
+      - charts/mailu/**
       - .github/workflows/trivy.yaml
       - .trivy.yaml
   # Allows you to run this workflow manually from the Actions tab
