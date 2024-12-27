@@ -23,14 +23,17 @@ a Service of type NodePort or LoadBalancer.
 flowchart TD
     %% entities
     Internet(Internet)
+    Ingress("`**Ingress**
+    service`")
     FrontService("`**NodePort/LoadBalancer**
     service`")
     Front("`**Mailu front**
     single pod`")
     Webmail("`**Mailu webmail**
     single pod`")
-    Ingress("`**Ingress**
-    service`")
+    MailServices("`**Mailu smtp/imap...**
+    pods`")
+
 
     Internet --> Node1
     Internet --> Node2
@@ -40,11 +43,13 @@ flowchart TD
     end
 
     subgraph Node2[k8s node 2]
+        IngressController2 -- 80/443 --> Ingress
+
         FrontService -- 25/.../995 --> Front
         HostPort["`**HostPort**`"] -- 25/.../995 --> Front
-
-        IngressController2 -- 80/443 --> Ingress
         Ingress -- HTTPS --> Front
+
+        Front --> MailServices
         Front --> Webmail
     end
 ```
