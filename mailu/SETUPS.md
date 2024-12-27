@@ -2,6 +2,11 @@
 
 WIP: This document shall describe and show how Mailu can be setup with the Helm Chart.
 
+> [!IMPORTANT]
+> Routing all traffic, including Web traffic through the Mailu `front` service is done **on purpose** to deliver
+> an integrated service to the users of Mailu. You are free to run components separately, but such setups are not in scope
+> of the Mailu project or the Mailu Helm Chart and are not supported.
+
 ## Simple setup
 
 This is a simple setup to make Mailu services available from the internet.
