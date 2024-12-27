@@ -53,5 +53,8 @@ spec:
       port: 14190
       protocol: TCP
     - name: https
+      {{- if and (eq .Values.ingress.type "traefik") .Values.ingress.enabled .Values.ingress.traefik.insecureSkipVerify }}
+      serversTransport: {{ include "mailu.fullname" . }}
+      {{- end }}
       port: 443
       protocol: TCP

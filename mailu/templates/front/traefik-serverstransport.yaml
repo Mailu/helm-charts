@@ -1,0 +1,11 @@
+# Only do this if .Values.ingress.type is traefik and .Values.ingress.enabled is true and .Values.ingress.traefik.insecureSkipVerify is true
+{{- if and (eq .Values.ingress.type "traefik") .Values.ingress.enabled .Values.ingress.traefik.insecureSkipVerify }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: {{ include "mailu.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+spec:
+  insecureSkipVerify: true
+{{- end }}
