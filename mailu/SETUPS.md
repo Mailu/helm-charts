@@ -11,15 +11,14 @@ mail services.
 How traffic is routed from a public IP address to individual K8s nodes is out of scope and must be taken care of individually.
 Typically K8s nodes have private IP addresses and a Service of type LoadBalancer is used to make services available on public IPs.
 
-### Using HostPort
-
-- Ingress for Webmail (80, 443)
-- Host port for Mail ports (25, 110, 143, 465, 587, 993, 995)
+This setup is using a single instance where Mail services will be reachable either through HostPort or
+a Service of type NodePort or LoadBalancer.
 
 ```mermaid
 flowchart TD
     %% entities
     Internet(Internet)
+    FrontService(NodePort/LoadBalancer\nservice)
     Front(Mailu front\nsingle pod)
     Webmail(Mailu webmail\nsingle pod)
     Ingress(Ingress\nservice)
@@ -32,12 +31,19 @@ flowchart TD
     end
 
     subgraph Node2[k8s node 2]
+        FrontService -- 25/.../995 --> Front
         HostPort -- 25/.../995 --> Front
+
         IngressController2 -- 80/443 --> Ingress
-        Ingress --> Front
+        Ingress -- HTTPS --> Front
         Front --> Webmail
     end
 ```
+
+### Using HostPort (default)
+
+- Ingress for Webmail (80, 443)
+- Host port for Mail ports (25, 110, 143, 465, 587, 993, 995)
 
 ### Using NodePort
 
