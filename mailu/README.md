@@ -383,64 +383,66 @@ Check that the deployed pods are all running.
 
 ### Admin parameters
 
-| Name                                          | Description                                                                           | Value               |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `admin.enabled`                               | Enable access to the admin interface                                                  | `true`              |
-| `admin.uri`                                   | URI to access the admin interface                                                     | `/admin`            |
-| `admin.logLevel`                              | Override default log level                                                            | `""`                |
-| `admin.image.repository`                      | Pod image repository                                                                  | `mailu/admin`       |
-| `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
-| `admin.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `admin.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
-| `admin.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
-| `admin.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `admin.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
-| `admin.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
-| `admin.resources.limits`                      | The resources limits for the container                                                | `{}`                |
-| `admin.resources.requests`                    | The requested resources for the container                                             | `{}`                |
-| `admin.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
-| `admin.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
-| `admin.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
-| `admin.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
-| `admin.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
-| `admin.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `admin.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
-| `admin.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
-| `admin.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
-| `admin.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `admin.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
-| `admin.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
-| `admin.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`             |
-| `admin.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
-| `admin.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
-| `admin.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
-| `admin.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `3`                 |
-| `admin.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
-| `admin.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
-| `admin.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
-| `admin.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
-| `admin.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
-| `admin.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
-| `admin.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
-| `admin.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
-| `admin.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
-| `admin.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
-| `admin.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
-| `admin.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `admin.affinity`                              | Affinity for admin pod assignment                                                     | `{}`                |
-| `admin.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
-| `admin.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `admin.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
-| `admin.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `admin.service.annotations`                   | Admin service annotations                                                             | `{}`                |
-| `admin.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `admin.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `admin.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
-| `admin.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `admin.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `admin.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `admin.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `admin.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
+| Name                                          | Description                                                                                   | Value               |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------- |
+| `admin.enabled`                               | Enable access to the admin interface                                                          | `true`              |
+| `admin.uri`                                   | URI to access the admin interface                                                             | `/admin`            |
+| `admin.logLevel`                              | Override default log level                                                                    | `""`                |
+| `admin.image.repository`                      | Pod image repository                                                                          | `mailu/admin`       |
+| `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)                   | `""`                |
+| `admin.image.pullPolicy`                      | Pod image pull policy                                                                         | `IfNotPresent`      |
+| `admin.persistence.size`                      | Pod pvc size                                                                                  | `20Gi`              |
+| `admin.persistence.storageClass`              | Pod pvc storage class                                                                         | `""`                |
+| `admin.persistence.accessModes`               | Pod pvc access modes                                                                          | `["ReadWriteOnce"]` |
+| `admin.persistence.claimNameOverride`         | Pod pvc name override                                                                         | `""`                |
+| `admin.persistence.annotations`               | Pod pvc annotations                                                                           | `{}`                |
+| `admin.resources.limits`                      | The resources limits for the container                                                        | `{}`                |
+| `admin.resources.requests`                    | The requested resources for the container                                                     | `{}`                |
+| `admin.livenessProbe.enabled`                 | Enable livenessProbe                                                                          | `true`              |
+| `admin.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                           | `3`                 |
+| `admin.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                                       | `10`                |
+| `admin.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                              | `10`                |
+| `admin.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                           | `1`                 |
+| `admin.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                             | `1`                 |
+| `admin.readinessProbe.enabled`                | Enable readinessProbe                                                                         | `true`              |
+| `admin.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                                      | `10`                |
+| `admin.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                             | `10`                |
+| `admin.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                            | `1`                 |
+| `admin.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                          | `3`                 |
+| `admin.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                          | `1`                 |
+| `admin.startupProbe.enabled`                  | Enable startupProbe                                                                           | `false`             |
+| `admin.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                        | `10`                |
+| `admin.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                               | `10`                |
+| `admin.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                              | `1`                 |
+| `admin.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                            | `3`                 |
+| `admin.startupProbe.successThreshold`         | Success threshold for startupProbe                                                            | `1`                 |
+| `admin.podLabels`                             | Add extra labels to pod                                                                       | `{}`                |
+| `admin.podAnnotations`                        | Add extra annotations to the pod                                                              | `{}`                |
+| `admin.nodeSelector`                          | Node labels selector for pod assignment                                                       | `{}`                |
+| `admin.initContainers`                        | Add additional init containers to the pod                                                     | `[]`                |
+| `admin.priorityClassName`                     | Pods' priorityClassName                                                                       | `""`                |
+| `admin.podSecurityContext.enabled`            | Enabled pods' Security Context                                                                | `false`             |
+| `admin.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                            | `1001`              |
+| `admin.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                          | `false`             |
+| `admin.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                                    | `1001`              |
+| `admin.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                                 | `false`             |
+| `admin.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                                     | `2`                 |
+| `admin.dnsPolicy`                             | DNS Policy of the admin pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                |
+| `admin.dnsConfig`                             | DNS settings for the admin pod                                                                | `{}`                |
+| `admin.affinity`                              | Affinity for admin pod assignment                                                             | `{}`                |
+| `admin.tolerations`                           | Tolerations for pod assignment                                                                | `[]`                |
+| `admin.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                          | `3`                 |
+| `admin.hostAliases`                           | Pod pod host aliases                                                                          | `[]`                |
+| `admin.schedulerName`                         | Name of the k8s scheduler (other than default)                                                | `""`                |
+| `admin.service.annotations`                   | Admin service annotations                                                                     | `{}`                |
+| `admin.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                                | `[]`                |
+| `admin.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                                       | `RollingUpdate`     |
+| `admin.extraEnvVars`                          | Extra environment variable to pass to the running container                                   | `[]`                |
+| `admin.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod         | `""`                |
+| `admin.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod            | `""`                |
+| `admin.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                          | `[]`                |
+| `admin.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                            | `[]`                |
+| `admin.extraContainers`                       | Add additional containers to the pod                                                          | `[]`                |
 
 ### Redis parameters
 

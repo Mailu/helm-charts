@@ -1047,6 +1047,14 @@ admin:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
+  ## @param admin.dnsPolicy DNS Policy of the admin pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+  ## @param admin.dnsConfig DNS settings for the admin pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+  dnsConfig: {}
+
   ## @param admin.affinity Affinity for admin pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
