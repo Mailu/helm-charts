@@ -76,6 +76,14 @@ jobs:
           kubectl -n kube-system rollout restart deployment coredns
           kubectl -n kube-system rollout status deployment coredns --timeout=120s
 
+      - name: Install traefik and nginx as Ingress Controllers
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+          helm repo add traefik https://traefik.github.io/charts
+          helm install ingress-nginx ingress-nginx/ingress-nginx -n kube-system
+          helm install traefik traefik/traefik -n kube-system
+
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
