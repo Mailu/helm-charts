@@ -8,11 +8,14 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-  {{- range .Values.hostnames }}
-    - name: wget-{{ . }}
+    - name: wget
       image: busybox
-      command: ['wget']
-      args: ['-S', 'https://{{ . }}']
-  {{- end }}
+      command: ['/bin/sh']
+      args:
+        - '-c'
+        - |
+          {{- range .Values.hostnames }}
+          wget -S 'https://{{ . }}'
+          {{- end }}
   restartPolicy: Never
 {{- end }}
