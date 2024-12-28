@@ -88,4 +88,9 @@ front:
 ```
 
 ## K8s nodes with public IPs
-!Warning section: traffic between pods is unencrypted, use istio or similar to ensure traffic between k8s nodes is encrypted.
+
+> [!WARNING]
+> Traffic between pods is unencrypted, use [istio](https://istio.io/) or similar to ensure traffic between pods of the k8s nodes is encrypted.
+
+If your cluster nodes use public IPs, you can directly access the mail ports from the internet, for example using the
+default HostPort or a NodePort Service described above.
