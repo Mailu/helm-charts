@@ -92,23 +92,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  notify-matrix:
-    needs:
-      - publish
-    runs-on: ubuntu-latest
-    name: Send message via Matrix
-    steps:
-      - name: Send message to mailu-helm-chart channel
-        # Only run this job if the release-please job created a release
-        id: matrix-chat-message
-        uses: fadenb/matrix-chat-message@v0.0.6
-        with:
-          homeserver: "matrix.org"
-          token: ${{ secrets.MATRIX_TOKEN }}
-          channel: "!KluZWhQwHDYrOfqJdD:make-it.fr"
-          message: |
-            # New release of ${{ github.event.inputs.package }} helm chart: ${{ github.event.inputs.version }}
-
-            [${{ github.event.inputs.version }}](https://github.com/${{ github.repository }}/releases/tag/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}) has been released.
-
-            ${{ needs.publish.outputs.release_body }}
+  
