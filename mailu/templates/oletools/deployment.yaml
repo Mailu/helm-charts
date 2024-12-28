@@ -14,7 +14,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.oletools.replicaCount }}
   {{- if .Values.oletools.updateStrategy }}
   strategy: {{- toYaml .Values.oletools.updateStrategy | nindent 4 }}
   {{- end }}

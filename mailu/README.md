@@ -384,13 +384,14 @@ Check that the deployed pods are all running.
 ### Admin parameters
 
 | Name                                          | Description                                                                           | Value               |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+| --------------------------------------------- |---------------------------------------------------------------------------------------| ------------------- |
 | `admin.enabled`                               | Enable access to the admin interface                                                  | `true`              |
 | `admin.uri`                                   | URI to access the admin interface                                                     | `/admin`            |
 | `admin.logLevel`                              | Override default log level                                                            | `""`                |
 | `admin.image.repository`                      | Pod image repository                                                                  | `mailu/admin`       |
 | `admin.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `admin.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `admin.replicaCount`                          | Number of admin replicas to deploy                                                    | `1`                                                                               |
 | `admin.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `admin.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `admin.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -529,6 +530,7 @@ Check that the deployed pods are all running.
 | `dovecot.image.repository`                      | Pod image repository                                                                  | `mailu/dovecot`     |
 | `dovecot.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `dovecot.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `dovecot.replicaCount`                          | Number of dovecot replicas to deploy                                                  | `1`                                                                               |
 | `dovecot.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `dovecot.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `dovecot.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
@@ -712,7 +714,7 @@ Check that the deployed pods are all running.
 ### webmail parameters
 
 | Name                                            | Description                                                                           | Value                                                                             |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| ----------------------------------------------- |---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
 | `webmail.enabled`                               | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
 | `webmail.uri`                                   | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
 | `webmail.type`                                  | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
@@ -721,6 +723,7 @@ Check that the deployed pods are all running.
 | `webmail.image.repository`                      | Pod image repository                                                                  | `mailu/webmail`                                                                   |
 | `webmail.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                                                                              |
 | `webmail.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`                                                                    |
+| `webmail.replicaCount`                          | Number of webmail replicas to deploy                                                  | `1`                                                                               |
 | `webmail.persistence.size`                      | Pod pvc size                                                                          | `20Gi`                                                                            |
 | `webmail.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                                                                              |
 | `webmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
@@ -896,12 +899,13 @@ Check that the deployed pods are all running.
 ### OLETools parameters
 
 | Name                                             | Description                                                                           | Value            |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------- | ---------------- |
+| ------------------------------------------------ |---------------------------------------------------------------------------------------| ---------------- |
 | `oletools.enabled`                               | Enable OLETools                                                                       | `true`           |
 | `oletools.logLevel`                              | Override default log level                                                            | `""`             |
 | `oletools.image.repository`                      | Pod image repository                                                                  | `mailu/oletools` |
 | `oletools.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`             |
 | `oletools.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`   |
+| `oletools.replicaCount`                          | Number of oletools replicas to deploy                                                 | `1`                                                                               |
 | `oletools.resources.limits`                      | The resources limits for the container                                                | `{}`             |
 | `oletools.resources.requests`                    | The requested resources for the container                                             | `{}`             |
 | `oletools.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`           |
