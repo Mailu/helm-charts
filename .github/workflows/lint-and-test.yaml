@@ -85,6 +85,7 @@ jobs:
           # TODO: this is a bad idea as it ties Chart testing to this setup. It would be better to discover the LB IP in the test.
           helm install ingress-nginx ingress-nginx/ingress-nginx -n kube-system --set controller.service.loadBalancerIP="192.168.0.100" --set controller.service.externalIPs="{192.168.0.100}"
           helm install traefik traefik/traefik -n kube-system --set service.spec.loadBalancerIP="192.168.0.101" --set service.spec.externalIPs="{192.168.0.101}"
+          sleep 3
           kubectl -n kube-system get svc
 
       - name: Run chart-testing (install)

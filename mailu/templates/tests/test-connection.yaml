@@ -15,8 +15,12 @@ spec:
         - '-c'
         - |
           {{- range .Values.hostnames }}
-          wget -S --header "Host: {{ . }}" 'https://192.168.0.100'
-          wget -S --header "Host: {{ . }}" 'https://192.168.0.101'
+          # don't test ingress, it's out of scope
+          # wget -S --header "Host: {{ . }}" 'https://192.168.0.100'
+          # wget -S --header "Host: {{ . }}" 'https://192.168.0.101'
+          # test mailu-front service instead
+          wget -S --header "Host: {{ . }}" 'http://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
+          wget -S --header "Host: {{ . }}" 'https://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
           {{- end }}
   restartPolicy: Never
 {{- end }}
