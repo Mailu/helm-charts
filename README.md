@@ -8,7 +8,7 @@
 [![Kubescape](https://github.com/Mailu/helm-charts/actions/workflows/kubescape.yaml/badge.svg?branch=master)](https://github.com/Mailu/helm-charts/actions/workflows/kubescape.yaml)
 [![Datree code scanning](https://github.com/Mailu/helm-charts/actions/workflows/datree.yaml/badge.svg?branch=master)](https://github.com/Mailu/helm-charts/actions/workflows/datree.yaml)
 
-[Chart documentation](mailu/README.md)
+[Chart documentation](charts/mailu/README.md)
 
 
 Releases can be found at https://mailu.github.io/helm-charts/
