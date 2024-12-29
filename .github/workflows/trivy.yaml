@@ -19,6 +19,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch: {}
 
+permissions:
+  security-events: write
+
 jobs:
   trivy-scan:
     runs-on: ubuntu-latest
@@ -50,22 +53,6 @@ jobs:
           scan-type: 'config'
           scan-ref: '.'
           trivy-config: '.trivy.yaml'
-
-      - uses: actions/cache@v4
-        with:
-          key: trivy-results
-          path: trivy-results.sarif
-
-  trivy-publish:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    needs: trivy-scan
-    steps:
-      - uses: actions/cache/restore@v4
-        with:
-          key: trivy-results
-          path: trivy-results.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
