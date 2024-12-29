@@ -6,9 +6,8 @@ on:
   pull_request:
     branches:
       - master
-# commented out to always run.
-#    paths:
-#      - charts/mailu/**
+    paths:
+      - charts/mailu/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
