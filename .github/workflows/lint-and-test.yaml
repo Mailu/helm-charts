@@ -83,6 +83,7 @@ jobs:
           helm repo add traefik https://traefik.github.io/charts
           helm install ingress-nginx ingress-nginx/ingress-nginx -n kube-system
           helm install traefik traefik/traefik -n kube-system
+          kubectl -n kube-system get svc
 
       - name: Run chart-testing (install)
         id: install
