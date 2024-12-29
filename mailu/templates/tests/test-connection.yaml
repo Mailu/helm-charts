@@ -1,4 +1,3 @@
-{{- if .Values.ingress.enabled }}
 apiVersion: v1
 kind: Pod
 metadata:
@@ -15,12 +14,9 @@ spec:
         - '-c'
         - |
           {{- range .Values.hostnames }}
-          # don't test ingress, it's out of scope
-          # wget -S --header "Host: {{ . }}" 'https://192.168.0.100'
-          # wget -S --header "Host: {{ . }}" 'https://192.168.0.101'
-          # test mailu-front service instead
+          # HTTP redirects to HTTPS
           wget -S --header "Host: {{ . }}" 'http://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
+          # HTTPS redirects to SSO page
           wget -S --header "Host: {{ . }}" 'https://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
           {{- end }}
   restartPolicy: Never
-{{- end }}
