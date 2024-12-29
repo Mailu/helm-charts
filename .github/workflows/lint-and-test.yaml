@@ -78,6 +78,9 @@ jobs:
 
   update-readme-metadata:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    needs: lint-and-test
     steps:
       - name: Install readme-generator-for-helm
         run: npm install -g @bitnami/readme-generator-for-helm
@@ -91,27 +94,6 @@ jobs:
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
-
-      - uses: actions/cache@v4
-        with:
-          key: README.md
-          path: charts/mailu/README.md
-
-  push-readme-changes:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    needs: [lint-and-test,update-readme-metadata]
-    steps:
-      - name: Checkout mailu/helm-charts
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: actions/cache/restore@v4
-        with:
-          key: README.md
-          path: charts/mailu/README.md
 
       - name: Push changes
         run: |
