@@ -15,7 +15,8 @@ spec:
         - '-c'
         - |
           {{- range .Values.hostnames }}
-          wget -S 'https://{{ . }}'
+          wget -S --header "Host: {{ . }}" 'https://192.168.0.100'
+          wget -S --header "Host: {{ . }}" 'https://192.168.0.101'
           {{- end }}
   restartPolicy: Never
 {{- end }}

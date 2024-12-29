@@ -81,8 +81,10 @@ jobs:
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo add traefik https://traefik.github.io/charts
-          helm install ingress-nginx ingress-nginx/ingress-nginx -n kube-system
-          helm install traefik traefik/traefik -n kube-system
+          # we're defining loadBalancer IPs here, so we can test in test-connection.yaml in the Chart
+          # TODO: this is a bad idea as it ties Chart testing to this setup. It would be better to discover the LB IP in the test.
+          helm install ingress-nginx ingress-nginx/ingress-nginx -n kube-system --set controller.service.loadBalancerIP="192.168.0.100"
+          helm install traefik traefik/traefik -n kube-system --set service.spec.loadBalancerIP="192.168.0.101"
           kubectl -n kube-system get svc
 
       - name: Run chart-testing (install)
