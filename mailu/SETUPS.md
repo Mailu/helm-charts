@@ -72,6 +72,9 @@ front:
   externalService:
     enabled: true
     type: NodePort
+    nodePort:
+      # optionally define specific ports
+      imaps: 30995
 ```
 
 ### Using LoadBalancer
