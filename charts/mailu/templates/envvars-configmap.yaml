@@ -31,6 +31,7 @@ data:
   DB_NAME: {{ include "mailu.database.name" . }}
   # DB_PW => via secret
   DB_USER: {{ include "mailu.database.username" . }}
+  DB_APPENDIX: {{ include "mailu.database.appendix" . }}
   DEBUG_ASSETS: ""
   DEBUG: "false"
   DEBUG_PROFILER: "false"

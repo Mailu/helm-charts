@@ -33,6 +33,7 @@ MAPPING = {
     "DB_PW": (False, "Managed by Helm chart"),
     "DB_HOST": (False, "Managed by Helm chart"),
     "DB_NAME": (False, "Managed by Helm chart"),
+    "DB_APPENDIX": (False, "Managed by Helm chart"),
     "SQLITE_DATABASE_FILE": ("", ""),
     "SQLALCHEMY_DATABASE_URI": ("", ""),
     "SQLALCHEMY_TRACK_MODIFICATIONS": ("", ""),
