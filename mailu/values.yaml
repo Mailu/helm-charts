@@ -2015,10 +2015,10 @@ clamav:
 
 ## @section webmail parameters
 webmail:
-  ## @param webmail.enabled Enable deployment of Roundcube webmail
+  ## @param webmail.enabled Enable deployment of webmail
   enabled: true
 
-  ## @param webmail.uri URI to access Roundcube webmail
+  ## @param webmail.uri URI to access webmail
   uri: /webmail
 
   ## @param webmail.type Type of webmail to deploy (`roundcube` or `snappymail`)
@@ -2821,7 +2821,7 @@ oletools:
 
 ## @section Tika parameters
 tika:
-  ## @param tika.enabled Enable OLETools
+  ## @param tika.enabled Enable tika
   enabled: true
 
   ## @param tika.logLevel Override default log level

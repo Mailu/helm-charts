@@ -713,8 +713,8 @@ Check that the deployed pods are all running.
 
 | Name                                            | Description                                                                           | Value                                                                             |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `webmail.enabled`                               | Enable deployment of Roundcube webmail                                                | `true`                                                                            |
-| `webmail.uri`                                   | URI to access Roundcube webmail                                                       | `/webmail`                                                                        |
+| `webmail.enabled`                               | Enable deployment of webmail                                                          | `true`                                                                            |
+| `webmail.uri`                                   | URI to access webmail                                                                 | `/webmail`                                                                        |
 | `webmail.type`                                  | Type of webmail to deploy (`roundcube` or `snappymail`)                               | `roundcube`                                                                       |
 | `webmail.roundcubePlugins`                      | List of Roundcube plugins to enable                                                   | `["archive","zipdownload","markasjunk","managesieve","enigma","carddav","mailu"]` |
 | `webmail.logLevel`                              | Override default log level                                                            | `""`                                                                              |
@@ -952,7 +952,7 @@ Check that the deployed pods are all running.
 
 | Name                                         | Description                                                                                     | Value           |
 | -------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------- |
-| `tika.enabled`                               | Enable OLETools                                                                                 | `true`          |
+| `tika.enabled`                               | Enable tika                                                                                     | `true`          |
 | `tika.logLevel`                              | Override default log level                                                                      | `""`            |
 | `tika.languages`                             | Array of languages to enable (sets the FULL_TEXT_SEARCH environment variable); "off" to disable | `["en"]`        |
 | `tika.image.repository`                      | Pod image repository                                                                            | `apache/tika`   |
