@@ -29,9 +29,11 @@ spec:
         {{- if .Values.webmail.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.webmail.podLabels "context" $) | nindent 8 }}
         {{- end }}
-      {{- if .Values.webmail.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.webmail.podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
+      annotations:
+        checksum/envvars-configmap.yaml: {{ include (print .Template.BasePath "/envvars-configmap.yaml") . | sha256sum }}
+        {{- if .Values.webmail.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.webmail.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.webmail.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.webmail.hostAliases }}

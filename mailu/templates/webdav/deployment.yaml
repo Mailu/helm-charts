@@ -29,9 +29,11 @@ spec:
         {{- if .Values.webdav.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.webdav.podLabels "context" $) | nindent 8 }}
         {{- end }}
-      {{- if .Values.webdav.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.webdav.podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
+      annotations:
+        checksum/envvars-configmap.yaml: {{ include (print .Template.BasePath "/envvars-configmap.yaml") . | sha256sum }}
+        {{- if .Values.webdav.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.webdav.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.webdav.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.webdav.hostAliases }}

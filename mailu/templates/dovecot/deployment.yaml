@@ -29,9 +29,11 @@ spec:
         {{- if .Values.dovecot.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.podLabels "context" $) | nindent 8 }}
         {{- end }}
-      {{- if .Values.dovecot.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.dovecot.podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
+      annotations:
+        checksum/envvars-configmap.yaml: {{ include (print .Template.BasePath "/envvars-configmap.yaml") . | sha256sum }}
+        {{- if .Values.dovecot.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.dovecot.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.dovecot.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.dovecot.hostAliases }}
