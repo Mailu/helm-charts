@@ -18,6 +18,9 @@ metadata:
     {{- if .Values.commonAnnotations }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
+    {{- if and (eq .Values.ingress.type "traefik") .Values.ingress.enabled .Values.ingress.traefik.insecureSkipVerify }}
+    traefik.ingress.kubernetes.io/servers-transport: {{ printf "%s-%s@kubernetescrd" (include "common.names.namespace" .) (include "mailu.fullname" .) | quote }}
+    {{- end }}
 spec:
   {{- if and .Values.ingress.ingressClassName (eq "true" (include "common.ingress.supportsIngressClassname" .)) }}
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}

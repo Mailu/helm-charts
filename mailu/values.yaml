@@ -639,6 +639,13 @@ ingress:
     submission: false
     manageSieve: false
 
+  ## @param ingress.type Ingress type (nginx or traefik)
+  type: nginx
+
+  ## @param ingress.traefik.insecureSkipVerify Disable TLS verification for Traefik (between Traefik and the backend)
+  traefik:
+    insecureSkipVerify: true
+
 ## @section Proxy auth configuration
 ## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
 proxyAuth:
