@@ -33,9 +33,11 @@ spec:
         {{- if .Values.front.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.front.podLabels "context" $) | nindent 8 }}
         {{- end }}
-      {{- if .Values.front.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.front.podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
+      annotations:
+        checksum/envvars-configmap.yaml: {{ include (print .Template.BasePath "/envvars-configmap.yaml") . | sha256sum }}
+        {{- if .Values.front.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.front.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.front.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.front.hostAliases }}

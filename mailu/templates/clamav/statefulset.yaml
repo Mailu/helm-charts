@@ -30,9 +30,11 @@ spec:
         {{- if .Values.clamav.podLabels }}
         {{- include "common.tplvalues.render" (dict "value" .Values.clamav.podLabels "context" $) | nindent 8 }}
         {{- end }}
-      {{- if .Values.clamav.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.clamav.podAnnotations "context" $) | nindent 8 }}
-      {{- end }}
+      annotations:
+        checksum/envvars-configmap.yaml: {{ include (print .Template.BasePath "/envvars-configmap.yaml") . | sha256sum }}
+        {{- if .Values.clamav.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.clamav.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
     spec:
       {{- include "common.images.pullSecrets" (dict "images" (list .Values.clamav.image) "global" .Values.global) | nindent 6 }}
       {{- if .Values.clamav.hostAliases }}
