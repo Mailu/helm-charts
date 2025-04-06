@@ -296,6 +296,9 @@ externalDatabase:
   ## @param externalDatabase.existingSecretPasswordKey Key in the secret containing the database password
   existingSecretPasswordKey: "password"
 
+  ## @param externalDatabase.appendix String appended to the SQLAlchemy URI
+  appendix: ""
+
 externalRedis:
   ## @param externalRedis.enabled Set to true to use an external Redis instance (ignored if `redis.enabled` is true)
   enabled: false
