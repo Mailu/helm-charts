@@ -193,7 +193,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- if .Values.front.externalService.ports.smtp -}}
         {{- $enabledPorts = append $enabledPorts "25" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.smtps -}}
+    {{- if or .Values.front.externalService.ports.smtps .Values.front.externalService.ports.submissions -}}
         {{- $enabledPorts = append $enabledPorts "465" -}}
     {{- end -}}
     {{- if .Values.front.externalService.ports.submission -}}
@@ -228,7 +228,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- if .Values.front.externalService.ports.smtp -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.smtps -}}
+    {{- if or .Values.front.externalService.ports.smtps .Values.externalService.ports.submissions -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
     {{- end -}}
     {{- if .Values.front.externalService.ports.submission -}}
