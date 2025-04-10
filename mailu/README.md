@@ -463,11 +463,13 @@ Check that the deployed pods are all running.
 ### Postfix parameters
 
 | Name                                            | Description                                                                           | Value               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
+|-------------------------------------------------|---------------------------------------------------------------------------------------|---------------------|
 | `postfix.logLevel`                              | Override default log level                                                            | `""`                |
 | `postfix.image.repository`                      | Pod image repository                                                                  | `mailu/postfix`     |
 | `postfix.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`                |
 | `postfix.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
+| `postfix.kind`                                  | Kind of resource to create for postfix (`Deployment` or `StatefulSet`)                | `Deployment`        |
+| `postfix.replicaCount`                          | Number of front replicas to deploy (only for `StatefulSet` kind)                      | `StatefulSet`       |
 | `postfix.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
 | `postfix.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
 | `postfix.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
