@@ -921,12 +921,14 @@ admin:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param admin.persistence.enabled Enable persistence using PVC
   ## @param admin.persistence.size Pod pvc size
   ## @param admin.persistence.storageClass Pod pvc storage class
   ## @param admin.persistence.accessModes Pod pvc access modes
   ## @param admin.persistence.claimNameOverride Pod pvc name override
   ## @param admin.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -1160,12 +1162,14 @@ postfix:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param postfix.persistence.enabled Enable persistence using PVC
   ## @param postfix.persistence.size Pod pvc size
   ## @param postfix.persistence.storageClass Pod pvc storage class
   ## @param postfix.persistence.accessModes Pod pvc access modes
   ## @param postfix.persistence.claimNameOverride Pod pvc name override
   ## @param postfix.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -1368,12 +1372,14 @@ dovecot:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param dovecot.persistence.enabled Enable persistence using PVC
   ## @param dovecot.persistence.size Pod pvc size
   ## @param dovecot.persistence.storageClass Pod pvc storage class
   ## @param dovecot.persistence.accessModes Pod pvc access modes
   ## @param dovecot.persistence.claimNameOverride Pod pvc name override
   ## @param dovecot.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -1598,12 +1604,14 @@ rspamd:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param rspamd.persistence.enabled Enable persistence using PVC
   ## @param rspamd.persistence.size Pod pvc size
   ## @param rspamd.persistence.storageClass Pod pvc storage class
   ## @param rspamd.persistence.accessModes Pod pvc access modes
   ## @param rspamd.persistence.claimNameOverride Pod pvc name override
   ## @param rspamd.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 1Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -2047,12 +2055,14 @@ webmail:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param webmail.persistence.enabled Enable persistence using PVC
   ## @param webmail.persistence.size Pod pvc size
   ## @param webmail.persistence.storageClass Pod pvc storage class
   ## @param webmail.persistence.accessModes Pod pvc access modes
   ## @param webmail.persistence.claimNameOverride Pod pvc name override
   ## @param webmail.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -2247,12 +2257,14 @@ webdav:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param webdav.persistence.enabled Enable persistence using PVC
   ## @param webdav.persistence.size Pod pvc size
   ## @param webdav.persistence.storageClass Pod pvc storage class
   ## @param webdav.persistence.accessModes Pod pvc access modes
   ## @param webdav.persistence.claimNameOverride Pod pvc name override
   ## @param webdav.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
@@ -2450,12 +2462,14 @@ fetchmail:
     pullPolicy: IfNotPresent
 
   ## Pod persistence (if not using single_pvc)
+  ## @param fetchmail.persistence.enabled Enable persistence using PVC
   ## @param fetchmail.persistence.size Pod pvc size
   ## @param fetchmail.persistence.storageClass Pod pvc storage class
   ## @param fetchmail.persistence.accessModes Pod pvc access modes
   ## @param fetchmail.persistence.claimNameOverride Pod pvc name override
   ## @param fetchmail.persistence.annotations Pod pvc annotations
   persistence:
+    enabled: true
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]

@@ -131,9 +131,14 @@ spec:
         {{- toYaml .Values.webdav.extraContainers | nindent 8 }}
       {{- end }}
       volumes:
+        {{- if not .Values.webmail.persistence.enabled }}
+        - name: data
+          emptyDir: {}
+        {{- else }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "mailu.webdav.claimName" . }}
+        {{- end }}
         {{- if .Values.webdav.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.webdav.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
