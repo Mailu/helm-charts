@@ -121,7 +121,7 @@ spec:
               command:
                 - sh
                 - -c
-                - '! /usr/libexec/postfix/master -t'
+                - '! /usr/libexec/postfix/master -t && df'
           {{- end }}
           {{- if .Values.postfix.livenessProbe.enabled }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.livenessProbe "enabled") "context" $) | nindent 12 }}
@@ -129,7 +129,7 @@ spec:
               command:
                 - sh
                 - -c
-                - '! /usr/libexec/postfix/master -t'
+                - '! /usr/libexec/postfix/master -t && df'
           {{- end }}
           {{- if .Values.postfix.readinessProbe.enabled }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.postfix.readinessProbe "enabled") "context" $) | nindent 12 }}
@@ -137,7 +137,7 @@ spec:
               command:
                 - sh
                 - -c
-                - '! /usr/libexec/postfix/master -t'
+                - '! /usr/libexec/postfix/master -t && df'
           {{- end }}
       {{- if .Values.postfix.extraContainers }}
         {{- toYaml .Values.postfix.extraContainers | nindent 8 }}
