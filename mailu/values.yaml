@@ -701,6 +701,7 @@ front:
     ## Example for LoadBalancer:
     ## type: LoadBalancer
     loadBalancerIP: ""
+    loadBalancerSourceRanges: []
     externalTrafficPolicy: Local
     annotations: {}
     ports:

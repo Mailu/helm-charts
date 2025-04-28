@@ -22,6 +22,9 @@ spec:
   {{- if .loadBalancerIP }}
   loadBalancerIP: {{ .loadBalancerIP }}
   {{- end }}
+  {{- if .loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{ toYaml .loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
   ports:
     {{- if .ports.pop3 }}
     - name: pop3

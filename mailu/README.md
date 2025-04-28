@@ -305,81 +305,82 @@ Check that the deployed pods are all running.
 
 ### Frontend load balancer for non-HTTP(s) services
 
-| Name                                          | Description                                                                           | Value           |
-| --------------------------------------------- | ------------------------------------------------------------------------------------- | --------------- |
-| `front.logLevel`                              | Override default log level                                                            | `""`            |
-| `front.image.repository`                      | Pod image repository                                                                  | `mailu/nginx`   |
-| `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
-| `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
-| `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
-| `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
-| `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
-| `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
-| `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
-| `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
-| `front.externalService.ports.pop3`            | Expose POP3 port - 110/tcp                                                            | `false`         |
-| `front.externalService.ports.pop3s`           | Expose POP3 port (TLS) - 995/tcp                                                      | `true`          |
-| `front.externalService.ports.imap`            | Expose IMAP port - 143/tcp                                                            | `false`         |
-| `front.externalService.ports.imaps`           | Expose IMAP port (TLS) - 993/tcp                                                      | `true`          |
-| `front.externalService.ports.smtp`            | Expose SMTP port - 25/tcp                                                             | `true`          |
-| `front.externalService.ports.smtps`           | Expose SMTP port (TLS) - 465/tcp                                                      | `true`          |
-| `front.externalService.ports.submission`      | Expose Submission port - 587/tcp                                                      | `false`         |
-| `front.externalService.ports.manageSieve`     | Expose ManageSieve port - 4190/tcp                                                    | `true`          |
-| `front.externalService.nodePorts.pop3`        | NodePort to use for POP3 (defaults to 110/tcp)                                        | `110`           |
-| `front.externalService.nodePorts.pop3s`       | NodePort to use for POP3 (TLS) (defaults to 995/tcp)                                  | `995`           |
-| `front.externalService.nodePorts.imap`        | NodePort to use for IMAP (defaults to 143/tcp)                                        | `143`           |
-| `front.externalService.nodePorts.imaps`       | NodePort to use for IMAP (TLS) (defaults to 993/tcp)                                  | `993`           |
-| `front.externalService.nodePorts.smtp`        | NodePort to use for SMTP (defaults to 25/tcp)                                         | `25`            |
-| `front.externalService.nodePorts.smtps`       | NodePort to use for SMTP (TLS) (defaults to 465/tcp)                                  | `465`           |
-| `front.externalService.nodePorts.submission`  | NodePort to use for Submission (defaults to 587/tcp)                                  | `587`           |
-| `front.externalService.nodePorts.manageSieve` | NodePort to use for ManageSieve (defaults to 4190/tcp)                                | `4190`          |
-| `front.kind`                                  | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
-| `front.replicaCount`                          | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |
-| `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |
-| `front.resources.requests`                    | The requested resources for the container                                             | `{}`            |
-| `front.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`          |
-| `front.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`             |
-| `front.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`            |
-| `front.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`            |
-| `front.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`             |
-| `front.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `5`             |
-| `front.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`          |
-| `front.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`            |
-| `front.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`            |
-| `front.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `5`             |
-| `front.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `1`             |
-| `front.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`             |
-| `front.startupProbe.enabled`                  | Enable startupProbe                                                                   | `false`         |
-| `front.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`            |
-| `front.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`            |
-| `front.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `5`             |
-| `front.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `30`            |
-| `front.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`             |
-| `front.podLabels`                             | Add extra labels to pod                                                               | `{}`            |
-| `front.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`            |
-| `front.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`            |
-| `front.initContainers`                        | Add additional init containers to the pod                                             | `[]`            |
-| `front.priorityClassName`                     | Pods' priorityClassName                                                               | `""`            |
-| `front.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`         |
-| `front.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`          |
-| `front.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`         |
-| `front.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`          |
-| `front.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`         |
-| `front.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`             |
-| `front.affinity`                              | Affinity for front pod assignment                                                     | `{}`            |
-| `front.tolerations`                           | Tolerations for pod assignment                                                        | `[]`            |
-| `front.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`             |
-| `front.hostAliases`                           | Pod pod host aliases                                                                  | `[]`            |
-| `front.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`            |
-| `front.service.annotations`                   | Admin service annotations                                                             | `{}`            |
-| `front.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`            |
-| `front.updateStrategy.type`                   | Strategy to use to update Pods                                                        | `RollingUpdate` |
-| `front.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`            |
-| `front.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`            |
-| `front.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
-| `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
-| `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
-| `front.extraContainers`                       | Add additional containers to the pod                                                  | `[]`            |
+| Name                                              | Description                                                                           | Value           |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------- |
+| `front.logLevel`                                  | Override default log level                                                            | `""`            |
+| `front.image.repository`                          | Pod image repository                                                                  | `mailu/nginx`   |
+| `front.image.tag`                                 | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
+| `front.image.pullPolicy`                          | Pod image pull policy                                                                 | `IfNotPresent`  |
+| `front.hostPort.enabled`                          | Expose front mail ports via hostPort                                                  | `true`          |
+| `front.externalService.enabled`                   | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
+| `front.externalService.type`                      | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
+| `front.externalService.externalTrafficPolicy`     | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
+| `front.externalService.loadBalancerIP`            | Service loadBalancerIP                                                                | `""`            |
+| `front.externalService.loadBalancerSourceRanges`  | Service loadBalancerSourceRanges                                                      | `[]`            |
+| `front.externalService.annotations`               | Service annotations                                                                   | `{}`            |
+| `front.externalService.ports.pop3`                | Expose POP3 port - 110/tcp                                                            | `false`         |
+| `front.externalService.ports.pop3s`               | Expose POP3 port (TLS) - 995/tcp                                                      | `true`          |
+| `front.externalService.ports.imap`                | Expose IMAP port - 143/tcp                                                            | `false`         |
+| `front.externalService.ports.imaps`               | Expose IMAP port (TLS) - 993/tcp                                                      | `true`          |
+| `front.externalService.ports.smtp`                | Expose SMTP port - 25/tcp                                                             | `true`          |
+| `front.externalService.ports.smtps`               | Expose SMTP port (TLS) - 465/tcp                                                      | `true`          |
+| `front.externalService.ports.submission`          | Expose Submission port - 587/tcp                                                      | `false`         |
+| `front.externalService.ports.manageSieve`         | Expose ManageSieve port - 4190/tcp                                                    | `true`          |
+| `front.externalService.nodePorts.pop3`            | NodePort to use for POP3 (defaults to 110/tcp)                                        | `110`           |
+| `front.externalService.nodePorts.pop3s`           | NodePort to use for POP3 (TLS) (defaults to 995/tcp)                                  | `995`           |
+| `front.externalService.nodePorts.imap`            | NodePort to use for IMAP (defaults to 143/tcp)                                        | `143`           |
+| `front.externalService.nodePorts.imaps`           | NodePort to use for IMAP (TLS) (defaults to 993/tcp)                                  | `993`           |
+| `front.externalService.nodePorts.smtp`            | NodePort to use for SMTP (defaults to 25/tcp)                                         | `25`            |
+| `front.externalService.nodePorts.smtps`           | NodePort to use for SMTP (TLS) (defaults to 465/tcp)                                  | `465`           |
+| `front.externalService.nodePorts.submission`      | NodePort to use for Submission (defaults to 587/tcp)                                  | `587`           |
+| `front.externalService.nodePorts.manageSieve`     | NodePort to use for ManageSieve (defaults to 4190/tcp)                                | `4190`          |
+| `front.kind`                                      | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
+| `front.replicaCount`                              | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |
+| `front.resources.limits`                          | The resources limits for the container                                                | `{}`            |
+| `front.resources.requests`                        | The requested resources for the container                                             | `{}`            |
+| `front.livenessProbe.enabled`                     | Enable livenessProbe                                                                  | `true`          |
+| `front.livenessProbe.failureThreshold`            | Failure threshold for livenessProbe                                                   | `3`             |
+| `front.livenessProbe.initialDelaySeconds`         | Initial delay seconds for livenessProbe                                               | `10`            |
+| `front.livenessProbe.periodSeconds`               | Period seconds for livenessProbe                                                      | `10`            |
+| `front.livenessProbe.successThreshold`            | Success threshold for livenessProbe                                                   | `1`             |
+| `front.livenessProbe.timeoutSeconds`              | Timeout seconds for livenessProbe                                                     | `5`             |
+| `front.readinessProbe.enabled`                    | Enable readinessProbe                                                                 | `true`          |
+| `front.readinessProbe.initialDelaySeconds`        | Initial delay seconds for readinessProbe                                              | `10`            |
+| `front.readinessProbe.periodSeconds`              | Period seconds for readinessProbe                                                     | `10`            |
+| `front.readinessProbe.timeoutSeconds`             | Timeout seconds for readinessProbe                                                    | `5`             |
+| `front.readinessProbe.failureThreshold`           | Failure threshold for readinessProbe                                                  | `1`             |
+| `front.readinessProbe.successThreshold`           | Success threshold for readinessProbe                                                  | `1`             |
+| `front.startupProbe.enabled`                      | Enable startupProbe                                                                   | `false`         |
+| `front.startupProbe.initialDelaySeconds`          | Initial delay seconds for startupProbe                                                | `10`            |
+| `front.startupProbe.periodSeconds`                | Period seconds for startupProbe                                                       | `10`            |
+| `front.startupProbe.timeoutSeconds`               | Timeout seconds for startupProbe                                                      | `5`             |
+| `front.startupProbe.failureThreshold`             | Failure threshold for startupProbe                                                    | `30`            |
+| `front.startupProbe.successThreshold`             | Success threshold for startupProbe                                                    | `1`             |
+| `front.podLabels`                                 | Add extra labels to pod                                                               | `{}`            |
+| `front.podAnnotations`                            | Add extra annotations to the pod                                                      | `{}`            |
+| `front.nodeSelector`                              | Node labels selector for pod assignment                                               | `{}`            |
+| `front.initContainers`                            | Add additional init containers to the pod                                             | `[]`            |
+| `front.priorityClassName`                         | Pods' priorityClassName                                                               | `""`            |
+| `front.podSecurityContext.enabled`                | Enabled pods' Security Context                                                        | `false`         |
+| `front.podSecurityContext.fsGroup`                | Set pods' Security Context fsGroup                                                    | `1001`          |
+| `front.containerSecurityContext.enabled`          | Enabled containers' Security Context                                                  | `false`         |
+| `front.containerSecurityContext.runAsUser`        | Set containers' Security Context runAsUser                                            | `1001`          |
+| `front.containerSecurityContext.runAsNonRoot`     | Set container's Security Context runAsNonRoot                                         | `false`         |
+| `front.terminationGracePeriodSeconds`             | In seconds, time given to the pod to terminate gracefully                             | `2`             |
+| `front.affinity`                                  | Affinity for front pod assignment                                                     | `{}`            |
+| `front.tolerations`                               | Tolerations for pod assignment                                                        | `[]`            |
+| `front.revisionHistoryLimit`                      | Configure the revisionHistoryLimit of the deployment                                  | `3`             |
+| `front.hostAliases`                               | Pod pod host aliases                                                                  | `[]`            |
+| `front.schedulerName`                             | Name of the k8s scheduler (other than default)                                        | `""`            |
+| `front.service.annotations`                       | Admin service annotations                                                             | `{}`            |
+| `front.topologySpreadConstraints`                 | Topology Spread Constraints for pod assignment                                        | `[]`            |
+| `front.updateStrategy.type`                       | Strategy to use to update Pods                                                        | `RollingUpdate` |
+| `front.extraEnvVars`                              | Extra environment variable to pass to the running container                           | `[]`            |
+| `front.extraEnvVarsCM`                            | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`            |
+| `front.extraEnvVarsSecret`                        | Name of existing Secret containing extra environment variables to mount in the pod    | `""`            |
+| `front.extraVolumeMounts`                         | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
+| `front.extraVolumes`                              | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
+| `front.extraContainers`                           | Add additional containers to the pod                                                  | `[]`            |
 
 ### Admin parameters
 
