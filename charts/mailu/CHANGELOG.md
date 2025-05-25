@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/Mailu/helm-charts/compare/mailu-2.2.0...mailu-2.2.1) (2025-05-25)
+
+
+### Miscellaneous Chores
+
+* trigger release ([41e7f53](https://github.com/Mailu/helm-charts/commit/41e7f53869be97ebf1f99785f3728965d5bee4d8))
+
 ## [2.2.0](https://github.com/Mailu/helm-charts/compare/mailu-2.1.2...mailu-2.2.0) (2025-05-25)
 
 
