@@ -667,7 +667,7 @@ Check that the deployed pods are all running.
 | `clamav.resources.limits`                      | The resources limits for the container                                                | `{}`                   |
 | `clamav.resources.requests`                    | The requested resources for the container                                             | `{}`                   |
 | `clamav.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`                 |
-| `clamav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                    |
+| `clamav.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `5`                    |
 | `clamav.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                   |
 | `clamav.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                   |
 | `clamav.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                    |
