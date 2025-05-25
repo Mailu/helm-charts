@@ -213,41 +213,41 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- $proxyProtocolPorts := list -}}
 
 {{- if .Values.front.externalService.enabled -}}
-    {{- if .Values.front.externalService.ports.pop3 -}}
+    {{- if and .Values.front.externalService.ports.pop3 .Values.ingress.proxyProtocol.pop3 -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "110" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.pop3s -}}
+    {{- if and .Values.front.externalService.ports.pop3s .Values.ingress.proxyProtocol.pop3s -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "995" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.imap -}}
+    {{- if and .Values.front.externalService.ports.imap .Values.ingress.proxyProtocol.imap -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "143" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.imaps -}}
+    {{- if and .Values.front.externalService.ports.imaps .Values.ingress.proxyProtocol.imaps -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "993" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.smtp -}}
+    {{- if and .Values.front.externalService.ports.smtp .Values.ingress.proxyProtocol.smtp -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.smtps -}}
+    {{- if and .Values.front.externalService.ports.smtps .Values.ingress.proxyProtocol.smtps -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.submission -}}
+    {{- if and .Values.front.externalService.ports.submission .Values.ingress.proxyProtocol.submission -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "587" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.manageSieve -}}
+    {{- if and .Values.front.externalService.ports.manageSieve .Values.ingress.proxyProtocol.manageSieve -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "4190" -}}
     {{- end -}}
 {{- end -}}
 
 {{- $proxyProtocolPortsString := join "," $proxyProtocolPorts -}}
-{{/* if any ports are enabled and .front.realIpFrom is empty, fail */}}
-{{- if and (gt (len $proxyProtocolPorts) 0) (not .Values.front.realIpFrom) -}}
-    {{- fail "PROXY protocol is enabled for some ports, but front.realIpFrom is not set" -}}
+{{/* if any ports are enabled and .ingress.realIpFrom is empty, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) (not .Values.ingress.realIpFrom) -}}
+    {{- fail "PROXY protocol is enabled for some ports, but ingress.realIpFrom is not set" -}}
 {{- end -}}
 
-{{/* if any ports are enabled and .front.realIpHeader is set, fail */}}
-{{- if and (gt (len $proxyProtocolPorts) 0) .Values.front.realIpHeader -}}
-    {{- fail "PROXY protocol is enabled for some ports, but front.realIpHeader is set" -}}
+{{/* if any ports are enabled and .ingress.realIpHeader is set, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) .Values.ingress.realIpHeader -}}
+    {{- fail "PROXY protocol is enabled for some ports, but ingress.realIpHeader is set" -}}
 {{- end -}}
 
 {{- printf "%s" $proxyProtocolPortsString -}}
