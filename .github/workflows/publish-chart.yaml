@@ -11,7 +11,7 @@ on:
         description: Name of the package that will be published
         required: true
         type: string
-        default: mailu
+        default: charts/mailu
       version:
         description: Version of the package that will be published
         required: true
@@ -27,6 +27,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Extract chart name
+        id: extract_chart_name
+        run: echo "::set-output name=chart_name::$(basename '${{ github.event.inputs.package }}')"
 
       - name: Checkout Github Pages to gh-pages folder
         uses: actions/checkout@v3
@@ -45,10 +49,10 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-          helm dependency build charts/mailu
+          helm dependency build ${{ github.event.inputs.package }}
 
       - name: Run helm lint
-        run: helm lint --strict --values charts/mailu/ci/helm-lint-values.yaml charts/mailu
+        run: helm lint --strict --values ${{ github.event.inputs.package }}/ci/helm-lint-values.yaml ${{ github.event.inputs.package }}
 
       - name: Install chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
@@ -57,7 +61,7 @@ jobs:
 
       - name: Package Chart with chart-releaser
         run: |
-          cr package charts/mailu
+          cr package ${{ github.event.inputs.package }}
 
       - name: Get Release
         uses: octokit/request-action@v2.x
@@ -65,19 +69,19 @@ jobs:
         with:
           route: GET /repos/{repo}/releases/tags/{tag}
           repo: ${{ github.repository }}
-          tag: ${{ github.event.inputs.package }}-${{ github.event.inputs.version }}
+          tag: ${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Chart build to Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
-          tag_name: "${{ github.event.inputs.package }}-${{ github.event.inputs.version }}"
+          name: "${{ steps.extract_chart_name.outputs.chart_name }}: v${{ github.event.inputs.version }}"
+          tag_name: "${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}"
           generate_release_notes: false
           body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
-            .cr-release-packages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
+            .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
 
       - name: Update chart index and publish to Github pages
         run: |
