@@ -48,7 +48,7 @@ jobs:
           helm dependency build charts/mailu
 
       - name: Run helm lint
-        run: helm lint --strict --values charts/mailu/ci/helm-lint-values.yaml mailu
+        run: helm lint --strict --values charts/mailu/ci/helm-lint-values.yaml charts/mailu
 
       - name: Install chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
@@ -57,7 +57,7 @@ jobs:
 
       - name: Package Chart with chart-releaser
         run: |
-          cr package mailu
+          cr package charts/mailu
 
       - name: Get Release
         uses: octokit/request-action@v2.x
