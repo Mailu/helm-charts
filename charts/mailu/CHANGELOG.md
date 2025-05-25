@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2025-05-25)
+
+
+### Features
+
+* ✨ move chart to subdir charts ([#389](https://github.com/Mailu/helm-charts/issues/389)) ([f76c60a](https://github.com/Mailu/helm-charts/commit/f76c60a540a5693fbadd51e3ce21d47e83106abb))
+
 ## [2.1.2](https://github.com/Mailu/helm-charts/compare/mailu-2.1.1...mailu-2.1.2) (2024-12-22)
 
 
