@@ -240,14 +240,14 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- end -}}
 
 {{- $proxyProtocolPortsString := join "," $proxyProtocolPorts -}}
-{{/* if any ports are enabled and .front.realIpFrom is empty, fail */}}
-{{- if and (gt (len $proxyProtocolPorts) 0) (not .Values.front.realIpFrom) -}}
-    {{- fail "PROXY protocol is enabled for some ports, but front.realIpFrom is not set" -}}
+{{/* if any ports are enabled and .ingress.realIpFrom is empty, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) (not .Values.ingress.realIpFrom) -}}
+    {{- fail "PROXY protocol is enabled for some ports, but ingress.realIpFrom is not set" -}}
 {{- end -}}
 
-{{/* if any ports are enabled and .front.realIpHeader is set, fail */}}
-{{- if and (gt (len $proxyProtocolPorts) 0) .Values.front.realIpHeader -}}
-    {{- fail "PROXY protocol is enabled for some ports, but front.realIpHeader is set" -}}
+{{/* if any ports are enabled and .ingress.realIpHeader is set, fail */}}
+{{- if and (gt (len $proxyProtocolPorts) 0) .Values.ingress.realIpHeader -}}
+    {{- fail "PROXY protocol is enabled for some ports, but ingress.realIpHeader is set" -}}
 {{- end -}}
 
 {{- printf "%s" $proxyProtocolPortsString -}}
