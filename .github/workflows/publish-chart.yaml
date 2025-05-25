@@ -2,6 +2,7 @@
 name: release-pipeline
 
 permissions:
+  id-token: write
   contents: write
   attestations: write
 
