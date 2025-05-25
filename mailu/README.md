@@ -652,7 +652,7 @@ Check that the deployed pods are all running.
 | `clamav.enabled`                               | Enable ClamAV                                                                         | `true`                 |
 | `clamav.logLevel`                              | Override default log level                                                            | `""`                   |
 | `clamav.image.repository`                      | Pod image repository                                                                  | `clamav/clamav-debian` |
-| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `1.2.0-6`              |
+| `clamav.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `1.4`                  |
 | `clamav.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`         |
 | `clamav.image.registry`                        | Pod image registry (specific for clamav as it is not part of the mailu organization)  | `docker.io`            |
 | `clamav.persistence.enabled`                   | Enable persistence using PVC                                                          | `true`                 |
