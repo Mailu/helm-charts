@@ -1865,7 +1865,7 @@ clamav:
   ## @param clamav.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
   livenessProbe:
     enabled: true
-    failureThreshold: 3
+    failureThreshold: 5
     initialDelaySeconds: 10
     periodSeconds: 10
     successThreshold: 1
