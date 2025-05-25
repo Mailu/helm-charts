@@ -3,6 +3,7 @@ name: release-pipeline
 
 permissions:
   contents: write
+  attestations: write
 
 on:
   workflow_dispatch:
@@ -63,6 +64,18 @@ jobs:
         run: |
           cr package ${{ github.event.inputs.package }}
 
+      - name: Calculate artifact digests
+        run: |
+          shasum -a 256 .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz > .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
+          echo "Checksum: $(cat .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt)"
+
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@v2
+        id: attest
+        with:
+          subject-path: .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
+          subject-checksums: .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
+
       - name: Get Release
         uses: octokit/request-action@v2.x
         id: get_release
@@ -82,6 +95,7 @@ jobs:
           body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
             .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
+            .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
 
       - name: Update chart index and publish to Github pages
         run: |
