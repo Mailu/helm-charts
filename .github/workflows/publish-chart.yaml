@@ -65,17 +65,11 @@ jobs:
         run: |
           cr package ${{ github.event.inputs.package }}
 
-      - name: Calculate artifact digests
-        run: |
-          shasum -a 256 .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz > .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
-          echo "Checksum: $(cat .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt)"
-
       - name: Attest Build Provenance
         uses: actions/attest-build-provenance@v2
         id: attest
         with:
           subject-path: .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
-          subject-checksums: .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -98,7 +92,7 @@ jobs:
           body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
             .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
-            .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.checksums.txt
+            ${{ steps.attest.outputs.bundle-path }}
 
       - name: Update chart index and publish to Github pages
         run: |
