@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/Mailu/helm-charts/compare/mailu-2.2.1...mailu-2.2.2) (2025-05-25)
+
+
+### Bug Fixes
+
+* fix proxy protocol check ([#414](https://github.com/Mailu/helm-charts/issues/414)) ([5304600](https://github.com/Mailu/helm-charts/commit/5304600aac1d55b4c2ac19123d7793909e7d84e0))
+
 ## [2.2.1](https://github.com/Mailu/helm-charts/compare/mailu-2.2.0...mailu-2.2.1) (2025-05-25)
 
 
