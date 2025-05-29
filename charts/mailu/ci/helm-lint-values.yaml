@@ -1,12 +1,12 @@
 hostnames:
-  - example.com
+  - mailu.cluster.local
 
-domain: example.com
+domain: mailu.cluster.local
 
 initialAccount:
   enabled: true
   username: mailadmin
-  domain: example.com
+  domain: mailu.cluster.local
   password: chang3m3!
 
 secretKey: chang3m3!
