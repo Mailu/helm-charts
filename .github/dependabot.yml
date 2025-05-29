@@ -4,3 +4,8 @@ updates:
     directory: ".github"
     schedule:
       interval: "weekly"
+  - package-ecosystem: "helm"
+    directory: "charts"
+    schedule:
+      interval: "weekly"
+# info: for anyone looking to use dependabot to update pre-commit hooks: https://github.com/dependabot/dependabot-core/issues/1524#issuecomment-2708625358

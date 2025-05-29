@@ -7,6 +7,7 @@ on:
     branches:
       - master
     paths:
+      - .github/**
       - charts/mailu/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -75,10 +76,8 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --debug --config ct.yaml
 
-  update-readme-metadata:
+  check-readme-update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     needs: lint-and-test
     steps:
       - name: Install readme-generator-for-helm
@@ -93,15 +92,7 @@ jobs:
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
-
-      - name: Push changes
-        run: |
-          # Push all the changes
-          cd charts
-          git config --global user.email "actions@github.com"
-          git config --global user.name "Github actions"
-          git add -A
-          if ! git diff-index --quiet HEAD; then
-            git commit -am "Update README.md with readme-generator-for-helm" --signoff
-            git push
-          fi
+          git diff --exit-code --name-status charts/mailu/README.md || {
+            echo "README update is missing. This should have been prevented by pre-commit hook."
+            exit 1
+          }
