@@ -78,6 +78,10 @@ spec:
           volumeMounts:
             - name: certs
               mountPath: /certs
+            {{- if .Values.front.overrides }}
+            - name: overrides
+              mountPath: /overrides
+            {{- end }}
             {{- if .Values.front.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -201,6 +205,11 @@ spec:
               - key: tls.key
                 path: key.pem
             secretName: {{ include "mailu.certificatesSecretName" . }}
+        {{- if .Values.front.overrides }}
+        - name: overrides
+          configMap:
+            name: {{ printf "%s-front-override" (include "mailu.fullname" .) }}
+        {{- end }}
         {{- if .Values.front.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
