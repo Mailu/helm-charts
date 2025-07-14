@@ -177,31 +177,29 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- $enabledPorts = append $enabledPorts "443" -}}
 {{- end -}}
 
-{{- if .Values.front.externalService.enabled -}}
-    {{- if .Values.front.externalService.ports.pop3 -}}
-        {{- $enabledPorts = append $enabledPorts "110" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.pop3s -}}
-        {{- $enabledPorts = append $enabledPorts "995" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.imap -}}
-        {{- $enabledPorts = append $enabledPorts "143" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.imaps -}}
-        {{- $enabledPorts = append $enabledPorts "993" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.smtp -}}
-        {{- $enabledPorts = append $enabledPorts "25" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.smtps -}}
-        {{- $enabledPorts = append $enabledPorts "465" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.submission -}}
-        {{- $enabledPorts = append $enabledPorts "587" -}}
-    {{- end -}}
-    {{- if .Values.front.externalService.ports.manageSieve -}}
-        {{- $enabledPorts = append $enabledPorts "4190" -}}
-    {{- end -}}
+{{- if .Values.front.externalService.ports.pop3 -}}
+    {{- $enabledPorts = append $enabledPorts "110" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.pop3s -}}
+    {{- $enabledPorts = append $enabledPorts "995" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.imap -}}
+    {{- $enabledPorts = append $enabledPorts "143" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.imaps -}}
+    {{- $enabledPorts = append $enabledPorts "993" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.smtp -}}
+    {{- $enabledPorts = append $enabledPorts "25" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.smtps -}}
+    {{- $enabledPorts = append $enabledPorts "465" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.submission -}}
+    {{- $enabledPorts = append $enabledPorts "587" -}}
+{{- end -}}
+{{- if .Values.front.externalService.ports.manageSieve -}}
+    {{- $enabledPorts = append $enabledPorts "4190" -}}
 {{- end -}}
 
 {{- $enabledPortsString := join "," $enabledPorts -}}
@@ -212,31 +210,29 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- define "mailu.proxyProtocolPorts" -}}
 {{- $proxyProtocolPorts := list -}}
 
-{{- if .Values.front.externalService.enabled -}}
-    {{- if and .Values.front.externalService.ports.pop3 .Values.ingress.proxyProtocol.pop3 -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "110" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.pop3s .Values.ingress.proxyProtocol.pop3s -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "995" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.imap .Values.ingress.proxyProtocol.imap -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "143" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.imaps .Values.ingress.proxyProtocol.imaps -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "993" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.smtp .Values.ingress.proxyProtocol.smtp -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.smtps .Values.ingress.proxyProtocol.smtps -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.submission .Values.ingress.proxyProtocol.submission -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "587" -}}
-    {{- end -}}
-    {{- if and .Values.front.externalService.ports.manageSieve .Values.ingress.proxyProtocol.manageSieve -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "4190" -}}
-    {{- end -}}
+{{- if and .Values.front.externalService.ports.pop3 .Values.ingress.proxyProtocol.pop3 -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "110" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.pop3s .Values.ingress.proxyProtocol.pop3s -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "995" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.imap .Values.ingress.proxyProtocol.imap -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "143" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.imaps .Values.ingress.proxyProtocol.imaps -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "993" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.smtp .Values.ingress.proxyProtocol.smtp -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.smtps .Values.ingress.proxyProtocol.smtps -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.submission .Values.ingress.proxyProtocol.submission -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "587" -}}
+{{- end -}}
+{{- if and .Values.front.externalService.ports.manageSieve .Values.ingress.proxyProtocol.manageSieve -}}
+    {{- $proxyProtocolPorts = append $proxyProtocolPorts "4190" -}}
 {{- end -}}
 
 {{- $proxyProtocolPortsString := join "," $proxyProtocolPorts -}}
