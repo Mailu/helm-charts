@@ -283,17 +283,6 @@ Check that the deployed pods are all running.
 | `ingress.extraTls`                  | TLS configuration for additional hostname(s) to be covered with this ingress record                                              | `[]`                     |
 | `ingress.secrets`                   | Custom TLS certificates as secrets                                                                                               | `[]`                     |
 | `ingress.extraRules`                | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
-| `ingress.realIpHeader`              | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod (ex.: X-Forwarded-For)                                | `""`                     |
-| `ingress.realIpFrom`                | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `""`                     |
-| `ingress.tlsFlavorOverride`         | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
-| `ingress.proxyProtocol.pop3`        | Enable PROXY protocol for POP3 (110/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.pop3s`       | Enable PROXY protocol for POP3S (995/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.imap`        | Enable PROXY protocol for IMAP (143/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.imaps`       | Enable PROXY protocol for IMAPS (993/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.smtp`        | Enable PROXY protocol for SMTP (25/tcp)                                                                                          | `false`                  |
-| `ingress.proxyProtocol.smtps`       | Enable PROXY protocol for SMTPS (465/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.submission`  | Enable PROXY protocol for Submission (587/tcp)                                                                                   | `false`                  |
-| `ingress.proxyProtocol.manageSieve` | Enable PROXY protocol for ManageSieve (4190/tcp)                                                                                 | `false`                  |
 
 ### Proxy auth configuration
 
@@ -312,6 +301,17 @@ Check that the deployed pods are all running.
 | `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
+| `front.realIpHeader`                          | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod            | `""`            |
+| `front.realIpFrom`                            | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod              | `""`            |
+| `front.tlsFlavorOverride`                     | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod           | `""`            |
+| `front.proxyProtocol.pop3`                    | Enable PROXY protocol for POP3 (110/tcp)                                              | `false`         |
+| `front.proxyProtocol.pop3s`                   | Enable PROXY protocol for POP3S (995/tcp)                                             | `false`         |
+| `front.proxyProtocol.imap`                    | Enable PROXY protocol for IMAP (143/tcp)                                              | `false`         |
+| `front.proxyProtocol.imaps`                   | Enable PROXY protocol for IMAPS (993/tcp)                                             | `false`         |
+| `front.proxyProtocol.smtp`                    | Enable PROXY protocol for SMTP (25/tcp)                                               | `false`         |
+| `front.proxyProtocol.smtps`                   | Enable PROXY protocol for SMTPS (465/tcp)                                             | `false`         |
+| `front.proxyProtocol.submission`              | Enable PROXY protocol for Submission (587/tcp)                                        | `false`         |
+| `front.proxyProtocol.manageSieve`             | Enable PROXY protocol for ManageSieve (4190/tcp)                                      | `false`         |
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
 | `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
