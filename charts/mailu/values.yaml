@@ -611,7 +611,7 @@ ingress:
   extraRules: []
 
   ## @param ingress.realIpHeader Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
-  realIpHeader: X-Forwarded-For
+  realIpHeader: ""
 
   ## @param ingress.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
   realIpFrom: ""
