@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0](https://github.com/Mailu/helm-charts/compare/mailu-2.2.2...mailu-2.3.0) (2025-08-21)
+
+
+### Features
+
+* bump mailu version to 2024.06.41 ([#431](https://github.com/Mailu/helm-charts/issues/431)) ([ad72d37](https://github.com/Mailu/helm-charts/commit/ad72d3779f2601cc1c52b02b04130fbe3b6cc78a))
+
+
+### Bug Fixes
+
+* remove env vars from clamav, oletools and tika pods ([#428](https://github.com/Mailu/helm-charts/issues/428)) ([ea26d85](https://github.com/Mailu/helm-charts/commit/ea26d85d400f223dddd63a6e322f4e27984b07de))
+* update tika (CVE-2025-54988) ([#430](https://github.com/Mailu/helm-charts/issues/430)) ([270a2d0](https://github.com/Mailu/helm-charts/commit/270a2d09c477a06fcdb7e1760f3eb6913e889fc6))
+
 ## [2.2.2](https://github.com/Mailu/helm-charts/compare/mailu-2.2.1...mailu-2.2.2) (2025-05-25)
 
 
