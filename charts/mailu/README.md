@@ -956,7 +956,7 @@ Check that the deployed pods are all running.
 | `tika.logLevel`                              | Override default log level                                                                      | `""`            |
 | `tika.languages`                             | Array of languages to enable (sets the FULL_TEXT_SEARCH environment variable); "off" to disable | `["en"]`        |
 | `tika.image.repository`                      | Pod image repository                                                                            | `apache/tika`   |
-| `tika.image.tag`                             | Pod image tag                                                                                   | `2.9.2.1-full`  |
+| `tika.image.tag`                             | Pod image tag                                                                                   | `latest-full`   |
 | `tika.image.pullPolicy`                      | Pod image pull policy                                                                           | `IfNotPresent`  |
 | `tika.image.registry`                        | Pod image registry (specific for tika as it is not part of the mailu organization)              | `docker.io`     |
 | `tika.resources.limits`                      | The resources limits for the container                                                          | `{}`            |
