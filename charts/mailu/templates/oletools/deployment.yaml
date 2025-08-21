@@ -82,9 +82,8 @@ spec:
             {{- if .Values.oletools.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+          {{- if or .Values.oletools.extraEnvVarsCM .Values.oletools.extraEnvVarsSecret }}
           envFrom:
-            - configMapRef:
-                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.oletools.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsCM "context" $) }}
@@ -93,6 +92,7 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- end }}
           ports:
             - name: olefy
               containerPort: 11343
