@@ -124,7 +124,7 @@ spec:
           {{- end }}
           securityContext:
             {{- $securityContext := dict "capabilities" (dict "add" (list "NET_BIND_SERVICE")) }}
-            {{- if .Values.admin.containerSecurityContext }}
+            {{- if and .Values.admin.containerSecurityContext (hasKey .Values.admin.containerSecurityContext "enabled") .Values.admin.containerSecurityContext.enabled }}
             {{- $securityContext = merge $securityContext (omit .Values.admin.containerSecurityContext "enabled") }}
             {{- end }}
             {{- toYaml $securityContext | nindent 12 }}
