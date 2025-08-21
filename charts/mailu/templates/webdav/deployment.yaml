@@ -85,9 +85,8 @@ spec:
             {{- if .Values.webdav.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.webdav.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+          {{- if or .Values.webdav.extraEnvVarsCM .Values.webdav.extraEnvVarsSecret }}
           envFrom:
-            - configMapRef:
-                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.webdav.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.webdav.extraEnvVarsCM "context" $) }}
@@ -96,6 +95,7 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.webdav.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 5232

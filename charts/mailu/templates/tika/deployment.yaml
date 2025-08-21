@@ -82,9 +82,8 @@ spec:
             {{- if .Values.tika.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.tika.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+          {{- if or .Values.tika.extraEnvVarsCM .Values.tika.extraEnvVarsSecret }}
           envFrom:
-            - configMapRef:
-                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.tika.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.tika.extraEnvVarsCM "context" $) }}
@@ -93,6 +92,7 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.tika.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 9998

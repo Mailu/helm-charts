@@ -86,9 +86,8 @@ spec:
             {{- if .Values.clamav.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.clamav.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+          {{- if or .Values.clamav.extraEnvVarsCM .Values.clamav.extraEnvVarsSecret }}
           envFrom:
-            - configMapRef:
-                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.clamav.extraEnvVarsCM }}
             - configMapRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.clamav.extraEnvVarsCM "context" $) }}
@@ -97,6 +96,7 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.clamav.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- end }}
           ports:
             - name: clamav
               containerPort: 3310
