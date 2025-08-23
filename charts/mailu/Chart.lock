@@ -3,13 +3,13 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 2.8.0
 - name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 17.15.2
+  repository: oci://registry-1.docker.io/cloudpirates
+  version: 0.1.5
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 11.9.13
 - name: mariadb
   repository: https://charts.bitnami.com/bitnami
   version: 12.2.9
-digest: sha256:418939e4cffeabd09d5a87f643f1fc87b43f23b00a9139d36646fcb11ebf4c17
-generated: "2023-08-14T00:40:16.960741779+02:00"
+digest: sha256:c7360d44c34c8decacc379897de5781f5c10fe5f639ec0a60c371520fae30b21
+generated: "2025-08-23T21:45:41.781862919+02:00"
