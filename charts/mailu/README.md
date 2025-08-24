@@ -380,6 +380,7 @@ Check that the deployed pods are all running.
 | `front.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`            |
 | `front.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`            |
 | `front.extraContainers`                       | Add additional containers to the pod                                                  | `[]`            |
+| `front.overrides`                             | Enable front overrides                                                                | `{}`            |
 
 ### Admin parameters
 
