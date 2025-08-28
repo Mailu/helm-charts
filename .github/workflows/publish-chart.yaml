@@ -32,7 +32,7 @@ jobs:
 
       - name: Extract chart name
         id: extract_chart_name
-        run: echo "::set-output name=chart_name::$(basename '${{ github.event.inputs.package }}')"
+        run: echo "chart_name=$(basename '${{ github.event.inputs.package }}')" >> "$GITHUB_OUTPUT"
 
       - name: Checkout Github Pages to gh-pages folder
         uses: actions/checkout@v3
