@@ -27,7 +27,7 @@ jobs:
       release_body: ${{ fromJSON(steps.get_release.outputs.data).body }}
     env:
       OCI_REGISTRY: ghcr.io
-      OCI_NAMESPACE: ${{ github.repository_owner }}/helm-charts
+      OCI_NAMESPACE: ${{ github.repository_owner }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
