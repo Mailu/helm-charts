@@ -5,6 +5,7 @@ permissions:
   id-token: write
   contents: write
   attestations: write
+  packages: write
 
 on:
   workflow_dispatch:
@@ -24,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_body: ${{ fromJSON(steps.get_release.outputs.data).body }}
+    env:
+      OCI_REGISTRY: ghcr.io
+      OCI_NAMESPACE: ${{ github.repository_owner }}/helm-charts
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -65,6 +69,14 @@ jobs:
         run: |
           cr package ${{ github.event.inputs.package }}
 
+      - name: Login to OCI registry (ghcr.io)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.OCI_REGISTRY }} --username "${{ github.actor }}" --password-stdin
+
+      - name: Push chart to OCI
+        run: |
+          CHART_FILE=".cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz"
+          helm push "$CHART_FILE" oci://${{ env.OCI_REGISTRY }}/${{ env.OCI_NAMESPACE }}
       - name: Attest Build Provenance
         uses: actions/attest-build-provenance@v2
         id: attest
