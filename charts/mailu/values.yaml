@@ -334,6 +334,10 @@ mariadb:
   ## @param mariadb.architecture MariaDB architecture. Allowed values: standalone or replication
   architecture: standalone
 
+  ## @param mariadb.image.repository MariaDB image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/mariadb
+
   ## @param mariadb.auth.rootPassword Password for the `root` user. Ignored if existing secret is provided.
   ## @param mariadb.auth.database Name for a custom database to create
   ## @param mariadb.auth.username Name for a custom user to create
@@ -404,6 +408,16 @@ mariadb:
         echo "Not running initialisation, exiting..."
       fi
 
+  ## @param mariadb.metrics.image.repository MariaDB metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/mysqld-exporter
+
+  ## @param mariadb.volumePermissions.image.repository MariaDB volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
 ## PostgreSQL chart configuration
 ## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 postgresql:
@@ -412,6 +426,10 @@ postgresql:
 
   ## @param postgresql.architecture PostgreSQL architecture. Allowed values: standalone or replication
   architecture: standalone
+
+  ## @param postgresql.image.repository PostgreSQL image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/postgresql
 
   ## @param postgresql.auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
   ## @param postgresql.auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
@@ -486,6 +504,16 @@ postgresql:
       storageClass: ""
       accessMode: ReadWriteOnce
       size: 8Gi
+
+  ## @param postgresql.metrics.image.repository PostgreSQL metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
+
+  ## @param postgresql.volumePermissions.image.repository PostgreSQL volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
 
 ## @param persistence.single_pvc Setings for a single volume for all apps.
 ## Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
@@ -1113,6 +1141,10 @@ redis:
   ## @param redis.architecture Redis architecture. Allowed values: `standalone` or `replication`
   architecture: standalone
 
+  ## @param redis.image.repository Redis image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/redis
+
   ## @param redis.auth.enabled DON'T CHANGE THIS VALUE. Mailu doesn't support Redis authentication
   auth:
     enabled: false
@@ -1144,6 +1176,31 @@ redis:
   ## Don't forget to configure replicas persistence if changing this value
   replica:
     count: 0
+
+  ## @param redis.sentinel.image.repository Redis Sentinel image (using bitnamilegacy for now)
+  sentinel:
+    image:
+      repository: bitnamilegacy/redis-sentinel
+
+  ## @param redis.metrics.image.repository Redis metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
+
+  ## @param redis.volumePermissions.image.repository Redis volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+  ## @param redis.kubectl.image.repository Redis kubectl image (using bitnamilegacy for now)
+  kubectl:
+    image:
+      repository: bitnamilegacy/kubectl
+
+  ## @param redis.sysctl.image.repository Redis sysctl image (using bitnamilegacy for now)
+  sysctl:
+    image:
+      repository: bitnamilegacy/os-shell
 
 ## @section Postfix parameters
 postfix:
