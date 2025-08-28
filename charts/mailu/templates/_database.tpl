@@ -16,7 +16,7 @@
 {{- if .Values.mariadb.enabled -}}
     {{- template "mariadb.primary.fullname" .Subcharts.mariadb -}}
 {{- else if .Values.postgresql.enabled -}}
-    {{- template "postgresql.primary.fullname" .Subcharts.postgresql -}}
+    {{- template "postgresql.v1.primary.fullname" .Subcharts.postgresql -}}
 {{- else if .Values.externalDatabase.enabled -}}
     {{- .Values.externalDatabase.host -}}
 {{- end -}}
@@ -96,7 +96,7 @@
 {{- if .Values.mariadb.enabled -}}
     {{- template "mariadb.secretName" .Subcharts.mariadb -}}
 {{- else if .Values.postgresql.enabled -}}
-    {{- template "postgresql.secretName" .Subcharts.postgresql -}}
+    {{- template "postgresql.v1.secretName" .Subcharts.postgresql -}}
 {{- else if ne (include "mailu.database.type" .) "sqlite" -}}
     {{- if .Values.externalDatabase.enabled -}}
         {{- include "mailu.database.external.secretName" . -}}
