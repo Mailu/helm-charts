@@ -57,7 +57,7 @@ jobs:
         run: helm lint --strict --values ${{ github.event.inputs.package }}/ci/helm-lint-values.yaml ${{ github.event.inputs.package }}
 
       - name: Install chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+        uses: helm/chart-releaser-action@v1.7.0
         with:
           install_only: true
 
