@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.3.0](https://github.com/Mailu/helm-charts/compare/mailu-2.2.2...mailu-2.3.0) (2025-08-28)
+
+
+### Features
+
+* bump mailu version to 2024.06.41 ([#431](https://github.com/Mailu/helm-charts/issues/431)) ([ad72d37](https://github.com/Mailu/helm-charts/commit/ad72d3779f2601cc1c52b02b04130fbe3b6cc78a))
+
+
+### Bug Fixes
+
+* bump mailu version to 2024.06.43 ([#436](https://github.com/Mailu/helm-charts/issues/436)) ([a04015a](https://github.com/Mailu/helm-charts/commit/a04015a870bcd44bf6de018af9fcff0ac7f908d1))
+* pin tika image to 3.2.2.0-full ([#435](https://github.com/Mailu/helm-charts/issues/435)) ([921e66b](https://github.com/Mailu/helm-charts/commit/921e66b8e7e3a2dd28d4781950d5069fe27a9745))
+* remove env vars from clamav, oletools and tika pods ([#428](https://github.com/Mailu/helm-charts/issues/428)) ([ea26d85](https://github.com/Mailu/helm-charts/commit/ea26d85d400f223dddd63a6e322f4e27984b07de))
+* restrict tika and oletools internet access ([#432](https://github.com/Mailu/helm-charts/issues/432)) ([c112e9a](https://github.com/Mailu/helm-charts/commit/c112e9aab486b0c36e0aa181d1bd36f4f10d3e51))
+* update bitnami dependencies and use bitnamilegacy repo ([#434](https://github.com/Mailu/helm-charts/issues/434)) ([e5f55f2](https://github.com/Mailu/helm-charts/commit/e5f55f2c2941a4b10aa90f4af36131ea256b7a53))
+* update tika (CVE-2025-54988) ([#430](https://github.com/Mailu/helm-charts/issues/430)) ([270a2d0](https://github.com/Mailu/helm-charts/commit/270a2d09c477a06fcdb7e1760f3eb6913e889fc6))
+
 ## [2.2.2](https://github.com/Mailu/helm-charts/compare/mailu-2.2.1...mailu-2.2.2) (2025-05-25)
 
 
