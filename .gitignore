@@ -2,3 +2,4 @@ gh-pages/
 charts/mailu/charts/
 pack_chart_*.sh
 .cr-release-packages
+.venv/
