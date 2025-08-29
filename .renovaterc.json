@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    ":semanticCommits",
+    "github>Mailu/helm-charts//.renovate/autoMerge",
+    "github>Mailu/helm-charts//.renovate/commitMessage",
+    "github>Mailu/helm-charts//.renovate/customManagers",
+    "github>Mailu/helm-charts//.renovate/labels",
+    "github>Mailu/helm-charts//.renovate/semanticCommits"
+  ],
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "suppressNotifications": [
+    "prEditedNotification",
+    "prIgnoreNotification"
+  ]
+}

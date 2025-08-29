@@ -1,4 +1,5 @@
 apiVersion: v2
+# renovate: datasource=github-releases depName=Mailu/mailu
 appVersion: 2024.06.43
 version: 2.3.0
 name: mailu

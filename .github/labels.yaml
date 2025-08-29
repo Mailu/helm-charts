@@ -1,0 +1,84 @@
+---
+# Areas
+- name: area/charts
+  color: "#0e8a16"
+  description: "Changes made in the charts directory"
+- name: area/docs
+  color: "#0e8a16"
+  description: "Changes made in the docs files"
+- name: area/github
+  color: "#0e8a16"
+  description: "Changes made in the GitHub directory"
+- name: area/renovate
+  color: "#0e8a16"
+  description: "Changes made in the Renovate files"
+- name: area/utils
+  color: "#0e8a16"
+  description: "Changes made in the utils directory"
+# Renovate Types
+- name: renovate/container
+  color: "#027fa0"
+  description: "Changes made in the container files"
+- name: renovate/github-action
+  color: "#027fa0"
+  description: "Changes made in the GitHub Action files"
+- name: renovate/github-release
+  color: "#027fa0"
+  description: "Changes made in the GitHub Release files"
+- name: renovate/helm
+  description: "Changes made in the Helm files"
+  color: "#027fa0"
+# Semantic Types
+- name: type/digest
+  color: "#ffeC19"
+  description: "Updates to digest version"
+- name: type/patch
+  color: "#ffeC19"
+  description: "Updates to patch version"
+- name: type/minor
+  color: "#ff9800"
+  description: "Updates to minor version"
+- name: type/major
+  description: "Updates to major version"
+  color: "#f6412d"
+# Uncategorized
+- name: backlog
+  color: "#172c7a"
+  description: "Issues that are in the backlog"
+- name: bug
+  color: "#d73a4a"
+  description: "Issues that are confirmed to be bugs"
+- name: documentation
+  color: "#0075ca"
+  description: "Improvements or additions to documentation"
+- name: duplicate
+  color: "#ee0701"
+  description: "Issues that are duplicates"
+- name: enhancement
+  color: "#a2eeef"
+  description: "Improvements or additions to existing features"
+- name: help wanted
+  color: "#008672"
+  description: "Issues that need assistance"
+- name: mailu issue
+  color: "#6699FE"
+  description: "Mailu related issues"
+- name: needs testing
+  color: "#7F50A7"
+  description: "Issues that need testing"
+- name: pending answer
+  color: "#FE9C09"
+  description: "Issues that are awaiting a response"
+- name: question
+  color: "#d876e3"
+  description: "Questions that need answers"
+- name: Stale
+  color: "#ededed"
+  description: "Issues that have not been updated for a while"
+# Release Please
+- name: "autorelease: pending"
+  color: "#ededed"
+  description: "Release please - pending autorelease"
+- name: "autorelease: tagged"
+  color: "#ededed"
+  description: "Release please - tagged autorelease"
