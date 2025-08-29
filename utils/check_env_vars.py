@@ -45,7 +45,7 @@ MAPPING = {
     "HOSTNAMES": ("hostnames", ""),
     "POSTMASTER": ("postmaster", ""),
     "WILDCARD_SENDERS": ("", ""),
-    "TLS_FLAVOR": ("ingress.tlsFlavorOverride", ""),
+    "TLS_FLAVOR": ("front.tlsFlavorOverride", ""),
     "INBOUND_TLS_ENFORCE": ("", ""),
     "DEFER_ON_TLS_ERROR": ("", ""),
     "AUTH_RATELIMIT_IP": ("limits.authRatelimit.ip", ""),

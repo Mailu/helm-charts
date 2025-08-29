@@ -70,8 +70,8 @@ Get MailU domain name or throw an error if not set
 
 {{/* Get the MailU TLS Flavor */}}
 {{- define "mailu.tlsFlavor" -}}
-{{- if .Values.ingress.tlsFlavorOverride -}}
-{{- .Values.ingress.tlsFlavorOverride -}}
+{{- if .Values.front.tlsFlavorOverride -}}
+{{- .Values.front.tlsFlavorOverride -}}
 {{- else -}}
     {{- if .Values.ingress.tls -}}
         {{- print "cert" -}}
@@ -137,8 +137,8 @@ Only "master" is allowed to be used as a version other than the semver notation.
     {{- end -}}
 {{- end -}}
 
-{{- if .Values.ingress.tlsFlavor -}}
-{{- $oldValues = append $oldValues "ingress.tlsFlavor" -}}
+{{- if .Values.front.tlsFlavor -}}
+{{- $oldValues = append $oldValues "front.tlsFlavor" -}}
 {{- end -}}
 
 {{- if .Values.ingress.externalIngress -}}

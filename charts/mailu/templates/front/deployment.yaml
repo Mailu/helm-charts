@@ -105,37 +105,37 @@ spec:
               containerPort: 110
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 110
-              {{- end}}
+              {{- end }}
             - name: pop3s
               protocol: TCP
               containerPort: 995
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 995
-              {{- end}}
+              {{- end }}
             - name: imap
               protocol: TCP
               containerPort: 143
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 143
-              {{- end}}
+              {{- end }}
             - name: imaps
               protocol: TCP
               containerPort: 993
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 993
-              {{- end}}
+              {{- end }}
             - name: smtp
               protocol: TCP
               containerPort: 25
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 25
-              {{- end}}
+              {{- end }}
             - name: smtps
               protocol: TCP
               containerPort: 465
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 465
-              {{- end}}
+              {{- end }}
             - name: smtp-auth
               protocol: TCP
               containerPort: 10025
@@ -147,21 +147,24 @@ spec:
               containerPort: 587
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 587
-              {{- end}}
+              {{- end }}
             - name: auth
+              protocol: TCP
               containerPort: 8000
-              protocol: TCP
             - name: http
+              protocol: TCP
               containerPort: 80
-              protocol: TCP
             - name: sieve
-              containerPort: 14190
               protocol: TCP
+              containerPort: 14190
+              {{- if .Values.front.hostPort.enabled }}
+              hostPort: 4190
+              {{- end }}
             {{ if not .Values.ingress.enabled }}
             - name: https
-              containerPort: 443
               protocol: TCP
-            {{end}}
+              containerPort: 443
+            {{- end }}
           {{- if .Values.front.resources }}
           resources: {{- toYaml .Values.front.resources | nindent 12 }}
           {{- end }}
