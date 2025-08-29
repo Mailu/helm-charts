@@ -7,7 +7,8 @@
     "github>Mailu/helm-charts//.renovate/commitMessage",
     "github>Mailu/helm-charts//.renovate/customManagers",
     "github>Mailu/helm-charts//.renovate/labels",
-    "github>Mailu/helm-charts//.renovate/semanticCommits"
+    "github>Mailu/helm-charts//.renovate/semanticCommits",
+    ":disableRateLimiting"
   ],
   "dependencyDashboardTitle": "Renovate Dashboard 🤖",
   "suppressNotifications": [
