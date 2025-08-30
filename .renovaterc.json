@@ -14,5 +14,19 @@
   "suppressNotifications": [
     "prEditedNotification",
     "prIgnoreNotification"
+  ],  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Helm Chart appVersion",
+      "fileMatch": [
+        "/(^|\/)Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?appVersion:\\s*(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
   ]
+
 }
