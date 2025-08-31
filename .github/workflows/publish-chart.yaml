@@ -62,7 +62,7 @@ jobs:
         run: helm lint --strict --values ${{ github.event.inputs.package }}/ci/helm-lint-values.yaml ${{ github.event.inputs.package }}
 
       - name: Install chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
+        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         with:
           install_only: true
 
@@ -129,7 +129,7 @@ jobs:
       - name: Send message to mailu-helm-chart channel
         # Only run this job if the release-please job created a release
         id: matrix-chat-message
-        uses: fadenb/matrix-chat-message@v0.0.6
+        uses: fadenb/matrix-chat-message@89baab2b9ea06ffdd5f5b1ca80e9f888c3d7c9d3 # v0.0.6
         with:
           homeserver: "matrix.org"
           token: ${{ secrets.MATRIX_TOKEN }}
