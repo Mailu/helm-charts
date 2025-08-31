@@ -90,7 +90,7 @@ jobs:
         run: |
           pip install pre-commit
           echo "Updating README.md for mailu chart"
-          pre-commit run
+          pre-commit run --show-diff-on-failure
           git diff --exit-code --name-status charts/mailu/README.md || {
             echo "README update is missing. This should have been prevented by pre-commit hook."
             exit 1
