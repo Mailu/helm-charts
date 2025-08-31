@@ -1018,7 +1018,6 @@ Check that the deployed pods are all running.
 | `tika.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                              | `[]`                                                                                   |
 | `tika.extraContainers`                       | Add additional containers to the pod                                                            | `[]`                                                                                   |
 
-
 ## Example values.yaml to get started
 
 ```yaml

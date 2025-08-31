@@ -715,7 +715,7 @@ front:
   ## @param front.externalService.ports.smtps Expose SMTP port (TLS) - 465/tcp
   ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
   ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
-  ## @param front.externalService.nodePorts [nullable] Optionally define NodePorts.
+  ## @param front.externalService.nodePorts [object,nullable] Optionally define NodePorts.
   ## @param front.externalService.nodePorts.pop3 [nullable] NodePort to use for POP3
   ## @param front.externalService.nodePorts.pop3s [nullable] NodePort to use for POP3 (TLS)
   ## @param front.externalService.nodePorts.imap [nullable] NodePort to use for IMAP
