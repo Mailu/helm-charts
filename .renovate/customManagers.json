@@ -4,8 +4,8 @@
     {
       "customType": "regex",
       "description": "Helm Chart appVersion",
-      "fileMatch": [
-        "/(^|/)Chart\\.yaml$/"
+      "managerFilePatterns": [
+        "/(^|/)Chart\\.ya?ml$/"
       ],
       "matchStrings": [
         "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\n.*?appVersion:\\s*(?<currentValue>.*)"
