@@ -33,8 +33,8 @@ postgresql:
         memory: 500Mi
         cpu: 100m
       limits:
-        memory: 500Mi
-        cpu: 1
+        memory: 1Gi
+        cpu: 2
 
 ingress:
   enabled: true
@@ -51,8 +51,8 @@ front:
       memory: 100Mi
       cpu: 100m
     limits:
-      memory: 200Mi
-      cpu: 200m
+      memory: 1Gi
+      cpu: 2
 
 admin:
   logLevel: DEBUG
@@ -63,8 +63,8 @@ admin:
       memory: 500Mi
       cpu: 100m
     limits:
-      memory: 500Mi
-      cpu: 1
+      memory: 1Gi
+      cpu: 2
   initContainers:
     # Add an initcontainer to wait for redis to be deployed
     - name: wait-for-redis
@@ -80,8 +80,8 @@ admin:
           memory: 50Mi
           cpu: 10m
         limits:
-          memory: 100Mi
-          cpu: 50m
+          memory: 1Gi
+          cpu: 2
 
 postfix:
   logLevel: INFO
@@ -93,7 +93,7 @@ postfix:
       cpu: 100m
     limits:
       memory: 2Gi
-      cpu: 1
+      cpu: 2
 
 dovecot:
   logLevel: INFO
@@ -104,8 +104,8 @@ dovecot:
       memory: 500Mi
       cpu: 100m
     limits:
-      memory: 500Mi
-      cpu: 1
+      memory: 1Gi
+      cpu: 2
 
 rspamd:
   logLevel: INFO
@@ -116,8 +116,8 @@ rspamd:
       memory: 100Mi
       cpu: 100m
     limits:
-      memory: 200Mi
-      cpu: 1
+      memory: 1Gi
+      cpu: 2
 
 clamav:
   logLevel: INFO
@@ -129,7 +129,7 @@ clamav:
       cpu: 100m
     limits:
       memory: 2Gi
-      cpu: 1
+      cpu: 2
 
 webmail:
   logLevel: INFO
@@ -140,8 +140,8 @@ webmail:
       memory: 100Mi
       cpu: 100m
     limits:
-      memory: 200Mi
-      cpu: 1
+      memory: 1Gi
+      cpu: 2
 
 webdav:
   logLevel: INFO
@@ -160,8 +160,8 @@ redis:
         memory: 500Mi
         cpu: 100m
       limits:
-        memory: 500Mi
-        cpu: 1
+        memory: 1Gi
+        cpu: 2
 
 tika:
   enabled: true
