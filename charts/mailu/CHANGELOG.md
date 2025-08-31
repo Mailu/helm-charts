@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/Mailu/helm-charts/compare/mailu-2.3.0...mailu-2.3.1) (2025-08-31)
+
+
+### Bug Fixes
+
+* remove deprecated common template (fixes [#449](https://github.com/Mailu/helm-charts/issues/449)) ([#451](https://github.com/Mailu/helm-charts/issues/451)) ([b262be4](https://github.com/Mailu/helm-charts/commit/b262be4a7f827fa3aee855f39ffb327548f276f1))
+
 ## [2.3.0](https://github.com/Mailu/helm-charts/compare/mailu-2.2.2...mailu-2.3.0) (2025-08-28)
 
 
