@@ -5,6 +5,7 @@
     ":semanticCommits",
     "github>Mailu/helm-charts//.renovate/autoMerge",
     "github>Mailu/helm-charts//.renovate/commitMessage",
+    "github>Mailu/helm-charts//.renovate/packageRules",
     "github>Mailu/helm-charts//.renovate/customManagers",
     "github>Mailu/helm-charts//.renovate/labels",
     "github>Mailu/helm-charts//.renovate/semanticCommits",
