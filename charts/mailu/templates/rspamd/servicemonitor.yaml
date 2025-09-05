@@ -1,0 +1,41 @@
+{{- if and .Values.rspamd.enabled .Values.rspamd.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "mailu.rspamd.serviceName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: rspamd
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.rspamd.serviceMonitor.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.rspamd.serviceMonitor.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: rspamd
+  namespaceSelector:
+    matchNames:
+      - {{ include "common.names.namespace" . | quote }}
+  endpoints:
+    - port: rspamd-http
+      path: /metrics
+      scheme: http
+      {{- if .Values.rspamd.serviceMonitor.interval }}
+      interval: {{ .Values.rspamd.serviceMonitor.interval }}
+      {{- end }}
+      params:
+        password:
+          - "mailu"
+      # Remove password from labels (even if hardcoded)
+      relabelings:
+        - action: labeldrop
+          regex: "__param_password"
+        {{ if .Values.rspamd.serviceMonitor.relabelings }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.rspamd.serviceMonitor.relabelings "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.rspamd.serviceMonitor.metricRelabelings }}
+      metricRelabelings: {{- tpl (toYaml .Values.rspamd.serviceMonitor.metricRelabelings | nindent 6) . }}
+      {{- end }}
+{{- end }}

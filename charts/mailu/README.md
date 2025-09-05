@@ -166,6 +166,11 @@ Check that the deployed pods are all running.
   app.kubernetes.io/instance: ingress-nginx
   app.kubernetes.io/component: controller
 ` |
+| `networkPolicy.monitoring.namespace`          | Namespace where the monitoring pods are deployed                                                                                       | `monitoring`                                                                                                                                  |
+| `networkPolicy.monitoring.podSelector`        | Selector for the monitoring pods                                                                                                       | `matchLabels:
+  app.kubernetes.io/name: prometheus-agent
+  app.kubernetes.io/instance: kps
+`                                                  |
 | `mailuVersion`                                | Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0       | `""`                                                                                                                                          |
 | `logLevel`                                    | default log level. can be overridden globally or per service                                                                           | `WARNING`                                                                                                                                     |
 | `postmaster`                                  | local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)                                                    | `postmaster`                                                                                                                                  |
@@ -583,6 +588,11 @@ Check that the deployed pods are all running.
 | `dovecot.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
 | `dovecot.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
 | `dovecot.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `dovecot.serviceMonitor.enabled`                | If true, a serviceMonitor will be created for Dovecot                                 | `false`             |
+| `dovecot.serviceMonitor.annotations`            | Dovecot serviceMonitor annotations                                                    | `{}`                |
+| `dovecot.serviceMonitor.interval`               | Dovecot serviceMonitor scrape interval                                                | `""`                |
+| `dovecot.serviceMonitor.metricRelabelings`      | MetricRelabelConfigs to apply to samples after scraping, but before ingestion.        | `[]`                |
+| `dovecot.serviceMonitor.relabelings`            | RelabelConfigs to apply to samples before scraping                                    | `[]`                |
 | `dovecot.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
 | `dovecot.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
 | `dovecot.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
@@ -647,7 +657,12 @@ Check that the deployed pods are all running.
 | `rspamd.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
 | `rspamd.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
 | `rspamd.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `rspamd.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `rspamd.service.annotations`                   | Rspamd service annotations                                                            | `{}`                |
+| `rspamd.serviceMonitor.enabled`                | If true, a serviceMonitor will be created for Rspamd                                  | `false`             |
+| `rspamd.serviceMonitor.annotations`            | Rspamd serviceMonitor annotations                                                     | `{}`                |
+| `rspamd.serviceMonitor.interval`               | Rspamd serviceMonitor scrape interval                                                 | `""`                |
+| `rspamd.serviceMonitor.metricRelabelings`      | MetricRelabelConfigs to apply to samples after scraping, but before ingestion.        | `[]`                |
+| `rspamd.serviceMonitor.relabelings`            | RelabelConfigs to apply to samples before scraping                                    | `[]`                |
 | `rspamd.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
 | `rspamd.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
 | `rspamd.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
