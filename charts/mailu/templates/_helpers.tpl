@@ -208,3 +208,12 @@ mailu: tika
     {{- print "off" -}}
 {{- end -}}
 {{- end -}}
+
+
+{{/* If .Values.dovecot.serviceMonitor.enabled is true and .Values.dovecot.overrides is an empty object, throw an alert message as it would not work */}}
+{{- define "mailu.dovecot.validateServiceMonitor" -}}
+{{- if and .Values.dovecot.serviceMonitor.enabled (eq (len .Values.dovecot.overrides) 0) -}}
+mailu: dovecot
+    You need to set at least one override for Dovecot's service monitor
+{{- end -}}
+{{- end -}}

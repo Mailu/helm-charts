@@ -119,6 +119,11 @@ spec:
             - name: sieve
               containerPort: 4190
               protocol: TCP
+            {{- if .Values.dovecot.serviceMonitor.enabled }}
+            - name: dovecot-metrics
+              containerPort: 9900
+              protocol: TCP
+            {{- end }}
           {{- if .Values.dovecot.resources }}
           resources: {{- toYaml .Values.dovecot.resources | nindent 12 }}
           {{- end }}

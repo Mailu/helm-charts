@@ -36,3 +36,5 @@ After you created an initial admin login (see docs), you can login to the admin 
 If you're upgrading from Mailu < 2024.06, please read this: https://mailu.io/2024.06/releases.html#after-upgrading
 
 {{ include "mailu.validateValues" . }}
+
+{{ include "mailu.dovecot.validateServiceMonitor" . }}

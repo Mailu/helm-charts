@@ -1,0 +1,34 @@
+{{- if and .Values.dovecot.enabled .Values.dovecot.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "mailu.dovecot.serviceName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: dovecot
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.dovecot.serviceMonitor.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.dovecot.serviceMonitor.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: dovecot
+  namespaceSelector:
+    matchNames:
+      - {{ include "common.names.namespace" . | quote }}
+  endpoints:
+    - port: dovecot-metrics
+      path: /metrics
+      scheme: http
+      {{- if .Values.dovecot.serviceMonitor.interval }}
+      interval: {{ .Values.dovecot.serviceMonitor.interval }}
+      {{- end }}
+      {{- if .Values.dovecot.serviceMonitor.relabelings }}
+      relabelings: {{- tpl (toYaml .Values.dovecot.serviceMonitor.relabelings | nindent 6) . }}
+      {{- end }}
+      {{- if .Values.dovecot.serviceMonitor.metricRelabelings }}
+      metricRelabelings: {{- tpl (toYaml .Values.dovecot.serviceMonitor.metricRelabelings | nindent 6) . }}
+      {{- end }}
+{{- end }}

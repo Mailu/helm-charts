@@ -32,4 +32,9 @@ spec:
     - name: sieve
       port: 4190
       protocol: TCP
+    {{- if .Values.dovecot.serviceMonitor.enabled }}
+    - name: dovecot-metrics
+      port: 9900
+      protocol: TCP
+    {{- end }}
 {{- end }}
