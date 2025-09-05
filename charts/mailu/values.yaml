@@ -131,6 +131,17 @@ networkPolicy:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/component: controller
 
+  ## @param networkPolicy.monitoring.namespace Namespace where the monitoring pods are deployed
+  ## @param networkPolicy.monitoring.podSelector Selector for the monitoring pods
+  ## Make sure you adapt the namespace and podSelector to your environment
+  ## as this can greatly differ between setups. The values below are just examples.
+  monitoring:
+    namespace: monitoring
+    podSelector: |
+      matchLabels:
+        app.kubernetes.io/name: prometheus-agent
+        app.kubernetes.io/instance: kps
+
 ## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
 mailuVersion: ""
 
@@ -1575,6 +1586,37 @@ dovecot:
   service:
     ## @param dovecot.service.annotations Admin service annotations
     annotations: {}
+
+  # Service monitor parameters
+  serviceMonitor:
+    ## @param dovecot.serviceMonitor.enabled If true, a serviceMonitor will be created for Dovecot
+    enabled: false
+
+    ## @param dovecot.serviceMonitor.annotations Dovecot serviceMonitor annotations
+    annotations: {}
+
+    ## @param dovecot.serviceMonitor.interval Dovecot serviceMonitor scrape interval
+    ## If not set, the default prometheus scrape interval will be used
+    interval: ""
+
+    ## @param dovecot.serviceMonitor.metricRelabelings MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    ## @param dovecot.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
 
   ## @param dovecot.topologySpreadConstraints Topology Spread Constraints for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
