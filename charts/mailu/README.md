@@ -294,17 +294,6 @@ Check that the deployed pods are all running.
 | `ingress.extraTls`                  | TLS configuration for additional hostname(s) to be covered with this ingress record                                              | `[]`                     |
 | `ingress.secrets`                   | Custom TLS certificates as secrets                                                                                               | `[]`                     |
 | `ingress.extraRules`                | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
-| `ingress.realIpHeader`              | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
-| `ingress.realIpFrom`                | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `""`                     |
-| `ingress.tlsFlavorOverride`         | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
-| `ingress.proxyProtocol.pop3`        | Enable PROXY protocol for POP3 (110/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.pop3s`       | Enable PROXY protocol for POP3S (995/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.imap`        | Enable PROXY protocol for IMAP (143/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.imaps`       | Enable PROXY protocol for IMAPS (993/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.smtp`        | Enable PROXY protocol for SMTP (25/tcp)                                                                                          | `false`                  |
-| `ingress.proxyProtocol.smtps`       | Enable PROXY protocol for SMTPS (465/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.submission`  | Enable PROXY protocol for Submission (587/tcp)                                                                                   | `false`                  |
-| `ingress.proxyProtocol.manageSieve` | Enable PROXY protocol for ManageSieve (4190/tcp)                                                                                 | `false`                  |
 
 ### Proxy auth configuration
 
@@ -323,6 +312,17 @@ Check that the deployed pods are all running.
 | `front.image.tag`                             | Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)           | `""`            |
 | `front.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`  |
 | `front.hostPort.enabled`                      | Expose front mail ports via hostPort                                                  | `true`          |
+| `front.realIpHeader`                          | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod            | `""`            |
+| `front.realIpFrom`                            | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod              | `""`            |
+| `front.tlsFlavorOverride`                     | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod           | `""`            |
+| `front.proxyProtocol.pop3`                    | Enable PROXY protocol for POP3 (110/tcp)                                              | `false`         |
+| `front.proxyProtocol.pop3s`                   | Enable PROXY protocol for POP3S (995/tcp)                                             | `false`         |
+| `front.proxyProtocol.imap`                    | Enable PROXY protocol for IMAP (143/tcp)                                              | `false`         |
+| `front.proxyProtocol.imaps`                   | Enable PROXY protocol for IMAPS (993/tcp)                                             | `false`         |
+| `front.proxyProtocol.smtp`                    | Enable PROXY protocol for SMTP (25/tcp)                                               | `false`         |
+| `front.proxyProtocol.smtps`                   | Enable PROXY protocol for SMTPS (465/tcp)                                             | `false`         |
+| `front.proxyProtocol.submission`              | Enable PROXY protocol for Submission (587/tcp)                                        | `false`         |
+| `front.proxyProtocol.manageSieve`             | Enable PROXY protocol for ManageSieve (4190/tcp)                                      | `false`         |
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
 | `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
@@ -1100,7 +1100,7 @@ The default ingress is handled externally. In some situations, this is problemat
 on the same address as the exposed ports. Kubernetes services cannot provide such capabilities without vendor-specific annotations.
 
 By setting `ingress.enabled` to false, the internal NGINX instance provided by `front` will configure TLS according to
-`ingress.tlsFlavorOverride` and redirect `http` scheme connections to `https`.
+`front.tlsFlavorOverride` and redirect `http` scheme connections to `https`.
 
 CAUTION: This configuration exposes `/admin` to all clients with access to the web UI.
 
@@ -1240,8 +1240,8 @@ The table below lists the environment variables that will be passed to the pods 
 | `RATELIMIT_STORAGE_URL`           | -                                      | Managed by Helm chart                                      | ``                                                       |                                                                                                  |
 | `RECAPTCHA_PRIVATE_KEY`           | -                                      |                                                            | ``                                                       | ``                                                                                               |
 | `RECAPTCHA_PUBLIC_KEY`            | -                                      |                                                            | ``                                                       | ``                                                                                               |
-| `REAL_IP_FROM`                    | `ingress.realIpFrom`                   |                                                            | ``                                                       | `0.0.0.0/0`                                                                                      |
-| `REAL_IP_HEADER`                  | `ingress.realIpHeader`                 |                                                            | ``                                                       | `X-Forwarded-For`                                                                                |
+| `REAL_IP_FROM`                    | `front.realIpFrom`                     |                                                            | ``                                                       | `0.0.0.0/0`                                                                                      |
+| `REAL_IP_HEADER`                  | `front.realIpHeader`                   |                                                            | ``                                                       | ``                                                                              |
 | `RECIPIENT_DELIMITER`             | `recipientDelimiter`                   |                                                            | ``                                                       | `+`                                                                                              |
 | `REJECT_UNLISTED_RECIPIENT`       | -                                      |                                                            | `yes`                                                    | `yes`                                                                                            |
 | `RELAYHOST`                       | `externalRealy.host`                   |                                                            | ``                                                       | ``                                                                                               |
@@ -1259,7 +1259,7 @@ The table below lists the environment variables that will be passed to the pods 
 | `SUBNET6`                         | `subnet6`                              | _warning: IPv6 support with Kubernetes is untested_        | `None`                                                   | `none`                                                                                           |
 | `SUBNET`                          | `subnet`                               |                                                            | `192.168.203.0/24`                                       | `10.42.0.0/16`                                                                                   |
 | `TEMPLATES_AUTO_RELOAD`           | -                                      |                                                            | `True`                                                   | `True`                                                                                           |
-| `TLS_FLAVOR`                      | `ingress.tlsFlavorOverride`            |                                                            | `cert`                                                   | `cert`                                                                                           |
+| `TLS_FLAVOR`                      | `front.tlsFlavorOverride`              |                                                            | `cert`                                                   | `cert`                                                                                           |
 | `TLS_PERMISSIVE`                  | -                                      |                                                            | `True`                                                   | `True`                                                                                           |
 | `TZ`                              | `timezone`                             |                                                            | `Etc/UTC`                                                | `Etc/UTC`                                                                                        |
 | `WEB_ADMIN`                       | `admin.uri`                            |                                                            | `/admin`                                                 | `/admin`                                                                                         |
