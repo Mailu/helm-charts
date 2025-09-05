@@ -3,6 +3,51 @@ entries:
   mailu:
   - apiVersion: v2
     appVersion: 2024.06.43
+    created: "2025-09-05T14:47:42.39564681Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.31.4
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 22.0.7
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.7.27
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: https://charts.bitnami.com/bitnami
+      version: 22.0.0
+    description: This chart installs the Mailu mail system on kubernetes
+    digest: c569c4d26241c3c75887e4978ae29ded8d938594ecc6d5301c7514b268d7361a
+    home: https://mailu.io
+    icon: https://mailu.io/master/_images/logo.png
+    keywords:
+    - mailu
+    - mail
+    - email
+    - smtp
+    - imap
+    - pop3
+    - webmail
+    - postfix
+    - dovecot
+    - roundcube
+    maintainers:
+    - name: Mailu
+      url: https://mailu.io
+    name: mailu
+    sources:
+    - https://github.com/Mailu/helm-charts/
+    urls:
+    - https://github.com/Mailu/helm-charts/releases/download/mailu-2.4.0/mailu-2.4.0.tgz
+    version: 2.4.0
+  - apiVersion: v2
+    appVersion: 2024.06.43
     created: "2025-08-31T14:52:12.984722549Z"
     dependencies:
     - name: common
@@ -951,4 +996,4 @@ entries:
     urls:
     - https://mailu.github.io/helm-charts/mailu-0.0.1.tgz
     version: 0.0.1
-generated: "2025-08-31T14:52:12.984989468Z"
+generated: "2025-09-05T14:47:42.395882821Z"
