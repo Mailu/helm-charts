@@ -647,7 +647,12 @@ Check that the deployed pods are all running.
 | `rspamd.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
 | `rspamd.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
 | `rspamd.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `rspamd.service.annotations`                   | Admin service annotations                                                             | `{}`                |
+| `rspamd.service.annotations`                   | Rspamd service annotations                                                            | `{}`                |
+| `rspamd.serviceMonitor.enabled`                | If true, a serviceMonitor will be created for Rspamd                                  | `false`             |
+| `rspamd.serviceMonitor.annotations`            | Rspamd serviceMonitor annotations                                                     | `{}`                |
+| `rspamd.serviceMonitor.interval`               | Rspamd serviceMonitor scrape interval                                                 | `""`                |
+| `rspamd.serviceMonitor.metricRelabelings`      | MetricRelabelConfigs to apply to samples after scraping, but before ingestion.        | `[]`                |
+| `rspamd.serviceMonitor.relabelings`            | RelabelConfigs to apply to samples before scraping                                    | `[]`                |
 | `rspamd.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
 | `rspamd.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
 | `rspamd.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |

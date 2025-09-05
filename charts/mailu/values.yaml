@@ -1804,8 +1804,39 @@ rspamd:
 
   # Service parameters
   service:
-    ## @param rspamd.service.annotations Admin service annotations
+    ## @param rspamd.service.annotations Rspamd service annotations
     annotations: {}
+
+  # Service monitor parameters
+  serviceMonitor:
+    ## @param rspamd.serviceMonitor.enabled If true, a serviceMonitor will be created for Rspamd
+    enabled: false
+
+    ## @param rspamd.serviceMonitor.annotations Rspamd serviceMonitor annotations
+    annotations: {}
+
+    ## @param rspamd.serviceMonitor.interval Rspamd serviceMonitor scrape interval
+    ## If not set, the default prometheus scrape interval will be used
+    interval: ""
+
+    ## @param rspamd.serviceMonitor.metricRelabelings MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    ## @param rspamd.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
 
   ## @param rspamd.topologySpreadConstraints Topology Spread Constraints for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

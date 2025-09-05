@@ -118,6 +118,21 @@ rspamd:
     limits:
       memory: 1Gi
       cpu: 2
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    # Random relabellings to test behavior
+    metricRelabelings:
+      - action: keep
+        regex: "kube_(daemonset|deployment|pod|namespace|node|statefulset).+"
+        sourceLabels: [__name__]
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_node_name]
+        separator: ;
+        regex: ^(.*)$
+        targetLabel: nodename
+        replacement: $1
+        action: replace
 
 clamav:
   logLevel: INFO
