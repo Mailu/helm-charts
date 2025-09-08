@@ -1987,7 +1987,7 @@ clamav:
   ## @param clamav.image.registry Pod image registry (specific for clamav as it is not part of the mailu organization)
   image:
     repository: clamav/clamav-debian
-    tag: 1.4@sha256:acca47d2c5fa0c6e1e8ac842669f03330b58ac161aa57831d70624a4667e664a
+    tag: 1.4@sha256:7ea2310bda3400e2bb776b21bf3f170a2094bc102ce67948ead30561fd760842
     pullPolicy: IfNotPresent
     registry: docker.io
 
