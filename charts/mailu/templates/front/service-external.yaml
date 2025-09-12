@@ -27,7 +27,7 @@ spec:
     - name: pop3
       port: 110
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.pop3 }}
       nodePort: {{ .nodePorts.pop3 }}
       {{- end }}
     {{- end }}
@@ -35,7 +35,7 @@ spec:
     - name: pop3s
       port: 995
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.pop3s }}
       nodePort: {{ .nodePorts.pop3s }}
       {{- end }}
     {{- end }}
@@ -43,7 +43,7 @@ spec:
     - name: imap
       port: 143
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.imap }}
       nodePort: {{ .nodePorts.imap }}
       {{- end }}
     {{- end }}
@@ -51,7 +51,7 @@ spec:
     - name: imaps
       port: 993
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.imaps }}
       nodePort: {{ .nodePorts.imaps }}
       {{- end }}
     {{- end }}
@@ -59,7 +59,7 @@ spec:
     - name: smtp
       port: 25
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.smtp }}
       nodePort: {{ .nodePorts.smtp }}
       {{- end }}
     {{- end }}
@@ -67,7 +67,7 @@ spec:
     - name: smtps
       port: 465
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.smtps }}
       nodePort: {{ .nodePorts.smtps }}
       {{- end }}
     {{- end }}
@@ -75,7 +75,7 @@ spec:
     - name: smtpd
       port: 587
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.submission }}
       nodePort: {{ .nodePorts.submission }}
       {{- end }}
     {{- end }}
@@ -83,7 +83,7 @@ spec:
     - name: sieve
       port: 4190
       protocol: TCP
-      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      {{- if and (eq $.Values.front.externalService.type "NodePort") .nodePorts.manageSieve }}
       nodePort: {{ .nodePorts.manageSieve }}
       {{- end }}
     {{- end }}
