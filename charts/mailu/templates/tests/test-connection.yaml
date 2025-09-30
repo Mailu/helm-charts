@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "mailu.fullname" . }}-test-connection"
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['/bin/sh']
+      args:
+        - '-c'
+        - |
+          {{- range .Values.hostnames }}
+          # HTTP redirects to HTTPS
+          wget -S --header "Host: {{ . }}" 'http://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
+          # HTTPS redirects to SSO page
+          wget -S --header "Host: {{ . }}" 'https://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "common.names.namespace" $ }}.svc.cluster.local'
+          {{- end }}
+  restartPolicy: Never

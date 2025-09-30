@@ -1,0 +1,3213 @@
+## Default values for mailu.
+
+## @section Global parameters
+## Global common parameters (see Bitnamis common chart)
+## @param global.imageRegistry Global container image registry
+## @param global.imagePullSecrets Global container image pull secret
+## @param global.storageClass Global storageClass to use for persistent volumes
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+  database:
+    ## @param global.database.roundcube.database Name of the roundcube database
+    ## @param global.database.roundcube.username Username to use for the roundcube database
+    ## @param global.database.roundcube.password Password to use for the roundcube database
+    ## @param global.database.roundcube.existingSecret Name of an existing secret to use for the roundcube database
+    ## @param global.database.roundcube.existingSecretPasswordKey Name of the key in the existing secret to use for the roundcube database password
+    roundcube:
+      database: roundcube
+      username: roundcube
+      password: ""
+      existingSecret: ""
+      existingSecretPasswordKey: ""
+
+## @section Common parameters
+
+## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
+kubeVersion: ""
+## @param nameOverride String to partially override mailu.fullname include (will maintain the release name)
+nameOverride: ""
+## @param fullnameOverride String to fully override mailu.fullname template
+fullnameOverride: ""
+## @param commonLabels Add labels to all the deployed resources
+commonLabels: {}
+## @param commonAnnotations Add annotations to all the deployed resources
+commonAnnotations: {}
+
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+## @param tolerations Tolerations for pod assignment
+tolerations: []
+
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## @param affinity Affinity for pod assignment
+affinity: {}
+
+## @param imageRegistry Container registry to use for all Mailu images
+imageRegistry: ghcr.io
+
+## @section Mailu parameters
+
+## e.g.:
+## hostnames:
+##   - mail.example.com
+##   - imap.example.com
+## @param hostnames List of hostnames to generate certificates and ingresses for. The first will be used as primary mail hostname.
+hostnames: []
+
+## e.g.:
+## domain: example.com
+## @param domain Mail domain name. See https://github.com/Mailu/Mailu/blob/master/docs/faq.rst#what-is-the-difference-between-domain-and-hostnames
+domain: ""
+
+## e.g.:
+## secretKey: chang3m3!
+## @param secretKey The secret key is required for protecting authentication cookies and must be set individually for each deployment
+## If empty, a random secret key will be generated and saved in a secret
+secretKey: ""
+
+## e.g.:
+## existingSecret: mailu-secret
+## @param existingSecret Name of the existing secret to retrieve the secretKey.
+## The secret has to contain the secretKey value under the `secret-key` key.
+existingSecret: ""
+
+## @param timezone Timezone to use for the containers
+timezone: "Etc/UTC"
+
+## e.g.:
+## initialAccount:
+##   username: mailadmin
+##   domain: mydomain.com
+##   password: ""
+##   existingSecret: mailu-secret
+##
+## @param initialAccount.enabled Enable the creation of the initial account
+## @param initialAccount.username Username of the initial account
+## @param initialAccount.domain Domain of the initial account
+## @param initialAccount.password Password of the initial account; ignored if using existing secret; if empty, a random password will be generated and saved in a secret
+## @param initialAccount.existingSecret Name of the existing secret to retrieve the initial account's password
+## @param initialAccount.existingSecretPasswordKey Name of the key in the existing secret to use for the initial account's password
+## @param initialAccount.mode How to treat the creationg of the initial account. Possible values: "create", "update" or "ifmissing"
+initialAccount:
+  enabled: false
+  username: ""
+  domain: ""
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
+  mode: "update"
+
+## @param api.enabled Enable the API interface
+## @param api.token Token to use for the API interface - if empty, a random token will be generated and saved in a secret
+## @param api.existingSecret Name of the existing secret to retrieve the API token - if set, the token will be ignored
+## @param api.existingSecretTokenKey Name of the key in the existing secret to use for the API token
+## @param api.webPath Path for the API interface
+api:
+  enabled: false
+  token: ""
+  existingSecret: ""
+  existingSecretTokenKey: "api-token"
+  webPath: "/api"
+
+## @param subnet Change this if you're using different address ranges for pods (IPv4)
+subnet: 10.42.0.0/16
+
+## @param subnet6 Change this if you're using different address ranges for pods (IPv6)
+subnet6: ""
+
+networkPolicy:
+  ## @param networkPolicy.enabled Enable network policy
+  enabled: false
+
+  ## @param networkPolicy.ingressController.namespace Namespace where the ingress controller is deployed
+  ## @param networkPolicy.ingressController.podSelector Selector for the ingress controller pods
+  ingressController:
+    namespace: ingress-nginx
+    podSelector: |
+      matchLabels:
+        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/instance: ingress-nginx
+        app.kubernetes.io/component: controller
+
+  ## @param networkPolicy.monitoring.namespace Namespace where the monitoring pods are deployed
+  ## @param networkPolicy.monitoring.podSelector Selector for the monitoring pods
+  ## Make sure you adapt the namespace and podSelector to your environment
+  ## as this can greatly differ between setups. The values below are just examples.
+  monitoring:
+    namespace: monitoring
+    podSelector: |
+      matchLabels:
+        app.kubernetes.io/name: prometheus-agent
+        app.kubernetes.io/instance: kps
+
+## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
+mailuVersion: ""
+
+## @param logLevel default log level. can be overridden globally or per service
+logLevel: WARNING
+
+## @param postmaster local part of the postmaster email address (Mailu will use @$DOMAIN as domain part)
+postmaster: postmaster
+
+## @param recipientDelimiter The delimiter used to separate local part from extension in recipient addresses
+recipientDelimiter: "+"
+
+## @param dmarc.rua Local part of the DMARC report email address (Mailu will use @$DOMAIN as domain part)
+## @param dmarc.ruf Local part of the DMARC failure report email address (Mailu will use @$DOMAIN as domain part)
+dmarc:
+  rua: ""
+  ruf: ""
+
+limits:
+  ## @param limits.messageSizeLimitInMegabytes Maximum size of an email in megabytes
+  messageSizeLimitInMegabytes: 50
+
+  ## Configuration to prevent brute-force attacks. See the documentation for further information: https://mailu.io/master/configuration.html
+  ## @param limits.authRatelimit.ip Sets the `AUTH_RATELIMIT_IP` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.ipv4Mask Sets the `AUTH_RATELIMIT_IP_V4_MASK` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.ipv6Mask Sets the `AUTH_RATELIMIT_IP_V6_MASK` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.user Sets the `AUTH_RATELIMIT_USER` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.exemptionLength Sets the `AUTH_RATELIMIT_EXEMPTION_LENGTH` environment variable in the `admin` pod
+  ## @param limits.authRatelimit.exemption Sets the `AUTH_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  authRatelimit:
+    ip: 60/hour
+    ipv4Mask: 24
+    ipv6Mask: 56
+    user: 100/day
+    exemptionLength: 86400
+    exemption: ""
+
+  # Configuration to reduce outgoing spam in case of a compromised account. See the documentation for further information: https://mailu.io/1.9/configuration.html?highlight=MESSAGE_RATELIMIT
+  ## @param limits.messageRatelimit.value Sets the `MESSAGE_RATELIMIT` environment variable in the `admin` pod
+  ## @param limits.messageRatelimit.exemption Sets the `MESSAGE_RATELIMIT_EXEMPTION` environment variable in the `admin` pod
+  messageRatelimit:
+    value: 200/day
+    exemption: ""
+
+## Mailu external relay configuration
+## Example:
+##  externalRelay:
+##    host: "[domain.tld]:port"
+##    username: username
+##    password: SECRET
+##    # username and password can also be stored as secret:
+##    existingSecret: external-relay-secret
+##    usernameKey: username
+##    passwordKey: password
+##    networks: ["10.0.0.0/24", "2001:db8::/32"]
+## @param externalRelay.host Hostname of the external relay
+## @param externalRelay.username Username for the external relay
+## @param externalRelay.password Password for the external relay
+## @param externalRelay.existingSecret Name of the secret containing the username and password for the external relay; if set, username and password will be ignored
+## @param externalRelay.usernameKey Key in the secret containing the username for the external relay
+## @param externalRelay.passwordKey Key in the secret containing the password for the external relay
+## @param externalRelay.networks List of networks that are allowed to use Mailu as external relay
+externalRelay:
+  host: ""
+  username: ""
+  password: ""
+  existingSecret: ""
+  usernameKey: "relay-username"
+  passwordKey: "relay-password"
+  networks: []
+
+## @param clusterDomain Kubernetes cluster domain name
+clusterDomain: cluster.local
+
+## @param credentialRounds Number of rounds to use for password hashing
+credentialRounds: 12
+
+## @param sessionCookieSecure Controls the secure flag on the cookies of the administrative interface.
+## It should only be turned off if you intend to access it over plain HTTP.
+sessionCookieSecure: true
+
+## @param authRequireTokens Require tokens for authentication
+authRequireTokens: false
+
+## @param sessionTimeout Maximum amount of time in seconds between requests before a session is invalidated
+sessionTimeout: 3600
+
+## @param permanentSessionLifetime Maximum amount of time in seconds a session can be kept alive for if it hasn’t timed-out
+permanentSessionLifetime: 2592000
+
+## @param letsencryptShortchain Controls whether we send the ISRG Root X1 certificate in TLS handshakes.
+## This is required for android handsets older than 7.1.1 but slows down the performance of modern devices.
+letsencryptShortchain: false
+
+## @param customization.siteName Website name
+## @param customization.website URL of the website
+## @param customization.logoUrl Sets a URL for a custom logo. This logo replaces the Mailu logo in the topleft of the main admin interface.
+## @param customization.logoBackground Sets a custom background colour for the brand logo in the top left of the main admin interface.
+customization:
+  siteName: "Mailu"
+  website: "https://mailu.io"
+  logoUrl: ""
+  logoBackground: ""
+
+## @param welcomeMessage.enabled Enable welcome message
+## @param welcomeMessage.subject Subject of the welcome message
+## @param welcomeMessage.body Body of the welcome message
+welcomeMessage:
+  enabled: true
+  subject: "Welcome to Mailu"
+  body: "Welcome to Mailu, your new email service. Please change your password and update your profile."
+
+## @param wildcardSenders List of user emails that can send emails from any address
+wildcardSenders: []
+
+## @param tls.outboundLevel Sets the `OUTBOUND_TLS_LEVEL` environment variable
+## @param tls.deferOnError Sets the `DEFER_ON_TLS_ERROR` environment variable
+## @param tls.inboundEnforce Sets the `INBOUND_TLS_ENFORCE` environment variable
+tls:
+  outboundLevel: ""
+  deferOnError: ""
+  inboundEnforce: ""
+
+## @section Storage parameters
+
+## If deploying mariadb or postgresql from this chart (see `mariadb.enabled` and `postgresql.enabled`),
+## the username, password and database name for the `mailu` database needs to be configured in the respective sections.
+## If using an external database, the `mailu` database needs to be created manually and the credentials need to be configured here.
+## The `roundcube` database needs to be configured under the `global.database` section.
+## If using the built-in MariaDB or PostgreSQL, the `roundcube` database will be created automatically.
+externalDatabase:
+  ## @param externalDatabase.enabled Set to true to use an external database
+  enabled: false
+
+  ## @param externalDatabase.type Type of the external database for mailu and roundcube (`mysql`/`postgresql`)
+  ## Use `mysql` for MariaDB
+  type: ""
+
+  ## @param externalDatabase.host Hostname of the database
+  host: ""
+
+  ## @param externalDatabase.port Port of the database
+  port: 3306
+
+  ## @param externalDatabase.database Name of the database
+  database: mailu
+
+  ## @param externalDatabase.username Username to use for the database
+  username: mailu
+
+  ## @param externalDatabase.password Password to use for the database
+  password: ""
+
+  ## @param externalDatabase.existingSecret Name of the secret containing the database credentials
+  existingSecret: ""
+
+  ## @param externalDatabase.existingSecretDatabaseKey Key in the secret containing the database name
+  existingSecretDatabaseKey: "database"
+
+  ## @param externalDatabase.existingSecretUsernameKey Key in the secret containing the database username
+  existingSecretUsernameKey: "username"
+
+  ## @param externalDatabase.existingSecretPasswordKey Key in the secret containing the database password
+  existingSecretPasswordKey: "password"
+
+externalRedis:
+  ## @param externalRedis.enabled Set to true to use an external Redis instance (ignored if `redis.enabled` is true)
+  enabled: false
+
+  ## @param externalRedis.host Hostname of the external Redis instance
+  host: ""
+
+  ## @param externalRedis.port Port of the external Redis instance
+  port: 6379
+
+  ## @param externalRedis.adminQuotaDbId Redis database ID for the quota storage on the admin pod
+  adminQuotaDbId: 1
+
+  ## @param externalRedis.adminRateLimitDbId Redis database ID for the rate limit storage on the admin pod
+  adminRateLimitDbId: 2
+
+  ## @param externalRedis.rspamdDbId Redis database ID for the rspamd storage on the rspamd pod
+  ## Changing this value does nothing as the option is not configurable in rspamd pod yet
+  ## ref: https://rspamd.com/doc/configuration/redis.html#available-redis-options
+  rspamdDbId: 0
+
+## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
+## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
+database:
+  mysql:
+    roundcubePassword: ""
+  postgresql:
+    roundcubePassword: ""
+
+## MariaDB chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/mariadb
+mariadb:
+  ## @param mariadb.enabled Enable MariaDB deployment
+  enabled: false
+
+  ## @param mariadb.architecture MariaDB architecture. Allowed values: standalone or replication
+  architecture: standalone
+
+  ## @param mariadb.image.repository MariaDB image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/mariadb
+
+  ## @param mariadb.auth.rootPassword Password for the `root` user. Ignored if existing secret is provided.
+  ## @param mariadb.auth.database Name for a custom database to create
+  ## @param mariadb.auth.username Name for a custom user to create
+  ## @param mariadb.auth.password Password for the new user. Ignored if existing secret is provided
+  ## @param mariadb.auth.existingSecret Use existing secret for password details (`auth.rootPassword`, `auth.password`, `auth.replicationPassword`
+  ## will be ignored and picked up from this secret). The secret has to contain the keys `mariadb-root-password`, `mariadb-replication-password`
+  ## and `mariadb-password`
+  auth:
+    rootPassword: ""
+    database: mailu
+    username: mailu
+    password: ""
+    existingSecret: ""
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  ## @param mariadb.primary.persistence.enabled Enable persistence using PVC
+  ## @param mariadb.primary.persistence.storageClass PVC Storage Class for MariaDB volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ## @param mariadb.primary.persistence.accessMode PVC Access Mode for MariaDB volume
+  ## @param mariadb.primary.persistence.size PVC Storage Request for MariaDB volume
+  primary:
+    persistence:
+      enabled: false
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+    ## @skip mariadb.primary.extraEnvVars
+    ## Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
+    extraEnvVars: |
+      - name: ROUNDCUBE_DB_PW
+        valueFrom:
+          secretKeyRef:
+            name: {{ include "mailu.database.roundcube.secretName" . }}
+            key: {{ include "mailu.database.roundcube.secretKey" . }}
+      - name: ROUNDCUBE_DB_NAME
+        value: {{ include "mailu.database.roundcube.name" . }}
+      - name: ROUNDCUBE_DB_USER
+        value: {{ include "mailu.database.roundcube.username" . }}
+
+  ## @skip mariadb.initdbScripts.create_roundcube_database.sh
+  ## DO NOT EDIT Script to create the roundcube database
+  initdbScripts:
+    create_roundcube_database.sh: |
+      #!/bin/bash
+      # set -o errexit
+      # set -o nounset
+      # set -o pipefail
+      echo "Checking for DB initialisation"
+      if [ -S /opt/bitnami/mariadb/tmp/mysql.sock ]; then
+        echo "Running DB initialisation..."
+        /opt/bitnami/mariadb/bin/mysql --user="root" --password="${MARIADB_ROOT_PASSWORD}" <<SQL
+        --
+        -- Initialisation script for roundcube database
+        --
+        CREATE DATABASE IF NOT EXISTS ${ROUNDCUBE_DB_NAME};
+        GRANT ALL PRIVILEGES ON ${ROUNDCUBE_DB_NAME}.* TO '${ROUNDCUBE_DB_USER}'@'%' IDENTIFIED BY '${ROUNDCUBE_DB_PW}';
+        FLUSH PRIVILEGES;
+      SQL
+        echo "DB initialisation complete"
+      else
+        echo "Not running initialisation, exiting..."
+      fi
+
+  ## @param mariadb.metrics.image.repository MariaDB metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/mysqld-exporter
+
+  ## @param mariadb.volumePermissions.image.repository MariaDB volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+## PostgreSQL chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+postgresql:
+  ## @param postgresql.enabled Enable PostgreSQL deployment
+  enabled: false
+
+  ## @param postgresql.architecture PostgreSQL architecture. Allowed values: standalone or replication
+  architecture: standalone
+
+  ## @param postgresql.image.repository PostgreSQL image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/postgresql
+
+  ## @param postgresql.auth.enablePostgresUser Assign a password to the "postgres" admin user. Otherwise, remote access will be blocked for this user
+  ## @param postgresql.auth.postgresPassword Password for the "postgres" admin user. Ignored if `auth.existingSecret` with key `postgres-password` is provided
+  ## @param postgresql.auth.username Name for a custom user to create
+  ## @param postgresql.auth.password Password for the custom user to create. Ignored if `auth.existingSecret` with key `password` is provided
+  ## @param postgresql.auth.database Name for a custom database to create
+  ## @param postgresql.auth.existingSecret Use existing secret for password details (`auth.postgresPassword`, `auth.password` will be ignored and picked up from this secret). The secret has to contain the keys `postgres-password` and `password`
+  auth:
+    enablePostgresUser: true
+    postgresPassword: changeme
+    username: mailu
+    password: ""
+    database: mailu
+    existingSecret: ""
+
+    ## @param postgresql.auth.secretKeys.adminPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param postgresql.auth.secretKeys.userPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    ## @param postgresql.auth.secretKeys.replicationPasswordKey Name of key in existing secret to use for PostgreSQL credentials. Only used when `auth.existingSecret` is set.
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+      replicationPasswordKey: replication-password
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  ## @param postgresql.primary.persistence.enabled Enable persistence using PVC
+  ## @param postgresql.primary.persistence.storageClass PVC Storage Class for PostgreSQL volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ## @param postgresql.primary.persistence.accessMode PVC Access Mode for PostgreSQL volume
+  ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
+  primary:
+    ## @skip postgresql.primary.extraEnvVars
+    ## Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
+    extraEnvVars: |
+      - name: ROUNDCUBE_DB_PW
+        valueFrom:
+          secretKeyRef:
+            name: {{ include "mailu.database.roundcube.secretName" . }}
+            key: {{ include "mailu.database.roundcube.secretKey" . }}
+      - name: ROUNDCUBE_DB_NAME
+        value: {{ include "mailu.database.roundcube.name" . }}
+      - name: ROUNDCUBE_DB_USER
+        value: {{ include "mailu.database.roundcube.username" . }}
+
+    initdb:
+      ## @skip postgresql.primary.initdb.scripts.create_roundcube_database.sh
+      ## DO NOT EDIT Script to create the roundcube database
+      scripts:
+        create_roundcube_database.sh: |
+          #!/bin/bash
+          # set -o errexit
+          # set -o nounset
+          # set -o pipefail
+          info "Running DB initialisation..."
+          info "Creating database ${ROUNDCUBE_DB_NAME}..."
+          echo "CREATE DATABASE \"$ROUNDCUBE_DB_NAME\"" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Creating user ${ROUNDCUBE_DB_USER}"
+          echo "CREATE ROLE \"${ROUNDCUBE_DB_USER}\" WITH LOGIN CREATEDB PASSWORD '${ROUNDCUBE_DB_PW}';" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Granting access to \"${ROUNDCUBE_DB_USER}\" to the database \"${ROUNDCUBE_DB_NAME}\""
+          echo "GRANT ALL PRIVILEGES ON DATABASE \"${ROUNDCUBE_DB_NAME}\" TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          echo "ALTER DATABASE \"${ROUNDCUBE_DB_NAME}\" OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+          info "Setting ownership for the 'public' schema database \"${ROUNDCUBE_DB_NAME}\" to \"${ROUNDCUBE_DB_USER}\""
+          echo "ALTER SCHEMA public OWNER TO \"${ROUNDCUBE_DB_USER}\"\;" | postgresql_execute "$ROUNDCUBE_DB_NAME" "postgres" "$POSTGRES_POSTGRES_PASSWORD"
+
+    persistence:
+      enabled: false
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 8Gi
+
+  ## @param postgresql.metrics.image.repository PostgreSQL metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/postgres-exporter
+
+  ## @param postgresql.volumePermissions.image.repository PostgreSQL volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+## @param persistence.single_pvc Setings for a single volume for all apps.
+## Set single_pvc: false to use a per app volume and set the properties in <app>.persistence (ex. admin.persistence)
+## @param persistence.size Size of the persistent volume claim (for single PVC)
+## @param persistence.accessModes Access mode of backing PVC (for single PVC)
+## @param persistence.annotations Annotations for the PVC (for single PVC)
+## @param persistence.hostPath Path to mount the volume at on the host
+## @param persistence.existingClaim Name of existing PVC (for single PVC)
+## @param persistence.storageClass Storage class of backing PVC (for single PVC)
+## @param persistence.claimNameOverride Override the name of the PVC (for single PVC)
+persistence:
+  single_pvc: true
+  size: 100Gi
+  accessModes: [ReadWriteOnce]
+  annotations: {}
+  hostPath: ""
+  existingClaim: ""
+  storageClass: ""
+  claimNameOverride: ""
+
+## @section Ingress settings
+
+## Set external ingress config
+ingress:
+  ## @param ingress.enabled Enable external ingress
+  enabled: true
+
+  ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
+  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  ingressClassName: ""
+
+  ## @param ingress.pathType Ingress path type
+  pathType: ImplementationSpecific
+
+  ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
+  apiVersion: ""
+
+  ## @param ingress.path Default path for the ingress record
+  path: /
+
+  ## @param ingress.annotations [object] Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.
+  ## Use this parameter to set the required annotations for cert-manager, see
+  ## ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+  ## e.g:
+  ## annotations:
+  ##   kubernetes.io/ingress.class: nginx
+  ##   cert-manager.io/cluster-issuer: cluster-issuer-name
+  annotations: {}
+
+  ## @param ingress.tls Enable TLS configuration for the hosts defined at `hostnames` parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: `{{ printf "%s-certificates" (include "mailu.fullname" . ) }}`
+  ## You can:
+  ##   - Use the `ingress.secrets` parameter to create this TLS secret
+  ##   - Rely on cert-manager to create it by setting the corresponding annotations
+  ##   - Rely on Helm to create self-signed certificates by setting `ingress.tls=true` and `ingress.certManager=false`
+  tls: true
+
+  ## @param ingress.existingSecret Name of an existing Secret containing the TLS certificates for the Ingress
+  ## If empty, the expected secret name will be `{{ printf "%s-certificates" (include "mailu.fullname" . ) }}`
+  existingSecret: ""
+
+  ## @param ingress.selfSigned Create a TLS secret for this ingress record using self-signed certificates generated by Helm
+  selfSigned: false
+
+  ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
+  ## e.g:
+  ## extraHosts:
+  ##   - name: mailu.local
+  ##     path: /
+  extraHosts: []
+
+  ## @param ingress.extraPaths An array with additional arbitrary paths that may need to be added to the ingress under the main host
+  ## e.g:
+  ## extraPaths:
+  ## - path: /*
+  ##   backend:
+  ##     serviceName: ssl-redirect
+  ##     servicePort: use-annotation
+  extraPaths: []
+
+  ## @param ingress.extraTls TLS configuration for additional hostname(s) to be covered with this ingress record
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  ## e.g:
+  ## extraTls:
+  ## - hosts:
+  ##     - mailu.local
+  ##   secretName: mailu.local-tls
+  extraTls: []
+
+  ## @param ingress.secrets Custom TLS certificates as secrets
+  ## NOTE: 'key' and 'certificate' are expected in PEM format
+  ## NOTE: 'name' should line up with a 'secretName' set further up
+  ## If it is not set and you're using cert-manager, this is unneeded, as it will create a secret for you with valid certificates
+  ## If it is not set and you're NOT using cert-manager either, self-signed certificates will be created valid for 365 days (if `ingress.selfSigned=true`)
+  ## It is also possible to create and manage the certificates outside of this helm chart
+  ## Please see README.md for more information
+  ## e.g:
+  ## secrets:
+  ##   - name: mailu.local-tls
+  ##     key: |-
+  ##       -----BEGIN RSA PRIVATE KEY-----
+  ##       ...
+  ##       -----END RSA PRIVATE KEY-----
+  ##     certificate: |-
+  ##       -----BEGIN CERTIFICATE-----
+  ##       ...
+  ##       -----END CERTIFICATE-----
+  secrets: []
+
+  ## @param ingress.extraRules Additional rules to be covered with this ingress record
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
+  ## e.g:
+  ## extraRules:
+  ## - host: mailu.local
+  ##     http:
+  ##       path: /
+  ##       backend:
+  ##         service:
+  ##           name: example-svc
+  ##           port:
+  ##             name: http
+  extraRules: []
+
+  ## @param ingress.realIpHeader Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
+  realIpHeader: X-Forwarded-For
+
+  ## @param ingress.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
+  realIpFrom: ""
+
+  ## @param ingress.tlsFlavorOverride Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod
+  ## This is normally auto-detected, only change it if you know what you are doing.
+  tlsFlavorOverride: ""
+
+  ## @param ingress.proxyProtocol.pop3 Enable PROXY protocol for POP3 (110/tcp)
+  ## @param ingress.proxyProtocol.pop3s Enable PROXY protocol for POP3S (995/tcp)
+  ## @param ingress.proxyProtocol.imap Enable PROXY protocol for IMAP (143/tcp)
+  ## @param ingress.proxyProtocol.imaps Enable PROXY protocol for IMAPS (993/tcp)
+  ## @param ingress.proxyProtocol.smtp Enable PROXY protocol for SMTP (25/tcp)
+  ## @param ingress.proxyProtocol.smtps Enable PROXY protocol for SMTPS (465/tcp)
+  ## @param ingress.proxyProtocol.submission Enable PROXY protocol for Submission (587/tcp)
+  ## @param ingress.proxyProtocol.manageSieve Enable PROXY protocol for ManageSieve (4190/tcp)
+  ## Enabling any of these requires to have ingress.realIpFrom set
+  proxyProtocol:
+    pop3: false
+    pop3s: false
+    imap: false
+    imaps: false
+    smtp: false
+    smtps: false
+    submission: false
+    manageSieve: false
+
+## @section Proxy auth configuration
+## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
+proxyAuth:
+  ## @param proxyAuth.whitelist Comma separated list of CIDRs of proxies to trust for authentication
+  whitelist: ""
+
+  ## @param proxyAuth.header HTTP header containing the email address of the user to authenticate
+  header: "X-Auth-Email"
+
+  ## @param proxyAuth.create Whether non-existing accounts should be auto-created
+  create: "false"
+
+## @section Frontend load balancer for non-HTTP(s) services
+front:
+  ## @param front.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param front.image.repository Pod image repository
+  ## @param front.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param front.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/nginx
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## front.controller.kind Deployment only supported for now
+  # controller:
+  #   kind: Deployment
+
+  ## @param front.hostPort.enabled Expose front mail ports via hostPort
+  hostPort:
+    enabled: true
+
+  ## Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  ## @param front.externalService.enabled Expose front mail ports via external service (ClusterIP or LoadBalancer)
+  ## @param front.externalService.type Service type (ClusterIP or LoadBalancer)
+  ## @param front.externalService.externalTrafficPolicy Service externalTrafficPolicy (Cluster or Local)
+  ## @param front.externalService.loadBalancerIP Service loadBalancerIP
+  ## @param front.externalService.annotations Service annotations
+  ## @param front.externalService.ports.pop3 Expose POP3 port - 110/tcp
+  ## @param front.externalService.ports.pop3s Expose POP3 port (TLS) - 995/tcp
+  ## @param front.externalService.ports.imap Expose IMAP port - 143/tcp
+  ## @param front.externalService.ports.imaps Expose IMAP port (TLS) - 993/tcp
+  ## @param front.externalService.ports.smtp Expose SMTP port - 25/tcp
+  ## @param front.externalService.ports.smtps Expose SMTP port (TLS) - 465/tcp
+  ## @param front.externalService.ports.submission Expose Submission port - 587/tcp
+  ## @param front.externalService.ports.manageSieve Expose ManageSieve port - 4190/tcp
+  ## @param front.externalService.nodePorts.pop3 NodePort to use for POP3 (defaults to 110/tcp)
+  ## @param front.externalService.nodePorts.pop3s NodePort to use for POP3 (TLS) (defaults to 995/tcp)
+  ## @param front.externalService.nodePorts.imap NodePort to use for IMAP (defaults to 143/tcp)
+  ## @param front.externalService.nodePorts.imaps NodePort to use for IMAP (TLS) (defaults to 993/tcp)
+  ## @param front.externalService.nodePorts.smtp NodePort to use for SMTP (defaults to 25/tcp)
+  ## @param front.externalService.nodePorts.smtps NodePort to use for SMTP (TLS) (defaults to 465/tcp)
+  ## @param front.externalService.nodePorts.submission NodePort to use for Submission (defaults to 587/tcp)
+  ## @param front.externalService.nodePorts.manageSieve NodePort to use for ManageSieve (defaults to 4190/tcp)
+  externalService:
+    enabled: false
+    type: ClusterIP
+    ## Example for LoadBalancer:
+    ## type: LoadBalancer
+    loadBalancerIP: ""
+    externalTrafficPolicy: Local
+    annotations: {}
+    ports:
+      pop3: false
+      pop3s: true
+      imap: false
+      imaps: true
+      smtp: true
+      smtps: true
+      submission: false
+      manageSieve: true
+    nodePorts:
+      pop3: 110
+      pop3s: 995
+      imap: 143
+      imaps: 993
+      smtp: 25
+      smtps: 465
+      submission: 587
+      manageSieve: 4190
+
+  ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
+  kind: Deployment
+
+  ## @param front.replicaCount Number of front replicas to deploy (only for `Deployment` kind)
+  replicaCount: 1
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param front.resources.limits The resources limits for the container
+  ## @param front.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 200m
+    ##    memory: 200Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 100Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.livenessProbe.enabled Enable livenessProbe
+  ## @param front.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param front.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param front.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param front.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param front.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.readinessProbe.enabled Enable readinessProbe
+  ## @param front.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param front.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param front.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param front.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param front.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 1
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param front.startupProbe.enabled Enable startupProbe
+  ## @param front.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param front.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param front.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param front.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param front.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 30
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param front.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param front.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param front.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param front.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param front.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param front.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param front.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param front.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param front.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param front.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param front.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param front.affinity Affinity for front pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param front.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param front.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param front.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param front.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param front.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param front.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param front.updateStrategy.type Strategy to use to update Pods
+  ## `Recreate` or `RollingUpdate` if `front.kind=Deployment`
+  ## `OnDelete` or `RollingUpdate` if `front.kind=DaemonSet`
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param front.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param front.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param front.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param front.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param front.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param front.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section Admin parameters
+admin:
+  ## @param admin.enabled Enable access to the admin interface
+  enabled: true
+
+  ## @param admin.uri URI to access the admin interface
+  uri: /admin
+
+  ## @param admin.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param admin.image.repository Pod image repository
+  ## @param admin.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param admin.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/admin
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param admin.persistence.size Pod pvc size
+  ## @param admin.persistence.storageClass Pod pvc storage class
+  ## @param admin.persistence.accessModes Pod pvc access modes
+  ## @param admin.persistence.claimNameOverride Pod pvc name override
+  ## @param admin.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param admin.resources.limits The resources limits for the container
+  ## @param admin.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.livenessProbe.enabled Enable livenessProbe
+  ## @param admin.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param admin.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param admin.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param admin.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param admin.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.readinessProbe.enabled Enable readinessProbe
+  ## @param admin.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param admin.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param admin.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param admin.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param admin.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param admin.startupProbe.enabled Enable startupProbe
+  ## @param admin.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param admin.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param admin.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param admin.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param admin.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param admin.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param admin.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param admin.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param admin.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param admin.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param admin.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param admin.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param admin.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param admin.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param admin.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param admin.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param admin.dnsPolicy DNS Policy of the admin pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+  ## @param admin.dnsConfig DNS settings for the admin pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+  dnsConfig: {}
+
+  ## @param admin.affinity Affinity for admin pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param admin.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param admin.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param admin.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param admin.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param admin.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param admin.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param admin.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param admin.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param admin.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param admin.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param admin.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param admin.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param admin.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section Redis parameters
+## Redis chart configuration
+## for more options see https://github.com/bitnami/charts/tree/master/bitnami/redis
+redis:
+  ## @param redis.enabled Enable redis deployment through the redis subchart
+  enabled: true
+
+  ## @param redis.architecture Redis architecture. Allowed values: `standalone` or `replication`
+  architecture: standalone
+
+  ## @param redis.image.repository Redis image repository (using bitnamilegacy for now)
+  image:
+    repository: bitnamilegacy/redis
+
+  ## @param redis.auth.enabled DON'T CHANGE THIS VALUE. Mailu doesn't support Redis authentication
+  auth:
+    enabled: false
+
+  master:
+    ## @param redis.master.enabled DON'T CHANGE THIS VALUE. Enable redis master
+    enabled: true
+
+    ## @param redis.master.count Number of redis master replicas
+    count: 1
+
+    ## @param redis.master.persistence.enabled Enable persistence using Persistent Volume Claims
+    ## @param redis.master.persistence.size Pod pvc size
+    ## @param redis.master.persistence.storageClass Pod pvc storage class
+    ## @param redis.master.persistence.accessModes Pod pvc access modes
+    ## @param redis.master.persistence.annotations Pod pvc annotations
+    ## @param redis.master.persistence.existingClaim Pod pvc existing claim; necessary if using single_pvc
+    ## @param redis.master.persistence.subPath Subpath in PVC; necessary if using single_pvc (set it to `redis`)
+    persistence:
+      enabled: true
+      size: 8Gi
+      storageClass: ""
+      accessModes: [ReadWriteOnce]
+      existingClaim: ""
+      subPath: ""
+      annotations: {}
+
+  ## @param redis.replica.count Number of redis replicas (only if `redis.architecture=replication`)
+  ## Don't forget to configure replicas persistence if changing this value
+  replica:
+    count: 0
+
+  ## @param redis.sentinel.image.repository Redis Sentinel image (using bitnamilegacy for now)
+  sentinel:
+    image:
+      repository: bitnamilegacy/redis-sentinel
+
+  ## @param redis.metrics.image.repository Redis metrics exporter image (using bitnamilegacy for now)
+  metrics:
+    image:
+      repository: bitnamilegacy/redis-exporter
+
+  ## @param redis.volumePermissions.image.repository Redis volume permissions image (using bitnamilegacy for now)
+  volumePermissions:
+    image:
+      repository: bitnamilegacy/os-shell
+
+  ## @param redis.kubectl.image.repository Redis kubectl image (using bitnamilegacy for now)
+  kubectl:
+    image:
+      repository: bitnamilegacy/kubectl
+
+  ## @param redis.sysctl.image.repository Redis sysctl image (using bitnamilegacy for now)
+  sysctl:
+    image:
+      repository: bitnamilegacy/os-shell
+
+## @section Postfix parameters
+postfix:
+  ## @param postfix.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param postfix.image.repository Pod image repository
+  ## @param postfix.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param postfix.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/postfix
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param postfix.persistence.size Pod pvc size
+  ## @param postfix.persistence.storageClass Pod pvc storage class
+  ## @param postfix.persistence.accessModes Pod pvc access modes
+  ## @param postfix.persistence.claimNameOverride Pod pvc name override
+  ## @param postfix.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param postfix.resources.limits The resources limits for the container
+  ## @param postfix.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 2Gi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 500m
+    ##    memory: 2Gi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param postfix.livenessProbe.enabled Enable livenessProbe
+  ## @param postfix.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param postfix.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param postfix.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param postfix.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param postfix.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param postfix.readinessProbe.enabled Enable readinessProbe
+  ## @param postfix.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param postfix.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param postfix.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param postfix.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param postfix.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param postfix.startupProbe.enabled Enable startupProbe
+  ## @param postfix.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param postfix.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param postfix.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param postfix.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param postfix.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: true
+    failureThreshold: 30
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param postfix.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param postfix.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param postfix.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param postfix.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param postfix.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param postfix.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param postfix.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param postfix.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param postfix.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param postfix.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param postfix.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param postfix.affinity Affinity for postfix pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param postfix.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param postfix.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param postfix.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param postfix.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param postfix.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param postfix.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param postfix.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param postfix.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param postfix.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param postfix.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param postfix.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param postfix.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param postfix.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+  ## @param postfix.overrides Enable postfix overrides
+  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
+  ## Example:
+  ## overrides:
+  ##   postfix.cf: |
+  ##     my_variable = my_value
+  overrides: {}
+
+## @section Dovecot parameters
+dovecot:
+  ## @param dovecot.enabled Enable dovecot
+  enabled: true
+
+  ## @param dovecot.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param dovecot.image.repository Pod image repository
+  ## @param dovecot.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param dovecot.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/dovecot
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param dovecot.persistence.size Pod pvc size
+  ## @param dovecot.persistence.storageClass Pod pvc storage class
+  ## @param dovecot.persistence.accessModes Pod pvc access modes
+  ## @param dovecot.persistence.claimNameOverride Pod pvc name override
+  ## @param dovecot.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param dovecot.resources.limits The resources limits for the container
+  ## @param dovecot.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param dovecot.livenessProbe.enabled Enable livenessProbe
+  ## @param dovecot.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param dovecot.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param dovecot.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param dovecot.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param dovecot.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param dovecot.readinessProbe.enabled Enable readinessProbe
+  ## @param dovecot.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param dovecot.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param dovecot.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param dovecot.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param dovecot.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param dovecot.startupProbe.enabled Enable startupProbe
+  ## @param dovecot.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param dovecot.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param dovecot.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param dovecot.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param dovecot.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 10
+
+  ## @param dovecot.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param dovecot.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param dovecot.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param dovecot.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param dovecot.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param dovecot.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param dovecot.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param dovecot.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param dovecot.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param dovecot.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param dovecot.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param dovecot.affinity Affinity for dovecot pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param dovecot.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param dovecot.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param dovecot.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param dovecot.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param dovecot.service.annotations Admin service annotations
+    annotations: {}
+
+  # Service monitor parameters
+  serviceMonitor:
+    ## @param dovecot.serviceMonitor.enabled If true, a serviceMonitor will be created for Dovecot
+    enabled: false
+
+    ## @param dovecot.serviceMonitor.annotations Dovecot serviceMonitor annotations
+    annotations: {}
+
+    ## @param dovecot.serviceMonitor.interval Dovecot serviceMonitor scrape interval
+    ## If not set, the default prometheus scrape interval will be used
+    interval: ""
+
+    ## @param dovecot.serviceMonitor.metricRelabelings MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    ## @param dovecot.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
+
+  ## @param dovecot.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param dovecot.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param dovecot.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param dovecot.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param dovecot.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param dovecot.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param dovecot.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param dovecot.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+  ## @param dovecot.overrides Enable dovecot overrides
+  ## Example:
+  ## overrides:
+  ##   dovecot.conf: |
+  ##     # More info here: https://mailu.io/1.8/kubernetes/mailu/index.html#dovecot
+  ##     mail_nfs_index = yes
+  ##     mail_nfs_storage = yes
+  ##     mail_fsync = always
+  ##     mmap_disable = yes
+  ##     mail_max_userip_connections=100
+  ## If you set dovecot.serviceMonitor.enabled to true, the dovecot override needs to be configured
+  ## for it to be enabled.
+  ## Below is an example getting started configuration, which can be adapted to your needs.
+  ##
+  ## overrides:
+  ##   dovecot.conf: |
+  ##     ##
+  ##     ## Statistics and metrics
+  ##     ##
+  ##
+  ##     # Dovecot supports gathering statistics from events.
+  ##     # Currently there are no statistics logged by default, and therefore they must
+  ##     # be explicitly added using the metric configuration blocks.
+  ##     #
+  ##     # Unlike old stats, the new statistics do not require any plugins loaded.
+  ##     #
+  ##     # See https://doc.dovecot.org/2.3/configuration_manual/stats/ for more details.
+  ##
+  ##     ##
+  ##     ## Example metrics
+  ##     ##
+  ##
+  ##     metric auth_success {
+  ##       filter = event=auth_request_finished AND success=yes
+  ##     }
+  ##
+  ##     metric auth_failures {
+  ##       filter = event=auth_request_finished AND NOT success=yes
+  ##     }
+  ##
+  ##     metric imap_command {
+  ##       filter = event=imap_command_finished
+  ##       group_by = cmd_name tagged_reply_state
+  ##     }
+  ##
+  ##     metric smtp_command {
+  ##       filter = event=smtp_server_command_finished
+  ##       group_by = cmd_name status_code duration:exponential:1:5:10
+  ##     }
+  ##
+  ##     metric mail_delivery {
+  ##       filter = event=mail_delivery_finished
+  ##       group_by = duration:exponential:1:5:10
+  ##     }
+  ##
+  ##     ##
+  ##     ## Prometheus
+  ##     ##
+  ##
+  ##     # To allow access to statistics with Prometheus, enable http listener
+  ##     # on stats process. Stats will be available on /metrics path.
+  ##     #
+  ##     # See https://doc.dovecot.org/2.3/configuration_manual/stats/openmetrics/ for more
+  ##     # details.
+  ##
+  ##     service stats {
+  ##       inet_listener http {
+  ##         port = 9900
+  ##       }
+  ##     }
+  ##
+  overrides: {}
+
+  ## @param dovecot.compression Maildir compression algorithm (gz, bz2, lz4, zstd)
+  compression: ""
+
+  ## @param dovecot.compressionLevel Maildir compression level (1-9)
+  compressionLevel: 6
+
+## @section rspamd parameters
+rspamd:
+  ## @param rspamd.enabled Enable rspamd
+  enabled: true
+  ## @param rspamd.overrides Enable rspamd overrides
+  ## More info here: https://mailu.io/master/faq.html#how-can-i-override-settings
+  ## Example:
+  ## overrides:
+  ##   fileA.conf: |
+  ##     obj {
+  ##       key = value;
+  ##     }
+  overrides: {}
+
+  ## @param rspamd.antivirusAction Action to take when an virus is detected. Possible values: `reject` or `discard`
+  antivirusAction: "discard"
+
+  ## @param rspamd.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param rspamd.image.repository Pod image repository
+  ## @param rspamd.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param rspamd.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/rspamd
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param rspamd.persistence.size Pod pvc size
+  ## @param rspamd.persistence.storageClass Pod pvc storage class
+  ## @param rspamd.persistence.accessModes Pod pvc access modes
+  ## @param rspamd.persistence.claimNameOverride Pod pvc name override
+  ## @param rspamd.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 1Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param rspamd.resources.limits The resources limits for the container
+  ## @param rspamd.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 200m
+    ##    memory: 200Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 100m
+    ##    memory: 100Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param rspamd.livenessProbe.enabled Enable livenessProbe
+  ## @param rspamd.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param rspamd.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param rspamd.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param rspamd.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param rspamd.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param rspamd.readinessProbe.enabled Enable readinessProbe
+  ## @param rspamd.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param rspamd.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param rspamd.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param rspamd.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param rspamd.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## give it 15 minutes for initial rule compilation
+  ## @param rspamd.startupProbe.enabled Enable startupProbe
+  ## @param rspamd.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param rspamd.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param rspamd.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param rspamd.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param rspamd.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: true
+    failureThreshold: 90
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param rspamd.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param rspamd.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param rspamd.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param rspamd.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param rspamd.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param rspamd.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param rspamd.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param rspamd.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param rspamd.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param rspamd.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param rspamd.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param rspamd.affinity Affinity for rspamd pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param rspamd.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param rspamd.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param rspamd.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param rspamd.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param rspamd.service.annotations Rspamd service annotations
+    annotations: {}
+
+  # Service monitor parameters
+  serviceMonitor:
+    ## @param rspamd.serviceMonitor.enabled If true, a serviceMonitor will be created for Rspamd
+    enabled: false
+
+    ## @param rspamd.serviceMonitor.annotations Rspamd serviceMonitor annotations
+    annotations: {}
+
+    ## @param rspamd.serviceMonitor.interval Rspamd serviceMonitor scrape interval
+    ## If not set, the default prometheus scrape interval will be used
+    interval: ""
+
+    ## @param rspamd.serviceMonitor.metricRelabelings MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+    ## @param rspamd.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
+    ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api-reference/api.md#relabelconfig
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
+
+  ## @param rspamd.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param rspamd.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param rspamd.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param rspamd.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param rspamd.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param rspamd.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param rspamd.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param rspamd.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section clamav parameters
+clamav:
+  ## @param clamav.enabled Enable ClamAV
+  enabled: true
+
+  ## @param clamav.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param clamav.image.repository Pod image repository
+  ## @param clamav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param clamav.image.pullPolicy Pod image pull policy
+  ## @param clamav.image.registry Pod image registry (specific for clamav as it is not part of the mailu organization)
+  image:
+    repository: clamav/clamav-debian
+    tag: 1.4@sha256:acca47d2c5fa0c6e1e8ac842669f03330b58ac161aa57831d70624a4667e664a
+    pullPolicy: IfNotPresent
+    registry: docker.io
+
+  ## Pod persistence (if not using single_pvc)
+  persistence:
+    ## @param clamav.persistence.enabled Enable persistence using PVC
+    enabled: true
+
+    ## @param clamav.persistence.size Pod pvc size
+    size: 2Gi
+
+    ## @param clamav.persistence.storageClass Pod pvc storage class
+    storageClass: ""
+
+    ## @param clamav.persistence.accessModes Pod pvc access modes
+    accessModes: [ReadWriteOnce]
+
+    ## @param clamav.persistence.annotations Pod pvc annotations
+    annotations: {}
+
+    ## @param clamav.persistence.labels Pod pvc labels
+    labels: {}
+
+    ## @param clamav.persistence.selector Additional labels to match for the PVC
+    ## e.g:
+    ## selector:
+    ##   matchLabels:
+    ##     app: my-app
+    selector: {}
+
+    ## @param clamav.persistence.dataSource Custom PVC data source
+    dataSource: {}
+
+    ## @param clamav.persistence.existingClaim Use a existing PVC which must be created manually before bound
+    ## NOTE: requires clamav.persistence.enabled: true
+    existingClaim: ""
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param clamav.resources.limits The resources limits for the container
+  ## @param clamav.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 1
+    ##    memory: 2Gi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 1
+    ##    memory: 1Gi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param clamav.livenessProbe.enabled Enable livenessProbe
+  ## @param clamav.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param clamav.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param clamav.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param clamav.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param clamav.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 5
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param clamav.readinessProbe.enabled Enable readinessProbe
+  ## @param clamav.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param clamav.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param clamav.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param clamav.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param clamav.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## give it 15 minutes for initial rule compilation
+  ## @param clamav.startupProbe.enabled Enable startupProbe
+  ## @param clamav.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param clamav.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param clamav.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param clamav.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param clamav.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 60
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param clamav.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param clamav.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param clamav.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param clamav.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param clamav.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param clamav.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param clamav.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param clamav.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param clamav.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param clamav.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param clamav.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param clamav.affinity Affinity for clamav pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## clamav must share a volume with rspamd. This is usually enforced by the volume itself (RWO). If you use RWM volumes and want to
+  ## have clamav running on the same node, add the following affinity rule:
+  ##  affinity:
+  ##    podAffinity:
+  ##      requiredDuringSchedulingIgnoredDuringExecution:
+  ##        - labelSelector:
+  ##            matchExpressions:
+  ##              - key: app.kubernetes.io/component
+  ##                operator: In
+  ##                values:
+  ##                  - rspamd
+  ##          topologyKey: kubernetes.io/hostname
+  affinity: {}
+
+  ## @param clamav.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param clamav.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param clamav.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param clamav.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param clamav.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param clamav.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param clamav.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param clamav.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param clamav.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param clamav.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param clamav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param clamav.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section webmail parameters
+webmail:
+  ## @param webmail.enabled Enable deployment of webmail
+  enabled: true
+
+  ## @param webmail.uri URI to access webmail
+  uri: /webmail
+
+  ## @param webmail.type Type of webmail to deploy (`roundcube` or `snappymail`)
+  type: roundcube
+
+  ## @param webmail.roundcubePlugins List of Roundcube plugins to enable
+  roundcubePlugins:
+    - archive
+    - zipdownload
+    - markasjunk
+    - managesieve
+    - enigma
+    - carddav
+    - mailu
+
+  ## @param webmail.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param webmail.image.repository Pod image repository
+  ## @param webmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param webmail.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/webmail
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param webmail.persistence.size Pod pvc size
+  ## @param webmail.persistence.storageClass Pod pvc storage class
+  ## @param webmail.persistence.accessModes Pod pvc access modes
+  ## @param webmail.persistence.claimNameOverride Pod pvc name override
+  ## @param webmail.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param webmail.resources.limits The resources limits for the container
+  ## @param webmail.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 200m
+    ##    memory: 200Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 100m
+    ##    memory: 100Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webmail.livenessProbe.enabled Enable livenessProbe
+  ## @param webmail.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param webmail.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param webmail.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param webmail.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param webmail.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webmail.readinessProbe.enabled Enable readinessProbe
+  ## @param webmail.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param webmail.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param webmail.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param webmail.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param webmail.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webmail.startupProbe.enabled Enable startupProbe
+  ## @param webmail.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param webmail.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param webmail.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param webmail.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param webmail.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param webmail.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param webmail.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param webmail.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param webmail.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param webmail.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param webmail.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param webmail.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param webmail.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param webmail.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param webmail.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param webmail.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param webmail.affinity Affinity for webmail pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param webmail.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param webmail.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param webmail.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param webmail.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param webmail.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param webmail.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param webmail.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param webmail.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param webmail.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param webmail.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param webmail.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param webmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param webmail.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section webdav parameters
+webdav:
+  ## @param webdav.enabled Enable deployment of WebDAV server (using Radicale)
+  enabled: false
+
+  ## @param webdav.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param webdav.image.repository Pod image repository
+  ## @param webdav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param webdav.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/radicale
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param webdav.persistence.size Pod pvc size
+  ## @param webdav.persistence.storageClass Pod pvc storage class
+  ## @param webdav.persistence.accessModes Pod pvc access modes
+  ## @param webdav.persistence.claimNameOverride Pod pvc name override
+  ## @param webdav.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param webdav.resources.limits The resources limits for the container
+  ## @param webdav.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webdav.livenessProbe.enabled Enable livenessProbe
+  ## @param webdav.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param webdav.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param webdav.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param webdav.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param webdav.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webdav.readinessProbe.enabled Enable readinessProbe
+  ## @param webdav.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param webdav.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param webdav.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param webdav.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param webdav.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param webdav.startupProbe.enabled Enable startupProbe
+  ## @param webdav.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param webdav.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param webdav.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param webdav.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param webdav.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param webdav.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param webdav.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param webdav.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param webdav.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param webdav.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param webdav.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param webdav.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param webdav.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param webdav.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param webdav.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param webdav.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param webdav.affinity Affinity for webdav pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param webdav.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param webdav.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param webdav.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param webdav.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param webdav.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param webdav.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param webdav.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param webdav.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param webdav.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param webdav.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param webdav.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param webdav.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param webdav.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section fetchmail parameters
+fetchmail:
+  ## @param fetchmail.enabled Enable deployment of fetchmail
+  enabled: false
+
+  ## @param fetchmail.delay Delay between fetchmail runs
+  delay: 600
+
+  ## @param fetchmail.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param fetchmail.image.repository Pod image repository
+  ## @param fetchmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param fetchmail.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/fetchmail
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod persistence (if not using single_pvc)
+  ## @param fetchmail.persistence.size Pod pvc size
+  ## @param fetchmail.persistence.storageClass Pod pvc storage class
+  ## @param fetchmail.persistence.accessModes Pod pvc access modes
+  ## @param fetchmail.persistence.claimNameOverride Pod pvc name override
+  ## @param fetchmail.persistence.annotations Pod pvc annotations
+  persistence:
+    size: 20Gi
+    storageClass: ""
+    accessModes: [ReadWriteOnce]
+    claimNameOverride: ""
+    annotations: {}
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param fetchmail.resources.limits The resources limits for the container
+  ## @param fetchmail.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 200m
+    ##    memory: 200Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 100m
+    ##    memory: 100Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param fetchmail.livenessProbe.enabled Enable livenessProbe
+  ## @param fetchmail.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param fetchmail.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param fetchmail.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param fetchmail.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param fetchmail.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param fetchmail.readinessProbe.enabled Enable readinessProbe
+  ## @param fetchmail.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param fetchmail.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param fetchmail.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param fetchmail.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param fetchmail.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param fetchmail.startupProbe.enabled Enable startupProbe
+  ## @param fetchmail.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param fetchmail.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param fetchmail.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param fetchmail.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param fetchmail.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  ## @param fetchmail.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param fetchmail.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param fetchmail.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param fetchmail.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param fetchmail.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param fetchmail.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param fetchmail.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param fetchmail.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param fetchmail.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param fetchmail.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param fetchmail.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param fetchmail.affinity Affinity for fetchmail pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param fetchmail.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param fetchmail.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param fetchmail.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param fetchmail.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param fetchmail.service.annotations Admin service annotations
+    annotations: {}
+
+  ## @param fetchmail.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param fetchmail.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param fetchmail.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param fetchmail.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param fetchmail.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param fetchmail.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param fetchmail.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param fetchmail.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section OLETools parameters
+oletools:
+  ## @param oletools.enabled Enable OLETools
+  enabled: true
+
+  ## @param oletools.logLevel Override default log level
+  logLevel: ""
+
+  ## Pod image
+  ## @param oletools.image.repository Pod image repository
+  ## @param oletools.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param oletools.image.pullPolicy Pod image pull policy
+  image:
+    repository: mailu/oletools
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param oletools.resources.limits The resources limits for the container
+  ## @param oletools.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.livenessProbe.enabled Enable livenessProbe
+  ## @param oletools.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param oletools.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param oletools.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param oletools.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param oletools.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.readinessProbe.enabled Enable readinessProbe
+  ## @param oletools.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param oletools.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param oletools.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param oletools.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param oletools.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param oletools.startupProbe.enabled Enable startupProbe
+  ## @param oletools.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param oletools.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param oletools.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param oletools.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param oletools.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param oletools.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param oletools.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param oletools.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param oletools.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param oletools.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param oletools.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param oletools.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param oletools.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param oletools.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param oletools.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param oletools.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param oletools.affinity Affinity for oletools pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param oletools.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param oletools.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param oletools.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param oletools.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param oletools.service.annotations oletools service annotations
+    annotations: {}
+
+  ## @param oletools.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param oletools.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param oletools.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param oletools.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param oletools.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param oletools.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param oletools.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param oletools.extraContainers Add additional containers to the pod
+  extraContainers: []
+
+## @section Tika parameters
+tika:
+  ## @param tika.enabled Enable tika
+  enabled: true
+
+  ## @param tika.logLevel Override default log level
+  logLevel: ""
+
+  ## @param tika.languages Array of languages to enable (sets the FULL_TEXT_SEARCH environment variable); "off" to disable
+  ## See https://doc.dovecot.org/settings/plugin/fts-plugin/#fts-languages for all available languages
+  languages:
+    - en
+
+  ## Pod image
+  ## @param tika.image.repository Pod image repository
+  ## @param tika.image.tag Pod image tag
+  ## @param tika.image.pullPolicy Pod image pull policy
+  ## @param tika.image.registry Pod image registry (specific for tika as it is not part of the mailu organization)
+  image:
+    repository: apache/tika
+    tag: 3.2.2.0-full@sha256:ffab324253edc54706e8882dd28190b1e6559c344b5315ae8a74b9efda9e7291
+    pullPolicy: IfNotPresent
+    registry: docker.io
+
+  ## Pod resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param tika.resources.limits The resources limits for the container
+  ## @param tika.resources.requests The requested resources for the container
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 500m
+    ##    memory: 500Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 25m
+    ##    memory: 25Mi
+    requests: {}
+
+  ## Liveness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.livenessProbe.enabled Enable livenessProbe
+  ## @param tika.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param tika.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param tika.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param tika.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param tika.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  livenessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Readiness probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.readinessProbe.enabled Enable readinessProbe
+  ## @param tika.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param tika.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param tika.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param tika.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param tika.readinessProbe.successThreshold Success threshold for readinessProbe
+  readinessProbe:
+    enabled: true
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## Startup probe values
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
+  ## @param tika.startupProbe.enabled Enable startupProbe
+  ## @param tika.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param tika.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param tika.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param tika.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param tika.startupProbe.successThreshold Success threshold for startupProbe
+  startupProbe:
+    enabled: false
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  ## @param tika.podLabels Add extra labels to pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+  podLabels: {}
+
+  ## @param tika.podAnnotations Add extra annotations to the pod
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  podAnnotations: {}
+
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ## @param tika.nodeSelector Node labels selector for pod assignment
+  nodeSelector: {}
+
+  ## @param tika.initContainers Add additional init containers to the pod
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+  ## e.g:
+  ## initContainers:
+  ##  - name: your-image-name
+  ##    image: your-image
+  ##    imagePullPolicy: Always
+  ##    command: ['sh', '-c', 'echo "hello world"']
+  initContainers: []
+
+  ## @param tika.priorityClassName Pods' priorityClassName
+  priorityClassName: ""
+
+  ## @param tika.podSecurityContext.enabled Enabled pods' Security Context
+  ## @param tika.podSecurityContext.fsGroup Set pods' Security Context fsGroup
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  podSecurityContext:
+    enabled: false
+    fsGroup: 1001
+
+  ## @param tika.containerSecurityContext.enabled Enabled containers' Security Context
+  ## @param tika.containerSecurityContext.runAsUser Set containers' Security Context runAsUser
+  ## @param tika.containerSecurityContext.runAsNonRoot Set container's Security Context runAsNonRoot
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: false
+
+  ## @param tika.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
+  terminationGracePeriodSeconds: 2
+
+  ## @param tika.affinity Affinity for tika pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
+
+  ## @param tika.tolerations Tolerations for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  tolerations: []
+
+  ## @param tika.revisionHistoryLimit Configure the revisionHistoryLimit of the deployment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#revision-history-limit
+  revisionHistoryLimit: 3
+
+  ## @param tika.hostAliases Pod pod host aliases
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+  hostAliases: []
+
+  ## @param tika.schedulerName Name of the k8s scheduler (other than default)
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  schedulerName: ""
+
+  # Service parameters
+  service:
+    ## @param tika.service.annotations tika service annotations
+    annotations: {}
+
+  ## @param tika.topologySpreadConstraints Topology Spread Constraints for pod assignment
+  ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+  topologySpreadConstraints: []
+
+  ## Strategy to use to update Pods
+  ## @param tika.updateStrategy.type Can be set to RollingUpdate or OnDelete
+  updateStrategy:
+    type: RollingUpdate
+
+  ## @param tika.extraEnvVars Extra environment variable to pass to the running container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: MY_ENV_VAR
+  ##    value: env_var_value
+  extraEnvVars: []
+
+  ## @param tika.extraEnvVarsCM Name of existing ConfigMap containing extra environment variables to mount in the pod
+  extraEnvVarsCM: ""
+
+  ## @param tika.extraEnvVarsSecret Name of existing Secret containing extra environment variables to mount in the pod
+  extraEnvVarsSecret: ""
+
+  ## @param tika.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the pod
+  extraVolumeMounts: []
+
+  ## @param tika.extraVolumes Optionally specify extra list of additional volumes for the pod(s)
+  extraVolumes: []
+
+  ## @param tika.extraContainers Add additional containers to the pod
+  extraContainers: []
