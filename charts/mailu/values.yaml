@@ -718,6 +718,7 @@ front:
   ## @param front.externalService.externalTrafficPolicy Service externalTrafficPolicy (Cluster or Local)
   ## @param front.externalService.loadBalancerIP Service loadBalancerIP
   ## @param front.externalService.annotations Service annotations
+  ## @param front.externalService.labels Service labels
   ## @param front.externalService.ports.pop3 Expose POP3 port - 110/tcp
   ## @param front.externalService.ports.pop3s Expose POP3 port (TLS) - 995/tcp
   ## @param front.externalService.ports.imap Expose IMAP port - 143/tcp
@@ -742,6 +743,7 @@ front:
     loadBalancerIP: ""
     externalTrafficPolicy: Local
     annotations: {}
+    labels: {}
     ports:
       pop3: false
       pop3s: true
