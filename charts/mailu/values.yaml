@@ -283,8 +283,8 @@ externalDatabase:
   ## @param externalDatabase.host Hostname of the database
   host: ""
 
-  ## @param externalDatabase.port Port of the database
-  port: 3306
+  ## @param externalDatabase.port Override for port of the database
+  port: ""
 
   ## @param externalDatabase.database Name of the database
   database: mailu
