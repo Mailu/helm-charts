@@ -37,7 +37,7 @@ mailu:
   domain: "example.com"
   secretKey: "<redacted>"
   ...
+```
 
 **Additional information**
 Add any other context about the problem here, such as logs, error messages, or configurations.
-```
