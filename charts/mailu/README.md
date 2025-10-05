@@ -328,6 +328,7 @@ Check that the deployed pods are all running.
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
 | `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
 | `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
+| `front.externalService.labels`                | Service labels                                                                        | `{}`            |
 | `front.externalService.ports.pop3`            | Expose POP3 port - 110/tcp                                                            | `false`         |
 | `front.externalService.ports.pop3s`           | Expose POP3 port (TLS) - 995/tcp                                                      | `true`          |
 | `front.externalService.ports.imap`            | Expose IMAP port - 143/tcp                                                            | `false`         |
