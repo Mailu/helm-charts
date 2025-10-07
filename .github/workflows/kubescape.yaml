@@ -6,10 +6,10 @@ on:
     branches:
       - master
     paths:
-      - mailu/**
+      - charts/mailu/**
   pull_request:
     paths:
-      - mailu/**
+      - charts/mailu/**
 
 jobs:
   kubescape:
@@ -20,22 +20,21 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Install Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v4.3.0
         with:
-          version: v3.10.0
+          version: v3.19.0
 
       - name: Add Helm dependency repos
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo update
-          helm dependency build mailu
+          cd charts/mailu
+          helm dependency update
 
       - name: Generate k8s manifests
         run: |
-          helm template mailu ./mailu -f mailu/ci/helm-lint-values.yaml > /tmp/mailu-generated.yaml
+          helm template mailu charts/mailu -f charts/mailu/ci/helm-lint-values.yaml > /tmp/mailu-generated.yaml
 
       - name: Run Kubescape
         uses: kubescape/github-action@main
@@ -48,6 +47,6 @@ jobs:
           # # Optional: Scan a specific path. Default will scan the whole repository
           files: /tmp/mailu-generated.yaml
       - name: Upload Kubescape scan results to Github Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
