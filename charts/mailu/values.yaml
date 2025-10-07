@@ -967,12 +967,14 @@ admin:
   ## @param admin.persistence.accessModes Pod pvc access modes
   ## @param admin.persistence.claimNameOverride Pod pvc name override
   ## @param admin.persistence.annotations Pod pvc annotations
+  ## @param admin.persistence.existingClaim Pod pvc existing claim name
   persistence:
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
     claimNameOverride: ""
     annotations: {}
+    existingClaim: ""
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -1235,12 +1237,14 @@ postfix:
   ## @param postfix.persistence.accessModes Pod pvc access modes
   ## @param postfix.persistence.claimNameOverride Pod pvc name override
   ## @param postfix.persistence.annotations Pod pvc annotations
+  ## @param postfix.persistence.existingClaim Pod pvc existing claim name
   persistence:
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
     claimNameOverride: ""
     annotations: {}
+    existingClaim: ""
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -1443,12 +1447,14 @@ dovecot:
   ## @param dovecot.persistence.accessModes Pod pvc access modes
   ## @param dovecot.persistence.claimNameOverride Pod pvc name override
   ## @param dovecot.persistence.annotations Pod pvc annotations
+  ## @param dovecot.persistence.existingClaim Pod pvc existing claim name
   persistence:
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
     claimNameOverride: ""
     annotations: {}
+    existingClaim: ""
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -1765,12 +1771,14 @@ rspamd:
   ## @param rspamd.persistence.accessModes Pod pvc access modes
   ## @param rspamd.persistence.claimNameOverride Pod pvc name override
   ## @param rspamd.persistence.annotations Pod pvc annotations
+  ## @param rspamd.persistence.existingClaim Pod pvc existing claim name
   persistence:
     size: 1Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
     claimNameOverride: ""
     annotations: {}
+    existingClaim: ""
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -2245,12 +2253,14 @@ webmail:
   ## @param webmail.persistence.accessModes Pod pvc access modes
   ## @param webmail.persistence.claimNameOverride Pod pvc name override
   ## @param webmail.persistence.annotations Pod pvc annotations
+  ## @param webmail.persistence.existingClaim Pod pvc existing claim name
   persistence:
     size: 20Gi
     storageClass: ""
     accessModes: [ReadWriteOnce]
     claimNameOverride: ""
     annotations: {}
+    existingClaim: ""
 
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
