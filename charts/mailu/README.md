@@ -2,7 +2,7 @@
 
 ![Version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.version&style=flat-square&label=Version) ![AppVersion](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fmailu.github.io%2Fhelm-charts%2Findex.yaml&query=%24.entries.mailu%5B%3A1%5D.appVersion&style=flat-square&label=AppVersion)
 
-This chart installs the Mailu mail system on kubernetes
+This chart installs the Mailu mail system on Kubernetes
 
 **Homepage:** <https://mailu.io>
 
@@ -16,16 +16,16 @@ This chart installs the Mailu mail system on kubernetes
 | 2.x.x               | >= 2024.06    |
 
 Active development of this chart is only for the latest supported Mailu version.
-Branches exists for older mailu versions (e.g. old/mailu-1.8).
+Branches exists for older Mailu versions (e.g. old/mailu-1.8).
 
 ## Prerequisites
 
-- ⚠️Starting with version 1.9, you need a validating DNSSEC compatible resolver in order to run Mailu.
-- a working HTTP/HTTPS ingress controller such as nginx or traefik
-- cert-manager v0.12 or higher installed and configured (including a working cert issuer). Otherwise you will need to handle it by yourself and provide the secret to Mailu.
-- A node which has a public reachable IP, static address because mail service binds directly to the node's IP
-- A hosting service that allows inbound and outbound traffic on port 25.
-- Helm 3 (helm 2 support is dropped with release 0.3.0).
+- Starting with version 1.9, you need a validating DNSSEC compatible resolver in order to run Mailu.
+- a working HTTP/HTTPS ingress controller such as nginx or Traefik
+- cert-manager v0.12 or higher installed and configured (including a working cert issuer) – otherwise you'll need to handle issuing certificates and providing the secret to Mailu yourself
+- a node which has a publicly reachable static IP address, because mail service binds directly to the node's IP
+- a hosting provider that allows inbound and outbound traffic on port 25
+- Helm 3 (Helm 2 support is dropped with release 0.3.0)
 
 | Repository                         | Name       | Version |
 | ---------------------------------- | ---------- | ------- |
@@ -36,17 +36,19 @@ Branches exists for older mailu versions (e.g. old/mailu-1.8).
 
 ### Warning about open relays
 
-One of the biggest mistakes when running a mail server is a so called "Open Relay". This kind of misconfiguration is in most cases caused by a badly configured
-load balancer which hides the originating IP address of an email which makes Mailu think, the email comes from an internal address and ommits authentification and other checks. In the result, your mail server can be abused to spread spam and will get blacklisted within hours.
+One of the biggest mistakes when running a mail server is a so-called "open relay".
+In most cases, this kind of misconfiguration is caused by a badly configured load balancer that hides the originating IP address of an email.
+This makes Mailu think that the email is coming from an internal address and it omits authentification and other checks.
+As a result, your mail server can be abused to spread spam and will get blacklisted within hours.
 
-It is very important that you check your setup for open relay at least:
+It is very important to check whether your setup is an open relay at least:
 
 - after installation
-- at any time you change network settings or load balancer configuration
+- any time you change network settings or load balancer configuration
 
 The check is quite simple:
 
-- watch the logs for the "mailu-front" POD
+- watch the logs for the "mailu-front" pod
 - browse to an open relay checker like <https://mxtoolbox.com/diagnostic.aspx>
 - enter the hostname or IP address of your mail server and start the test
 
@@ -56,7 +58,7 @@ In the logs, you should see some message like
 2021/10/26 21:23:25 [info] 12#12: *25691 client 18.205.72.90:56741 connected to 0.0.0.0:25
 ```
 
-It is very important that the IP address shown here is an external public IP address, not an internal like 10.x.x.x, 192.168.x.x or 172.x.x.x.
+The IP address shown here must be a public IP address, i.e. not in any of the RFC 1918 subnets: `10.0.0.0/8`, `172.16.0.0/12`, or `192.168.0.0/16`
 
 Also verify that the result of the check confirms that there is no open relay:
 
@@ -66,21 +68,20 @@ SMTP Open Relay OK - Not an open relay.
 
 ### Warning, this will not work on most cloud providers
 
-- Google cloud does not allow outgoing connections to connect to port 25. You will not be able to send
-  mails with mailu on google cloud (<https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec>)
-- Many cloud providers don't allow to assign fixed IPs directly to nodes. They use proxies or load balancers instead. While
-  this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP get's lost.
-  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by mailu (due the lack of
-  support in the nginx mail modules). Without the original IP information, a mail server will not work properly, or worse, will be
+- Google Cloud does not allow outgoing connections to connect to port 25, so
+  [you will not be able to send mails with Mailu on Google Cloud](<https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec>)
+- Many cloud providers don't assign fixed IPs to nodes directly. They use proxies or load balancers instead.
+  While this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP gets lost.
+  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by Mailu (due the lack of support in the nginx mail modules).
+  Without the original IP information, a mail server will not work properly, or worse, become
   an open relay.
-- If you'd like to run mailu on kubernetes, consider to rent a cheap VPS and run kuberneres on it (e.g. using rancher2). A good option is to
-  use hetzner cloud VPS (author's personal opinion).
-- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides
-  source ip addresses behind a load balancer.
+- If you'd like to run Mailu on Kubernetes, consider renting a cheap VPS to run Kubernetes on (e.g. using Rancher2).
+  A good option for a hosting provider is [Hetzner Cloud VPS](<https://www.hetzner.com/cloud/>) (author's personal opinion).
+- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides source ip addresses behind a load balancer.
 
 ## Installation
 
-- Add the repository via:
+- add the repository:
 
 ```bash
 helm repo add mailu https://mailu.github.io/helm-charts/
@@ -94,19 +95,19 @@ helm show values mailu/mailu > my-values-file.yaml
 
 Edit the `my-values-file.yaml` to reflect your environment.
 
-- deploy the helm-chart with:
+- deploy the helm chart:
 
 ```bash
 helm install mailu mailu/mailu -n mailu-mailserver --values my-values-file.yaml
 ```
 
-- Uninstall the helm-chart with:
+- check that the deployed pods are all running
+
+### Uninstall
 
 ```bash
 helm uninstall mailu --namespace=mailu-mailserver
 ```
-
-Check that the deployed pods are all running.
 
 ## Parameters
 
@@ -217,7 +218,7 @@ Check that the deployed pods are all running.
 | Name                                                | Description                                                                                                                                                                                               | Value                             |
 | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `externalDatabase.enabled`                          | Set to true to use an external database                                                                                                                                                                   | `false`                           |
-| `externalDatabase.type`                             | Type of the external database for mailu and roundcube (`mysql`/`postgresql`)                                                                                                                              | `""`                              |
+| `externalDatabase.type`                             | Type of the external database for Mailu and Roundcube (`mysql`/`postgresql`)                                                                                                                              | `""`                              |
 | `externalDatabase.host`                             | Hostname of the database                                                                                                                                                                                  | `""`                              |
 | `externalDatabase.port`                             | Override for port of the database                                                                                                                                                                         | `""`                              |
 | `externalDatabase.database`                         | Name of the database                                                                                                                                                                                      | `mailu`                           |
@@ -1167,13 +1168,13 @@ There are several ways to expose mail ports to the public. If you do so, make su
 
 ### Running on a single node with a public IP
 
-This is the most straightforward way to run mailu. It can be used when the node where mailu (or at least the "front" POD) runs on a specific node that has a public ip address which is used for mail. All mail ports of the "front" POD will be simply exposed via the "hostPort" function.
+This is the most straightforward way to run Mailu. It can be used when the node where Mailu (or at least the "front" POD) runs on a specific node that has a public ip address which is used for mail. All mail ports of the "front" POD will be simply exposed via the "hostPort" function.
 
 To use this mode, set `front.hostPort.enabled` to `true` (which is the default). If your cluster has multiple nodes, you should use `front.nodeSelector` to bind the front container on the node where your public mail IP is located on.
 
 ### Running on bare metal with k3s and klipper-lb
 
-If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose mailu via loadBalancer, set:
+If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose Mailu via loadBalancer, set:
 
 - `front.hostPort.enabled`: `false`
 - `externalService.enabled`: `true`
