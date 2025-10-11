@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.5.0](https://github.com/Mailu/helm-charts/compare/mailu-2.4.0...mailu-2.5.0) (2025-10-11)
+
+
+### Features
+
+* **externalService:** allow to set labels ([#470](https://github.com/Mailu/helm-charts/issues/470)) ([e906264](https://github.com/Mailu/helm-charts/commit/e906264e6765d3ad1ea8daf9cfa9e9149518ba9c)), closes [#275](https://github.com/Mailu/helm-charts/issues/275)
+
+
+### Bug Fixes
+
+* Don't set empty vars instead of setting them to empty strings ([#475](https://github.com/Mailu/helm-charts/issues/475)) ([9ddb8b8](https://github.com/Mailu/helm-charts/commit/9ddb8b82d2493ceaced510f3e37b7d5e5765ed37))
+* **github-release:** update release mailu/mailu ( 2024.06.43 ➔ 2024.06.44 ) ([ab06eb6](https://github.com/Mailu/helm-charts/commit/ab06eb643829c869d8aea9756aefccf732129924))
+* **serviceMonitor:** labelSelector declaration ([#472](https://github.com/Mailu/helm-charts/issues/472)) ([3b03faa](https://github.com/Mailu/helm-charts/commit/3b03faa3c3df7e9ff5915bd8d30a42d1d1491562)), closes [#471](https://github.com/Mailu/helm-charts/issues/471)
+
 ## [2.4.0](https://github.com/Mailu/helm-charts/compare/mailu-2.3.1...mailu-2.4.0) (2025-09-05)
 
 
