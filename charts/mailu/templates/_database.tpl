@@ -28,8 +28,12 @@
     {{- print "3306" -}}
 {{- else if .Values.postgresql.enabled -}}
     {{- print "5432" -}}
-{{- else -}}
-    {{- .Values.externalDatabase.port -}}
+{{- else if .Values.externalDatabase.enabled -}}
+    {{- if eq .Values.externalDatabase.type "mysql" -}}
+        {{- .Values.externalDatabase.port | default "3306" -}}
+    {{- else if eq .Values.externalDatabase.type "postgresql" -}}
+        {{- .Values.externalDatabase.port | default "5432" -}}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 

@@ -189,7 +189,7 @@ class EnvVarChecker:
 
     def import_helm_values(self):
         """Import the Helm values.yaml file"""
-        values_file = os.path.join(self.base_path, "..", "mailu", "values.yaml")
+        values_file = os.path.join(self.base_path, "..", "charts", "mailu", "values.yaml")
         with open(values_file, "r", encoding="utf-8") as file:
             self.helm_values = yaml.safe_load(file)
 
