@@ -71,17 +71,6 @@
 {{- end -}}
 {{- end -}}
 
-{{/* Return the database URI appendix for Mailu */}}
-{{- define "mailu.database.appendix" -}}
-{{- if .Values.mariadb.enabled -}}
-    {{- "" | quote }}
-{{- else if .Values.postgresql.enabled -}}
-    {{- "" | quote }}
-{{- else }}
-    {{- .Values.externalDatabase.appendix | quote }}
-{{- end -}}
-{{- end -}}
-
 {{/* Return the name of the secret for the external database */}}
 {{- define "mailu.database.external.secretName" -}}
 {{ include "common.secrets.name" (dict "existingSecret" .Values.externalDatabase.existingSecret "defaultNameSuffix" "externaldb" "context" .) }}
