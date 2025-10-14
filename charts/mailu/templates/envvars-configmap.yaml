@@ -31,7 +31,6 @@ data:
   DB_NAME: {{ include "mailu.database.name" . }}
   # DB_PW => via secret
   DB_USER: {{ include "mailu.database.username" . }}
-  DB_APPENDIX: {{ include "mailu.database.appendix" . }}
   DEBUG_ASSETS: ""
   DEBUG: "false"
   DEBUG_PROFILER: "false"
@@ -110,8 +109,14 @@ data:
   REDIS_ADDRESS: {{ include "mailu.redis.serviceFqdn" . }}
   SMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
 
+# Conditionally set the PROXY_PROTOCOL value allowing for manual overwriting using extraEnvVars
 {{- if .Values.front.externalService.enabled -}}
   PROXY_PROTOCOL: {{ include "mailu.proxyProtocolPorts" . | quote }}
+{{- end -}}
+
+# If externalDatabase is enabled, we can also set the appendix if defined
+{{- if .Values.externalDatabase.enabled -}}
+  DB_APPENDIX: {{ include "mailu.database.appendix" . }}
 {{- end -}}
 
 {{- if not (eq (include "mailu.database.type" .) "sqlite") }}
