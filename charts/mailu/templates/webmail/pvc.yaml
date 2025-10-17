@@ -1,5 +1,6 @@
 ---
-{{- if and (.Values.webmail.enabled) (not .Values.persistence.single_pvc) }}
+{{- if .Values.webmail.enabled -}}
+{{- if and (not .Values.persistence.single_pvc) (not .Values.webmail.persistence.existingClaim) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -30,4 +31,5 @@ spec:
   {{- if .Values.webmail.persistence.storageClass }}
   storageClassName: {{ .Values.webmail.persistence.storageClass }}
   {{- end }}
+{{- end }}
 {{- end }}

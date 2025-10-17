@@ -1,5 +1,6 @@
 ---
-{{- if and (.Values.webdav.enabled) (not .Values.persistence.single_pvc) }}
+{{- if .Values.webdav.enabled -}}
+{{- if and (not .Values.persistence.single_pvc) (not .Values.webdav.persistence.existingClaim) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -30,4 +31,5 @@ spec:
   {{- if .Values.webdav.persistence.storageClass }}
   storageClassName: {{ .Values.webdav.persistence.storageClass }}
   {{- end }}
+{{- end }}
 {{- end }}
