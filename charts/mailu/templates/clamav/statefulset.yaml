@@ -73,9 +73,6 @@ spec:
           securityContext: {{- omit .Values.clamav.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: data
-              subPath: clamav
-              mountPath: /var/lib/clamav
             {{- if .Values.clamav.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.clamav.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -126,48 +123,4 @@ spec:
         {{- if .Values.clamav.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.clamav.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
-  {{- if not .Values.clamav.persistence.enabled }}
-        - name: data
-          emptyDir: {}
-  {{- else if .Values.clamav.persistence.existingClaim }}
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ printf "%s" (tpl .Values.clamav.persistence.existingClaim .) }}
-  {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-        labels: {{- include "common.labels.standard" . | nindent 10 }}
-          app.kubernetes.io/component: clamav
-          {{- if .Values.clamav.persistence.labels }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.clamav.persistence.labels "context" $ ) | nindent 10 }}
-          {{- end }}
-          {{- if .Values.commonLabels }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 10 }}
-          {{- end }}
-        {{- if or .Values.clamav.persistence.annotations .Values.commonAnnotations }}
-        annotations:
-          {{- if .Values.clamav.persistence.annotations }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.clamav.persistence.annotations "context" $ ) | nindent 10 }}
-          {{- end }}
-          {{- if .Values.commonAnnotations }}
-          {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 10 }}
-          {{- end }}
-        {{- end }}
-      spec:
-        accessModes:
-          {{- range .Values.clamav.persistence.accessModes }}
-          - {{ . | quote }}
-          {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.clamav.persistence.size | quote }}
-        {{- if .Values.clamav.persistence.selector }}
-        selector: {{- include "common.tplvalues.render" (dict "value" .Values.clamav.persistence.selector "context" $) | nindent 10 }}
-        {{- end }}
-        {{- if .Values.clamav.persistence.dataSource }}
-        dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.clamav.persistence.dataSource "context" $) | nindent 10 }}
-        {{- end }}
-        {{- include "common.storage.class" (dict "persistence" .Values.clamav.persistence "global" .Values.global) | nindent 8 }}
-  {{- end }}
 {{- end }}
