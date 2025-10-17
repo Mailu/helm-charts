@@ -18,7 +18,7 @@
                 "digest"
             ],
             "minimumReleaseAge": "1 minute",
-            "ignoreTests": true
+            "ignoreTests": false
         },
         {
             "description": "Auto-merge Mailu GitHub Releases",
@@ -34,7 +34,7 @@
             "matchPackageNames": [
                 "/Mailu/"
             ],
-            "ignoreTests": true
+            "ignoreTests": false
         }
     ]
 }
