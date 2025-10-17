@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.5.0](https://github.com/Mailu/helm-charts/compare/mailu-2.4.0...mailu-2.5.0) (2025-10-17)
+
+
+### Features
+
+* **externalService:** allow to set labels ([#470](https://github.com/Mailu/helm-charts/issues/470)) ([e906264](https://github.com/Mailu/helm-charts/commit/e906264e6765d3ad1ea8daf9cfa9e9149518ba9c)), closes [#275](https://github.com/Mailu/helm-charts/issues/275)
+
+
+### Bug Fixes
+
+* **container:** update image docker.io/apache/tika ( 3.2.2.0 ➔ 3.2.3.0 ) ([#465](https://github.com/Mailu/helm-charts/issues/465)) ([995b7eb](https://github.com/Mailu/helm-charts/commit/995b7eb67985d2e1004c39fed0adf7d61d0c6b4a))
+* Don't set empty vars instead of setting them to empty strings ([#475](https://github.com/Mailu/helm-charts/issues/475)) ([9ddb8b8](https://github.com/Mailu/helm-charts/commit/9ddb8b82d2493ceaced510f3e37b7d5e5765ed37))
+* **gh-actions lint-and-test:** correct indentation ([#492](https://github.com/Mailu/helm-charts/issues/492)) ([a03411d](https://github.com/Mailu/helm-charts/commit/a03411d19b6ebfb466187178b0aa90dd7f6d20fc)), closes [#490](https://github.com/Mailu/helm-charts/issues/490)
+* **github-release:** update release mailu/mailu ( 2024.06.43 ➔ 2024.06.44 ) ([ab06eb6](https://github.com/Mailu/helm-charts/commit/ab06eb643829c869d8aea9756aefccf732129924))
+* **serviceMonitor:** labelSelector declaration ([#472](https://github.com/Mailu/helm-charts/issues/472)) ([3b03faa](https://github.com/Mailu/helm-charts/commit/3b03faa3c3df7e9ff5915bd8d30a42d1d1491562)), closes [#471](https://github.com/Mailu/helm-charts/issues/471)
+
 ## [2.4.0](https://github.com/Mailu/helm-charts/compare/mailu-2.3.1...mailu-2.4.0) (2025-09-05)
 
 
