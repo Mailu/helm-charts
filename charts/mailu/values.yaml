@@ -3032,7 +3032,7 @@ tika:
   ## @param tika.image.registry Pod image registry (specific for tika as it is not part of the mailu organization)
   image:
     repository: apache/tika
-    tag: 3.2.2.0-full@sha256:ffab324253edc54706e8882dd28190b1e6559c344b5315ae8a74b9efda9e7291
+    tag: 3.2.3.0-full@sha256:21d8052de04e491ccf66e8680ade4da6f3d453a56d59f740b4167e54167219b7
     pullPolicy: IfNotPresent
     registry: docker.io
 
