@@ -57,6 +57,12 @@ spec:
       {{- if .Values.admin.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.admin.terminationGracePeriodSeconds }}
       {{- end }}
+      {{- if .Values.admin.dnsPolicy }}
+      dnsPolicy: {{ .Values.admin.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.admin.dnsConfig }}
+      dnsConfig: {{- include "common.tplvalues.render" (dict "value" .Values.admin.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.admin.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
       {{- end }}
