@@ -2001,40 +2001,6 @@ clamav:
     pullPolicy: IfNotPresent
     registry: docker.io
 
-  ## Pod persistence (if not using single_pvc)
-  persistence:
-    ## @param clamav.persistence.enabled Enable persistence using PVC
-    enabled: true
-
-    ## @param clamav.persistence.size Pod pvc size
-    size: 2Gi
-
-    ## @param clamav.persistence.storageClass Pod pvc storage class
-    storageClass: ""
-
-    ## @param clamav.persistence.accessModes Pod pvc access modes
-    accessModes: [ReadWriteOnce]
-
-    ## @param clamav.persistence.annotations Pod pvc annotations
-    annotations: {}
-
-    ## @param clamav.persistence.labels Pod pvc labels
-    labels: {}
-
-    ## @param clamav.persistence.selector Additional labels to match for the PVC
-    ## e.g:
-    ## selector:
-    ##   matchLabels:
-    ##     app: my-app
-    selector: {}
-
-    ## @param clamav.persistence.dataSource Custom PVC data source
-    dataSource: {}
-
-    ## @param clamav.persistence.existingClaim Use a existing PVC which must be created manually before bound
-    ## NOTE: requires clamav.persistence.enabled: true
-    existingClaim: ""
-
   ## Pod resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## We usually recommend not to specify default resources and to leave this as a conscious
