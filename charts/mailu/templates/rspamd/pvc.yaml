@@ -1,5 +1,6 @@
 ---
-{{- if and (not .Values.persistence.single_pvc) .Values.rspamd.enabled }}
+{{- if .Values.rspamd.enabled -}}
+{{- if and (not .Values.persistence.single_pvc) (not .Values.rspamd.persistence.existingClaim) }}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -30,4 +31,5 @@ spec:
   {{- if .Values.rspamd.persistence.storageClass }}
   storageClassName: {{ .Values.rspamd.persistence.storageClass }}
   {{- end }}
+{{- end }}
 {{- end }}
