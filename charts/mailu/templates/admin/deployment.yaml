@@ -57,6 +57,12 @@ spec:
       {{- if .Values.admin.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.admin.terminationGracePeriodSeconds }}
       {{- end }}
+      {{- if .Values.admin.dnsPolicy }}
+      dnsPolicy: {{ .Values.admin.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.admin.dnsConfig }}
+      dnsConfig: {{- include "common.tplvalues.render" (dict "value" .Values.admin.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.admin.initContainers }}
       initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
       {{- end }}
@@ -67,9 +73,6 @@ spec:
         - name: admin
           image: {{ .Values.imageRegistry }}/{{ .Values.admin.image.repository }}:{{ default (include "mailu.version" .) .Values.admin.image.tag }}
           imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
-          {{- if .Values.admin.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.admin.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- end }}
           volumeMounts:
             - name: data
               subPath: admin
@@ -126,9 +129,11 @@ spec:
               port: http
           {{- end }}
           securityContext:
-            capabilities:
-              add:
-                - NET_BIND_SERVICE
+            {{- $securityContext := dict "capabilities" (dict "add" (list "NET_BIND_SERVICE")) }}
+            {{- if and .Values.admin.containerSecurityContext (hasKey .Values.admin.containerSecurityContext "enabled") .Values.admin.containerSecurityContext.enabled }}
+            {{- $securityContext = merge $securityContext (omit .Values.admin.containerSecurityContext "enabled") }}
+            {{- end }}
+            {{- toYaml $securityContext | nindent 12 }}
       {{- if .Values.admin.extraContainers }}
         {{- toYaml .Values.admin.extraContainers | nindent 8 }}
       {{- end }}
