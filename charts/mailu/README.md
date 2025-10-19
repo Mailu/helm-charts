@@ -77,7 +77,7 @@ SMTP Open Relay OK - Not an open relay.
   an open relay.
 - If you'd like to run Mailu on Kubernetes, consider renting a cheap VPS to run Kubernetes on (e.g. using Rancher2).
   A good option for a hosting provider is [Hetzner Cloud VPS](<https://www.hetzner.com/cloud/>) (author's personal opinion).
-- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides source ip addresses behind a load balancer.
+- Please don't open issues in the bug tracker if your mail server is not working because your cloud provider blocks port 25 or hides source IP addresses behind a load balancer.
 
 ## Installation
 
