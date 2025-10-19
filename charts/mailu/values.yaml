@@ -1,4 +1,4 @@
-## Default values for mailu.
+## Default values for Mailu.
 
 ## @section Global parameters
 ## Global common parameters (see Bitnamis common chart)
@@ -11,11 +11,11 @@ global:
   storageClass: ""
 
   database:
-    ## @param global.database.roundcube.database Name of the roundcube database
-    ## @param global.database.roundcube.username Username to use for the roundcube database
-    ## @param global.database.roundcube.password Password to use for the roundcube database
-    ## @param global.database.roundcube.existingSecret Name of an existing secret to use for the roundcube database
-    ## @param global.database.roundcube.existingSecretPasswordKey Name of the key in the existing secret to use for the roundcube database password
+    ## @param global.database.roundcube.database Name of the Roundcube database
+    ## @param global.database.roundcube.username Username to use for the Roundcube database
+    ## @param global.database.roundcube.password Password to use for the Roundcube database
+    ## @param global.database.roundcube.existingSecret Name of an existing secret to use for the Roundcube database
+    ## @param global.database.roundcube.existingSecretPasswordKey Name of the key in the existing secret to use for the Roundcube database password
     roundcube:
       database: roundcube
       username: roundcube
@@ -27,9 +27,9 @@ global:
 
 ## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
 kubeVersion: ""
-## @param nameOverride String to partially override mailu.fullname include (will maintain the release name)
+## @param nameOverride String to partially override `mailu.fullname` include (will maintain the release name)
 nameOverride: ""
-## @param fullnameOverride String to fully override mailu.fullname template
+## @param fullnameOverride String to fully override `mailu.fullname` template
 fullnameOverride: ""
 ## @param commonLabels Add labels to all the deployed resources
 commonLabels: {}
@@ -142,7 +142,7 @@ networkPolicy:
         app.kubernetes.io/name: prometheus-agent
         app.kubernetes.io/instance: kps
 
-## @param mailuVersion Override Mailu version to be deployed (tag of mailu images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
+## @param mailuVersion Override Mailu version to be deployed (tag of `mailu` images). Defaults to `Chart.AppVersion` - must be master or a version >= 2.0
 mailuVersion: ""
 
 ## @param logLevel default log level. can be overridden globally or per service
@@ -267,16 +267,16 @@ tls:
 
 ## @section Storage parameters
 
-## If deploying mariadb or postgresql from this chart (see `mariadb.enabled` and `postgresql.enabled`),
+## If deploying MariaDB or PostgreSQL from this chart (see `mariadb.enabled` and `postgresql.enabled`),
 ## the username, password and database name for the `mailu` database needs to be configured in the respective sections.
 ## If using an external database, the `mailu` database needs to be created manually and the credentials need to be configured here.
-## The `roundcube` database needs to be configured under the `global.database` section.
-## If using the built-in MariaDB or PostgreSQL, the `roundcube` database will be created automatically.
+## The Roundcube database needs to be configured under the `global.database` section.
+## If using the built-in MariaDB or PostgreSQL, the Roundcube database will be created automatically.
 externalDatabase:
   ## @param externalDatabase.enabled Set to true to use an external database
   enabled: false
 
-  ## @param externalDatabase.type Type of the external database for mailu and roundcube (`mysql`/`postgresql`)
+  ## @param externalDatabase.type Type of the external database for Mailu and Roundcube (`mysql`/`postgresql`)
   ## Use `mysql` for MariaDB
   type: ""
 
@@ -328,8 +328,8 @@ externalRedis:
   ## ref: https://rspamd.com/doc/configuration/redis.html#available-redis-options
   rspamdDbId: 0
 
-## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
-## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the roundcube database
+## @param database.mysql.roundcubePassword DEPRECATED - DO NOT USE: Password for the Roundcube database
+## @param database.postgresql.roundcubePassword DEPRECATED - DO NOT USE: Password for the Roundcube database
 database:
   mysql:
     roundcubePassword: ""
@@ -383,7 +383,7 @@ mariadb:
       size: 8Gi
 
     ## @skip mariadb.primary.extraEnvVars
-    ## Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
+    ## Array with extra environment variables, used to create the initial Roundcube database; DO NOT EDIT; see `global.database` instead
     extraEnvVars: |
       - name: ROUNDCUBE_DB_PW
         valueFrom:
@@ -396,7 +396,7 @@ mariadb:
         value: {{ include "mailu.database.roundcube.username" . }}
 
   ## @skip mariadb.initdbScripts.create_roundcube_database.sh
-  ## DO NOT EDIT Script to create the roundcube database
+  ## DO NOT EDIT Script to create the Roundcube database
   initdbScripts:
     create_roundcube_database.sh: |
       #!/bin/bash
@@ -478,7 +478,7 @@ postgresql:
   ## @param postgresql.primary.persistence.size PVC Storage Request for PostgreSQL volume
   primary:
     ## @skip postgresql.primary.extraEnvVars
-    ## Array with extra environment variables, used to create the initial `roundcube` database; DO NOT EDIT; see `global.database` instead
+    ## Array with extra environment variables, used to create the initial Roundcube database; DO NOT EDIT; see `global.database` instead
     extraEnvVars: |
       - name: ROUNDCUBE_DB_PW
         valueFrom:
@@ -492,7 +492,7 @@ postgresql:
 
     initdb:
       ## @skip postgresql.primary.initdb.scripts.create_roundcube_database.sh
-      ## DO NOT EDIT Script to create the roundcube database
+      ## DO NOT EDIT Script to create the Roundcube database
       scripts:
         create_roundcube_database.sh: |
           #!/bin/bash
@@ -620,7 +620,7 @@ ingress:
   ## NOTE: 'name' should line up with a 'secretName' set further up
   ## If it is not set and you're using cert-manager, this is unneeded, as it will create a secret for you with valid certificates
   ## If it is not set and you're NOT using cert-manager either, self-signed certificates will be created valid for 365 days (if `ingress.selfSigned=true`)
-  ## It is also possible to create and manage the certificates outside of this helm chart
+  ## It is also possible to create and manage the certificates outside of this Helm chart
   ## Please see README.md for more information
   ## e.g:
   ## secrets:
@@ -697,7 +697,7 @@ front:
 
   ## Pod image
   ## @param front.image.repository Pod image repository
-  ## @param front.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param front.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param front.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/nginx
@@ -954,7 +954,7 @@ admin:
 
   ## Pod image
   ## @param admin.image.repository Pod image repository
-  ## @param admin.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param admin.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param admin.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/admin
@@ -1230,7 +1230,7 @@ postfix:
 
   ## Pod image
   ## @param postfix.image.repository Pod image repository
-  ## @param postfix.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param postfix.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param postfix.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/postfix
@@ -1438,7 +1438,7 @@ dovecot:
 
   ## Pod image
   ## @param dovecot.image.repository Pod image repository
-  ## @param dovecot.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param dovecot.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param dovecot.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/dovecot
@@ -1760,7 +1760,7 @@ rspamd:
 
   ## Pod image
   ## @param rspamd.image.repository Pod image repository
-  ## @param rspamd.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param rspamd.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param rspamd.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/rspamd
@@ -1992,9 +1992,9 @@ clamav:
 
   ## Pod image
   ## @param clamav.image.repository Pod image repository
-  ## @param clamav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param clamav.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param clamav.image.pullPolicy Pod image pull policy
-  ## @param clamav.image.registry Pod image registry (specific for clamav as it is not part of the mailu organization)
+  ## @param clamav.image.registry Pod image registry (specific for ClamAV as it is not part of the Mailu organization)
   image:
     repository: clamav/clamav-debian
     tag: 1.4@sha256:9a761d591ece47ecbc0927480aa39fafc23c827fe578b61e5123c27e0eafd34d
@@ -2240,7 +2240,7 @@ webmail:
 
   ## Pod image
   ## @param webmail.image.repository Pod image repository
-  ## @param webmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param webmail.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param webmail.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/webmail
@@ -2440,7 +2440,7 @@ webdav:
 
   ## Pod image
   ## @param webdav.image.repository Pod image repository
-  ## @param webdav.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param webdav.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param webdav.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/radicale
@@ -2643,7 +2643,7 @@ fetchmail:
 
   ## Pod image
   ## @param fetchmail.image.repository Pod image repository
-  ## @param fetchmail.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param fetchmail.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param fetchmail.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/fetchmail
@@ -2843,7 +2843,7 @@ oletools:
 
   ## Pod image
   ## @param oletools.image.repository Pod image repository
-  ## @param oletools.image.tag Pod image tag (defaults to mailuVersion if set, otherwise Chart.AppVersion)
+  ## @param oletools.image.tag Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)
   ## @param oletools.image.pullPolicy Pod image pull policy
   image:
     repository: mailu/oletools
@@ -3037,7 +3037,7 @@ tika:
   ## @param tika.image.repository Pod image repository
   ## @param tika.image.tag Pod image tag
   ## @param tika.image.pullPolicy Pod image pull policy
-  ## @param tika.image.registry Pod image registry (specific for tika as it is not part of the mailu organization)
+  ## @param tika.image.registry Pod image registry (specific for Tika as it is not part of the Mailu organization)
   image:
     repository: apache/tika
     tag: 3.2.3.0-full@sha256:21d8052de04e491ccf66e8680ade4da6f3d453a56d59f740b4167e54167219b7
