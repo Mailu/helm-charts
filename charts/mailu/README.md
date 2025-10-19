@@ -38,7 +38,7 @@ Branches exists for older Mailu versions (e.g. old/mailu-1.8).
 
 One of the biggest mistakes when running a mail server is a so-called "open relay".
 In most cases, this kind of misconfiguration is caused by a badly configured load balancer that hides the originating IP address of an email.
-This makes Mailu think that the email is coming from an internal address and it omits authentification and other checks.
+This makes Mailu think that the email is coming from an internal address and it omits authentication and other checks.
 As a result, your mail server can be abused to spread spam and will get blacklisted within hours.
 
 It is very important to check whether your setup is an open relay at least:
