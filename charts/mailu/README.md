@@ -409,6 +409,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `admin.persistence.accessModes`               | Pod pvc access modes                                                                          | `["ReadWriteOnce"]` |
 | `admin.persistence.claimNameOverride`         | Pod pvc name override                                                                         | `""`                |
 | `admin.persistence.annotations`               | Pod pvc annotations                                                                           | `{}`                |
+| `admin.persistence.existingClaim`             | Pod pvc existing claim name                                                                   | `""`                |
 | `admin.resources.limits`                      | The resources limits for the container                                                        | `{}`                |
 | `admin.resources.requests`                    | The requested resources for the container                                                     | `{}`                |
 | `admin.livenessProbe.enabled`                 | Enable livenessProbe                                                                          | `true`              |
@@ -494,6 +495,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `postfix.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
 | `postfix.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
 | `postfix.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `postfix.persistence.existingClaim`             | Pod pvc existing claim name                                                           | `""`                |
 | `postfix.resources.limits`                      | The resources limits for the container                                                | `{}`                |
 | `postfix.resources.requests`                    | The requested resources for the container                                             | `{}`                |
 | `postfix.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
@@ -555,6 +557,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `dovecot.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
 | `dovecot.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
 | `dovecot.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `dovecot.persistence.existingClaim`             | Pod pvc existing claim name                                                           | `""`                |
 | `dovecot.resources.limits`                      | The resources limits for the container                                                | `{}`                |
 | `dovecot.resources.requests`                    | The requested resources for the container                                             | `{}`                |
 | `dovecot.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
@@ -625,6 +628,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `rspamd.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
 | `rspamd.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
 | `rspamd.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
+| `rspamd.persistence.existingClaim`             | Pod pvc existing claim name                                                           | `""`                |
 | `rspamd.resources.limits`                      | The resources limits for the container                                                | `{}`                |
 | `rspamd.resources.requests`                    | The requested resources for the container                                             | `{}`                |
 | `rspamd.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
@@ -757,6 +761,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `webmail.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]`                                                               |
 | `webmail.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                                                                              |
 | `webmail.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                                                                              |
+| `webmail.persistence.existingClaim`             | Pod pvc existing claim name                                                           | `""`                                                                              |
 | `webmail.resources.limits`                      | The resources limits for the container                                                | `{}`                                                                              |
 | `webmail.resources.requests`                    | The requested resources for the container                                             | `{}`                                                                              |
 | `webmail.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`                                                                            |
