@@ -742,6 +742,7 @@ front:
     ## type: LoadBalancer
     loadBalancerIP: ""
     externalTrafficPolicy: Local
+    externalIPs: []
     annotations: {}
     labels: {}
     ports:
