@@ -1176,7 +1176,7 @@ To use this mode, set `front.hostPort.enabled` to `true` (which is the default).
 
 ### Running on bare metal with k3s and klipper-lb
 
-If you run on bare metal with k3s (e.g by using k3os), you can use the build-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose Mailu via loadBalancer, set:
+If you run on bare metal with k3s (e.g by using k3os), you can use the built-in load balancer [klipper-lb](https://rancher.com/docs/k3s/latest/en/networking/#service-load-balancer). To expose Mailu via loadBalancer, set:
 
 - `front.hostPort.enabled`: `false`
 - `externalService.enabled`: `true`
