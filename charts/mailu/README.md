@@ -72,7 +72,7 @@ SMTP Open Relay OK - Not an open relay.
   [you will not be able to send mails with Mailu on Google Cloud](<https://googlecloudplatform.uservoice.com/forums/302595-compute-engine/suggestions/12422808-please-unblock-port-25-allow-outbound-mail-connec>)
 - Many cloud providers don't assign fixed IPs to nodes directly. They use proxies or load balancers instead.
   While this works well with HTTP/HTTPs, on raw TCP connections (such as mail protocol connections) the originating IP gets lost.
-  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by Mailu (due the lack of support in the nginx mail modules).
+  There's a so called "proxy protocol" as a solution for this limitation but that's not yet supported by Mailu (due to the lack of support in the nginx mail modules).
   Without the original IP information, a mail server will not work properly, or worse, become
   an open relay.
 - If you'd like to run Mailu on Kubernetes, consider renting a cheap VPS to run Kubernetes on (e.g. using Rancher2).
