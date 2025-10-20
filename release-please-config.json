@@ -1,6 +1,6 @@
 {
   "packages": {
-    "mailu": {
+    "charts/mailu": {
       "package-name": "mailu",
       "changelog-path": "CHANGELOG.md",
       "release-type": "helm",

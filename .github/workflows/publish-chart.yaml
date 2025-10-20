@@ -1,8 +1,12 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: release-pipeline
 
 permissions:
+  id-token: write
   contents: write
+  attestations: write
+  # packages: write
 
 on:
   workflow_dispatch:
@@ -11,7 +15,7 @@ on:
         description: Name of the package that will be published
         required: true
         type: string
-        default: mailu
+        default: charts/mailu
       version:
         description: Version of the package that will be published
         required: true
@@ -22,14 +26,21 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_body: ${{ fromJSON(steps.get_release.outputs.data).body }}
+    # env:
+    #   OCI_REGISTRY: ghcr.io
+    #   OCI_NAMESPACE: ${{ github.repository_owner }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
+      - name: Extract chart name
+        id: extract_chart_name
+        run: echo "chart_name=$(basename '${{ github.event.inputs.package }}')" >> "$GITHUB_OUTPUT"
+
       - name: Checkout Github Pages to gh-pages folder
-        uses: actions/checkout@v3
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           repository: ${{ github.repository }}
           ref: gh-pages
@@ -37,7 +48,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
         with:
           version: v3.10.0
 
@@ -45,19 +56,35 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-          helm dependency build mailu
+          helm dependency build ${{ github.event.inputs.package }}
 
       - name: Run helm lint
-        run: helm lint --strict --values mailu/ci/helm-lint-values.yaml mailu
+        run: helm lint --strict --values ${{ github.event.inputs.package }}/ci/helm-lint-values.yaml ${{ github.event.inputs.package }}
 
       - name: Install chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+        uses: helm/chart-releaser-action@cae68fefc6b5f367a0275617c9f83181ba54714f # v1.7.0
         with:
           install_only: true
 
       - name: Package Chart with chart-releaser
         run: |
-          cr package mailu
+          cr package ${{ github.event.inputs.package }}
+
+      # - name: Login to OCI registry (ghcr.io)
+      #   run: |
+      #     echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.OCI_REGISTRY }} --username "${{ github.actor }}" --password-stdin
+
+      # - name: Push chart to OCI
+      #   run: |
+      #     CHART_FILE=".cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz"
+      #     helm push "$CHART_FILE" oci://${{ env.OCI_REGISTRY }}/${{ env.OCI_NAMESPACE }}
+      # - name: Attest Build Provenance
+      #   uses: actions/attest-build-provenance@v2
+      #   id: attest
+      #   with:
+      #     subject-path: .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Release
         uses: octokit/request-action@v2.x
@@ -65,19 +92,20 @@ jobs:
         with:
           route: GET /repos/{repo}/releases/tags/{tag}
           repo: ${{ github.repository }}
-          tag: ${{ github.event.inputs.package }}-${{ github.event.inputs.version }}
+          tag: ${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Chart build to Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2
         with:
-          name: "${{ github.event.inputs.package }}: v${{ github.event.inputs.version }}"
-          tag_name: "${{ github.event.inputs.package }}-${{ github.event.inputs.version }}"
+          name: "${{ steps.extract_chart_name.outputs.chart_name }}: v${{ github.event.inputs.version }}"
+          tag_name: "${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}"
           generate_release_notes: false
           body: ${{ fromJSON(steps.get_release.outputs.data).body }}
           files: |
-            .cr-release-packages/${{ github.event.inputs.package }}-${{ github.event.inputs.version }}.tgz
+            .cr-release-packages/${{ steps.extract_chart_name.outputs.chart_name }}-${{ github.event.inputs.version }}.tgz
+            ${{ steps.attest.outputs.bundle-path }}
 
       - name: Update chart index and publish to Github pages
         run: |
@@ -101,7 +129,7 @@ jobs:
       - name: Send message to mailu-helm-chart channel
         # Only run this job if the release-please job created a release
         id: matrix-chat-message
-        uses: fadenb/matrix-chat-message@v0.0.6
+        uses: fadenb/matrix-chat-message@89baab2b9ea06ffdd5f5b1ca80e9f888c3d7c9d3 # v0.0.6
         with:
           homeserver: "matrix.org"
           token: ${{ secrets.MATRIX_TOKEN }}
