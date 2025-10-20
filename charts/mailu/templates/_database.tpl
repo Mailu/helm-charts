@@ -125,12 +125,12 @@
 
 {{/* Return the database name for Roundcube */}}
 {{- define "mailu.database.roundcube.name" -}}
-{{- .Values.global.database.roundcube.database | quote }}
+{{- .Values.global.database.roundcube.database }}
 {{- end -}}
 
 {{/* Return the database username for Roundcube */}}
 {{- define "mailu.database.roundcube.username" -}}
-{{- .Values.global.database.roundcube.username | quote }}
+{{- .Values.global.database.roundcube.username }}
 {{- end -}}
 
 {{/* Return the database password for Roundcube */}}
