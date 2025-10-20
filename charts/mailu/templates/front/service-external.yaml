@@ -1,0 +1,96 @@
+{{- if .Values.front.externalService.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-ext" (include "mailu.front.serviceName" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: front
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.front.externalService.labels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.front.externalService.labels "context" $) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.front.externalService.annotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.front.externalService.annotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app.kubernetes.io/component: front
+{{- with .Values.front.externalService }}
+  type: {{ .type | default "ClusterIP" }}
+  {{- if ne .type "ClusterIP" -}}
+  externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
+  {{- end }}
+  {{- if .loadBalancerIP }}
+  loadBalancerIP: {{ .loadBalancerIP }}
+  {{- end }}
+  ports:
+    {{- if .ports.pop3 }}
+    - name: pop3
+      port: 110
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.pop3 }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.pop3s }}
+    - name: pop3s
+      port: 995
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.pop3s }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.imap }}
+    - name: imap
+      port: 143
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.imap }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.imaps }}
+    - name: imaps
+      port: 993
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.imaps }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.smtp }}
+    - name: smtp
+      port: 25
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.smtp }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.smtps }}
+    - name: smtps
+      port: 465
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.smtps }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.submission }}
+    - name: smtpd
+      port: 587
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.submission }}
+      {{- end }}
+    {{- end }}
+    {{- if .ports.manageSieve }}
+    - name: sieve
+      port: 4190
+      protocol: TCP
+      {{ if eq $.Values.front.externalService.type "NodePort" -}}
+      nodePort: {{ .nodePorts.manageSieve }}
+      {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}

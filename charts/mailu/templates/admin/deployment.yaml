@@ -1,0 +1,146 @@
+---
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ printf "%s-admin" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: admin
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.admin.updateStrategy }}
+  strategy: {{- toYaml .Values.admin.updateStrategy | nindent 4 }}
+  {{- end }}
+  revisionHistoryLimit: {{ .Values.admin.revisionHistoryLimit }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: admin
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: admin
+        {{- if .Values.admin.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.admin.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if .Values.admin.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.admin.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "common.images.pullSecrets" (dict "images" (list .Values.admin.image) "global" .Values.global) | nindent 6 }}
+      {{- if .Values.admin.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.admin.hostAliases "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.admin.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.admin.affinity "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.admin.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.priorityClassName }}
+      priorityClassName: {{ .Values.admin.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.admin.schedulerName }}
+      schedulerName: {{ .Values.admin.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.admin.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.admin.topologySpreadConstraints "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.admin.terminationGracePeriodSeconds }}
+      {{- end }}
+      {{- if .Values.admin.dnsPolicy }}
+      dnsPolicy: {{ .Values.admin.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.admin.dnsConfig }}
+      dnsConfig: {{- include "common.tplvalues.render" (dict "value" .Values.admin.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.admin.initContainers "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.admin.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.admin.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: admin
+          image: {{ .Values.imageRegistry }}/{{ .Values.admin.image.repository }}:{{ default (include "mailu.version" .) .Values.admin.image.tag }}
+          imagePullPolicy: {{ .Values.admin.image.pullPolicy }}
+          volumeMounts:
+            - name: data
+              subPath: admin
+              mountPath: /data
+            - name: data
+              mountPath: /dkim
+              subPath: dkim
+            {{- if .Values.admin.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ default .Values.logLevel .Values.admin.logLevel }}
+            - name: QUOTA_STORAGE_URL
+              value: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.adminQuota" .) }}
+            {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
+            {{- if .Values.admin.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVars "context" $) | nindent 12 }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
+            {{- if .Values.admin.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsCM "context" $) }}
+            {{- end }}
+            {{- if .Values.admin.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ include "common.tplvalues.render" (dict "value" .Values.admin.extraEnvVarsSecret "context" $) }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ int (include "mailu.admin.port" .) }}
+              protocol: TCP
+          {{- if .Values.admin.resources }}
+          resources: {{- toYaml .Values.admin.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.admin.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.startupProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /ping
+              port: http
+          {{- end }}
+          {{- if .Values.admin.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.livenessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /ping
+              port: http
+          {{- end }}
+          {{- if .Values.admin.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.admin.readinessProbe "enabled") "context" $) | nindent 12 }}
+            httpGet:
+              path: /ping
+              port: http
+          {{- end }}
+          securityContext:
+            {{- $securityContext := dict "capabilities" (dict "add" (list "NET_BIND_SERVICE")) }}
+            {{- if and .Values.admin.containerSecurityContext (hasKey .Values.admin.containerSecurityContext "enabled") .Values.admin.containerSecurityContext.enabled }}
+            {{- $securityContext = merge $securityContext (omit .Values.admin.containerSecurityContext "enabled") }}
+            {{- end }}
+            {{- toYaml $securityContext | nindent 12 }}
+      {{- if .Values.admin.extraContainers }}
+        {{- toYaml .Values.admin.extraContainers | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "mailu.admin.claimName" . }}
+        {{- if .Values.admin.extraVolumes }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.admin.extraVolumes "context" $) | nindent 8 }}
+        {{- end }}

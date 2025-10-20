@@ -9,5 +9,5 @@ output: trivy-results.sarif
 misconfiguration:
   helm:
     values:
-      - ./mailu/ci/helm-lint-values.yaml
+      - ./charts/mailu/ci/helm-lint-values.yaml
 severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
