@@ -1,7 +1,7 @@
 apiVersion: v2
 # renovate: datasource=github-releases depName=Mailu/mailu
 appVersion: 2024.06.45
-version: 2.5.0
+version: 2.5.1
 name: mailu
 description: This chart installs the Mailu mail system on Kubernetes
 home: https://mailu.io
