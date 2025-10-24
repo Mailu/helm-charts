@@ -130,7 +130,7 @@ spec:
               {{- if .Values.front.hostPort.enabled }}
               hostPort: 25
               {{- end}}
-            - name: smtps
+            - name: submissions
               protocol: TCP
               containerPort: 465
               {{- if .Values.front.hostPort.enabled }}
