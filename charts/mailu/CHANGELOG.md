@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.5.1](https://github.com/Mailu/helm-charts/compare/mailu-2.5.0...mailu-2.5.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* **docs:** readme OCD ([#381](https://github.com/Mailu/helm-charts/issues/381)) ([6147f84](https://github.com/Mailu/helm-charts/commit/6147f8495ceef6bfa789b4e11cb2dbbdb74f8276))
+* **github-release:** update release mailu/mailu ( 2024.06.44 ➔ 2024.06.45 ) ([#504](https://github.com/Mailu/helm-charts/issues/504)) ([40479b4](https://github.com/Mailu/helm-charts/commit/40479b4e8af7a47b8cda74cff1d8220fca66abe6))
+
 ## [2.5.0](https://github.com/Mailu/helm-charts/compare/mailu-2.4.0...mailu-2.5.0) (2025-10-17)
 
 
