@@ -328,6 +328,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `front.externalService.enabled`               | Expose front mail ports via external service (ClusterIP or LoadBalancer)              | `false`         |
 | `front.externalService.type`                  | Service type (ClusterIP or LoadBalancer)                                              | `ClusterIP`     |
 | `front.externalService.externalTrafficPolicy` | Service externalTrafficPolicy (Cluster or Local)                                      | `Local`         |
+| `front.externalService.externalIPs`           | Service externalIPs                                                                   | `[]`            |
 | `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
 | `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
 | `front.externalService.labels`                | Service labels                                                                        | `{}`            |
