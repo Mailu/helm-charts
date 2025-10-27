@@ -946,6 +946,16 @@ front:
   ## @param front.extraContainers Add additional containers to the pod
   extraContainers: []
 
+  ## @param front.overrides Enable front overrides
+  ## Example:
+  ## overrides:
+  ##   mta-sts.conf: |
+  ##      # More info here: https://mailu.io/master/faq.html#how-do-i-setup-a-mta-sts-policy
+  ##      location ^~ /.well-known/mta-sts.txt {
+  ##        return 200 "version: STSv1\nmode: enforce\nmax_age: 1296000\nmx: mailu.example.com\n";
+  ##      }
+  overrides: {}
+
 ## @section Admin parameters
 admin:
   ## @param admin.enabled Enable access to the admin interface
