@@ -387,16 +387,16 @@ mariadb:
 
     ## @skip mariadb.primary.extraEnvVars
     ## Array with extra environment variables, used to create the initial Roundcube database; DO NOT EDIT; see `global.database` instead
-    extraEnvVars: |
+    extraEnvVars:
       - name: ROUNDCUBE_DB_PW
         valueFrom:
           secretKeyRef:
-            name: {{ include "mailu.database.roundcube.secretName" . }}
-            key: {{ include "mailu.database.roundcube.secretKey" . }}
+            name: '{{ include "mailu.database.roundcube.secretName" . }}'
+            key: '{{ include "mailu.database.roundcube.secretKey" . }}'
       - name: ROUNDCUBE_DB_NAME
-        value: {{ include "mailu.database.roundcube.name" . }}
+        value: '{{ include "mailu.database.roundcube.name" . }}'
       - name: ROUNDCUBE_DB_USER
-        value: {{ include "mailu.database.roundcube.username" . }}
+        value: '{{ include "mailu.database.roundcube.username" . }}'
 
   ## @skip mariadb.initdbScripts.create_roundcube_database.sh
   ## DO NOT EDIT Script to create the Roundcube database
@@ -482,16 +482,16 @@ postgresql:
   primary:
     ## @skip postgresql.primary.extraEnvVars
     ## Array with extra environment variables, used to create the initial Roundcube database; DO NOT EDIT; see `global.database` instead
-    extraEnvVars: |
+    extraEnvVars:
       - name: ROUNDCUBE_DB_PW
         valueFrom:
           secretKeyRef:
-            name: {{ include "mailu.database.roundcube.secretName" . }}
-            key: {{ include "mailu.database.roundcube.secretKey" . }}
+            name: '{{ include "mailu.database.roundcube.secretName" . }}'
+            key: '{{ include "mailu.database.roundcube.secretKey" . }}'
       - name: ROUNDCUBE_DB_NAME
-        value: {{ include "mailu.database.roundcube.name" . }}
+        value: '{{ include "mailu.database.roundcube.name" . }}'
       - name: ROUNDCUBE_DB_USER
-        value: {{ include "mailu.database.roundcube.username" . }}
+        value: '{{ include "mailu.database.roundcube.username" . }}'
 
     initdb:
       ## @skip postgresql.primary.initdb.scripts.create_roundcube_database.sh
