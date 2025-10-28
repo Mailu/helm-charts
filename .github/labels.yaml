@@ -65,16 +65,16 @@
   description: "Mailu related issues"
 - name: needs testing
   color: "#7F50A7"
-  description: "Issues that need testing"
+  description: "Issues or pull requests that need testing"
 - name: pending answer
   color: "#FE9C09"
-  description: "Issues that are awaiting a response"
+  description: "Issues or pull requests that are awaiting a response"
 - name: question
   color: "#d876e3"
   description: "Questions that need answers"
 - name: Stale
   color: "#ededed"
-  description: "Issues that have not been updated for a while"
+  description: "Issues or pull requests that have not been updated for a while"
 # Release Please
 - name: "autorelease: pending"
   color: "#ededed"
