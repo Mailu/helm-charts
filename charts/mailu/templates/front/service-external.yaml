@@ -21,7 +21,7 @@ spec:
     app.kubernetes.io/component: front
 {{- with .Values.front.externalService }}
   type: {{ .type | default "ClusterIP" }}
-  {{- if ne .type "ClusterIP" -}}
+  {{- if ne .type "ClusterIP" }}
   externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
   {{- end }}
   {{- if .loadBalancerIP }}
