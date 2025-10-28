@@ -1169,76 +1169,35 @@ admin:
   ## @param admin.extraContainers Add additional containers to the pod
   extraContainers: []
 
-## @section Redis parameters
-## Redis chart configuration
-## for more options see https://github.com/bitnami/charts/tree/master/bitnami/redis
-redis:
-  ## @param redis.enabled Enable redis deployment through the redis subchart
+## @section Valkey parameters
+## Valkey chart configuration
+## for more options see https://github.com/valkey-io/valkey-helm/tree/main/valkey
+valkey:
+  ## @param valkey.enabled Enable valkey deployment through the valkey subchart
   enabled: true
 
-  ## @param redis.architecture Redis architecture. Allowed values: `standalone` or `replication`
-  architecture: standalone
+  ## @param valkey.dataStorage.enabled Enable persistence using Persistent Volume Claims
+  ## @param valkey.dataStorage.requestedSize Pod pvc size
+  ## @param valkey.dataStorage.className Pod pvc storage class
+  ## @param valkey.dataStorage.accessModes Pod pvc access modes
+  ## @param valkey.dataStorage.persistentVolumeClaimName Pod pvc existing claim; necessary if using single_pvc
+  ## @param valkey.dataStorage.subPath Subpath in PVC; necessary if using single_pvc (set it to `valkey`)
+  ## @param valkey.dataStorage.annotations Pod pvc annotations
+  ## @param valkey.dataStorage.labels Pod pvc labels
+  dataStorage:
+    enabled: true
+    requestedSize: 8Gi
+    className: ""
+    accessModes: [ReadWriteOnce]
+    persistentVolumeClaimName: ""
+    subPath: ""
+    annotations: {}
+    labels: {}
 
-  ## @param redis.image.repository Redis image repository (using bitnamilegacy for now)
-  image:
-    repository: bitnamilegacy/redis
-
-  ## @param redis.auth.enabled DON'T CHANGE THIS VALUE. Mailu doesn't support Redis authentication
+  ## @param valkey.auth.enabled DON'T CHANGE THIS VALUE. Mailu doesn't support Redis/Valkey authentication
   auth:
     enabled: false
 
-  master:
-    ## @param redis.master.enabled DON'T CHANGE THIS VALUE. Enable redis master
-    enabled: true
-
-    ## @param redis.master.count Number of redis master replicas
-    count: 1
-
-    ## @param redis.master.persistence.enabled Enable persistence using Persistent Volume Claims
-    ## @param redis.master.persistence.size Pod pvc size
-    ## @param redis.master.persistence.storageClass Pod pvc storage class
-    ## @param redis.master.persistence.accessModes Pod pvc access modes
-    ## @param redis.master.persistence.annotations Pod pvc annotations
-    ## @param redis.master.persistence.existingClaim Pod pvc existing claim; necessary if using single_pvc
-    ## @param redis.master.persistence.subPath Subpath in PVC; necessary if using single_pvc (set it to `redis`)
-    persistence:
-      enabled: true
-      size: 8Gi
-      storageClass: ""
-      accessModes: [ReadWriteOnce]
-      existingClaim: ""
-      subPath: ""
-      annotations: {}
-
-  ## @param redis.replica.count Number of redis replicas (only if `redis.architecture=replication`)
-  ## Don't forget to configure replicas persistence if changing this value
-  replica:
-    count: 0
-
-  ## @param redis.sentinel.image.repository Redis Sentinel image (using bitnamilegacy for now)
-  sentinel:
-    image:
-      repository: bitnamilegacy/redis-sentinel
-
-  ## @param redis.metrics.image.repository Redis metrics exporter image (using bitnamilegacy for now)
-  metrics:
-    image:
-      repository: bitnamilegacy/redis-exporter
-
-  ## @param redis.volumePermissions.image.repository Redis volume permissions image (using bitnamilegacy for now)
-  volumePermissions:
-    image:
-      repository: bitnamilegacy/os-shell
-
-  ## @param redis.kubectl.image.repository Redis kubectl image (using bitnamilegacy for now)
-  kubectl:
-    image:
-      repository: bitnamilegacy/kubectl
-
-  ## @param redis.sysctl.image.repository Redis sysctl image (using bitnamilegacy for now)
-  sysctl:
-    image:
-      repository: bitnamilegacy/os-shell
 
 ## @section Postfix parameters
 postfix:
