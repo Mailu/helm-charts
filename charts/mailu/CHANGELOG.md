@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.6.0](https://github.com/Mailu/helm-charts/compare/mailu-2.5.1...mailu-2.6.0) (2025-11-05)
+
+
+### Features
+
+* support mta-sts configuration with overrides ([#396](https://github.com/Mailu/helm-charts/issues/396)) ([051c3b2](https://github.com/Mailu/helm-charts/commit/051c3b21208658915469e276cf6941a147b3a59d))
+
+
+### Bug Fixes
+
+* Allow set externalIPs ([#499](https://github.com/Mailu/helm-charts/issues/499)) ([b30a1a3](https://github.com/Mailu/helm-charts/commit/b30a1a32c43aea7618c471fe3154e28e13026dcd))
+* prevent overzealous whitespace removal ([#509](https://github.com/Mailu/helm-charts/issues/509)) ([5a65b6b](https://github.com/Mailu/helm-charts/commit/5a65b6b2609d3beb3625fd2556f94fc5429ffede)), closes [#508](https://github.com/Mailu/helm-charts/issues/508)
+* type of db ExtraEnvVars values ([#466](https://github.com/Mailu/helm-charts/issues/466)) ([64a068d](https://github.com/Mailu/helm-charts/commit/64a068d5171d69d02d4587fd948cd4d2abca0af9))
+
 ## [2.5.1](https://github.com/Mailu/helm-charts/compare/mailu-2.5.0...mailu-2.5.1) (2025-10-22)
 
 
