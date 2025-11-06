@@ -1,0 +1,35 @@
+---
+{{- if .Values.webdav.enabled -}}
+{{- if and (not .Values.persistence.single_pvc) (not .Values.webdav.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ include "mailu.webdav.claimName" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: webdav
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.webdav.persistence.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.webdav.persistence.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.webdav.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- range .Values.webdav.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.webdav.persistence.size | quote }}
+  {{- if .Values.webdav.persistence.storageClass }}
+  storageClassName: {{ .Values.webdav.persistence.storageClass }}
+  {{- end }}
+{{- end }}
+{{- end }}

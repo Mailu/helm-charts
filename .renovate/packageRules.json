@@ -1,0 +1,9 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "packageRules": [
+        {
+            "matchPackageNames": ["Mailu/mailu"],
+            "versioning": "regex:^(?<major>\\d+)\\.(0)?(?<minor>\\d+)\\.(0)?(?<patch>\\d+)?$"
+        }
+    ]
+}

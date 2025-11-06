@@ -33,6 +33,7 @@ MAPPING = {
     "DB_PW": (False, "Managed by Helm chart"),
     "DB_HOST": (False, "Managed by Helm chart"),
     "DB_NAME": (False, "Managed by Helm chart"),
+    "DB_APPENDIX": (False, "Managed by Helm chart"),
     "SQLITE_DATABASE_FILE": ("", ""),
     "SQLALCHEMY_DATABASE_URI": ("", ""),
     "SQLALCHEMY_TRACK_MODIFICATIONS": ("", ""),
@@ -188,7 +189,7 @@ class EnvVarChecker:
 
     def import_helm_values(self):
         """Import the Helm values.yaml file"""
-        values_file = os.path.join(self.base_path, "..", "mailu", "values.yaml")
+        values_file = os.path.join(self.base_path, "..", "charts", "mailu", "values.yaml")
         with open(values_file, "r", encoding="utf-8") as file:
             self.helm_values = yaml.safe_load(file)
 

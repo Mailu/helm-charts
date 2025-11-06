@@ -1,3 +1,5 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: "Close stale issues and PR"
 on:
   schedule:
@@ -8,12 +10,13 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v8
+      - uses: actions/stale@5f858e3efba33a5ca4407a664cc011ad407f2008 # v10
         with:
-          stale-issue-message: "This issue is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 5 days."
-          stale-pr-message: "This PR is stale because it has been open 45 days with no activity. Remove stale label or comment or this will be closed in 10 days."
-          close-issue-message: "This issue was closed because it has been stalled for 5 days with no activity."
+          stale-issue-message: "This issue is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 14 days."
+          stale-pr-message: "This PR is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 14 days."
+          close-issue-message: "This issue was closed because it has been stale for 14 days with no activity."
+          close-pr-message: "This PR was closed because it has been stale for 14 days with no further activity."
           days-before-stale: 30
-          days-before-close: 5
-          days-before-pr-close: -1
+          days-before-close: 14
           start-date: '2023-08-14T00:00:00Z'
+          any-of-labels: 'pending answer,needs testing'

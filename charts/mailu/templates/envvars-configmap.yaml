@@ -1,0 +1,289 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  ADMIN: {{ .Values.admin.enabled | quote }}
+  {{- with .Values.rspamd.antivirusAction }}
+  ANTIVIRUS_ACTION: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.exemptionLength }}
+  AUTH_RATELIMIT_EXEMPTION_LENGTH: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.exemption }}
+  AUTH_RATELIMIT_EXEMPTION: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.ipv4Mask }}
+  AUTH_RATELIMIT_IP_V4_MASK: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.ipv6Mask }}
+  AUTH_RATELIMIT_IP_V6_MASK: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.ip }}
+  AUTH_RATELIMIT_IP: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.authRatelimit.user }}
+  AUTH_RATELIMIT_USER: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.authRequireTokens }}
+  AUTH_REQUIRE_TOKENS: {{ . | quote }}
+  {{- end }}
+  BABEL_DEFAULT_LOCALE: "en"
+  BABEL_DEFAULT_TIMEZONE: "UTC"
+  BOOTSTRAP_SERVE_LOCAL: "true"
+  {{- with .Values.dovecot.compressionLevel }}
+  COMPRESSION_LEVEL: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.dovecot.compression }}
+  COMPRESSION: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.credentialRounds }}
+  CREDENTIAL_ROUNDS: {{ . | quote }}
+  {{- end }}
+  DB_FLAVOR: {{ include "mailu.database.type" . }}
+  DB_HOST: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
+  DB_NAME: {{ include "mailu.database.name" . }}
+  # DB_PW => via secret
+  DB_USER: {{ include "mailu.database.username" . }}
+  DEBUG_ASSETS: ""
+  DEBUG: "false"
+  DEBUG_PROFILER: "false"
+  DEBUG_TB_INTERCEPT_REDIRECTS: "false"
+  DEFAULT_QUOTA: "1000000000"
+  DEFAULT_SPAM_THRESHOLD: "80"
+  {{- with .Values.tls.deferOnError }}
+  DEFER_ON_TLS_ERROR: {{ . | quote }}
+  {{- end }}
+  DISABLE_STATISTICS: "false"
+  DKIM_PATH: "/dkim/{domain}.{selector}.key"
+  DKIM_SELECTOR: "dkim"
+  {{- with .Values.dmarc.rua }}
+  DMARC_RUA: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.dmarc.ruf }}
+  DMARC_RUF: {{ . | quote }}
+  {{- end }}
+  DOMAIN_REGISTRATION: "false"
+  DOMAIN: {{ .Values.domain | quote }}
+  {{- with .Values.fetchmail.delay }}
+  FETCHMAIL_DELAY: {{ . | quote }}
+  {{- end }}
+  FETCHMAIL_ENABLED: {{ .Values.fetchmail.enabled | quote }}
+  HOSTNAMES: {{ join "," .Values.hostnames }}
+  {{- with .Values.tls.inboundEnforce }}
+  INBOUND_TLS_ENFORCE: {{ . | quote }}
+  {{- end }}
+  INSTANCE_ID_PATH: "/data/instance"
+  {{- with .Values.ingress.enabled }}
+  KUBERNETES_INGRESS: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.letsencryptShortchain }}
+  LETSENCRYPT_SHORTCHAIN: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.logLevel }}
+  LOG_LEVEL: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.customization.logoBackground }}
+  LOGO_BACKGROUND: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.customization.logoUrl }}
+  LOGO_URL: {{ . | quote }}
+  {{- end }}
+  MAILU_HELM_CHART: "true"
+  # Temporary workaround for https://github.com/Mailu/helm-charts/issues/309 until MAILU_HELM_CHART is taken into consideration in Mailu
+  I_KNOW_MY_SETUP_DOESNT_FIT_REQUIREMENTS_AND_WONT_FILE_ISSUES_WITHOUT_PATCHES: "true"
+  MEMORY_SESSIONS: "false"
+  {{- with .Values.limits.messageRatelimit.exemption }}
+  MESSAGE_RATELIMIT_EXEMPTION: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.limits.messageRatelimit.value }}
+  MESSAGE_RATELIMIT: {{ . | quote }}
+  {{- end }}
+  MESSAGE_SIZE_LIMIT: "{{ mul .Values.limits.messageSizeLimitInMegabytes (mul 1024 1024) }}"
+  {{- with .Values.tls.outboundLevel }}
+  OUTBOUND_TLS_LEVEL: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.permanentSessionLifetime }}
+  PERMANENT_SESSION_LIFETIME: {{ . | int64 | quote }}
+  {{- end }}
+  PORTS: {{ include "mailu.enabledPorts" . }}
+  {{- with .Values.postmaster }}
+  POSTMASTER: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.proxyAuth.create }}
+  PROXY_AUTH_CREATE: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.proxyAuth.header }}
+  PROXY_AUTH_HEADER: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.proxyAuth.whitelist }}
+  PROXY_AUTH_WHITELIST: {{ . | quote }}
+  {{- end }}
+  RATELIMIT_STORAGE_URL: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.rateLimit" .) }}
+  {{- with .Values.ingress.realIpFrom }}
+  REAL_IP_FROM: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.ingress.realIpHeader }}
+  REAL_IP_HEADER: {{ . | quote }}
+  {{- end }}
+  RECAPTCHA_PRIVATE_KEY: ""
+  RECAPTCHA_PUBLIC_KEY: ""
+  {{- with .Values.recipientDelimiter }}
+  RECIPIENT_DELIMITER: {{ . | quote }}
+  {{- end }}
+  REJECT_UNLISTED_RECIPIENT: "yes"
+  {{- with .Values.externalRelay.host }}
+  RELAYHOST: {{ . | quote }}
+  {{- end }}
+  {{- if .Values.externalRelay.networks }}
+  RELAYNETS: {{ (join "," .Values.externalRelay.networks) | quote }}
+  {{- end }}
+  ROUNDCUBE_DB_FLAVOR: {{ include "mailu.database.type" . }}
+  # SECRET_KEY => via secret
+  {{- with .Values.sessionCookieSecure }}
+  SESSION_COOKIE_SECURE: {{ . | quote }}
+  {{- end }}
+  # SESSION_KEY_BITS: 128 # TODO: Fix Mailu to parse int when from string
+  {{- with .Values.sessionTimeout }}
+  SESSION_TIMEOUT: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.customization.siteName }}
+  SITENAME: {{ . | quote }}
+  {{- end }}
+  SQLALCHEMY_DATABASE_URI: "sqlite:////data/main.db"
+  SQLALCHEMY_TRACK_MODIFICATIONS: "false"
+  SQLITE_DATABASE_FILE: "data/main.db"
+  STATS_ENDPOINT: "19.{}.stats.mailu.io"
+  {{- with .Values.subnet6 }}
+  SUBNET6: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.subnet }}
+  SUBNET: {{ . | quote }}
+  {{- end }}
+  TEMPLATES_AUTO_RELOAD: "true"
+  TLS_FLAVOR: {{ include "mailu.tlsFlavor" . }}
+  TLS_PERMISSIVE: "true"
+  {{- with .Values.timezone }}
+  TZ: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.admin.uri }}
+  WEB_ADMIN: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.customization.website }}
+  WEBSITE: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.welcomeMessage.body }}
+  WELCOME_BODY: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.welcomeMessage.subject }}
+  WELCOME_SUBJECT: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.welcomeMessage.enabled }}
+  WELCOME: {{ . | quote}}
+  {{- end }}
+  {{- if .Values.wildcardSenders }}
+  WILDCARD_SENDERS: {{ .Values.wildcardSenders | join "," | quote }}
+  {{- end }}
+
+  # Addresses
+  ADMIN_ADDRESS: {{ include "mailu.admin.serviceFqdn" . }}
+  ANTISPAM_ADDRESS: {{ include "mailu.rspamd.serviceFqdn" . }}
+  FRONT_ADDRESS: {{ include "mailu.front.serviceFqdn" . }}
+  IMAP_ADDRESS: {{ include "mailu.dovecot.serviceFqdn" . }}
+  REDIS_ADDRESS: {{ include "mailu.redis.serviceFqdn" . }}
+  SMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
+
+{{- if .Values.front.externalService.enabled }}
+  PROXY_PROTOCOL: {{ include "mailu.proxyProtocolPorts" . | quote }}
+{{- end }}
+
+{{- if .Values.externalDatabase.enabled }}
+  DB_APPENDIX: {{ .Values.externalDatabase.appendix | quote }}
+{{- end }}
+
+{{- if not (eq (include "mailu.database.type" .) "sqlite") }}
+{{- if .Values.webmail.enabled }}
+  ROUNDCUBE_DB_USER: {{ include "mailu.database.roundcube.username" . | quote }}
+  ROUNDCUBE_DB_NAME: {{ include "mailu.database.roundcube.name" . | quote }}
+  ROUNDCUBE_DB_HOST: {{ printf "%s:%s" (include "mailu.database.host" .) (include "mailu.database.port" .) | quote}}
+{{- end }}
+{{- end }}
+
+{{- if .Values.initialAccount.enabled }}
+  {{- with .Values.initialAccount.mode }}
+  INITIAL_ADMIN_MODE: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.initialAccount.username }}
+  INITIAL_ADMIN_ACCOUNT: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.initialAccount.domain }}
+  INITIAL_ADMIN_DOMAIN: {{ . | quote }}
+  {{- end }}
+{{- end }}
+
+{{- if .Values.webmail.enabled }}
+  {{- with .Values.webmail.type }}
+  WEBMAIL: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.webmail.uri }}
+  WEB_WEBMAIL: {{ . | quote }}
+  WEBROOT_REDIRECT: {{ . | quote }}
+  {{- end }}
+  WEBMAIL_ADDRESS: {{ include "mailu.webmail.serviceFqdn" . }}
+  {{- if .Values.webmail.roundcubePlugins }}
+  ROUNDCUBE_PLUGINS: {{ (join "," .Values.webmail.roundcubePlugins) | quote }}
+  {{- end }}
+{{- else }}
+  WEBMAIL: none
+  WEBMAIL_ADDRESS: localhost
+  WEB_WEBMAIL: /
+  WEBROOT_REDIRECT: /admin/
+{{- end }}
+
+{{- if .Values.webdav.enabled }}
+  WEBDAV: radicale
+  WEBDAV_ADDRESS: {{ include "mailu.webdav.serviceFqdn" . }}
+{{- else }}
+  WEBDAV: none
+  WEBDAV_ADDRESS: localhost
+{{- end }}
+
+{{- if .Values.clamav.enabled }}
+  ANTIVIRUS: clamav
+  ANTIVIRUS_ADDRESS: {{ include "mailu.clamav.serviceFqdn" . }}
+{{- else }}
+  ANTIVIRUS: none
+  ANTIVIRUS_ADDRESS: localhost
+{{- end }}
+
+{{- if .Values.oletools.enabled }}
+  OLETOOLS_ADDRESS: {{ include "mailu.oletools.serviceFqdn" . }}
+  SCAN_MACROS: "true"
+{{- else }}
+  SCAN_MACROS: "false"
+{{- end }}
+
+{{- if .Values.tika.enabled }}
+  FULL_TEXT_SEARCH: {{ include "mailu.fullTextSearch" . }}
+  FULL_TEXT_SEARCH_ATTACHMENTS: "true"
+  FTS_ATTACHMENTS_ADDRESS: {{ include "mailu.tika.serviceFqdn" . }}
+{{- else }}
+  FULL_TEXT_SEARCH_ATTACHMENTS: "false"
+{{- end}}
+
+{{- if .Values.api.enabled }}
+  API: "true"
+  {{- with .Values.api.webPath }}
+  WEB_API: {{ . | quote }}
+  {{- end }}
+{{- else }}
+  API: "false"
+{{- end }}

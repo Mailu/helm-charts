@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Helm lint and test chart
 
 # Controls when the workflow will run
@@ -7,24 +8,22 @@ on:
     branches:
       - master
     paths:
-      - mailu/**
+      - .github/**
+      - charts/mailu/**
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           fetch-depth: 0
 
       - name: Install Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@1a275c3b69536ee54be43f2070a358922e12c8d4 # v4
         with:
           version: v3.10.0
 
@@ -32,18 +31,17 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-          helm dependency build mailu
+          helm dependency build charts/mailu
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6
         with:
-          python-version: "3.9"
+          python-version: "3.14"
           check-latest: true
 
-      # - name: Run helm lint
-      #   run: helm lint --strict --values mailu/helm-lint-values.yaml mailu
-
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.3.1
+        uses: helm/chart-testing-action@6ec842c01de15ebb84c8627d2744a0c2f2755c9f # v2.8.0
+        with:
+          yamale_version: "6.0.0"
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -58,7 +56,7 @@ jobs:
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
-        uses: helm/kind-action@v1.4.0
+        uses: helm/kind-action@92086f6be054225fa813e0a4b13787fc9088faab # v1.13.0
         with:
           config: kind-cluster.yaml
 
@@ -76,41 +74,33 @@ jobs:
           kubectl -n kube-system rollout restart deployment coredns
           kubectl -n kube-system rollout status deployment coredns --timeout=120s
 
+      - name: Install Prometheus CRDs (required for serviceMonitors)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          kubectl create -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/main/bundle.yaml
+
       - name: Run chart-testing (install)
         id: install
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --debug --config ct.yaml
 
-  update-readme-metadata:
+  check-readme-update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     needs: lint-and-test
     steps:
       - name: Install readme-generator-for-helm
         run: npm install -g @bitnami/readme-generator-for-helm
 
       - name: Checkout mailu/helm-charts
-        uses: actions/checkout@v3
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
-          ref: ${{github.event.pull_request.head.ref}}
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-          path: charts
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Execute readme-generator-for-helm
         run: |
           echo "Updating README.md for mailu chart"
           readme-generator --values "charts/mailu/values.yaml" --readme "charts/mailu/README.md" --schema "/tmp/schema.json"
-
-      - name: Push changes
-        run: |
-          # Push all the changes
-          cd charts
-          git config --global user.email "actions@github.com"
-          git config --global user.name "Github actions"
-          git add -A
-          if ! git diff-index --quiet HEAD; then
-            git commit -am "Update README.md with readme-generator-for-helm" --signoff
-            git push
-          fi
+          git diff --exit-code --name-status charts/mailu/README.md || {
+            echo "README update is missing. This should have been prevented by pre-commit hook."
+            exit 1
+          }
