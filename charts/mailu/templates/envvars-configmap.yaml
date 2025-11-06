@@ -114,7 +114,7 @@ data:
   {{- with .Values.permanentSessionLifetime }}
   PERMANENT_SESSION_LIFETIME: {{ . | int64 | quote }}
   {{- end }}
-  PORTS: {{ include "mailu.enabledPorts" . }}
+  PORTS: {{ include "mailu.enabledPorts" . | quote }}
   {{- with .Values.postmaster }}
   POSTMASTER: {{ . | quote }}
   {{- end }}
