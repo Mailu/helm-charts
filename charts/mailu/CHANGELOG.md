@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/Mailu/helm-charts/compare/mailu-2.6.0...mailu-2.6.1) (2025-11-06)
+
+
+### Bug Fixes
+
+* ensure PORTS value is quoted ([#515](https://github.com/Mailu/helm-charts/issues/515)) ([2d3ce2d](https://github.com/Mailu/helm-charts/commit/2d3ce2d82455bcaaa57dc81c2259a21ec2869a42))
+
 ## [2.6.0](https://github.com/Mailu/helm-charts/compare/mailu-2.5.1...mailu-2.6.0) (2025-11-05)
 
 
