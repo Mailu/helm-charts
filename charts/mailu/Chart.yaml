@@ -30,7 +30,7 @@ dependencies:
     version: 2.31.4
   - condition: redis.enabled
     name: redis
-    version: 22.0.7
+    version: 23.2.12
     repository: https://charts.bitnami.com/bitnami
   - condition: postgresql.enabled
     name: postgresql
