@@ -128,7 +128,7 @@ data:
   PROXY_AUTH_WHITELIST: {{ . | quote }}
   {{- end }}
   RATELIMIT_STORAGE_URL: {{ printf "redis://%s:%s/%s" (include "mailu.redis.serviceFqdn" .) (include "mailu.redis.port" .) (include "mailu.redis.db.rateLimit" .) }}
-  {{- with .Values.ingress.realIpFrom }}
+  {{- with .Values.front.proxyProtocol.realIpFrom }}
   REAL_IP_FROM: {{ . | quote }}
   {{- end }}
   {{- with .Values.ingress.realIpHeader }}
@@ -201,7 +201,7 @@ data:
   REDIS_ADDRESS: {{ include "mailu.redis.serviceFqdn" . }}
   SMTP_ADDRESS: {{ include "mailu.postfix.serviceFqdn" . }}
 
-{{- if .Values.front.externalService.enabled }}
+{{- if .Values.front.proxyProtocol.enabled }}
   PROXY_PROTOCOL: {{ include "mailu.proxyProtocolPorts" . | quote }}
 {{- end }}
 
