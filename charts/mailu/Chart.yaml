@@ -28,10 +28,10 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.31.4
-  - condition: redis.enabled
-    name: redis
-    version: 22.0.7
-    repository: https://charts.bitnami.com/bitnami
+  - condition: valkey.enabled
+    name: valkey
+    version: 0.7.6
+    repository: https://valkey.io/valkey-helm/
   - condition: postgresql.enabled
     name: postgresql
     version: 16.7.27

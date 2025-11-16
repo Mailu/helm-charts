@@ -461,29 +461,20 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `admin.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                            | `[]`                |
 | `admin.extraContainers`                       | Add additional containers to the pod                                                          | `[]`                |
 
-### Redis parameters
+### Valkey parameters
 
-| Name                                       | Description                                                         | Value                          |
-| ------------------------------------------ | ------------------------------------------------------------------- | ------------------------------ |
-| `redis.enabled`                            | Enable redis deployment through the redis subchart                  | `true`                         |
-| `redis.architecture`                       | Redis architecture. Allowed values: `standalone` or `replication`   | `standalone`                   |
-| `redis.image.repository`                   | Redis image repository (using bitnamilegacy for now)                | `bitnamilegacy/redis`          |
-| `redis.auth.enabled`                       | DON'T CHANGE THIS VALUE. Mailu doesn't support Redis authentication | `false`                        |
-| `redis.master.enabled`                     | DON'T CHANGE THIS VALUE. Enable redis master                        | `true`                         |
-| `redis.master.count`                       | Number of redis master replicas                                     | `1`                            |
-| `redis.master.persistence.enabled`         | Enable persistence using Persistent Volume Claims                   | `true`                         |
-| `redis.master.persistence.size`            | Pod pvc size                                                        | `8Gi`                          |
-| `redis.master.persistence.storageClass`    | Pod pvc storage class                                               | `""`                           |
-| `redis.master.persistence.accessModes`     | Pod pvc access modes                                                | `["ReadWriteOnce"]`            |
-| `redis.master.persistence.annotations`     | Pod pvc annotations                                                 | `{}`                           |
-| `redis.master.persistence.existingClaim`   | Pod pvc existing claim; necessary if using single_pvc               | `""`                           |
-| `redis.master.persistence.subPath`         | Subpath in PVC; necessary if using single_pvc (set it to `redis`)   | `""`                           |
-| `redis.replica.count`                      | Number of redis replicas (only if `redis.architecture=replication`) | `0`                            |
-| `redis.sentinel.image.repository`          | Redis Sentinel image (using bitnamilegacy for now)                  | `bitnamilegacy/redis-sentinel` |
-| `redis.metrics.image.repository`           | Redis metrics exporter image (using bitnamilegacy for now)          | `bitnamilegacy/redis-exporter` |
-| `redis.volumePermissions.image.repository` | Redis volume permissions image (using bitnamilegacy for now)        | `bitnamilegacy/os-shell`       |
-| `redis.kubectl.image.repository`           | Redis kubectl image (using bitnamilegacy for now)                   | `bitnamilegacy/kubectl`        |
-| `redis.sysctl.image.repository`            | Redis sysctl image (using bitnamilegacy for now)                    | `bitnamilegacy/os-shell`       |
+| Name                                           | Description                                                                | Value               |
+| ---------------------------------------------- | -------------------------------------------------------------------------- | ------------------- |
+| `valkey.enabled`                               | Enable valkey deployment through the valkey subchart                       | `true`              |
+| `valkey.dataStorage.enabled`                   | Enable persistence using Persistent Volume Claims                          | `true`              |
+| `valkey.dataStorage.requestedSize`             | Pod pvc size                                                               | `8Gi`               |
+| `valkey.dataStorage.className`                 | Pod pvc storage class                                                      | `""`                |
+| `valkey.dataStorage.accessModes`               | Pod pvc access modes                                                       | `["ReadWriteOnce"]` |
+| `valkey.dataStorage.persistentVolumeClaimName` | Pod pvc existing claim; necessary if using single_pvc                      | `""`                |
+| `valkey.dataStorage.subPath`                   | Subpath in PVC; necessary if using single_pvc (set it to `valkey`)         | `""`                |
+| `valkey.dataStorage.annotations`               | Pod pvc annotations                                                        | `{}`                |
+| `valkey.dataStorage.labels`                    | Pod pvc labels                                                             | `{}`                |
+| `valkey.auth.enabled`                          | DON'T CHANGE THIS VALUE. Mailu doesn't support Redis/Valkey authentication | `false`             |
 
 ### Postfix parameters
 
