@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mailu.name" -}}
-{{- include "common.names.name" . -}}
+{{- include "mailu.names.name" . -}}
 {{- end -}}
 
 {{/*
@@ -12,7 +12,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "mailu.fullname" -}}
-{{- include "common.names.fullname" . -}}
+{{- include "mailu.names.fullname" . -}}
 {{- end -}}
 
 {{/*
