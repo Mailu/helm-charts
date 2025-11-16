@@ -175,6 +175,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
 {{- if .Values.ingress.enabled -}}
     {{- $enabledPorts = append $enabledPorts "80" -}}
     {{- $enabledPorts = append $enabledPorts "443" -}}
+    {{- $enabledPorts = append $enabledPorts "4190" -}}
 {{- end -}}
 
 {{- if .Values.front.hostPort.enabled -}}
