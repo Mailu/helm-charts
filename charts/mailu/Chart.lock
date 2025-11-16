@@ -1,7 +1,4 @@
 dependencies:
-- name: common
-  repository: https://charts.bitnami.com/bitnami
-  version: 2.31.4
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 22.0.7
