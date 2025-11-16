@@ -1,6 +1,6 @@
-#global:
-#  imagePullSecrets:
-#    - name: image-secret-global
+# global:
+#   imagePullSecrets:
+#     - name: image-secret-global
 
 hostnames:
   - mailu.cluster.local
