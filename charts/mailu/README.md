@@ -297,16 +297,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `ingress.secrets`                   | Custom TLS certificates as secrets                                                                                               | `[]`                     |
 | `ingress.extraRules`                | Additional rules to be covered with this ingress record                                                                          | `[]`                     |
 | `ingress.realIpHeader`              | Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod                                                       | `X-Forwarded-For`        |
-| `ingress.realIpFrom`                | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod                                                         | `""`                     |
 | `ingress.tlsFlavorOverride`         | Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod                                                      | `""`                     |
-| `ingress.proxyProtocol.pop3`        | Enable PROXY protocol for POP3 (110/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.pop3s`       | Enable PROXY protocol for POP3S (995/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.imap`        | Enable PROXY protocol for IMAP (143/tcp)                                                                                         | `false`                  |
-| `ingress.proxyProtocol.imaps`       | Enable PROXY protocol for IMAPS (993/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.smtp`        | Enable PROXY protocol for SMTP (25/tcp)                                                                                          | `false`                  |
-| `ingress.proxyProtocol.smtps`       | Enable PROXY protocol for SMTPS (465/tcp)                                                                                        | `false`                  |
-| `ingress.proxyProtocol.submission`  | Enable PROXY protocol for Submission (587/tcp)                                                                                   | `false`                  |
-| `ingress.proxyProtocol.manageSieve` | Enable PROXY protocol for ManageSieve (4190/tcp)                                                                                 | `false`                  |
 
 ### Proxy auth configuration
 
@@ -348,6 +339,16 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `front.externalService.nodePorts.smtps`       | NodePort to use for SMTP (TLS) (defaults to 465/tcp)                                  | `465`           |
 | `front.externalService.nodePorts.submission`  | NodePort to use for Submission (defaults to 587/tcp)                                  | `587`           |
 | `front.externalService.nodePorts.manageSieve` | NodePort to use for ManageSieve (defaults to 4190/tcp)                                | `4190`          |
+| `proxyProtocol.enabled`                       | Enable PROXY protocol support in the `front` pod                                      | `false`         |
+| `proxyProtocol.realIpFrom`                    | Sets the value of `REAL_IP_FROM` environment variable in the `front` pod              | `""`            |
+| `proxyProtocol.ports.pop3`                    | Enable PROXY protocol for POP3 (110/tcp)                                              | `false`         |
+| `proxyProtocol.ports.pop3s`                   | Enable PROXY protocol for POP3S (995/tcp)                                             | `false`         |
+| `proxyProtocol.ports.imap`                    | Enable PROXY protocol for IMAP (143/tcp)                                              | `false`         |
+| `proxyProtocol.ports.imaps`                   | Enable PROXY protocol for IMAPS (993/tcp)                                             | `false`         |
+| `proxyProtocol.ports.smtp`                    | Enable PROXY protocol for SMTP (25/tcp)                                               | `false`         |
+| `proxyProtocol.ports.smtps`                   | Enable PROXY protocol for SMTPS (465/tcp)                                             | `false`         |
+| `proxyProtocol.ports.submission`              | Enable PROXY protocol for Submission (587/tcp)                                        | `false`         |
+| `proxyProtocol.ports.manageSieve`             | Enable PROXY protocol for ManageSieve (4190/tcp)                                      | `false`         |
 | `front.kind`                                  | Kind of resource to create for the front (`Deployment` or `DaemonSet`)                | `Deployment`    |
 | `front.replicaCount`                          | Number of front replicas to deploy (only for `Deployment` kind)                       | `1`             |
 | `front.resources.limits`                      | The resources limits for the container                                                | `{}`            |

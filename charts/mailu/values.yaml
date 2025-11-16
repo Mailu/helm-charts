@@ -756,6 +756,9 @@ front:
   ## This will make Mailu aware of the original client IP address.
   ## ref: https://mailu.io/master/configuration.html#proxy-protocol
   proxyProtocol:
+    ## @param front.proxyProtocol.enabled Enable PROXY protocol support in the `front` pod
+    enabled: false
+
     ## @param front.proxyProtocol.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
     ## This should be set to the CIDR(s) of the load balancer(s) in front of Mailu
     ## or pod that forwards traffic to Mailu supporting PROXY protocol.
