@@ -1,17 +1,17 @@
 ---
 {{- if .Values.oletools.enabled }}
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ printf "%s-oletools" (include "mailu.fullname" .) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: oletools
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   replicas: 1
@@ -20,31 +20,31 @@ spec:
   {{- end }}
   revisionHistoryLimit: {{ .Values.oletools.revisionHistoryLimit }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "mailu.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: oletools
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "mailu.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: oletools
         {{- if .Values.oletools.podLabels }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.oletools.podLabels "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.podLabels "context" $) | nindent 8 }}
         {{- end }}
       {{- if .Values.oletools.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.oletools.podAnnotations "context" $) | nindent 8 }}
+      annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.oletools.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
-      {{- include "common.images.pullSecrets" (dict "images" (list .Values.oletools.image) "global" .Values.global) | nindent 6 }}
+      {{- include "mailu.images.renderPullSecrets" (dict "images" (list .Values.oletools.image) "context" $) | nindent 6 }}
       {{- if .Values.oletools.hostAliases }}
-      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.hostAliases "context" $) | nindent 8 }}
+      hostAliases: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.hostAliases "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.affinity "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.tolerations "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.priorityClassName }}
       priorityClassName: {{ .Values.oletools.priorityClassName | quote }}
@@ -53,13 +53,13 @@ spec:
       schedulerName: {{ .Values.oletools.schedulerName | quote }}
       {{- end }}
       {{- if .Values.oletools.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.topologySpreadConstraints "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.oletools.terminationGracePeriodSeconds }}
       {{- end }}
       {{- if .Values.oletools.initContainers }}
-      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.oletools.initContainers "context" $) | nindent 8 }}
+      initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.initContainers "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.oletools.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.oletools.podSecurityContext "enabled" | toYaml | nindent 8 }}
@@ -73,24 +73,24 @@ spec:
           {{- end }}
           {{- if .Values.oletools.extraVolumeMounts }}
           volumeMounts:
-            {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.extraVolumeMounts "context" $) | nindent 12 }}
           {{- end }}
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.oletools.logLevel }}
             {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.oletools.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           {{- if or .Values.oletools.extraEnvVarsCM .Values.oletools.extraEnvVarsSecret }}
           envFrom:
             {{- if .Values.oletools.extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsCM "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsCM "context" $) }}
             {{- end }}
             {{- if .Values.oletools.extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsSecret "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.oletools.extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- end }}
           ports:
@@ -101,7 +101,7 @@ spec:
           resources: {{- toYaml .Values.oletools.resources | nindent 12 }}
           {{- end }}
           {{- if .Values.oletools.startupProbe.enabled }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.oletools.startupProbe "enabled") "context" $) | nindent 12 }}
+          startupProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.oletools.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -109,7 +109,7 @@ spec:
                 - 'echo PING|nc -q1 localhost 11343|grep PONG'
           {{- end }}
           {{- if .Values.oletools.livenessProbe.enabled }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.oletools.livenessProbe "enabled") "context" $) | nindent 12 }}
+          livenessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.oletools.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -117,7 +117,7 @@ spec:
                 - 'echo PING|nc -q1 localhost 11343|grep PONG'
           {{- end }}
           {{- if .Values.oletools.readinessProbe.enabled }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.oletools.readinessProbe "enabled") "context" $) | nindent 12 }}
+          readinessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.oletools.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -129,6 +129,6 @@ spec:
       {{- end }}
       {{- if .Values.oletools.extraVolumes }}
       volumes:
-        {{- include "common.tplvalues.render" (dict "value" .Values.oletools.extraVolumes "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.oletools.extraVolumes "context" $) | nindent 8 }}
       {{- end }}
 {{- end }}

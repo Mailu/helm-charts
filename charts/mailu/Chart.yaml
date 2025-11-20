@@ -1,7 +1,7 @@
 apiVersion: v2
 # renovate: datasource=github-releases depName=Mailu/mailu
 appVersion: 2024.06.45
-version: 2.6.1
+version: 2.6.2
 name: mailu
 description: This chart installs the Mailu mail system on Kubernetes
 home: https://mailu.io
@@ -23,11 +23,6 @@ maintainers:
   - name: Mailu
     url: https://mailu.io
 dependencies:
-  - name: common
-    repository: https://charts.bitnami.com/bitnami
-    tags:
-      - bitnami-common
-    version: 2.31.4
   - condition: redis.enabled
     name: redis
     version: 22.0.7

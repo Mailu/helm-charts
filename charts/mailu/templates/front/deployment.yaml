@@ -1,16 +1,16 @@
 ---
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+apiVersion: apps/v1
 kind: {{ .Values.front.kind }}
 metadata:
   name: {{ printf "%s-front" (include "mailu.fullname" .) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: front
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   {{- if eq .Values.front.kind "Deployment" }}
@@ -24,31 +24,31 @@ spec:
   {{- end }}
   revisionHistoryLimit: {{ .Values.front.revisionHistoryLimit }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "mailu.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: front
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "mailu.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: front
         {{- if .Values.front.podLabels }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.front.podLabels "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.front.podLabels "context" $) | nindent 8 }}
         {{- end }}
       {{- if .Values.front.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.front.podAnnotations "context" $) | nindent 8 }}
+      annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.front.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
-      {{- include "common.images.pullSecrets" (dict "images" (list .Values.front.image) "global" .Values.global) | nindent 6 }}
+      {{- include "mailu.images.renderPullSecrets" (dict "images" (list .Values.front.image) "context" $) | nindent 6 }}
       {{- if .Values.front.hostAliases }}
-      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.front.hostAliases "context" $) | nindent 8 }}
+      hostAliases: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.hostAliases "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.front.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.front.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.affinity "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.front.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.tolerations "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.priorityClassName }}
       priorityClassName: {{ .Values.front.priorityClassName | quote }}
@@ -57,13 +57,13 @@ spec:
       schedulerName: {{ .Values.front.schedulerName | quote }}
       {{- end }}
       {{- if .Values.front.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.front.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.topologySpreadConstraints "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.front.terminationGracePeriodSeconds }}
       {{- end }}
       {{- if .Values.front.initContainers }}
-      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.front.initContainers "context" $) | nindent 8 }}
+      initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.front.initContainers "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.front.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.front.podSecurityContext "enabled" | toYaml | nindent 8 }}
@@ -83,25 +83,25 @@ spec:
               mountPath: /overrides
             {{- end }}
             {{- if .Values.front.extraVolumeMounts }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.front.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.front.logLevel }}
             {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.front.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.front.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.front.extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVarsCM "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.front.extraEnvVarsCM "context" $) }}
             {{- end }}
             {{- if .Values.front.extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.front.extraEnvVarsSecret "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.front.extraEnvVarsSecret "context" $) }}
             {{- end }}
           ports:
             - name: pop3
@@ -170,7 +170,7 @@ spec:
           resources: {{- toYaml .Values.front.resources | nindent 12 }}
           {{- end }}
           {{- if .Values.front.startupProbe.enabled }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.startupProbe "enabled") "context" $) | nindent 12 }}
+          startupProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.front.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -178,7 +178,7 @@ spec:
                 - 'curl -skfLo /dev/null http://127.0.0.1:10204/health && kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.front.livenessProbe.enabled }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.livenessProbe "enabled") "context" $) | nindent 12 }}
+          livenessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.front.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -186,7 +186,7 @@ spec:
                 - 'curl -skfLo /dev/null http://127.0.0.1:10204/health && kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.front.readinessProbe.enabled }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.front.readinessProbe "enabled") "context" $) | nindent 12 }}
+          readinessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.front.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -211,5 +211,5 @@ spec:
             name: {{ printf "%s-front-override" (include "mailu.fullname" .) }}
         {{- end }}
         {{- if .Values.front.extraVolumes }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.front.extraVolumes "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.front.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
