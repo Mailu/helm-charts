@@ -30,6 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add valkey https://valkey.io/valkey-helm
           helm repo update
           helm dependency build charts/mailu
 
