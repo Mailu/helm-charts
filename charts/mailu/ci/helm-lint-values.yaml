@@ -1,3 +1,7 @@
+# global:
+#   imagePullSecrets:
+#     - name: image-secret-global
+
 hostnames:
   - mailu.cluster.local
 
@@ -207,8 +211,9 @@ rspamd:
 
 clamav:
   logLevel: INFO
-  # image:
-  #   tag: master
+#  image:
+#    pullSecrets:
+#      - name: image-secret
   resources:
     requests:
       memory: 1Gi

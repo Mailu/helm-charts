@@ -1,17 +1,17 @@
 ---
 {{- if .Values.dovecot.enabled }}
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ printf "%s-dovecot" (include "mailu.fullname" .) }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: dovecot
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   replicas: 1
@@ -20,31 +20,31 @@ spec:
   {{- end }}
   revisionHistoryLimit: {{ .Values.dovecot.revisionHistoryLimit }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "mailu.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: dovecot
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "mailu.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: dovecot
         {{- if .Values.dovecot.podLabels }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.podLabels "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.podLabels "context" $) | nindent 8 }}
         {{- end }}
       {{- if .Values.dovecot.podAnnotations }}
-      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.dovecot.podAnnotations "context" $) | nindent 8 }}
+      annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.dovecot.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec:
-      {{- include "common.images.pullSecrets" (dict "images" (list .Values.dovecot.image) "global" .Values.global) | nindent 6 }}
+      {{- include "mailu.images.renderPullSecrets" (dict "images" (list .Values.dovecot.image) "context" $) | nindent 6 }}
       {{- if .Values.dovecot.hostAliases }}
-      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.hostAliases "context" $) | nindent 8 }}
+      hostAliases: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.hostAliases "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.nodeSelector }}
-      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.nodeSelector "context" $) | nindent 8 }}
+      nodeSelector: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.affinity }}
-      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.affinity "context" $) | nindent 8 }}
+      affinity: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.affinity "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.tolerations }}
-      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.tolerations "context" $) | nindent 8 }}
+      tolerations: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.tolerations "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.priorityClassName }}
       priorityClassName: {{ .Values.dovecot.priorityClassName | quote }}
@@ -53,13 +53,13 @@ spec:
       schedulerName: {{ .Values.dovecot.schedulerName | quote }}
       {{- end }}
       {{- if .Values.dovecot.topologySpreadConstraints }}
-      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.topologySpreadConstraints "context" $) | nindent 8 }}
+      topologySpreadConstraints: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.topologySpreadConstraints "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.dovecot.terminationGracePeriodSeconds }}
       {{- end }}
       {{- if .Values.dovecot.initContainers }}
-      initContainers: {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.initContainers "context" $) | nindent 8 }}
+      initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.initContainers "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.dovecot.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.dovecot.podSecurityContext "enabled" | toYaml | nindent 8 }}
@@ -83,25 +83,25 @@ spec:
               mountPath: /overrides
             {{- end }}
             {{- if .Values.dovecot.extraVolumeMounts }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
           env:
             - name: LOG_LEVEL
               value: {{ default .Values.logLevel .Values.dovecot.logLevel }}
             {{- tpl (include "mailu.envvars.secrets" .) $ | nindent 12 }}
             {{- if .Values.dovecot.extraEnvVars }}
-            {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVars "context" $) | nindent 12 }}
+            {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-envvars" (include "mailu.fullname" .) }}
             {{- if .Values.dovecot.extraEnvVarsCM }}
             - configMapRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVarsCM "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVarsCM "context" $) }}
             {{- end }}
             {{- if .Values.dovecot.extraEnvVarsSecret }}
             - secretRef:
-                name: {{ include "common.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVarsSecret "context" $) }}
+                name: {{ include "mailu.tplvalues.render" (dict "value" .Values.dovecot.extraEnvVarsSecret "context" $) }}
             {{- end }}
           ports:
             - name: auth
@@ -128,7 +128,7 @@ spec:
           resources: {{- toYaml .Values.dovecot.resources | nindent 12 }}
           {{- end }}
           {{- if .Values.dovecot.startupProbe.enabled }}
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.startupProbe "enabled") "context" $) | nindent 12 }}
+          startupProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.dovecot.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -136,7 +136,7 @@ spec:
                 - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.dovecot.livenessProbe.enabled }}
-          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.livenessProbe "enabled") "context" $) | nindent 12 }}
+          livenessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.dovecot.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -144,7 +144,7 @@ spec:
                 - 'kill -0 `cat /run/dovecot/master.pid`'
           {{- end }}
           {{- if .Values.dovecot.readinessProbe.enabled }}
-          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.dovecot.readinessProbe "enabled") "context" $) | nindent 12 }}
+          readinessProbe: {{- include "mailu.tplvalues.render" (dict "value" (omit .Values.dovecot.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
                 - sh
@@ -164,6 +164,6 @@ spec:
             name: {{ printf "%s-dovecot-override" (include "mailu.fullname" .) }}
         {{- end }}
         {{- if .Values.dovecot.extraVolumes }}
-        {{- include "common.tplvalues.render" (dict "value" .Values.dovecot.extraVolumes "context" $) | nindent 8 }}
+        {{- include "mailu.tplvalues.render" (dict "value" .Values.dovecot.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
 {{- end }}

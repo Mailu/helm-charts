@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "mailu.name" -}}
-{{- include "common.names.name" . -}}
+{{- include "mailu.names.name" . -}}
 {{- end -}}
 
 {{/*
@@ -12,7 +12,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "mailu.fullname" -}}
-{{- include "common.names.fullname" . -}}
+{{- include "mailu.names.fullname" . -}}
 {{- end -}}
 
 {{/*
@@ -216,4 +216,93 @@ mailu: tika
 mailu: dovecot
     You need to set at least one override for Dovecot's service monitor
 {{- end -}}
+{{- end -}}
+
+{{/*
+Gets a value from .Values given
+Usage:
+{{ include "mailu.utils.getValueFromKey" (dict "key" "path.to.key" "context" $) }}
+*/}}
+{{- define "mailu.utils.getValueFromKey" -}}
+{{- $splitKey := splitList "." .key -}}
+{{- $value := "" -}}
+{{- $latestObj := $.context.Values -}}
+{{- range $splitKey -}}
+  {{- if not $latestObj -}}
+    {{- printf "please review the entire path of '%s' exists in values" $.key | fail -}}
+  {{- end -}}
+  {{- $value = ( index $latestObj . ) -}}
+  {{- $latestObj = $value -}}
+{{- end -}}
+{{- printf "%v" (default "" $value) -}}
+{{- end -}}
+
+{{/*
+Returns first .Values key with a defined value or first of the list if all non-defined
+Usage:
+{{ include "mailu.utils.getKeyFromList" (dict "keys" (list "path.to.key1" "path.to.key2") "context" $) }}
+*/}}
+{{- define "mailu.utils.getKeyFromList" -}}
+{{- $key := first .keys -}}
+{{- $reverseKeys := reverse .keys }}
+{{- range $reverseKeys }}
+  {{- $value := include "mailu.utils.getValueFromKey" (dict "key" . "context" $.context ) }}
+  {{- if $value -}}
+    {{- $key = . }}
+  {{- end -}}
+{{- end -}}
+{{- printf "%s" $key -}}
+{{- end -}}
+
+{{/*
+Build env var name given a field
+Usage:
+{{ include "mailu.utils.fieldToEnvVar" dict "field" "my-password" }}
+*/}}
+{{- define "mailu.utils.fieldToEnvVar" -}}
+  {{- $fieldNameSplit := splitList "-" .field -}}
+  {{- $upperCaseFieldNameSplit := list -}}
+
+  {{- range $fieldNameSplit -}}
+    {{- $upperCaseFieldNameSplit = append $upperCaseFieldNameSplit ( upper . ) -}}
+  {{- end -}}
+
+  {{ join "_" $upperCaseFieldNameSplit }}
+{{- end -}}
+
+{{/*
+Print instructions to get a secret value.
+Usage:
+{{ include "mailu.utils.secret.getvalue" (dict "secret" "secret-name" "field" "secret-value-field" "context" $) }}
+*/}}
+{{- define "mailu.utils.secret.getvalue" -}}
+{{- $varname := include "mailu.utils.fieldToEnvVar" . -}}
+export {{ $varname }}=$(kubectl get secret --namespace {{ include "mailu.names.namespace" .context | quote }} {{ .secret }} -o jsonpath="{.data.{{ .field }}}" | base64 -d)
+{{- end -}}
+
+{{/*
+Validate a value must not be empty.
+
+Usage:
+{{ include "mailu.validations.value.empty" (dict "valueKey" "mariadb.password" "secret" "secretName" "field" "my-password" "subchart" "subchart" "context" $) }}
+
+Validate value params:
+  - valueKey - String - Required. The path to the validating value in the values.yaml, e.g: "mysql.password"
+  - secret - String - Optional. Name of the secret where the validating value is generated/stored, e.g: "mysql-passwords-secret"
+  - field - String - Optional. Name of the field in the secret data, e.g: "mysql-password"
+  - subchart - String - Optional - Name of the subchart that the validated password is part of.
+*/}}
+{{- define "mailu.validations.values.single.empty" -}}
+  {{- $value := include "mailu.utils.getValueFromKey" (dict "key" .valueKey "context" .context) }}
+  {{- $subchart := ternary "" (printf "%s." .subchart) (empty .subchart) }}
+
+  {{- if not $value -}}
+    {{- $varname := "my-value" -}}
+    {{- $getCurrentValue := "" -}}
+    {{- if and .secret .field -}}
+      {{- $varname = include "mailu.utils.fieldToEnvVar" . -}}
+      {{- $getCurrentValue = printf " To get the current value:\n\n        %s\n" (include "mailu.utils.secret.getvalue" .) -}}
+    {{- end -}}
+    {{- printf "\n    '%s' must not be empty, please add '--set %s%s=$%s' to the command.%s" .valueKey $subchart .valueKey $varname $getCurrentValue -}}
+  {{- end -}}
 {{- end -}}

@@ -4,15 +4,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "mailu.clamav.serviceNameHeadless" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: clamav
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   annotations:
     {{- if .Values.clamav.service.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.clamav.service.annotations "context" $) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.clamav.service.annotations "context" $) | nindent 4 }}
     {{- end }}
     # Use this annotation in addition to the actual publishNotReadyAddresses
     # field below because the annotation will stop being respected soon but the
@@ -26,7 +26,7 @@ spec:
   # the sake of the other Postgresql pods even before they're ready, since they
   # have to be able to talk to each other in order to become ready.
   publishNotReadyAddresses: true
-  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+  selector: {{- include "mailu.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: clamav
   ports:
     - name: clamav

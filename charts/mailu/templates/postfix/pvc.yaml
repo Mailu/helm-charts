@@ -1,22 +1,22 @@
 ---
 {{- if and (not .Values.persistence.single_pvc) (not .Values.postfix.persistence.existingClaim) }}
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: {{ include "mailu.postfix.claimName" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: postfix
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if or .Values.postfix.persistence.annotations .Values.commonAnnotations }}
   annotations:
     {{- if .Values.postfix.persistence.annotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.postfix.persistence.annotations "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.postfix.persistence.annotations "context" $ ) | nindent 4 }}
     {{- end }}
     {{- if .Values.commonAnnotations }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
   {{- end }}
 spec:

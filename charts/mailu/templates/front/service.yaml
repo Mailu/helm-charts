@@ -3,17 +3,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "mailu.front.serviceName" . }}
-  namespace: {{ include "common.names.namespace" . | quote }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  namespace: {{ include "mailu.names.namespace" . | quote }}
+  labels: {{- include "mailu.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: front
     {{- if .Values.commonLabels }}
-    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
     {{- end }}
   {{- if .Values.front.service.annotations }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.front.service.annotations "context" $) | nindent 4 }}
+  annotations: {{- include "mailu.tplvalues.render" ( dict "value" .Values.front.service.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
-  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+  selector: {{- include "mailu.labels.matchLabels" . | nindent 4 }}
     app.kubernetes.io/component: front
   ports:
     - name: pop3

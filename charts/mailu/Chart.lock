@@ -1,7 +1,4 @@
 dependencies:
-- name: common
-  repository: https://charts.bitnami.com/bitnami
-  version: 2.31.4
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 22.0.7
@@ -11,5 +8,5 @@ dependencies:
 - name: mariadb
   repository: https://charts.bitnami.com/bitnami
   version: 22.0.0
-digest: sha256:df5f781d02793d5caf58b611f02cb260311d23cf9a4937de549eb8ebb32c0a5d
-generated: "2025-08-28T21:20:18.098711811+02:00"
+digest: sha256:281a64cc591c02586a4ef68228f19de0968514b3946477e7fc5db32f3eca0672
+generated: "2025-11-16T20:41:17.136901+01:00"
