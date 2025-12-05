@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.2](https://github.com/Mailu/helm-charts/compare/mailu-2.6.1...mailu-2.6.2) (2025-12-05)
+
+
+### Bug Fixes
+
+* clamav volumeClaimTemplates use matchLabels ([#522](https://github.com/Mailu/helm-charts/issues/522)) ([fa88206](https://github.com/Mailu/helm-charts/commit/fa88206e531d7e5e4e937f26809a0ccf1480bae2))
+
 ## [2.6.1](https://github.com/Mailu/helm-charts/compare/mailu-2.6.0...mailu-2.6.1) (2025-11-06)
 
 
