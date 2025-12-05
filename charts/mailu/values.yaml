@@ -655,31 +655,13 @@ ingress:
   ## @param ingress.realIpHeader Sets the value of `REAL_IP_HEADER` environment variable in the `front` pod
   realIpHeader: X-Forwarded-For
 
-  ## @param ingress.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
-  realIpFrom: ""
+
 
   ## @param ingress.tlsFlavorOverride Overrides the value of `TLS_FLAVOR` environment variable in the `front` pod
   ## This is normally auto-detected, only change it if you know what you are doing.
   tlsFlavorOverride: ""
 
-  ## @param ingress.proxyProtocol.pop3 Enable PROXY protocol for POP3 (110/tcp)
-  ## @param ingress.proxyProtocol.pop3s Enable PROXY protocol for POP3S (995/tcp)
-  ## @param ingress.proxyProtocol.imap Enable PROXY protocol for IMAP (143/tcp)
-  ## @param ingress.proxyProtocol.imaps Enable PROXY protocol for IMAPS (993/tcp)
-  ## @param ingress.proxyProtocol.smtp Enable PROXY protocol for SMTP (25/tcp)
-  ## @param ingress.proxyProtocol.smtps Enable PROXY protocol for SMTPS (465/tcp)
-  ## @param ingress.proxyProtocol.submission Enable PROXY protocol for Submission (587/tcp)
-  ## @param ingress.proxyProtocol.manageSieve Enable PROXY protocol for ManageSieve (4190/tcp)
-  ## Enabling any of these requires to have ingress.realIpFrom set
-  proxyProtocol:
-    pop3: false
-    pop3s: false
-    imap: false
-    imaps: false
-    smtp: false
-    smtps: false
-    submission: false
-    manageSieve: false
+
 
 ## @section Proxy auth configuration
 ## ref: https://mailu.io/master/configuration.html#header-authentication-using-an-external-proxy
@@ -767,6 +749,41 @@ front:
       smtps: 465
       submission: 587
       manageSieve: 4190
+
+  ## @section ProxyProtocol configuration
+  ## If the front service is sitting behind a load balancer that supports
+  ## PROXY protocol (e.g. HAPROXY, AWS ELB/ALB), you can enable it here.
+  ## This will make Mailu aware of the original client IP address.
+  ## ref: https://mailu.io/master/configuration.html#proxy-protocol
+  proxyProtocol:
+    ## @param front.proxyProtocol.enabled Enable PROXY protocol support in the `front` pod
+    enabled: false
+
+    ## @param front.proxyProtocol.realIpFrom Sets the value of `REAL_IP_FROM` environment variable in the `front` pod
+    ## This should be set to the CIDR(s) of the load balancer(s) in front of Mailu
+    ## or pod that forwards traffic to Mailu supporting PROXY protocol.
+    ## For example, if using an Ingress controller, this should be set to the
+    ## pod CIDR of the cluster.
+    realIpFrom: "10.42.0.0/16"
+
+    ## @param front.proxyProtocol.ports.pop3 Enable PROXY protocol for POP3 (110/tcp)
+    ## @param front.proxyProtocol.ports.pop3s Enable PROXY protocol for POP3S (995/tcp)
+    ## @param front.proxyProtocol.ports.imap Enable PROXY protocol for IMAP (143/tcp)
+    ## @param front.proxyProtocol.ports.imaps Enable PROXY protocol for IMAPS (993/tcp)
+    ## @param front.proxyProtocol.ports.smtp Enable PROXY protocol for SMTP (25/tcp)
+    ## @param front.proxyProtocol.ports.smtps Enable PROXY protocol for SMTPS (465/tcp)
+    ## @param front.proxyProtocol.ports.submission Enable PROXY protocol for Submission (587/tcp)
+    ## @param front.proxyProtocol.ports.manageSieve Enable PROXY protocol for ManageSieve (4190/tcp)
+    ## Enabling any of these requires to have ingress.realIpFrom set
+    ports:
+      pop3: false
+      pop3s: false
+      imap: false
+      imaps: false
+      smtp: false
+      smtps: false
+      submission: false
+      manageSieve: false
 
   ## @param front.kind Kind of resource to create for the front (`Deployment` or `DaemonSet`)
   kind: Deployment
