@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.3](https://github.com/Mailu/helm-charts/compare/mailu-2.6.2...mailu-2.6.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* **github-release:** update release mailu/mailu ( 2024.06.45 ➔ 2024.06.46 ) ([#534](https://github.com/Mailu/helm-charts/issues/534)) ([353a7c7](https://github.com/Mailu/helm-charts/commit/353a7c72ebba6a76ae145924259e51638af32db3))
+
 ## [2.6.2](https://github.com/Mailu/helm-charts/compare/mailu-2.6.1...mailu-2.6.2) (2025-12-05)
 
 
