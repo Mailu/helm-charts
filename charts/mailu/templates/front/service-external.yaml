@@ -23,6 +23,9 @@ spec:
   type: {{ .type | default "ClusterIP" }}
   {{- if ne .type "ClusterIP" }}
   externalTrafficPolicy: {{ .externalTrafficPolicy | default "Local" }}
+  {{- with .ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . | quote }}
+  {{- end }}
   {{- end }}
   {{- if .loadBalancerIP }}
   loadBalancerIP: {{ .loadBalancerIP }}
