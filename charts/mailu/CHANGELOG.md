@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/Mailu/helm-charts/compare/mailu-2.6.3...mailu-2.7.0) (2025-12-27)
+
+
+### Features
+
+* allow defining ipFamilyPolicy for external service ([#362](https://github.com/Mailu/helm-charts/issues/362)) ([924cc54](https://github.com/Mailu/helm-charts/commit/924cc540f0a6ae3c1ecc72329395fc10bd5b79ca))
+
 ## [2.6.3](https://github.com/Mailu/helm-charts/compare/mailu-2.6.2...mailu-2.6.3) (2025-12-16)
 
 
