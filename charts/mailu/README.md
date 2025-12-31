@@ -664,7 +664,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `rspamd.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
 | `rspamd.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
 | `rspamd.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `rspamd.dnsPolicy`                             | DNS Policy of the rspamd pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                |
+| `rspamd.dnsPolicy`                             | DNS Policy of the rspamd pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)              |
 | `rspamd.dnsConfig`                             | DNS settings for the rspamd pod                                                       | `{}`                |
 | `rspamd.affinity`                              | Affinity for rspamd pod assignment                                                    | `{}`                |
 | `rspamd.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
@@ -799,7 +799,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `webmail.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`                                                                            |
 | `webmail.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`                                                                           |
 | `webmail.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                                                                               |
-| `webmail.dnsPolicy`                             | DNS Policy of the webmail pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                                                                              |
+| `webmail.dnsPolicy`                             | DNS Policy of the webmail pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)                                                                           |
 | `webmail.dnsConfig`                             | DNS settings for the webmail pod                                                      | `{}`                                                                              |
 | `webmail.affinity`                              | Affinity for webmail pod assignment                                                   | `{}`                                                                              |
 | `webmail.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                                                                              |
