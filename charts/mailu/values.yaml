@@ -1920,6 +1920,14 @@ rspamd:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
+  ## @param rspamd.dnsPolicy DNS Policy of the rspamd pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+  ## @param rspamd.dnsConfig DNS settings for the rspamd pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+  dnsConfig: {}
+
   ## @param rspamd.affinity Affinity for rspamd pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
@@ -2400,6 +2408,14 @@ webmail:
   ## @param webmail.terminationGracePeriodSeconds In seconds, time given to the pod to terminate gracefully
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
+
+  ## @param webmail.dnsPolicy DNS Policy of the webmail pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+  ## @param webmail.dnsConfig DNS settings for the webmail pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+  dnsConfig: {}
 
   ## @param webmail.affinity Affinity for webmail pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
