@@ -85,7 +85,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- if not .Values.externalRedis.host -}}
         {{- fail "externalRedis.host must be set when externalRedis.enabled is true" -}}
     {{- else -}}
-        {{- printf "%s" .Values.externalRedis.host -}}
+        {{- tpl (printf "%s" .Values.externalRedis.host) $ -}}
     {{- end -}}
 {{- else -}}
     {{- printf "%s.%s.svc.%s" (include "mailu.redis.serviceName" . ) (include "mailu.names.namespace" . ) (include "mailu.clusterDomain" . ) -}}
