@@ -33,5 +33,5 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
   - condition: mariadb.enabled
     name: mariadb
-    version: 22.0.0
+    version: 24.0.3
     repository: https://charts.bitnami.com/bitnami
