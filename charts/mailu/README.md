@@ -331,6 +331,7 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `front.externalService.externalIPs`           | Service externalIPs                                                                   | `[]`            |
 | `front.externalService.ipFamilyPolicy`        | Service ipFamilyPolicy, for dual stack clusters.                                      | `""`            |
 | `front.externalService.loadBalancerIP`        | Service loadBalancerIP                                                                | `""`            |
+| `front.externalService.loadBalancerSourceRanges`  | Service loadBalancerSourceRanges                                                      | `[]`            |
 | `front.externalService.annotations`           | Service annotations                                                                   | `{}`            |
 | `front.externalService.labels`                | Service labels                                                                        | `{}`            |
 | `front.externalService.ports.pop3`            | Expose POP3 port - 110/tcp                                                            | `false`         |

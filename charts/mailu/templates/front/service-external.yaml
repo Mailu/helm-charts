@@ -30,6 +30,8 @@ spec:
   {{- if .loadBalancerIP }}
   loadBalancerIP: {{ .loadBalancerIP }}
   {{- end }}
+  {{- if .loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{ toYaml .loadBalancerSourceRanges | nindent 4 }}
   {{- if .externalIPs }}
   externalIPs:
   {{- toYaml .externalIPs | nindent 4 }}
