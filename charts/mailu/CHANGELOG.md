@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.7.0](https://github.com/Mailu/helm-charts/compare/mailu-2.6.3...mailu-2.7.0) (2026-03-21)
+
+
+### Features
+
+* allow defining ipFamilyPolicy for external service ([#362](https://github.com/Mailu/helm-charts/issues/362)) ([924cc54](https://github.com/Mailu/helm-charts/commit/924cc540f0a6ae3c1ecc72329395fc10bd5b79ca))
+
+
+### Bug Fixes
+
+* **github-release:** update release mailu/mailu ( 2024.06.46 ➔ 2024.06.47 ) ([#547](https://github.com/Mailu/helm-charts/issues/547)) ([a7fbe40](https://github.com/Mailu/helm-charts/commit/a7fbe40894177ed22f686ae74f8897cfd5b2980b))
+* **github-release:** update release mailu/mailu ( 2024.06.47 ➔ 2024.06.48 ) ([#553](https://github.com/Mailu/helm-charts/issues/553)) ([3047a10](https://github.com/Mailu/helm-charts/commit/3047a10efcd7039249ee21a98550ccc41570d29d))
+* **github-release:** update release mailu/mailu ( 2024.06.48 ➔ 2024.06.49 ) ([#555](https://github.com/Mailu/helm-charts/issues/555)) ([9ba8ece](https://github.com/Mailu/helm-charts/commit/9ba8ece0b9d1b60df7b2308c1b9c44d3855cc8b5))
+
 ## [2.6.3](https://github.com/Mailu/helm-charts/compare/mailu-2.6.2...mailu-2.6.3) (2025-12-16)
 
 
