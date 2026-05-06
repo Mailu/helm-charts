@@ -1196,6 +1196,41 @@ The [externalTrafficPolicy](https://kubernetes.io/docs/tasks/access-application-
 
 Please perform open relay tests after setup as described above!
 
+### With HTTPRoute instead of ingress
+- `ingress.enabled`: `false`
+- `ingress.existingSecret`: `m̀ail-mydomain-tld-tls` - this needs to be mapped into your current namespace either by the Gateway or a reflector controller. See https://github.com/Mailu/helm-charts/issues/543`
+- `ingress.tlsFlavorOverride`: `mail`
+
+`tlsFlavorOverride` `mail` configures `mailu-front` to use SSL for dovecot and nginx, offloading TLS for HTTPS to the Gateway API controller.
+A corresponding Gateway was implemented like:
+
+``` yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: eg-shared
+  namespace: gateway-infra
+spec:
+  gatewayClassName: eg-shared
+  listeners:
+    - name: https-mailu
+      port: 443
+      protocol: HTTPS
+      hostname: mail.mydomain.tld
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: mail-mydomain-tld-tls
+            namespace: mailu
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: mailu
+```
+
 ## Environment variables mapping
 
 The table below lists the environment variables that will be passed to the pods and their respective configuration path in the `values.yaml` file.
