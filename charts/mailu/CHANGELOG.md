@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.7.1](https://github.com/Mailu/helm-charts/compare/mailu-2.7.0...mailu-2.7.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* **github-release:** update release mailu/mailu ( 2024.06.49 ➔ 2024.06.50 ) ([#565](https://github.com/Mailu/helm-charts/issues/565)) ([df52add](https://github.com/Mailu/helm-charts/commit/df52add4fdf50ecda48b2282943d34aa0bd6116d))
+* **github-release:** update release mailu/mailu ( 2024.06.50 ➔ 2024.06.51 ) ([#568](https://github.com/Mailu/helm-charts/issues/568)) ([d4c28e9](https://github.com/Mailu/helm-charts/commit/d4c28e943ce9d603bc4e7b8de3ce452f2496e9f3))
+
 ## [2.7.0](https://github.com/Mailu/helm-charts/compare/mailu-2.6.3...mailu-2.7.0) (2026-03-21)
 
 
