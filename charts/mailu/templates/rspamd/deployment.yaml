@@ -58,6 +58,12 @@ spec:
       {{- if .Values.rspamd.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.rspamd.terminationGracePeriodSeconds }}
       {{- end }}
+      {{- if .Values.rspamd.dnsPolicy }}
+      dnsPolicy: {{ .Values.rspamd.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.rspamd.dnsConfig }}
+      dnsConfig: {{- include "mailu.tplvalues.render" (dict "value" .Values.rspamd.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.rspamd.initContainers }}
       initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.rspamd.initContainers "context" $) | nindent 8 }}
       {{- end }}
