@@ -31,7 +31,7 @@ spec:
     - name: smtp
       port: 25
       protocol: TCP
-    - name: smtps
+    - name: submissions
       port: 465
       protocol: TCP
     - name: smtpd
