@@ -19,6 +19,7 @@ metadata:
     {{- include "mailu.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
     {{- end }}
 spec:
+  {{- $servicePort := ternary "http" "https" .Values.ingress.enabled }}
   {{- if .Values.ingress.ingressClassName }}
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
   {{- end }}
@@ -32,7 +33,7 @@ spec:
           {{- end }}
           - path: {{ $.Values.ingress.path }}
             pathType: {{ $.Values.ingress.pathType }}
-            backend: {{- include "mailu.ingress.backend" (dict "serviceName" (include "mailu.front.serviceName" $) "servicePort" "https" "context" $)  | nindent 14 }}
+            backend: {{- include "mailu.ingress.backend" (dict "serviceName" (include "mailu.front.serviceName" $) "servicePort" $servicePort "context" $)  | nindent 14 }}
     {{- end }}
     {{- range .Values.ingress.extraHosts }}
     - host: {{ .name | quote }}
@@ -40,7 +41,7 @@ spec:
         paths:
           - path: {{ default "/" .path }}
             pathType: {{ default "ImplementationSpecific" .pathType }}
-            backend: {{- include "mailu.ingress.backend" (dict "serviceName" (include "mailu.front.serviceName" $) "servicePort" "https" "context" $) | nindent 14 }}
+            backend: {{- include "mailu.ingress.backend" (dict "serviceName" (include "mailu.front.serviceName" $) "servicePort" $servicePort "context" $) | nindent 14 }}
     {{- end }}
     {{- if .Values.ingress.extraRules }}
     {{- include "mailu.tplvalues.render" (dict "value" .Values.ingress.extraRules "context" $) | nindent 4 }}
