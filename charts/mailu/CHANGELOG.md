@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.7.4](https://github.com/Mailu/helm-charts/compare/mailu-2.7.3...mailu-2.7.4) (2026-09-07)
+
+
+### Bug Fixes
+
+* **github-release:** update release mailu/mailu ( 2024.06.55 ➔ 2024.06.56 ) ([#593](https://github.com/Mailu/helm-charts/issues/593)) ([0a03647](https://github.com/Mailu/helm-charts/commit/0a0364783ac1d1dd5a23aa2849fd59556f8a5c9b))
+* **github-release:** update release mailu/mailu ( 2024.06.56 ➔ 2024.06.57 ) ([#595](https://github.com/Mailu/helm-charts/issues/595)) ([10212f6](https://github.com/Mailu/helm-charts/commit/10212f646fe2687751442d9aaa8b10e3f6953238))
+* **ingress:** terminate HTTP TLS at external ingress. ([#605](https://github.com/Mailu/helm-charts/issues/605)) ([d1624d0](https://github.com/Mailu/helm-charts/commit/d1624d0578060cef7d00e08e41410630099124f1))
+
 ## [2.7.3](https://github.com/Mailu/helm-charts/compare/mailu-2.7.2...mailu-2.7.3) (2026-07-19)
 
 
