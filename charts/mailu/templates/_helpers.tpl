@@ -68,16 +68,18 @@ Get MailU domain name or throw an error if not set
 {{- end -}}
 {{- end -}}
 
-{{/* Get the MailU TLS Flavor */}}
+{{/* Get the Mailu TLS Flavor */}}
 {{- define "mailu.tlsFlavor" -}}
 {{- if .Values.ingress.tlsFlavorOverride -}}
-{{- .Values.ingress.tlsFlavorOverride -}}
+  {{- .Values.ingress.tlsFlavorOverride -}}
+{{- else if .Values.ingress.tls -}}
+  {{- if .Values.ingress.enabled -}}
+    {{- print "mail" -}}
+  {{- else -}}
+    {{- print "cert" -}}
+  {{- end -}}
 {{- else -}}
-    {{- if .Values.ingress.tls -}}
-        {{- print "cert" -}}
-    {{- else -}}
-        {{- print "notls" -}}
-    {{- end -}}
+  {{- print "notls" -}}
 {{- end -}}
 {{- end -}}
 
