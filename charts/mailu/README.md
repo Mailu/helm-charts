@@ -304,8 +304,9 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `ingress.proxyProtocol.imap`        | Enable PROXY protocol for IMAP (143/tcp)                                                                                         | `false`                  |
 | `ingress.proxyProtocol.imaps`       | Enable PROXY protocol for IMAPS (993/tcp)                                                                                        | `false`                  |
 | `ingress.proxyProtocol.smtp`        | Enable PROXY protocol for SMTP (25/tcp)                                                                                          | `false`                  |
-| `ingress.proxyProtocol.smtps`       | Enable PROXY protocol for SMTPS (465/tcp)                                                                                        | `false`                  |
+| `ingress.proxyProtocol.smtps`       | DEPRECATED: Do not use, use submissions instead.                                                                                 | `false`                  |
 | `ingress.proxyProtocol.submission`  | Enable PROXY protocol for Submission (587/tcp)                                                                                   | `false`                  |
+| `ingress.proxyProtocol.submissions` | Enable PROXY protocol for Submissions (465/tcp)                                                                                  | `false`                  |
 | `ingress.proxyProtocol.manageSieve` | Enable PROXY protocol for ManageSieve (4190/tcp)                                                                                 | `false`                  |
 
 ### Proxy auth configuration
@@ -338,8 +339,9 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `front.externalService.ports.imap`            | Expose IMAP port - 143/tcp                                                            | `false`         |
 | `front.externalService.ports.imaps`           | Expose IMAP port (TLS) - 993/tcp                                                      | `true`          |
 | `front.externalService.ports.smtp`            | Expose SMTP port - 25/tcp                                                             | `true`          |
-| `front.externalService.ports.smtps`           | Expose SMTP port (TLS) - 465/tcp                                                      | `true`          |
+| `front.externalService.ports.smtps`           | DEPRECATED: Do not use, use submissions instead                                       | `false`         |
 | `front.externalService.ports.submission`      | Expose Submission port - 587/tcp                                                      | `false`         |
+| `front.externalService.ports.submissions`     | Expose Submission port (TLS) - 465/tcp                                                | `true`          |
 | `front.externalService.ports.manageSieve`     | Expose ManageSieve port - 4190/tcp                                                    | `true`          |
 | `front.externalService.nodePorts.pop3`        | NodePort to use for POP3 (defaults to 110/tcp)                                        | `110`           |
 | `front.externalService.nodePorts.pop3s`       | NodePort to use for POP3 (TLS) (defaults to 995/tcp)                                  | `995`           |
