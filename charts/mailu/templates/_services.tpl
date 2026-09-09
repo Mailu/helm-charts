@@ -208,6 +208,11 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- end -}}
 {{- end -}}
 
+{{- /* Fallback to standard mail ports when using external ingress */ -}}
+{{- if not $enabledPorts -}}
+    {{- $enabledPorts = list "25" "465" "587" "143" "993" -}}
+{{- end -}}
+
 {{- $enabledPortsString := join "," $enabledPorts -}}
 {{- printf "%s" $enabledPortsString -}}
 {{- end -}}
