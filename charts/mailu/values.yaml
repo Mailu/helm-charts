@@ -746,6 +746,7 @@ front:
     ## Example for LoadBalancer:
     ## type: LoadBalancer
     loadBalancerIP: ""
+    loadBalancerSourceRanges: []
     externalTrafficPolicy: Local
     externalIPs: []
     ipFamilyPolicy: ""
