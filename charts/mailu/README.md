@@ -531,6 +531,8 @@ helm uninstall mailu --namespace=mailu-mailserver
 | `postfix.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
 | `postfix.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
 | `postfix.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
+| `postfix.dnsPolicy`                             | DNS Policy of the postfix pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`            |
+| `postfix.dnsConfig`                             | DNS settings for the postfix pod                                                      | `{}`                |
 | `postfix.affinity`                              | Affinity for postfix pod assignment                                                   | `{}`                |
 | `postfix.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
 | `postfix.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |

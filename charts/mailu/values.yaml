@@ -1385,6 +1385,14 @@ postfix:
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   terminationGracePeriodSeconds: 2
 
+  ## @param postfix.dnsPolicy DNS Policy of the postfix pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`)
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+  ## @param postfix.dnsConfig DNS settings for the postfix pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
+  dnsConfig: {}
+
   ## @param postfix.affinity Affinity for postfix pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   affinity: {}
