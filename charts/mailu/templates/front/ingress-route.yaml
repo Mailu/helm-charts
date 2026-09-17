@@ -1,0 +1,58 @@
+---
+{{- if and .Values.ingress.enabled (eq .Values.ingress.ingressClassName "traefik") }}
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: {{ include "mailu.fullname" $ }}-transport
+  namespace: {{ include "mailu.names.namespace" $ | quote }}
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "mailu.fullname" $ }}
+  namespace: {{ include "mailu.names.namespace" $ | quote }}
+  labels: {{- include "mailu.labels.standard" $ | nindent 4 }}
+    {{- if $.Values.commonLabels }}
+    {{- include "mailu.tplvalues.render" ( dict "value" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or $.Values.ingress.annotations $.Values.commonAnnotations }}
+  annotations:
+    {{- if $.Values.ingress.annotations }}
+    {{- include "mailu.tplvalues.render" ( dict "value" $.Values.ingress.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if $.Values.commonAnnotations }}
+    {{- include "mailu.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  routes:
+    {{- range $.Values.hostnames }}
+    - match: Host(`{{ . }}`)
+      kind: Rule
+      services:
+        - name: {{ include "mailu.front.serviceName" $ }}
+          port: https
+          serversTransport: {{ include "mailu.fullname" $ }}-transport
+      {{- if $.Values.ingress.extraPaths }}
+      middlewares:
+        {{- toYaml $.Values.ingress.extraPaths | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    {{- range $.Values.ingress.extraHosts }}
+    - match: Host(`{{ .name }}`)
+      kind: Rule
+      services:
+        - name: {{ include "mailu.front.serviceName" $ }}
+          port: https
+          serversTransport: {{ include "mailu.fullname" $ }}-transport
+    {{- end }}
+    {{- if $.Values.ingress.extraRules }}
+    {{- include "mailu.tplvalues.render" (dict "value" $.Values.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
+  {{- if $.Values.ingress.tls }}
+  tls:
+    secretName: {{ include "mailu.certificatesSecretName" $ }}
+  {{- end }}
+{{- end }}
