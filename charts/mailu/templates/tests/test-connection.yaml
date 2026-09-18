@@ -15,8 +15,8 @@ spec:
         - |
           {{- range .Values.hostnames }}
           # HTTP redirects to HTTPS
-          wget -S --header "Host: {{ . }}" 'http://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "mailu.names.namespace" $ }}.svc.cluster.local'
+          wget -S -O /dev/null --header "Host: {{ . }}" 'http://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "mailu.names.namespace" $ }}.svc.cluster.local'
           # HTTPS redirects to SSO page
-          wget -S --header "Host: {{ . }}" 'https://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "mailu.names.namespace" $ }}.svc.cluster.local'
+          wget -S -O /dev/null --header "Host: {{ . }}" 'https://{{ printf "%s-front" (include "mailu.fullname" $) }}.{{ include "mailu.names.namespace" $ }}.svc.cluster.local'
           {{- end }}
   restartPolicy: Never
