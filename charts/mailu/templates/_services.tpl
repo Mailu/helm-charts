@@ -197,7 +197,7 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- if .Values.front.externalService.ports.smtp -}}
         {{- $enabledPorts = append $enabledPorts "25" -}}
     {{- end -}}
-    {{- if .Values.front.externalService.ports.smtps -}}
+    {{- if or .Values.front.externalService.ports.smtps .Values.front.externalService.ports.submissions -}}
         {{- $enabledPorts = append $enabledPorts "465" -}}
     {{- end -}}
     {{- if .Values.front.externalService.ports.submission -}}
@@ -232,8 +232,13 @@ Service fqdn (within cluster) can be retrieved with `mailu.SERVICE.serviceFqdn`
     {{- if and .Values.front.externalService.ports.smtp .Values.ingress.proxyProtocol.smtp -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "25" -}}
     {{- end -}}
-    {{- if and .Values.front.externalService.ports.smtps .Values.ingress.proxyProtocol.smtps -}}
-        {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
+    {{- if or .Values.front.externalService.ports.smtps .Values.externalService.ports.submissions -}}
+        {{- if and .Values.front.externalService.ports.smtps .Values.ingress.proxyProtocol.smtps -}}
+            {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
+        {{- end -}}
+        {{- if and .Values.front.externalService.ports.submissions .Values.ingress.proxyProtocol.submissions -}}
+            {{- $proxyProtocolPorts = append $proxyProtocolPorts "465" -}}
+        {{- end -}}
     {{- end -}}
     {{- if and .Values.front.externalService.ports.submission .Values.ingress.proxyProtocol.submission -}}
         {{- $proxyProtocolPorts = append $proxyProtocolPorts "587" -}}

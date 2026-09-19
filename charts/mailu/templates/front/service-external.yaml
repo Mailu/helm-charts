@@ -75,8 +75,8 @@ spec:
       nodePort: {{ .nodePorts.smtp }}
       {{- end }}
     {{- end }}
-    {{- if .ports.smtps }}
-    - name: smtps
+    {{- if or .ports.submissions .ports.smtps }}
+    - name: submissions
       port: 465
       protocol: TCP
       {{ if eq $.Values.front.externalService.type "NodePort" -}}
