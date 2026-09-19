@@ -488,64 +488,66 @@ helm uninstall mailu --namespace=mailu-mailserver
 
 ### Postfix parameters
 
-| Name                                            | Description                                                                           | Value               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------- |
-| `postfix.logLevel`                              | Override default log level                                                            | `""`                |
-| `postfix.image.repository`                      | Pod image repository                                                                  | `mailu/postfix`     |
-| `postfix.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)       | `""`                |
-| `postfix.image.pullPolicy`                      | Pod image pull policy                                                                 | `IfNotPresent`      |
-| `postfix.persistence.size`                      | Pod pvc size                                                                          | `20Gi`              |
-| `postfix.persistence.storageClass`              | Pod pvc storage class                                                                 | `""`                |
-| `postfix.persistence.accessModes`               | Pod pvc access modes                                                                  | `["ReadWriteOnce"]` |
-| `postfix.persistence.claimNameOverride`         | Pod pvc name override                                                                 | `""`                |
-| `postfix.persistence.annotations`               | Pod pvc annotations                                                                   | `{}`                |
-| `postfix.persistence.existingClaim`             | Pod pvc existing claim name                                                           | `""`                |
-| `postfix.resources.limits`                      | The resources limits for the container                                                | `{}`                |
-| `postfix.resources.requests`                    | The requested resources for the container                                             | `{}`                |
-| `postfix.livenessProbe.enabled`                 | Enable livenessProbe                                                                  | `true`              |
-| `postfix.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                   | `3`                 |
-| `postfix.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                               | `10`                |
-| `postfix.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                      | `10`                |
-| `postfix.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                   | `1`                 |
-| `postfix.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                     | `1`                 |
-| `postfix.readinessProbe.enabled`                | Enable readinessProbe                                                                 | `true`              |
-| `postfix.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                              | `10`                |
-| `postfix.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                     | `10`                |
-| `postfix.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                    | `1`                 |
-| `postfix.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                  | `3`                 |
-| `postfix.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                  | `1`                 |
-| `postfix.startupProbe.enabled`                  | Enable startupProbe                                                                   | `true`              |
-| `postfix.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                | `10`                |
-| `postfix.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                       | `10`                |
-| `postfix.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                      | `1`                 |
-| `postfix.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                    | `30`                |
-| `postfix.startupProbe.successThreshold`         | Success threshold for startupProbe                                                    | `1`                 |
-| `postfix.podLabels`                             | Add extra labels to pod                                                               | `{}`                |
-| `postfix.podAnnotations`                        | Add extra annotations to the pod                                                      | `{}`                |
-| `postfix.nodeSelector`                          | Node labels selector for pod assignment                                               | `{}`                |
-| `postfix.initContainers`                        | Add additional init containers to the pod                                             | `[]`                |
-| `postfix.priorityClassName`                     | Pods' priorityClassName                                                               | `""`                |
-| `postfix.podSecurityContext.enabled`            | Enabled pods' Security Context                                                        | `false`             |
-| `postfix.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                    | `1001`              |
-| `postfix.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                  | `false`             |
-| `postfix.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                            | `1001`              |
-| `postfix.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                         | `false`             |
-| `postfix.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                             | `2`                 |
-| `postfix.affinity`                              | Affinity for postfix pod assignment                                                   | `{}`                |
-| `postfix.tolerations`                           | Tolerations for pod assignment                                                        | `[]`                |
-| `postfix.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                  | `3`                 |
-| `postfix.hostAliases`                           | Pod pod host aliases                                                                  | `[]`                |
-| `postfix.schedulerName`                         | Name of the k8s scheduler (other than default)                                        | `""`                |
-| `postfix.service.annotations`                   | Admin service annotations                                                             | `{}`                |
-| `postfix.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                        | `[]`                |
-| `postfix.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                               | `RollingUpdate`     |
-| `postfix.extraEnvVars`                          | Extra environment variable to pass to the running container                           | `[]`                |
-| `postfix.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod | `""`                |
-| `postfix.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod    | `""`                |
-| `postfix.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                  | `[]`                |
-| `postfix.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                    | `[]`                |
-| `postfix.extraContainers`                       | Add additional containers to the pod                                                  | `[]`                |
-| `postfix.overrides`                             | Enable postfix overrides                                                              | `{}`                |
+| Name                                            | Description                                                                                     | Value               |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------- |
+| `postfix.logLevel`                              | Override default log level                                                                      | `""`                |
+| `postfix.image.repository`                      | Pod image repository                                                                            | `mailu/postfix`     |
+| `postfix.image.tag`                             | Pod image tag (defaults to `mailuVersion` if set, otherwise `Chart.AppVersion`)                 | `""`                |
+| `postfix.image.pullPolicy`                      | Pod image pull policy                                                                           | `IfNotPresent`      |
+| `postfix.persistence.size`                      | Pod pvc size                                                                                    | `20Gi`              |
+| `postfix.persistence.storageClass`              | Pod pvc storage class                                                                           | `""`                |
+| `postfix.persistence.accessModes`               | Pod pvc access modes                                                                            | `["ReadWriteOnce"]` |
+| `postfix.persistence.claimNameOverride`         | Pod pvc name override                                                                           | `""`                |
+| `postfix.persistence.annotations`               | Pod pvc annotations                                                                             | `{}`                |
+| `postfix.persistence.existingClaim`             | Pod pvc existing claim name                                                                     | `""`                |
+| `postfix.resources.limits`                      | The resources limits for the container                                                          | `{}`                |
+| `postfix.resources.requests`                    | The requested resources for the container                                                       | `{}`                |
+| `postfix.livenessProbe.enabled`                 | Enable livenessProbe                                                                            | `true`              |
+| `postfix.livenessProbe.failureThreshold`        | Failure threshold for livenessProbe                                                             | `3`                 |
+| `postfix.livenessProbe.initialDelaySeconds`     | Initial delay seconds for livenessProbe                                                         | `10`                |
+| `postfix.livenessProbe.periodSeconds`           | Period seconds for livenessProbe                                                                | `10`                |
+| `postfix.livenessProbe.successThreshold`        | Success threshold for livenessProbe                                                             | `1`                 |
+| `postfix.livenessProbe.timeoutSeconds`          | Timeout seconds for livenessProbe                                                               | `1`                 |
+| `postfix.readinessProbe.enabled`                | Enable readinessProbe                                                                           | `true`              |
+| `postfix.readinessProbe.initialDelaySeconds`    | Initial delay seconds for readinessProbe                                                        | `10`                |
+| `postfix.readinessProbe.periodSeconds`          | Period seconds for readinessProbe                                                               | `10`                |
+| `postfix.readinessProbe.timeoutSeconds`         | Timeout seconds for readinessProbe                                                              | `1`                 |
+| `postfix.readinessProbe.failureThreshold`       | Failure threshold for readinessProbe                                                            | `3`                 |
+| `postfix.readinessProbe.successThreshold`       | Success threshold for readinessProbe                                                            | `1`                 |
+| `postfix.startupProbe.enabled`                  | Enable startupProbe                                                                             | `true`              |
+| `postfix.startupProbe.initialDelaySeconds`      | Initial delay seconds for startupProbe                                                          | `10`                |
+| `postfix.startupProbe.periodSeconds`            | Period seconds for startupProbe                                                                 | `10`                |
+| `postfix.startupProbe.timeoutSeconds`           | Timeout seconds for startupProbe                                                                | `1`                 |
+| `postfix.startupProbe.failureThreshold`         | Failure threshold for startupProbe                                                              | `30`                |
+| `postfix.startupProbe.successThreshold`         | Success threshold for startupProbe                                                              | `1`                 |
+| `postfix.podLabels`                             | Add extra labels to pod                                                                         | `{}`                |
+| `postfix.podAnnotations`                        | Add extra annotations to the pod                                                                | `{}`                |
+| `postfix.nodeSelector`                          | Node labels selector for pod assignment                                                         | `{}`                |
+| `postfix.initContainers`                        | Add additional init containers to the pod                                                       | `[]`                |
+| `postfix.priorityClassName`                     | Pods' priorityClassName                                                                         | `""`                |
+| `postfix.podSecurityContext.enabled`            | Enabled pods' Security Context                                                                  | `false`             |
+| `postfix.podSecurityContext.fsGroup`            | Set pods' Security Context fsGroup                                                              | `1001`              |
+| `postfix.containerSecurityContext.enabled`      | Enabled containers' Security Context                                                            | `false`             |
+| `postfix.containerSecurityContext.runAsUser`    | Set containers' Security Context runAsUser                                                      | `1001`              |
+| `postfix.containerSecurityContext.runAsNonRoot` | Set container's Security Context runAsNonRoot                                                   | `false`             |
+| `postfix.terminationGracePeriodSeconds`         | In seconds, time given to the pod to terminate gracefully                                       | `2`                 |
+| `postfix.dnsPolicy`                             | DNS Policy of the postfix pod (`Default`, `ClusterFirst`, `ClusterFirstWithHostNet` and `None`) | `""`                |
+| `postfix.dnsConfig`                             | DNS settings for the postfix pod                                                                | `{}`                |
+| `postfix.affinity`                              | Affinity for postfix pod assignment                                                             | `{}`                |
+| `postfix.tolerations`                           | Tolerations for pod assignment                                                                  | `[]`                |
+| `postfix.revisionHistoryLimit`                  | Configure the revisionHistoryLimit of the deployment                                            | `3`                 |
+| `postfix.hostAliases`                           | Pod pod host aliases                                                                            | `[]`                |
+| `postfix.schedulerName`                         | Name of the k8s scheduler (other than default)                                                  | `""`                |
+| `postfix.service.annotations`                   | Admin service annotations                                                                       | `{}`                |
+| `postfix.topologySpreadConstraints`             | Topology Spread Constraints for pod assignment                                                  | `[]`                |
+| `postfix.updateStrategy.type`                   | Can be set to RollingUpdate or OnDelete                                                         | `RollingUpdate`     |
+| `postfix.extraEnvVars`                          | Extra environment variable to pass to the running container                                     | `[]`                |
+| `postfix.extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables to mount in the pod           | `""`                |
+| `postfix.extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables to mount in the pod              | `""`                |
+| `postfix.extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts for the pod                            | `[]`                |
+| `postfix.extraVolumes`                          | Optionally specify extra list of additional volumes for the pod(s)                              | `[]`                |
+| `postfix.extraContainers`                       | Add additional containers to the pod                                                            | `[]`                |
+| `postfix.overrides`                             | Enable postfix overrides                                                                        | `{}`                |
 
 ### Dovecot parameters
 

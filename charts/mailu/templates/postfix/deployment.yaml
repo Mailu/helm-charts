@@ -57,6 +57,12 @@ spec:
       {{- if .Values.postfix.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.postfix.terminationGracePeriodSeconds }}
       {{- end }}
+      {{- if .Values.postfix.dnsPolicy }}
+      dnsPolicy: {{ .Values.postfix.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.postfix.dnsConfig }}
+      dnsConfig: {{- include "mailu.tplvalues.render" (dict "value" .Values.postfix.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.postfix.initContainers }}
       initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.postfix.initContainers "context" $) | nindent 8 }}
       {{- end }}
