@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.8.0](https://github.com/Mailu/helm-charts/compare/mailu-2.7.3...mailu-2.8.0) (2026-09-19)
+
+
+### Features
+
+* **chart:** add dnsPolicy and dnsConfig options for postfix ([#609](https://github.com/Mailu/helm-charts/issues/609)) ([43620b2](https://github.com/Mailu/helm-charts/commit/43620b23a3b5f1bb4c3e0ede2ef875bb3292c998))
+
+
+### Bug Fixes
+
+* **chart:** correct dovecot PVC existingClaim guard ([#608](https://github.com/Mailu/helm-charts/issues/608)) ([65ef0dd](https://github.com/Mailu/helm-charts/commit/65ef0dd37bb984430fbfdad4b957fd891cf86af0))
+* **chart:** write wget output to /dev/null in the test hook ([#611](https://github.com/Mailu/helm-charts/issues/611)) ([9675f57](https://github.com/Mailu/helm-charts/commit/9675f572c9d2bb26c7b8a51582b93309b47081dc))
+* **github-release:** update release mailu/mailu ( 2024.06.55 ➔ 2024.06.56 ) ([#593](https://github.com/Mailu/helm-charts/issues/593)) ([0a03647](https://github.com/Mailu/helm-charts/commit/0a0364783ac1d1dd5a23aa2849fd59556f8a5c9b))
+* **github-release:** update release mailu/mailu ( 2024.06.56 ➔ 2024.06.57 ) ([#595](https://github.com/Mailu/helm-charts/issues/595)) ([10212f6](https://github.com/Mailu/helm-charts/commit/10212f646fe2687751442d9aaa8b10e3f6953238))
+* **github-release:** update release mailu/mailu ( 2024.06.57 ➔ 2024.06.58 ) ([#601](https://github.com/Mailu/helm-charts/issues/601)) ([663eb5f](https://github.com/Mailu/helm-charts/commit/663eb5ffcfdc7c4831bb6fa4df0b6758dda8623e))
+* **ingress:** terminate HTTP TLS at external ingress. ([#605](https://github.com/Mailu/helm-charts/issues/605)) ([d1624d0](https://github.com/Mailu/helm-charts/commit/d1624d0578060cef7d00e08e41410630099124f1))
+
 ## [2.7.3](https://github.com/Mailu/helm-charts/compare/mailu-2.7.2...mailu-2.7.3) (2026-07-19)
 
 
