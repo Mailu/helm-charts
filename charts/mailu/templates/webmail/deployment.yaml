@@ -58,6 +58,12 @@ spec:
       {{- if .Values.webmail.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.webmail.terminationGracePeriodSeconds }}
       {{- end }}
+      {{- if .Values.webmail.dnsPolicy }}
+      dnsPolicy: {{ .Values.webmail.dnsPolicy | quote }}
+      {{- end }}
+      {{- if .Values.webmail.dnsConfig }}
+      dnsConfig: {{- include "mailu.tplvalues.render" (dict "value" .Values.webmail.dnsConfig "context" $) | nindent 8 }}
+      {{- end }}
       {{- if .Values.webmail.initContainers }}
       initContainers: {{- include "mailu.tplvalues.render" (dict "value" .Values.webmail.initContainers "context" $) | nindent 8 }}
       {{- end }}
