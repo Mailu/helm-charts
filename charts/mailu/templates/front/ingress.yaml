@@ -1,6 +1,5 @@
 ---
-{{/* TODO: add support for Traefik */}}
-{{- if .Values.ingress.enabled }}
+{{- if and .Values.ingress.enabled (ne .Values.ingress.ingressClassName "traefik") }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
