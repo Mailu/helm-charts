@@ -1,5 +1,12 @@
 ---
-{{- if and .Values.ingress.enabled (ne .Values.ingress.ingressClassName "traefik") }}
+{{- if .Values.ingress.enabled }}
+{{/*
+When ingressClassName is "traefik", front/ingress-route.yaml renders a native
+IngressRoute to actually serve traffic. This Ingress still renders alongside
+it because cert-manager's ingress-shim only watches Ingress, not IngressRoute
+- without it, cert-manager.io/cluster-issuer on the IngressRoute is a no-op
+and no Certificate ever gets created for the TLS secret both objects share.
+*/}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -21,6 +28,23 @@ spec:
   ingressClassName: {{ .Values.ingress.ingressClassName | quote }}
   {{- end }}
   rules:
+    {{- if eq .Values.ingress.ingressClassName "traefik" }}
+    {{/*
+    traefik case: this Ingress only exists to trigger cert-manager's
+    ingress-shim. Scoping it to the ACME challenge path keeps its Traefik
+    router rule (Host && PathPrefix) more specific than, and never tied
+    with, the IngressRoute's plain Host rule - so the IngressRoute always
+    serves real traffic unambiguously.
+    */}}
+    {{- range .Values.hostnames }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          - path: /.well-known/acme-challenge/
+            pathType: Prefix
+            backend: {{- include "mailu.ingress.backend" (dict "serviceName" (include "mailu.front.serviceName" $) "servicePort" "http" "context" $)  | nindent 14 }}
+    {{- end }}
+    {{- else }}
     {{- range .Values.hostnames }}
     - host: {{ . | quote }}
       http:
@@ -42,6 +66,7 @@ spec:
     {{- end }}
     {{- if .Values.ingress.extraRules }}
     {{- include "mailu.tplvalues.render" (dict "value" .Values.ingress.extraRules "context" $) | nindent 4 }}
+    {{- end }}
     {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
